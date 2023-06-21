@@ -39,15 +39,16 @@
     
     <!--<xsl:variable name="prose-module-xsd" select="document('oscal-prose-module.xsd')"/>-->
    
+    <xsl:variable name="metaschema-repository" as="xs:string">../../support/metaschema</xsl:variable>
    
-    <xsl:variable name="prose-modules" as="element()*">
-        <module>../../../schema/xml/metaschema-markup-multiline.xsd</module>
-        <module>../../../schema/xml/metaschema-markup-line.xsd</module>
-        <module>../../../schema/xml/metaschema-prose-base.xsd</module>
+    <xsl:variable name="prose-modules" as="element()*" expand-text="true">
+        <module>{$metaschema-repository}/schema/xml/metaschema-markup-multiline.xsd</module>
+        <module>{$metaschema-repository}/schema/xml/metaschema-markup-line.xsd</module>
+        <module>{$metaschema-repository}/schema/xml/metaschema-prose-base.xsd</module>
     </xsl:variable>
    
-    <xsl:variable name="atomictype-modules" as="element()*">
-        <module>../../../schema/xml/metaschema-datatypes.xsd</module>
+    <xsl:variable name="atomictype-modules" as="element()*" expand-text="true">
+        <module>{$metaschema-repository}/schema/xml/metaschema-datatypes.xsd</module>
     </xsl:variable>
     
     <xsl:variable name="type-map" as="element()*">

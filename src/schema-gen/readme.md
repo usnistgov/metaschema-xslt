@@ -2,7 +2,7 @@
 
 For generating XML Schema (XSD) and JSON Schema artifacts from Metaschema source.
 
-Depends on datatype definitions in subdirectory ../../../schema/. 
+Depends on datatype definitions in subdirectory (submodule)c     `../support/metaschema/schema`. 
 
 ## xsl
 

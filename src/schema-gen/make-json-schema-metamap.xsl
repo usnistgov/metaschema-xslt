@@ -590,10 +590,12 @@
     <xsl:key name="datatypes-by-name" xpath-default-namespace="http://www.w3.org/2005/xpath-functions"
         match="map" use="@key"/>
         
-    <xsl:variable name="json-datatypes-path" as="xs:string">../../../schema/json/metaschema-datatypes.json</xsl:variable>
+    <xsl:variable name="metaschema-repository" as="xs:string">../../support/metaschema</xsl:variable>
     
+    <xsl:variable name="json-datatypes-path" as="xs:string" expand-text="true">{$metaschema-repository}/schema/json/metaschema-datatypes.json</xsl:variable>
 
     <xsl:variable name="datatypes" expand-text="false">
         <xsl:copy-of xpath-default-namespace="http://www.w3.org/2005/xpath-functions" select="( unparsed-text($json-datatypes-path) => json-to-xml() )/map/map[@key='definitions']/map"/>
     </xsl:variable>
+    
 </xsl:stylesheet>

@@ -19,7 +19,10 @@
     
     <xsl:namespace-alias stylesheet-prefix="XSLT" result-prefix="xsl"/>
     
-    <xsl:variable name="type-definitions" select="document('../../../schema/xml/metaschema-datatypes.xsd')//xs:simpleType"/>
+    <xsl:variable name="metaschema-repository" as="xs:string">../../support/metaschema</xsl:variable>
+
+    <xsl:variable name="type-definitions" select="document($metaschema-repository || '/schema/xml/metaschema-datatypes.xsd')//xs:simpleType"/>
+    <!-- ../../support/metaschema/schema/xml/metaschema-datatypes.xsd   -->
     
     <xsl:variable name="type-map" select="document('../schema-gen/make-metaschema-xsd.xsl')/*/xsl:variable[@name='type-map']/*"/>
     
@@ -27,7 +30,7 @@
         <XSLT:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
             xmlns:xs="http://www.w3.org/2001/XMLSchema"
             xpath-default-namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0" version="3.0">
-            <XSLT:variable name="type-map" as="element()*">
+            <XSLT:variable name="type-map" as="element()+">
                 <xsl:copy-of select="$type-map" copy-namespaces="no"/>
             </XSLT:variable>
             <XSLT:function name="m:datatype-validate" as="xs:boolean">
