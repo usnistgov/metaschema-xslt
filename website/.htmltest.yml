@@ -1,7 +1,0 @@
-DirectoryPath: public
-CheckDoctype: false
-CheckMailto: false
-IgnoreExternalBrokenLinks: true
-IgnoreAltMissing: true
-IgnoreURLs:
-IgnoreDirs:

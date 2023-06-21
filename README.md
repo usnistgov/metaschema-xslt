@@ -1,2 +1,3 @@
-# metaschema
-Documentation for and implementations of the metaschema modeling language
+# metaschema-xslt
+
+The following is an XSLT implementation of the [Metaschema document modeling framework](https://github.com/usnistgov/metaschema)
