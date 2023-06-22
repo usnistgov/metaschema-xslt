@@ -67,21 +67,6 @@
    
    <xsl:key name="using-name" match="flag | field | assembly | define-flag | define-field | define-assembly" use="m:use-name(.)"/>
    
-   <!--
-      
-   OSCAL Model: [full schema name]
-   Version: [version]
-   XML Namespace: [ns, only for XML]
-   [XML|JSON] Schema: {blah}
-   JSON To XML|XML to JSON Converter: {blah]
-   
-   <p><span class="usa-tag">Schema download</span> <a href="/artifacts/xml/schema/oscal_catalog_schema.xsd">oscal_catalog_schema.xsd</a></p>
-<p><span class="usa-tag">JSON to XML content converter</span>  <a href="/artifacts/xml/convert/oscal_catalog_json-to-xml-converter.xsl">oscal_catalog_json-to-xml-converter.</a></p>
-<p>(<a href="?">How do I use the converter to convert OSCAL JSON to XML?</a>)</p>
-
-   
-   -->
-   
    
    <xsl:template match="/" mode="make-page">
       <html>
