@@ -7,10 +7,10 @@ usage() {
     cat <<EOF
 Usage: $(basename "${BASH_SOURCE[0]}") METASCHEMA_SOURCE XSD_RESULT [ADDITIONAL_ARGS]
 
-Transforms and formats an OSCAL XML Catalog into PDF using Saxon invoked from Maven.
+Produces an XSD (XML Schema Definition) from a valid and well-ordered NIST (ITL/CSD) metaschema (Metaschema instance) using Saxon invoked from Maven.
 Please install Maven first.
 
-Additional arguments are provided to XML Calabash
+Additional arguments are provided to XML Calabash.
 EOF
 }
 
