@@ -10,7 +10,7 @@ Usage: $(basename "${BASH_SOURCE[0]}") METASCHEMA_SOURCE XSD_RESULT [ADDITIONAL_
 Produces an XSD (XML Schema Definition) from a valid and well-ordered NIST (ITL/CSD) metaschema (Metaschema instance) using Saxon invoked from Maven.
 Please install Maven first.
 
-Additional arguments are provided to XML Calabash.
+Additional arguments are provided to SaxonHE - see https://www.saxonica.com/documentation11/#!using-xsl/commandline
 EOF
 }
 
@@ -42,7 +42,7 @@ mvn \
     -f "$POM_FILE" \
     exec:java \
     -Dexec.mainClass="$MAIN_CLASS" \
-    -Dexec.args="-xsl:nist-emulation/sp800-53A-catalog_html.xsl -s:\"$METASCHEMA_SOURCE\" -o:\"$XSD_RESULT\" $ADDITIONAL_ARGS"
+    -Dexec.args="-xsl:src/nist-metaschema-MAKE-XSD.xsl -s:\"$METASCHEMA_SOURCE\" -o:\"$XSD_RESULT\" $ADDITIONAL_ARGS"
 
 if [ -e "$XSD_RESULT" ]
 then 
