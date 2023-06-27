@@ -1,73 +1,127 @@
 # metaschema-xslt
 
+## punchlist
+
+- [x] `CODEMETA`
+- [x] `CONTRIBUTING.md`
+- [x] `CODEOWNERS`
+- [x] `LICENSE.md`
+- [x] `CODE_OF_CONDUCT.md`
+- [x] this file (see outline/requirements at end)
+
 ## Software description
 
-Metaschema-XSLT is an XSLT-based implementation of the NIST [Metaschema document modeling framework](https://github.com/usnistgov/metaschema).
+Metaschema-XSLT is an XSLT-based implementation of the NIST (ITL/CSD) [Metaschema document modeling framework](https://github.com/usnistgov/metaschema).
 
 NIST Metaschema defines how to describe sets of data objects -- serialized information sets, considered abstractly -- *across* and *between* implementations of processing systems that are coded to manipulate and process such objects.
 
-These descriptions are provided by means of a formal *language* developed for this purpose. An instance of this language is called a <q>metaschema</q>, while the language is named <q>Metaschema</q>. A metaschema proposes or stipulates, by description, a model or set of models, which can be followed by data instances in data processing systems using standard formats and notations, such as XML, JSON and YAML. (This particular implementation supports XML- and JSON-based notations.) Because the Metaschema definitions are abstracted away from details of the system, data sets conformant to these models (and thereby pre-fitted for operations that leverage them) can be developed, validated externally and readily processed by first, second or third parties to contracts. Prior knowledge to make informed and 'intelligent' inferences regarding information sets is provided by metaschema definitions, while metaschema-based tools can test for and enforce the constraints that come with Metaschema data (type) definitions.
-
-In support of metaschemas defined using this language, this software can be used to generate utilities and software artifacts including XML Schema (XSD) and JSON Schema, data conversion scripts, and model documentation. All of these can be deployed in support of other technologies addressing requirements in this domain.
+These descriptions are provided by means of a formal *language* developed for this purpose. In support of metaschemas defined using this language, this software can be used to generate utilities and software artifacts including XML Schema (XSD) and JSON Schema, data conversion scripts, and model documentation.
 
 ### Statement of purpose
 
-NIST ITL/CSD Metaschema is a data modeling technology, which works by providing formal and validable descriptions of data models such that they can be cast and rewritten in various alternative syntaxes, i.e. optimized at the level of format, while permitting lossless conversion of defined-as-equal information sets across format boundaries.
+NIST ITL/CSD Metaschema is a data modeling technology, which works by providing formal and validable descriptions of data models such that instances (data sets) conforming to these models can be cast and rewritten in various alternative syntaxes, i.e. optimized at the level of format, while permitting lossless conversion of defined-as-equal information sets across format boundaries.
 
-The software in this repository began as a 'scaffolding' demonstration and proof-of-concept of the capabilities of the Metaschema language, as an instance and demonstration of this concept. However, the Metaschema language is also defined in such a way as to be distinct from and independent of software that implements it. As such, by standing as a functional demonstration of metaschema capabilities, this software can serve in appropriate contexts 
+In addition to neutralizing the "XML/JSON" or more broadly "Markup/object notation" boundary, this technology also offers other capabilities such as external specification and validation of application-oriented semantics ("business rules") of models appropriate to specialized knowledge domains.
 
-Accordingly, the current effort seeks not only to implement, demonstrate and enable the capabilities of a NIST Metaschema system, with respect to functionalities including schema generation, data conversion or pipelining, stylesheet generation or a host of other potential uses of Metaschema and metaschemas considered broadly. In addition, we aspire to do so sustainably, not in the sense that the software will work forever, but that its users and adopters will at all times be able to trace the data flows it supports.
+The current effort seeks to implement, demonstrate and enable the capabilities of a NIST Metaschema system, with respect to functionalities including schema generation, data conversion or pipelining, stylesheet generation or a host of other potential uses of Metaschema and metaschemas considered broadly. In addition, we aspire to do so sustainably, not in the sense that the software will meet all requirements for all time, but that it will be reliable, validable and traceable.
 
-Considering data traceability and process transparency as the primary goal makes secondary goals, such as the creation of use cases (for this and compatible software) and the codification and maturation of relevant standards, including standards supported by Metaschema such as OSCAL.
+Considering data traceability and process transparency as primary goals will also serve secondary goals, such as the creation and demonstration of use cases (for this and compatible software) and the codification and maturation of relevant standards, including standards supported by Metaschema such as OSCAL.
 
 Stress is therefore on:
 
 - Transparency, testability and maintainability of processing on an open-source stack
-- Generality of support of Metaschema features
 - Conformance in support of Metaschema-based data interchange / interop
+- Generality of support of Metaschema features
 
 What we do not emphasize:
 
 - Performance
-- Portability beyond the XML/XSLT dependency stack (instead see other Metaschema initiatives)
-- Use cases (only)
+- Portability beyond the XML/XSLT dependency stack (instead we relying on other Metaschema initiatives)
+- Use cases in isolation
 
 ### Origins
 
-Formerly housed in the Metaschema repository, this code base traces the history of development of the Metaschema concept in the context of the OSCAL project. It was originally conceived as a demonstration and proof of concept, providing a bridge enabling JSON- and XML-based development in parallel over common problem sets. Success in this effort led to a determination that multiple implementations of a platform-independent specification were needed, at which point this implementation was carved out into its own repository. 
+Formerly housed in the Metaschema repository, this code base traces the history of development of the Metaschema concept in the context of the OSCAL project. It was originally conceived as a demonstration and proof of concept, providing a bridge enabling JSON- and XML-based development in parallel over common problem sets. Success in this effort led to a determination that multiple implementations of a platform-independent specification were needed, at which point this implementation was carved out into its own repository.
+
+### Licensing
+
+See the [project license](LICENSE.md) on this site.
+
+This project is placed into the world wide public domain.
 
 ### Project sunset
 
 Currently there is no plan to continue maintaining this project or code base beyond the retirement of its lead researcher. Indeed a project goal is to enable the stabilization and socialization of the Metaschema technology, as evidenced by the use and support of *other* Metaschema implementations.
 
-### Description of the repository contents
+## Repository contents
 
 `src` includes XSLT source code, with supporting infrastructure including ad-hoc testing
 
 `support` includes dependent submodules
 
-### Installation and use
+## Installation and use
 
-The software is designed to be used in any of a range of ways:
+The software is designed to be used in a range of ways:
 
-- Dynamically, in development of metaschemas and Metaschema-based software and tools
-- Within CI/CD, to generate artifacts or productions from metaschema source under controlled conditions
+- Directly, in development of metaschemas and Metaschema-based software and tools
+- Within Metaschema-based builds, including under CI/CD, to generate artifacts or productions from metaschema source under controlled conditions
 
-Accordingly, there will generally be multiple points of entry or invocation methods for any process, with  the software dependencies maintained as appropriate for different use cases.
+Accordingly (as is not uncommon with XML/XSLT-based libraries), there will generally be multiple points of entry or invocation methods for any process, with the software dependencies maintained as appropriate for different use cases.
 
 This being the case, since the applications are written in XSLT 3.0, the latest stable version of the [Saxon](https://saxonica.com/documentation11/documentation.xml) processor is regarded as the primary dependency.
 
 At one extreme, an XML IDE such as oXygen XML (or extended VS Code), integrating Saxon, can be used to run processes and tests in diagnostic mode, using its runtime and interfaces for XSLT (`*.xsl`) or XProc (`*.xproc`).
 
-At the other, command-line scripts or makefiles can be used to automate processes to run externally to produce outputs, and the repository includes examples of these.
+At the other, command-line scripts or makefiles can be used to automate processes to run externally to produce outputs. The repository includes examples of these.
 
-In this case, a convenient way to manage dependencies is to use Maven to manage a Java-based stack deploying SaxonHE and/or XML Calabash, as open-source XML processors. Scripts are provided for running under Maven.
+In particular, a convenient way to manage dependencies is to use Maven to manage a Java-based stack deploying SaxonHE and/or XML Calabash, as open-source XML processors. Scripts are provided for running under Maven.
 
-#### To run
+### To run
 
 With `bash` and Maven installed, run any script given at the top level. Use `--help` for help.
 
 For testing, all XSpec scenarios (`*.xspec`) can be run in place to generate local test reports.
+
+### Dependencies
+
+As noted, the Saxon XSLT engine can be regarded as a *de facto* dependency - while this XSLT-conformant code should in principle run in *any* processor implementing the language. SaxonHE can be bundled using Maven or another Java packaging technology.
+
+Developers interested in demonstrating the viability of these processes in different processors and environments are eagerly invited to participate in development of this tool or [related tools](#Related_projects).
+
+
+### Git Client Setup
+
+See more on git setup on the page on [Contributing](CONTRIBUTING).
+
+Clone the project:
+
+```
+git clone --recurse-submodules https://github.com/usnistgov/metaschema-xslt.git
+```
+
+Or to clone with submodule initialization:
+
+```
+git clone --recurse-submodules https://github.com/usnistgov/metaschema-xslt.git
+```
+
+### Initializing Git submodules
+
+This GitHub repository makes use of Git submodules to mount other repositories as subdirectories. When cloning this repo for the first time, you need to initialize these.
+
+```
+git submodule update --init
+```
+
+Or do this in one step using `clone --recurse-submodules` as noted.
+
+### Updating submodules
+
+Submodule contents will be periodically updated. To ensure you have the latest commits for a configured submodule, you will need to run the following command:
+
+```
+git submodule update --init --recursive
+```
 
 ## Contact information
 
@@ -77,7 +131,11 @@ This initiative spins off from and supports the ITL/CSD [Metaschema](https://pag
 
 For OSCAL-related discussions see the [OSCAL Site](https://pages.nist.gov/OSCAL/contribute).
 
-## Related Material
+## Cite this work
+
+Piez, Wendell (2023), Metaschema-XSLT. US National Institute of Standards and Technology (NIST). https://github.com/usnistgov/metaschema-xslt.
+
+## Related projects
 
 See the [Metaschema Repository](https://github.com/usnistgov/metaschema) and its [Pages Site](https://pages.nist.gov/metaschema/) for a description and specification of the technology this software is designed to support.
 
@@ -89,24 +147,13 @@ Projects in support of NIST Metaschema (at time of writing)
 - https://github.com/usnistgov/metaschema-node
 - https://github.com/usnistgov/nmetaschema
 
-Using NIST Metaschema
+Projects currently known to be using NIST Metaschema
 
 - [OSCAL: the Open Security Controls Assessment Language](https://pages.nist.gov/OSCAL/)
 
-
-## Cite this work
-
-Piez, Wendell (2023), Metaschema-XSLT. US National Institute of Standards and Technology (NIST). https://github.com/usnistgov/metaschema-xslt.
-
-## Dependencies
-
-As noted above, the Saxon XSLT engine can be regarded as a *de facto* dependency - while this XSLT-conformant code should in principle run in *any* processor implementing the language. SaxonHE can be bundled using Maven as noted above. This makes Maven (and Java) the dependency for practical purposes.
-
-Developers interested in demonstrating the viability of these processes in different processors and environments are eagerly invited to participate.
-
 ## Required outline
 
-See https://raw.githubusercontent.com/usnistgov/opensource-repo/main/README.md
+This page includes all the following, as described by guidelines at https://raw.githubusercontent.com/usnistgov/opensource-repo/main/README.md
 
 1. Software or Data description
    - Statements of purpose and maturity
