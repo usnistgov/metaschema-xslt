@@ -11,19 +11,21 @@
 
 ## Software description
 
-Metaschema-XSLT is an XSLT-based implementation of the NIST (ITL/CSD) [Metaschema document modeling framework](https://github.com/usnistgov/metaschema).
+Metaschema-XSLT is an XSLT-based implementation of the NIST (ITL/CSD) [Metaschema data modeling framework](https://github.com/usnistgov/metaschema).
 
 NIST Metaschema defines how to describe sets of data objects -- serialized information sets, considered abstractly -- *across* and *between* implementations of processing systems that are coded to manipulate and process such objects.
 
 These descriptions are provided by means of a formal *language* developed for this purpose. In support of metaschemas defined using this language, this software can be used to generate utilities and software artifacts including XML Schema (XSD) and JSON Schema, data conversion scripts, and model documentation.
 
+Such utilities can in turn provide the basis for ecosystems of tools supporting data models and data sets expressed in the supported formats. ***Make-your-own Schema Kit*** except you get more than a schema, you also get many things with it, including the ability to cast to other formats and maintain formal format-agnosticism.
+
 ### Statement of purpose
 
 NIST ITL/CSD Metaschema is a data modeling technology, which works by providing formal and validable descriptions of data models such that instances (data sets) conforming to these models can be cast and rewritten in various alternative syntaxes, i.e. optimized at the level of format, while permitting lossless conversion of defined-as-equal information sets across format boundaries.
 
-In addition to neutralizing the "XML/JSON" or more broadly "Markup/object notation" boundary, this technology also offers other capabilities such as external specification and validation of application-oriented semantics ("business rules") of models appropriate to specialized knowledge domains.
+In addition to neutralizing the "XML vs JSON" or more broadly "Markup language vs object notation" issue, this technology also offers other capabilities such as external specification and validation of application-oriented semantics ("business rules") defined over models appropriate to specialized knowledge domains.
 
-The current effort seeks to implement, demonstrate and enable the capabilities of a NIST Metaschema system, with respect to functionalities including schema generation, data conversion or pipelining, stylesheet generation or a host of other potential uses of Metaschema and metaschemas considered broadly. In addition, we aspire to do so sustainably, not in the sense that the software will meet all requirements for all time, but that it will be reliable, validable and traceable.
+The current effort seeks to implement, demonstrate and enable the capabilities of a NIST Metaschema system, with respect to functionalities including schema generation, data conversion or pipelining, stylesheet generation or a host of other potential uses of Metaschema and metaschemas considered broadly. In addition, we aspire to do so sustainably, not in the sense that the software will meet all requirements for all time, but that it will be reliable, validable, traceable, extensible -- and replaceable.
 
 Considering data traceability and process transparency as primary goals will also serve secondary goals, such as the creation and demonstration of use cases (for this and compatible software) and the codification and maturation of relevant standards, including standards supported by Metaschema such as OSCAL.
 
@@ -36,28 +38,28 @@ Stress is therefore on:
 What we do not emphasize:
 
 - Performance
-- Portability beyond the XML/XSLT dependency stack (instead we relying on other Metaschema initiatives)
+- Portability beyond the XML/XSLT dependency stack (instead relying on other Metaschema initiatives)
 - Use cases in isolation
 
 ### Origins
 
-Formerly housed in the Metaschema repository, this code base traces the history of development of the Metaschema concept in the context of the OSCAL project. It was originally conceived as a demonstration and proof of concept, providing a bridge enabling JSON- and XML-based development in parallel over common problem sets. Success in this effort led to a determination that multiple implementations of a platform-independent specification were needed, at which point this implementation was carved out into its own repository.
+Formerly housed in the Metaschema repository, this code base traces the history of development of the Metaschema concept in the context of the OSCAL project. It was originally conceived as a demonstration and proof of concept, providing a bridge enabling JSON- and XML-based development in parallel over common problem sets and common data. Success in this effort led to a determination that multiple implementations of a platform-independent specification were needed, at which point this implementation was carved out into its own repository.
 
 ### Licensing
 
-See the [project license](LICENSE.md) on this site.
+See the [project license](LICENSE.md) in this repository.
 
-This project is placed into the world wide public domain.
+This project is placed into the worldwide public domain.
 
 ### Project sunset
 
-Currently there is no plan to continue maintaining this project or code base beyond the retirement of its lead researcher. Indeed a project goal is to enable the stabilization and socialization of the Metaschema technology, as evidenced by the use and support of *other* Metaschema implementations.
+Currently there is no plan to continue maintaining this project beyond the retirement of its lead researcher. A project goal is to enable the stabilization and socialization of the Metaschema technology, as evidenced by the use and support of *other* Metaschema implementations.
 
 ## Repository contents
 
 `src` includes XSLT source code, with supporting infrastructure including ad-hoc testing
 
-`support` includes dependent submodules
+`support` includes dependent submodules with other static resources for configuration
 
 ## Installation and use
 
@@ -80,14 +82,19 @@ In particular, a convenient way to manage dependencies is to use Maven to manage
 
 With `bash` and Maven installed, run any script given at the top level. Use `--help` for help.
 
+Additionally, scripts and stylesheets will be documented *in situ* using readmes and in line.
+
 For testing, all XSpec scenarios (`*.xspec`) can be run in place to generate local test reports.
+
+Users are also expected to call resources in this repository from their own scripts. Do this either by cloning, copying and modifying scripts here; by writing your own; or by adapting code into the XML/XSLT processing framework or stack of your choice.
 
 ### Dependencies
 
 As noted, the Saxon XSLT engine can be regarded as a *de facto* dependency - while this XSLT-conformant code should in principle run in *any* processor implementing the language. SaxonHE can be bundled using Maven or another Java packaging technology.
 
-Developers interested in demonstrating the viability of these processes in different processors and environments are eagerly invited to participate in development of this tool or [related tools](#Related_projects).
+At time of writing, Saxon versions 10-12 are all known to work with this codebase. When reporting bugs please include the version of your processor.
 
+Developers interested in demonstrating the viability of these processes in different processors and environments are eagerly invited to participate in development of this tool or [related tools](#Related_projects).
 
 ### Git Client Setup
 
@@ -117,7 +124,7 @@ Or do this in one step using `clone --recurse-submodules` as noted.
 
 ### Updating submodules
 
-Submodule contents will be periodically updated. To ensure you have the latest commits for a configured submodule, you will need to run the following command:
+Submodule contents will be periodically updated. To ensure you have the latest commits for a configured submodule:
 
 ```
 git submodule update --init --recursive
@@ -125,7 +132,9 @@ git submodule update --init --recursive
 
 ## Contact information
 
-Principal Investigator: Wendell Piez, NIST ITL/CSD (Information Technology Laboratory, Computer Security Division). Email w e n d e l l (dot) p i e z (at) n i s t (dot) g o v.
+Principal Investigator: Wendell Piez, NIST (US National Institute of Standards and Technology) ITL/CSD (Information Technology Laboratory, Computer Security Division).
+
+Email w e n d e l l (dot) p i e z (at) n i s t (dot) g o v.
 
 This initiative spins off from and supports the ITL/CSD [Metaschema](https://pages.nist.gov/metaschema) Project, originally and currently being developed in support of OSCAL, the [Open Security Controls Assessment Language](https://pages.nist.gov/OSCAL).
 
