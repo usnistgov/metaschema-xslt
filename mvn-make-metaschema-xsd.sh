@@ -27,7 +27,7 @@ XSD_RESULT=$2
 ADDITIONAL_ARGS=$(shift 2; echo ${*// /\\ })
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)"
-POM_FILE="${SCRIPT_DIR}/../pom.xml"
+POM_FILE="${SCRIPT_DIR}/support/pom.xml"
 
 MAIN_CLASS="net.sf.saxon.Transform" # Saxon defined in pom.xml
 

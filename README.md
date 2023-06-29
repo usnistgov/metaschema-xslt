@@ -9,6 +9,12 @@
 - [x] `CODE_OF_CONDUCT.md`
 - [x] this file (see outline/requirements at end)
 
+## License
+
+See the [project license](LICENSE.md) in this repository.
+
+This project is placed into the worldwide public domain.
+
 ## Software description
 
 Metaschema-XSLT is an XSLT-based implementation of the NIST (ITL/CSD) [Metaschema data modeling framework](https://github.com/usnistgov/metaschema).
@@ -45,15 +51,11 @@ What we do not emphasize:
 
 Formerly housed in the Metaschema repository, this code base traces the history of development of the Metaschema concept in the context of the OSCAL project. It was originally conceived as a demonstration and proof of concept, providing a bridge enabling JSON- and XML-based development in parallel over common problem sets and common data. Success in this effort led to a determination that multiple implementations of a platform-independent specification were needed, at which point this implementation was carved out into its own repository.
 
-### Licensing
-
-See the [project license](LICENSE.md) in this repository.
-
-This project is placed into the worldwide public domain.
-
 ### Project sunset
 
 Currently there is no plan to continue maintaining this project beyond the retirement of its lead researcher. A project goal is to enable the stabilization and socialization of the Metaschema technology, as evidenced by the use and support of *other* Metaschema implementations.
+
+The best way to ensure long-term access to the code base is to clone or fork the git repository and archive a copy for study or use.
 
 ## Repository contents
 
@@ -92,7 +94,7 @@ Users are also expected to call resources in this repository from their own scri
 
 As noted, the Saxon XSLT engine can be regarded as a *de facto* dependency - while this XSLT-conformant code should in principle run in *any* processor implementing the language. SaxonHE can be bundled using Maven or another Java packaging technology.
 
-At time of writing, Saxon versions 10-12 are all known to work with this codebase. When reporting bugs please include the version of your processor.
+The [POM file](support/pom.xml) for Java/Maven configuration indicates the current tested version of Saxon. At time of writing, Saxon versions 10 and 11 are known to work with this codebase. When reporting bugs please include the version of your processor.
 
 Developers interested in demonstrating the viability of these processes in different processors and environments are eagerly invited to participate in development of this tool or [related tools](#Related_projects).
 
