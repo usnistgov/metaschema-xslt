@@ -24,6 +24,7 @@
     
     <xsl:variable name="type-definitions-file" as="xs:string" expand-text="true">{$metaschema-repository}/schema/xml/metaschema-datatypes.xsd</xsl:variable>
     
+    <!-- TODO: check up and align with latest -->
     <xsl:variable name="type-definitions" as="element()*" select="document($type-definitions-file)//xs:simpleType">
         
     </xsl:variable>

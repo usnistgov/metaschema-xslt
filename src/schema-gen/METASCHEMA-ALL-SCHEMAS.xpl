@@ -51,7 +51,7 @@
   
   <p:xslt name="make-xsd">
     <p:input port="stylesheet">
-      <p:document href="./make-metaschema-xsd.xsl"/>
+      <p:document href="XSD/make-metaschema-xsd.xsl"/>
     </p:input>
   </p:xslt>
   
@@ -62,7 +62,7 @@
       <p:pipe port="result" step="composed"/>
     </p:input>
     <p:input port="stylesheet">
-      <p:document href="./make-json-schema-metamap.xsl"/>
+      <p:document href="JSON-schema/make-json-schema-metamap.xsl"/>
     </p:input>
   </p:xslt>
   
