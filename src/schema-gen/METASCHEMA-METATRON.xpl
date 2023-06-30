@@ -37,7 +37,7 @@
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Import (subpipeline) -->
   
-  <p:import href="compose/metaschema-compose.xpl"/>
+  <p:import href="../compose/metaschema-compose.xpl"/>
   
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Pipeline -->
@@ -50,7 +50,7 @@
   
   <p:xslt name="make-metatron">
     <p:input port="stylesheet">
-      <p:document href="schema-gen/make-metaschema-metatron.xsl"/>
+      <p:document href="Schematron/make-metaschema-metatron.xsl"/>
     </p:input>
   </p:xslt>
   
