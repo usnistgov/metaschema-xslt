@@ -100,7 +100,9 @@ The Schematron currently runs the composition step irrespectively. We should per
 
 ### Compose metaschema
 
-Schema composition is essentially import resolution, wherein overriding imports are resolved. Since the last definition prevails, any definition in a main module overrides any imported definition of the same name; similarly, imports can cascade, any import overriding earlier imports. Metaschema composition does not guarantee a viable schema result: definitions must still be sensible.
+Schema composition is essentially import resolution, wherein overriding imports are resolved. Semantics of metaschema composition essentially follow Metaschema specifications for resolution of *metaschema modules* in importing.
+
+The result is a single normalized and annotated metaschema instance with all defaults explicit and disambiguated, or error reports.
 
 source: metaschema (main module)
 
@@ -113,5 +115,7 @@ A composition step is provided internally by other processes, but it can also be
 ### XProc
 
 As noted above, everything can also be done under XProc 1.0 (`*.xpl` files) for debugging.
+
+For a view of any XProc, try the [XProc Visualizer](https://pages.nist.gov/xslt-blender/xproc-visualizer/).
 
 Porting to XProc 3.0 and/or to other pipelining approaches is on the further horizon.
