@@ -32,7 +32,7 @@
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Import (subpipeline) -->
   
-  <p:import href="compose/metaschema-compose.xpl"/>
+  <p:import href="../compose/metaschema-compose.xpl"/>
   
   
   
@@ -56,7 +56,7 @@
 
   <p:xslt name="make-abstract-map">
     <p:input port="stylesheet">
-      <p:document href="compose/make-model-map.xsl"/>
+      <p:document href="../compose/make-model-map.xsl"/>
     </p:input>
   </p:xslt>
   
@@ -64,13 +64,13 @@
      and expands identifiers -->
   <p:xslt name="unfold-instance-map">
     <p:input port="stylesheet">
-      <p:document href="compose/unfold-model-map.xsl"/>
+      <p:document href="../compose/unfold-model-map.xsl"/>
     </p:input>
   </p:xslt>
   
   <p:xslt name="annotate-instance-map">
     <p:input port="stylesheet">
-      <p:document href="compose/annotate-model-map.xsl"/>
+      <p:document href="../compose/annotate-model-map.xsl"/>
     </p:input>
   </p:xslt>
   
@@ -80,13 +80,13 @@
       <p:pipe port="result" step="unfold-model-map"/>
     </p:input>-->
     <p:input port="stylesheet">
-      <p:document href="document/xml/element-tree.xsl"/>
+      <p:document href="xml/element-tree.xsl"/>
     </p:input>
   </p:xslt>
   
   <p:xslt name="make-xml-model-map">
     <p:input port="stylesheet">
-      <p:document href="document/xml/element-map-html.xsl"/>
+      <p:document href="xml/element-map-html.xsl"/>
     </p:input>
     <p:with-param name="outline-page"   select="$xml-outline-filename"/>
     <p:with-param name="reference-page" select="$xml-reference-filename"/>
@@ -100,7 +100,7 @@
       <p:pipe port="result" step="make-xml-element-tree"/>
     </p:input>
     <p:input port="stylesheet">
-      <p:document href="document/xml/element-reference-html.xsl"/>
+      <p:document href="xml/element-reference-html.xsl"/>
     </p:input>
     <p:with-param name="xml-reference-page"    select="$xml-reference-filename"/>
     <p:with-param name="xml-definitions-page"  select="$xml-definitions-filename"/>
@@ -115,7 +115,7 @@
       <p:pipe port="result" step="make-xml-element-tree"/>
     </p:input>
     <p:input port="stylesheet">
-      <p:document href="document/xml/element-index-html.xsl"/>
+      <p:document href="xml/element-index-html.xsl"/>
     </p:input>
     <p:with-param name="index-page"       select="$xml-index-filename"/>
     <p:with-param name="reference-page"   select="$xml-reference-filename"/>
@@ -131,7 +131,7 @@
     </p:input>
     <p:input port="stylesheet">
       <!-- XXX fix up / reduce this XSLT (from RC2) -->
-      <p:document href="document/xml/xml-definitions.xsl"/>
+      <p:document href="xml/xml-definitions.xsl"/>
     </p:input>
     <p:with-param name="xml-definitions-page"  select="$xml-definitions-filename"/>
     <p:with-param name="json-definitions-page" select="$json-definitions-filename"/>
@@ -148,14 +148,14 @@
       <p:pipe port="result" step="annotate-instance-map"/>
     </p:input>
     <p:input port="stylesheet">
-      <p:document href="document/json/object-tree.xsl"/>
+      <p:document href="json/object-tree.xsl"/>
     </p:input>
   </p:xslt>
 
   <!-- From this, we first make the model map (ready to inject into the web build) -->
   <p:xslt name="make-json-model-map">
     <p:input port="stylesheet">
-      <p:document href="document/json/object-map-html.xsl"/>
+      <p:document href="json/object-map-html.xsl"/>
     </p:input>
     <p:with-param name="outline-page"   select="$json-outline-filename"/>
     <p:with-param name="reference-page" select="$json-reference-filename"/>
@@ -174,7 +174,7 @@
     </p:input>
     <!--<p:with-option name="initial-mode" select="QName('','make-page')"/>-->
     <p:input port="stylesheet">
-      <p:document href="document/json/object-reference-html.xsl"/>
+      <p:document href="json/object-reference-html.xsl"/>
     </p:input>
     <p:with-param name="json-reference-page"   select="$json-reference-filename"/>
     <p:with-param name="json-definitions-page" select="$json-definitions-filename"/>
@@ -192,7 +192,7 @@
       <p:pipe port="result" step="make-json-object-tree"/>
     </p:input>
     <p:input port="stylesheet">
-      <p:document href="document/json/object-index-html.xsl"/>
+      <p:document href="json/object-index-html.xsl"/>
     </p:input>
     <p:with-param name="index-page"       select="$json-index-filename"/>
     <p:with-param name="reference-page"   select="$json-reference-filename"/>
@@ -208,7 +208,7 @@
     </p:input>
     <p:input port="stylesheet">
       <!-- XXX fix up / reduce this XSLT (from RC2) -->
-      <p:document href="document/json/json-definitions.xsl"/>
+      <p:document href="json/json-definitions.xsl"/>
     </p:input>
     <p:with-param name="json-definitions-page" select="$json-definitions-filename"/>
     <p:with-param name="xml-definitions-page"  select="$xml-definitions-filename"/>
@@ -222,7 +222,7 @@
       <p:inline><dummy/></p:inline>
     </p:input>
     <p:input port="stylesheet">
-      <p:document href="document/pipeline-diagnostic.xsl"/>
+      <p:document href="pipeline-diagnostic.xsl"/>
     </p:input>
     <p:with-param name="test1" select="$json-outline-uri"/>
     <p:with-param name="test2"  select="$source-doc"/>
