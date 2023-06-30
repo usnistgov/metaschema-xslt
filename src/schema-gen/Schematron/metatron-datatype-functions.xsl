@@ -20,8 +20,13 @@
     
     <xsl:namespace-alias stylesheet-prefix="XSLT" result-prefix="xsl"/>
     
-    <xsl:variable name="type-definitions" select="document('oscal-datatypes.xsd')//xs:simpleType"/>
+    <xsl:variable name="metaschema-repository" as="xs:string">../../../support/metaschema/</xsl:variable>
     
+    <xsl:variable name="type-definitions-file" as="xs:string" expand-text="true">{$metaschema-repository}/schema/xml/metaschema-datatypes.xsd</xsl:variable>
+    
+    <xsl:variable name="type-definitions" as="element()*" select="document($type-definitions-file)//xs:simpleType">
+        
+    </xsl:variable>
     <xsl:template match="/">
         <XSLT:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
             xmlns:xs="http://www.w3.org/2001/XMLSchema"

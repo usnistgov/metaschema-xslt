@@ -19,7 +19,7 @@
 <!-- nb Validation against both schema and Schematron for the Metaschema format is assumed. -->
     <xsl:namespace-alias stylesheet-prefix="XSLT" result-prefix="xsl"/>
     
-    <xsl:import href="../metapath/parse-metapath.xsl"/>
+    <xsl:import href="../../metapath/parse-metapath.xsl"/>
     
     <xsl:import href="metatron-datatype-functions.xsl"/>
     

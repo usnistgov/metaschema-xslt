@@ -19,6 +19,19 @@
 
     <xsl:variable name="composed-metaschema" select="/" />
 
+    <xsl:variable name="datatype-map" select="document('../XSD/make-metaschema-xsd.xsl')/*/xsl:variable[@name='type-map']/*" as="element()*"/>
+
+    <xsl:variable name="metaschema-repository" as="xs:string">../../../support/metaschema</xsl:variable>
+    
+    <xsl:variable name="json-datatypes-path" as="xs:string" expand-text="true">{$metaschema-repository}/schema/json/metaschema-datatypes.json</xsl:variable>
+    
+    <xsl:variable name="datatypes" expand-text="false">
+        <xsl:copy-of xpath-default-namespace="http://www.w3.org/2005/xpath-functions" select="( unparsed-text($json-datatypes-path) => json-to-xml() )/map/map[@key='definitions']/map"/>
+    </xsl:variable>
+    
+    <xsl:key name="datatypes-by-name" xpath-default-namespace="http://www.w3.org/2005/xpath-functions"
+        match="map" use="@key"/>
+    
     <xsl:template match="/" priority="2">
         <xsl:apply-templates />
     </xsl:template>
@@ -576,8 +589,6 @@
     
     <!--Not supporting float or double--> 
 
-<xsl:variable name="datatype-map" select="document('make-metaschema-xsd.xsl')/*/xsl:variable[@name='type-map']/*" as="element()*"/>
-    
     <xsl:template priority="2.1" match="*[@as-type = $datatype-map/@as-type]" mode="object-type">
         <xsl:variable name="assigned-type" select="$datatype-map[(@as-type|@prefer)=current()/@as-type]/string(.)"/>
         <string key="$ref">#/definitions/{$assigned-type}</string>
@@ -586,16 +597,5 @@
     <xsl:mode name="acquire-types" on-no-match="shallow-copy"/>
     
     <xsl:template mode="acquire-types" xpath-default-namespace="http://www.w3.org/2005/xpath-functions" match="string[@key='description']"/>
-    
-    <xsl:key name="datatypes-by-name" xpath-default-namespace="http://www.w3.org/2005/xpath-functions"
-        match="map" use="@key"/>
-        
-    <xsl:variable name="metaschema-repository" as="xs:string">../../support/metaschema</xsl:variable>
-    
-    <xsl:variable name="json-datatypes-path" as="xs:string" expand-text="true">{$metaschema-repository}/schema/json/metaschema-datatypes.json</xsl:variable>
-
-    <xsl:variable name="datatypes" expand-text="false">
-        <xsl:copy-of xpath-default-namespace="http://www.w3.org/2005/xpath-functions" select="( unparsed-text($json-datatypes-path) => json-to-xml() )/map/map[@key='definitions']/map"/>
-    </xsl:variable>
     
 </xsl:stylesheet>
