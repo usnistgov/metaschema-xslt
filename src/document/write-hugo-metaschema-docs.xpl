@@ -222,7 +222,7 @@
       <p:inline><dummy/></p:inline>
     </p:input>
     <p:input port="stylesheet">
-      <p:document href="pipeline-diagnostic.xsl"/>
+      <p:document href="common/pipeline-diagnostic.xsl"/>
     </p:input>
     <p:with-param name="test1" select="$json-outline-uri"/>
     <p:with-param name="test2"  select="$source-doc"/>

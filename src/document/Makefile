@@ -1,14 +1,22 @@
-SHELL:=/usr/bin/env bash
+include ../testing/make_common.mk
 
-test: smoke-test
+# XML Calabash prefers absolute paths
+test_metaschema:=$(abspath ../testing/models_metaschema.xml)
+output_folder:=$(abspath test_output)
 
-pom_path:=../../support/pom.xml
-entry_xproc:=write-hugo-metaschema-docs.xpl
-
-smoke-test_output:=test_output/smoke/
+.PHONY: test
+test: smoke-test ## Run all tests
 
 .PHONY: smoke-test
-smoke-test:
-	mvn --quiet -f "${pom_path}" exec:java \
-    	-Dexec.mainClass="com.xmlcalabash.drivers.Main" \
-		-Dexec.args="-i source=file://$$(pwd)/../testing/models_metaschema.xml output-path=file://$$(pwd)/${smoke-test_output} ${entry_xproc}"
+smoke-test: smoke-test-hugo smoke-test-standalone
+
+.PHONY: smoke-test-hugo
+smoke-test-hugo: ## Test verifies that 'write-hugo-metaschema-docs.xpl' runs without error
+	$(call EXEC_CALABASH,-i source=$(test_metaschema) output-path=file://$(output_folder)/smoke/hugo/ write-hugo-metaschema-docs.xpl)
+
+.PHONY: smoke-test-standalone
+smoke-test-standalone: ## Test verifies that make-metaschema-standalone-docs.xpl runs without error
+	$(call EXEC_CALABASH,-i source=$(test_metaschema) output-path=file://$(output_folder)/smoke/standalone/ make-metaschema-standalone-docs.xpl)
+
+clean: ## Remove test output
+	rm -fr $(smoke-test_output)
