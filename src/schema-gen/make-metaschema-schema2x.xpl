@@ -38,7 +38,7 @@
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Import (subpipeline) -->
   
-  <p:import href="compose/metaschema-compose.xpl"/>
+  <p:import href="../compose/metaschema-compose.xpl"/>
   
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Pipeline -->
@@ -51,7 +51,7 @@
   
   <p:xslt name="make-xsd">
     <p:input port="stylesheet">
-      <p:document href="schema-gen/make-metaschema-xsd.xsl"/>
+      <p:document href="./make-metaschema-xsd.xsl"/>
     </p:input>
   </p:xslt>
   
@@ -62,14 +62,14 @@
       <p:pipe port="result" step="composed"/>
     </p:input>
     <p:input port="stylesheet">
-      <p:document href="schema-gen/make-json-schema-metamap.xsl"/>
+      <p:document href="./make-json-schema-metamap.xsl"/>
     </p:input>
   </p:xslt>
   
   <!--<p:identity name="serialize-json"/>-->
   <p:xslt name="serialize-json">
     <p:input port="stylesheet">
-      <p:document href="util/xpath-json-to-json.xsl"/>
+      <p:document href="../common/xpath-json-to-json.xsl"/>
     </p:input>
   </p:xslt>
   

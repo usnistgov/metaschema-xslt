@@ -61,7 +61,6 @@ mvn \
     -Dexec.mainClass="$MAIN_CLASS" \
     -Dexec.args="${CALABASH_ARGS}"
 
-
 if [ -e "$XSD_FILE" -a -e "$JSONSCHEMA_FILE" ]
 then 
     echo "Results can be found in $XSD_FILE and $JSONSCHEMA_FILE"
