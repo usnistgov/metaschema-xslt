@@ -13,7 +13,7 @@ wrapper XProc consumes entire directory or file set of metaschemas (e.g.) and de
 current hugo-write XProc needs to be split into two
   one with ports
   the other writes the ports to a given path set
-a third Hugo calls this one with a file set
+a third XProc calls the writer for files in a file set
 
 #### nist-metaschema-COMPOSE.xsl
 

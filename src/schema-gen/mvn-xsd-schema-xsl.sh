@@ -27,7 +27,7 @@ XSD_RESULT=$2
 ADDITIONAL_ARGS=$(shift 2; echo ${*// /\\ })
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)"
-POM_FILE="${SCRIPT_DIR}/../support/pom.xml"
+POM_FILE="${SCRIPT_DIR}/../../support/pom.xml"
 
 MAIN_CLASS="net.sf.saxon.Transform" # Saxon defined in pom.xml
 
@@ -42,7 +42,7 @@ mvn \
     -f "$POM_FILE" \
     exec:java \
     -Dexec.mainClass="$MAIN_CLASS" \
-    -Dexec.args="-xsl:nist-metaschema-MAKE-XSD.xsl -s:\"$METASCHEMA_SOURCE\" -o:\"$XSD_RESULT\" $ADDITIONAL_ARGS"
+    -Dexec.args="-xsl:${SCRIPT_DIR}/nist-metaschema-MAKE-XSD.xsl -s:\"$METASCHEMA_SOURCE\" -o:\"$XSD_RESULT\" $ADDITIONAL_ARGS"
 
 if [ -e "$XSD_RESULT" ]
 then 

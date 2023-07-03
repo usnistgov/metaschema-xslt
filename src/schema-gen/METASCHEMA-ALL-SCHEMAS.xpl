@@ -2,7 +2,7 @@
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
   xmlns:c="http://www.w3.org/ns/xproc-step" version="1.0"
   xmlns:metaschema="http://csrc.nist.gov/ns/metaschema/1.0"
-  type="metaschema:make-metaschema-schema2x" name="make-metaschema-schema2x">
+  type="metaschema:MAKE-ALL-SCHEMAS" name="MAKE-ALL-SCHEMAS">
   
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Ports -->
@@ -11,12 +11,12 @@
   <p:input port="parameters" kind="parameter"/>
   
   <p:serialization port="INT_0_echo-input" indent="true"  method="xml"/>
-  <p:output port="IN_0_echo-input" primary="false">
+  <p:output port="INT_0_echo-input" primary="false">
     <p:pipe port="result" step="input"/>
   </p:output>
   
   <p:serialization port="INT_1_composed-metaschema" indent="true" method="xml"/>
-  <p:output port="IN_1_composed-metaschema" primary="false">
+  <p:output port="INT_1_composed-metaschema" primary="false">
     <p:pipe port="result" step="composed"/>
   </p:output>
   
