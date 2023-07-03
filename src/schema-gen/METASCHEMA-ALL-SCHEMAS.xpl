@@ -10,12 +10,12 @@
   <p:input port="METASCHEMA" primary="true"/>
   <p:input port="parameters" kind="parameter"/>
   
-  <p:serialization port="IN_0_echo-input" indent="true"  method="xml"/>
+  <p:serialization port="INT_0_echo-input" indent="true"  method="xml"/>
   <p:output port="IN_0_echo-input" primary="false">
     <p:pipe port="result" step="input"/>
   </p:output>
   
-  <p:serialization port="IN_1_composed-metaschema" indent="true" method="xml"/>
+  <p:serialization port="INT_1_composed-metaschema" indent="true" method="xml"/>
   <p:output port="IN_1_composed-metaschema" primary="false">
     <p:pipe port="result" step="composed"/>
   </p:output>

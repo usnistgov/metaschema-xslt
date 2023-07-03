@@ -2,6 +2,19 @@
 
 ### xsl
 
+Until the June 2023 refactor....
+
+random thought / come back to ... read files from file system in XProc?
+
+wrapper XProc consumes entire directory or file set of metaschemas (e.g.) and delivers docs and/or artifacts for all of them
+
+(If we do it right the pipeline and its XSLTs will need to be compiled only once)
+ 
+current hugo-write XProc needs to be split into two
+  one with ports
+  the other writes the ports to a given path set
+a third Hugo calls this one with a file set
+
 #### nist-metaschema-COMPOSE.xsl
 
 - XSLT stylesheet version 3.0 (0 templates)
