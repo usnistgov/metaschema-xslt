@@ -82,17 +82,23 @@ In particular, a convenient way to manage dependencies is to use Maven to manage
 
 ### To run
 
-With `bash` and Maven installed, run any script given at the top level. Use `--help` for help.
+The following generalized services are provided by the tools in this repository, separately or in combination
 
-Additionally, scripts and stylesheets will be documented *in situ* using readmes and in line.
+- XSD and JSON schema generation - `schema-gen` folder
+- Converter XSLTs for metaschema-supported data - `converter-gen`
+- Metaschema documentation `document`.
+
+Scripts and stylesheets will be documented *in situ* using readmes and in line. Most scripts depend on Apache Maven supporting a Java runtime. Since XSLTs can call, import, include or read XSLTs from elsewhere in the repo, and sometimes do, keep the modules together: each folder on its own is *not* self-contained.
 
 For testing, all XSpec scenarios (`*.xspec`) can be run in place to generate local test reports.
 
 Users are also expected to call resources in this repository from their own scripts. Do this either by cloning, copying and modifying scripts here; by writing your own; or by adapting code into the XML/XSLT processing framework or stack of your choice.
 
+A convention is used indicating that an XProc (`*.xpl` file) or XSLT (`*.xsl`) intended to be invoked directly (that is, not only to be used as a module or component) is given a name entirely or partly in `ALL-CAPITALS`. For example, `src/schema-gen/METASCHEMA-ALL-SCHEMAS.xpl` is such an XProc pipeline (a step definition intended to be used directly).
+
 ### Dependencies
 
-As noted, the Saxon XSLT engine can be regarded as a *de facto* dependency - while this XSLT-conformant code should in principle run in *any* processor implementing the language. SaxonHE can be bundled using Maven or another Java packaging technology.
+As noted, the Saxon XSLT engine can be regarded as a *de facto* dependency - while this XSLT-conformant code should in principle run in any processor implementing the language. SaxonHE can be bundled using Maven or another Java packaging technology.
 
 The [POM file](support/pom.xml) for Java/Maven configuration indicates the current tested version of Saxon. At time of writing, Saxon versions 10 and 11 are known to work with this codebase. When reporting bugs please include the version of your processor.
 
