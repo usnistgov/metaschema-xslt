@@ -7,6 +7,10 @@
 
     <xsl:strip-space elements="METASCHEMA define-assembly define-field model"/>
     
+    <!-- Purpose: Provide a discrete JSON syntax finalization step for use in pipelines -->
+    <!-- Input: Any XML representing JSON -->
+    <!-- Output: raw JSON syntax, wrapped in 'JSON' tags; or a runtime error -->
+    
     <!-- given XPath JSON, this XSLT produces JSON wrapped in a <json> element... -->
     
     <!--<xsl:output indent="yes" method="text"/>-->

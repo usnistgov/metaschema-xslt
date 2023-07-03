@@ -49,7 +49,7 @@
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Import (subpipeline) -->
   
-  <p:import href="compose/metaschema-compose.xpl"/>
+  <p:import href="../compose/metaschema-compose.xpl"/>
   
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Pipeline -->
@@ -66,19 +66,19 @@
       <p:pipe port="result" step="composed"/>
     </p:input>
     <p:input port="stylesheet">
-      <p:document href="compose/make-model-map.xsl"/>
+      <p:document href="../compose/make-model-map.xsl"/>
     </p:input>
   </p:xslt>
   
   <p:xslt name="unfold-model-map">
     <p:input port="stylesheet">
-      <p:document href="compose/unfold-model-map.xsl"/>
+      <p:document href="../compose/unfold-model-map.xsl"/>
     </p:input>
   </p:xslt>
   
   <p:xslt name="definition-map">
     <p:input port="stylesheet">
-      <p:document href="compose/reduce-map.xsl"/>
+      <p:document href="../compose/reduce-map.xsl"/>
     </p:input>
   </p:xslt>
   
@@ -86,7 +86,7 @@
   
   <p:xslt name="make-xml-converter">
     <p:input port="stylesheet">
-      <p:document href="converter-gen/produce-xml-converter.xsl"/>
+      <p:document href="produce-xml-converter.xsl"/>
     </p:input>
   </p:xslt>
   
