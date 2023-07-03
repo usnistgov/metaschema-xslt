@@ -1,21 +1,13 @@
-# 
+# Flowcharts
 
-scripts - NW
-XSLTs
-XProcs
-Metaschema site PR
-  redirect XSLTs with message?
-Wiki - flowchart diagrams
-AG - Metaschema meetings?
-
-Mermaid code delivered by XProc Visualizer and adjusted by hand.
-
+Showing XProc as a flowchart between states (representations), operations (transformations) and dependencies (read-write interfaces)
 
 ## XProc METASCHEMA-ALL-SCHEMAS.xpl
 
-Adjustments:
-- Moved `serialize-json_stylesheet_document` to the end
-
+To update:
+- Drop file on the [XProc Visualizer](https://pages.nist.gov/xslt-blender/xproc-visualizer/)
+- Move `serialize-json_stylesheet_document` to the end for better placement
+- Hit Enter
 
 ```mermaid
 ---
@@ -46,8 +38,8 @@ make-json-schema-xml_stylesheet_document[/document 'JSON-schema/make-json-schema
 make-json-schema-xml_xslt ===>|SOURCE|serialize-json_xslt[[XSLT 'serialize-json']]
 input_port_METASCHEMA[(input port 'METASCHEMA')]
 input_port_parameters[(input port 'parameters')]
-input_identity -. OUTPUT .-> IN_0_echo-input_output([output port 'IN_0_echo-input'])
-composed_identity -. OUTPUT .-> IN_1_composed-metaschema_output([output port 'IN_1_composed-metaschema'])
+input_identity -. OUTPUT .-> INT_0_echo-input_output([output port 'INT_0_echo-input'])
+composed_identity -. OUTPUT .-> INT_1_composed-metaschema_output([output port 'INT_1_composed-metaschema'])
 make-json-schema-xml_xslt -. OUTPUT .-> OUT_json-schema-xml_output([output port 'OUT_json-schema-xml'])
 serialize-json_stylesheet_document[/document '../common/xpath-json-to-json.xsl'/] -->|STYLESHEET|serialize-json_xslt[[XSLT 'serialize-json']]
 ```
