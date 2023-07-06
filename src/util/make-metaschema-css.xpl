@@ -28,7 +28,7 @@
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Import (subpipeline) -->
   
-  <p:import href="compose/metaschema-compose.xpl"/>
+  <p:import href="../compose/metaschema-compose.xpl"/>
   
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Pipeline -->
@@ -41,7 +41,7 @@
   
   <p:xslt name="produce-css">
     <p:input port="stylesheet">
-      <p:document href="util/make-plain-CSS.xsl"/>
+      <p:document href="make-plain-CSS.xsl"/>
     </p:input>
   </p:xslt>
 </p:declare-step>
