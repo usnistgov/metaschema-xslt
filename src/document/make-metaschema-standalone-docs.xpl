@@ -19,9 +19,6 @@
 
   <p:input port="parameters" kind="parameter" />
 
-  <!--<p:option
-  name="metaschema-id" select="'oscal'"/>-->
-
   <p:option name="output-path" required="true" />
   <p:option name="metaschema-id" select="'oscal_catalog_metaschema'" />
 
@@ -35,28 +32,28 @@
   <p:option name="xml-definitions-filename" select="'xml-definitions.html'" />
 
   <!-- preview ports permit examining pipeline inputs -->
-  <p:serialization port="_a.echo-input" indent="true" />
-  <p:output port="_a.echo-input" primary="false">
+  <p:serialization port="INT_0_echo-input" indent="true" />
+  <p:output port="INT_0_echo-input" primary="false">
     <p:pipe port="result" step="input" />
   </p:output>
 
-  <p:serialization port="_b.composed" indent="true" />
-  <p:output port="_b.composed" primary="false">
+  <p:serialization port="INT_1_composed" indent="true" />
+  <p:output port="INT_1_composed" primary="false">
     <p:pipe port="result" step="composed" />
   </p:output>
 
-  <p:serialization port="_d.abstract-model-map" indent="true" />
-  <p:output port="_d.abstract-model-map" primary="false">
+  <p:serialization port="INT_2_abstract-model-map" indent="true" />
+  <p:output port="INT_2_abstract-model-map" primary="false">
     <p:pipe port="result" step="make-abstract-map" />
   </p:output>
 
-  <p:serialization port="_e.unfolded-instance-map" indent="true" />
-  <p:output port="_e.unfolded-instance-map" primary="false">
+  <p:serialization port="INT_3_unfolded-instance-map" indent="true" />
+  <p:output port="INT_3_unfolded-instance-map" primary="false">
     <p:pipe port="result" step="unfold-instance-map" />
   </p:output>
 
-  <p:serialization port="_f.marked-instance-map" indent="true" />
-  <p:output port="_f.marked-instance-map" primary="false">
+  <p:serialization port="INT_4_marked-instance-map" indent="true" />
+  <p:output port="INT_4_marked-instance-map" primary="false">
     <p:pipe port="result" step="annotate-instance-map" />
   </p:output>
 

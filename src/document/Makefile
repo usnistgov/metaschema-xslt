@@ -16,7 +16,14 @@ smoke-test-hugo: ## Test verifies that 'write-hugo-metaschema-docs.xpl' runs wit
 
 .PHONY: smoke-test-standalone
 smoke-test-standalone: ## Test verifies that make-metaschema-standalone-docs.xpl runs without error
-	$(call EXEC_CALABASH,-i source=$(test_metaschema) output-path=file://$(output_folder)/smoke/standalone/ make-metaschema-standalone-docs.xpl)
+	$(call EXEC_CALABASH,-i source=$(test_metaschema) \
+		output-path=file://$(output_folder)/smoke/standalone/ \
+		-o INT_0_echo-input=/dev/null \
+		-o INT_1_composed=/dev/null \
+		-o INT_2_abstract-model-map=/dev/null \
+		-o INT_3_unfolded-instance-map=/dev/null \
+		-o INT_4_marked-instance-map=/dev/null \
+		make-metaschema-standalone-docs.xpl)
 
 clean: ## Remove test output
 	rm -fr $(smoke-test_output)
