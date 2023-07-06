@@ -8,7 +8,7 @@
   <!-- Input: A valid and correct OSCAL Metaschema instance linked to its modules (also valid and correct) -->
   <!-- Input: options 'path' and 'metaschema-id' must be set, to populate a/@href in crosslinks -->
   <!-- Output: Ports expose standalone (and linked) HTML for analysis -->
-  <!-- Note: This is for debugging; see write-hugo-metaschema.xpl for build runtime XProc -->
+  <!-- Note: This is for debugging; see METASCHEMA-HTML-DOCS.xpl for build runtime XProc -->
   
   <!-- NIST/ITL Metaschema github.com/usnistgov/metaschema https://pages.nist.gov/metaschema/ -->
   
