@@ -27,21 +27,21 @@ SCHEMA_NAME=$2
 ADDITIONAL_ARGS=$(shift 2; echo ${*// /\\ })
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)"
-POM_FILE="${SCRIPT_DIR}/support/pom.xml"
+POM_FILE="${SCRIPT_DIR}/../../support/pom.xml"
 
 MAIN_CLASS="com.xmlcalabash.drivers.Main" # XML Calabash
 
-PIPELINE="${SCRIPT_DIR}/src/make-metaschema-schema2x.xpl"
+PIPELINE="${SCRIPT_DIR}/METASCHEMA-ALL-SCHEMAS.xpl"
 
 XSD_FILE="${SCHEMA_NAME}_schema.xsd"
 JSONSCHEMA_FILE="${SCHEMA_NAME}_schema.json"
 
-CALABASH_ARGS="-iMETASCHEMA=\"$METASCHEMA_XML\" \
-               -oIN_0_echo-input=/dev/null \
-               -oIN_1_composed-metaschema=/dev/null \
-               -oOUT_json-schema-xml=/dev/null \
-               -oOUT_json-schema=\"$JSONSCHEMA_FILE\" \
-               -oOUT_xml-schema=\"$XSD_FILE\" \
+CALABASH_ARGS="-i METASCHEMA=\"$METASCHEMA_XML\" \
+               -o INT_0_echo-input=/dev/null \
+               -o INT_1_composed-metaschema=/dev/null \
+               -o OUT_json-schema-xml=/dev/null \
+               -o OUT_json-schema=\"$JSONSCHEMA_FILE\" \
+               -o OUT_xml-schema=\"$XSD_FILE\" \
                $ADDITIONAL_ARGS \"$PIPELINE\""
 
 if [ -e "$XSD_FILE" ]
@@ -60,7 +60,6 @@ mvn \
     exec:java \
     -Dexec.mainClass="$MAIN_CLASS" \
     -Dexec.args="${CALABASH_ARGS}"
-
 
 if [ -e "$XSD_FILE" -a -e "$JSONSCHEMA_FILE" ]
 then 

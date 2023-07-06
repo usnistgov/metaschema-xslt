@@ -2,7 +2,7 @@
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
   xmlns:c="http://www.w3.org/ns/xproc-step" version="1.0"
   xmlns:metaschema="http://csrc.nist.gov/ns/metaschema/1.0"
-  type="metaschema:make-metaschema-schema2x" name="make-metaschema-schema2x">
+  type="metaschema:METASCHEMA-ALL-SCHEMAS" name="METASCHEMA-ALL-SCHEMAS">
   
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Ports -->
@@ -10,13 +10,13 @@
   <p:input port="METASCHEMA" primary="true"/>
   <p:input port="parameters" kind="parameter"/>
   
-  <p:serialization port="IN_0_echo-input" indent="true"  method="xml"/>
-  <p:output port="IN_0_echo-input" primary="false">
+  <p:serialization port="INT_0_echo-input" indent="true"  method="xml"/>
+  <p:output port="INT_0_echo-input" primary="false">
     <p:pipe port="result" step="input"/>
   </p:output>
   
-  <p:serialization port="IN_1_composed-metaschema" indent="true" method="xml"/>
-  <p:output port="IN_1_composed-metaschema" primary="false">
+  <p:serialization port="INT_1_composed-metaschema" indent="true" method="xml"/>
+  <p:output port="INT_1_composed-metaschema" primary="false">
     <p:pipe port="result" step="composed"/>
   </p:output>
   
@@ -38,7 +38,7 @@
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Import (subpipeline) -->
   
-  <p:import href="compose/metaschema-compose.xpl"/>
+  <p:import href="../compose/metaschema-compose.xpl"/>
   
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Pipeline -->
@@ -51,7 +51,7 @@
   
   <p:xslt name="make-xsd">
     <p:input port="stylesheet">
-      <p:document href="schema-gen/make-metaschema-xsd.xsl"/>
+      <p:document href="XSD/make-metaschema-xsd.xsl"/>
     </p:input>
   </p:xslt>
   
@@ -62,14 +62,14 @@
       <p:pipe port="result" step="composed"/>
     </p:input>
     <p:input port="stylesheet">
-      <p:document href="schema-gen/make-json-schema-metamap.xsl"/>
+      <p:document href="JSON-schema/make-json-schema-metamap.xsl"/>
     </p:input>
   </p:xslt>
   
   <!--<p:identity name="serialize-json"/>-->
   <p:xslt name="serialize-json">
     <p:input port="stylesheet">
-      <p:document href="util/xpath-json-to-json.xsl"/>
+      <p:document href="../common/xpath-json-to-json.xsl"/>
     </p:input>
   </p:xslt>
   

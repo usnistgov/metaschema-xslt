@@ -2,7 +2,11 @@
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
   xmlns:c="http://www.w3.org/ns/xproc-step" version="1.0"
   xmlns:metaschema="http://csrc.nist.gov/ns/metaschema/1.0"
-  type="metaschema:test-make-metaschema-xsd" name="test-make-metaschema-xsd">
+  type="metaschema:make-metaschema-metatron" name="make-metaschema-metatron">
+  
+  <!-- Purpose: Produces a Schematron instance (Metatron)  -->
+  <!-- Input: A valid and correct OSCAL Metaschema instance linked to its modules (also valid and correct) -->
+  <!-- Output: Port exposes a Schematron -->
   
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Ports -->
@@ -20,9 +24,9 @@
     <p:pipe        port="result"     step="composed"/>
   </p:output>
   
-  <p:serialization port="c.XSD" indent="true"/>
-  <p:output        port="c.XSD" primary="false">
-    <p:pipe        port="result" step="make-xsd"/>
+  <p:serialization port="c.metatron" indent="true"/>
+  <p:output        port="c.metatron" primary="false">
+    <p:pipe        port="result" step="make-metatron"/>
   </p:output>
   
   <p:serialization port="f.final" indent="true" method="xml" omit-xml-declaration="false"/>
@@ -33,20 +37,20 @@
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Import (subpipeline) -->
   
-  <p:import href="../compose/metaschema-compose-debug.xpl"/>
+  <p:import href="../compose/metaschema-compose.xpl"/>
   
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Pipeline -->
   
   <p:identity name="input"/>
   
-  <metaschema:metaschema-compose-debug name="compose"/>
+  <metaschema:metaschema-compose name="compose"/>
   
   <p:identity name="composed"/>
   
-  <p:xslt name="make-xsd">
+  <p:xslt name="make-metatron">
     <p:input port="stylesheet">
-      <p:document href="make-metaschema-xsd.xsl"/>
+      <p:document href="Schematron/make-metaschema-metatron.xsl"/>
     </p:input>
   </p:xslt>
   

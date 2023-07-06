@@ -5,6 +5,9 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     exclude-result-prefixes="#all">
     
+    <!-- Purpose: provide XSLT pipelining functionality to XSLT libraries -->
+    <!-- Note: emulates some of XProc using XPath 3.1 `transform()` in conformant engines -->
+    
     <!-- Entry point traps the root node of the source and passes it down the chain of transformation references -->
     
     <!-- Utility XSLT supporting pipelining. -->

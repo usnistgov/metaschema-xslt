@@ -22,21 +22,22 @@
 
     <xsl:variable name="xslt-base" select="document('')/document-uri()"/>
     
-    <xsl:import href="nist-metaschema-metaprocess.xsl"/>
+    <xsl:import href="../common/nist-metaschema-metaprocess.xsl"/>
     
     <!-- The $transformation-sequence declares transformations to be applied in order. -->
-    <xsl:variable name="transformation-sequence">
-        <nm:transform version="3.0">compose/metaschema-collect.xsl</nm:transform>
-        <nm:transform version="3.0">compose/metaschema-build-refs.xsl</nm:transform>
-        <nm:transform version="3.0">compose/metaschema-trim-extra-modules.xsl</nm:transform>
-        <nm:transform version="3.0">compose/metaschema-prune-unused-definitions.xsl</nm:transform>
-        <nm:transform version="3.0">compose/metaschema-resolve-use-names.xsl</nm:transform>
-        <nm:transform version="3.0">compose/metaschema-resolve-sibling-names.xsl</nm:transform>
-        <nm:transform version="3.0">compose/metaschema-digest.xsl</nm:transform>
-        <nm:transform version="3.0">compose/annotate-composition.xsl</nm:transform>
+    <xsl:variable name="transformation-sequence" expand-text="true">
+        <xsl:variable as="xs:string" name="composer-dir">../compose</xsl:variable>
+        <nm:transform version="3.0">{ $composer-dir }/metaschema-collect.xsl</nm:transform>
+        <nm:transform version="3.0">{ $composer-dir }/metaschema-build-refs.xsl</nm:transform>
+        <nm:transform version="3.0">{ $composer-dir }/metaschema-trim-extra-modules.xsl</nm:transform>
+        <nm:transform version="3.0">{ $composer-dir }/metaschema-prune-unused-definitions.xsl</nm:transform>
+        <nm:transform version="3.0">{ $composer-dir }/metaschema-resolve-use-names.xsl</nm:transform>
+        <nm:transform version="3.0">{ $composer-dir }/metaschema-resolve-sibling-names.xsl</nm:transform>
+        <nm:transform version="3.0">{ $composer-dir }/metaschema-digest.xsl</nm:transform>
+        <nm:transform version="3.0">{ $composer-dir }/annotate-composition.xsl</nm:transform>
         
-        <nm:transform version="3.0">schema-gen/make-json-schema-metamap.xsl</nm:transform>
-        <nm:transform version="3.0">util/xpath-json-to-json.xsl</nm:transform>
+        <nm:transform version="3.0">JSON-schema/make-json-schema-metamap.xsl</nm:transform>
+        <nm:transform version="3.0">../common/xpath-json-to-json.xsl</nm:transform>
     </xsl:variable>
     
 </xsl:stylesheet>

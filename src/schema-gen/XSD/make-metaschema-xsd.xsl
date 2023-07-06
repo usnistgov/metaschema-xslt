@@ -39,7 +39,7 @@
     
     <!--<xsl:variable name="prose-module-xsd" select="document('oscal-prose-module.xsd')"/>-->
    
-    <xsl:variable name="metaschema-repository" as="xs:string">../../support/metaschema</xsl:variable>
+    <xsl:variable name="metaschema-repository" as="xs:string">../../../support/metaschema</xsl:variable>
    
     <xsl:variable name="prose-modules" as="element()*" expand-text="true">
         <module>{$metaschema-repository}/schema/xml/metaschema-markup-multiline.xsd</module>
