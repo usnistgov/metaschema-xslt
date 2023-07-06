@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+   xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="3.0"
+   xpath-default-namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+   xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+   exclude-result-prefixes="#all">
+   <!--
    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml"
    xpath-default-namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
-   xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0" exclude-result-prefixes="#all">
+   xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0" exclude-result-prefixes="#all">-->
 
    <!-- produces an HTML 'stub' to be inserted into Hugo -->
 
