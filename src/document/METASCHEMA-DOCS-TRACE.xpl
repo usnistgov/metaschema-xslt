@@ -21,7 +21,6 @@
 
   <!--<p:option name="metaschema-id" select="'oscal'"/>-->
   
-  <p:option name="output-path" required="true"/>
   <p:option name="metaschema-id" select="'oscal_catalog_metaschema'"/>
   
   <p:option name="json-outline-filename"     select="'json-outline.html'"/>
@@ -114,15 +113,6 @@
 
   <p:import href="../compose/metaschema-compose.xpl"/>
 
-  <p:variable name="xml-outline-uri"      select="resolve-uri($xml-outline-filename,     $output-path)"/>
-  <p:variable name="xml-reference-uri"    select="resolve-uri($xml-reference-filename,   $output-path)"/>
-  <p:variable name="xml-index-uri"        select="resolve-uri($xml-index-filename,       $output-path)"/>
-  <p:variable name="xml-definitions-uri"  select="resolve-uri($xml-definitions-filename, $output-path)"/>
-  <p:variable name="json-outline-uri"     select="resolve-uri($json-outline-filename,    $output-path)"/>
-  <p:variable name="json-reference-uri"   select="resolve-uri($json-reference-filename,  $output-path)"/>
-  <p:variable name="json-index-uri"       select="resolve-uri($json-index-filename,      $output-path)"/>
-  <p:variable name="json-definitions-uri" select="resolve-uri($json-definitions-filename,$output-path)"/>
-  
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Pipeline -->
 

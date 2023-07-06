@@ -52,7 +52,7 @@
   <!-- Implicit source is on the METASCHEMA input port -->
   
   <metaschema:metaschema-docs-trace name="DOCS-PIPELINE">
-    <p:with-option name="output-path"   select="$output-path"/>
+    <!--<p:with-option name="output-path"   select="$output-path"/>-->
     <p:with-option name="metaschema-id" select="$metaschema-id"/>
   </metaschema:metaschema-docs-trace>
     

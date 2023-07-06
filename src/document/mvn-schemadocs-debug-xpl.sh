@@ -53,7 +53,6 @@ CALABASH_ARGS="-iMETASCHEMA=\"$METASCHEMA_XML\" \
                -oXML-element-index-html=$OUTPUT_DIR/$SCHEMA_NAME-xml-index.html \
                -oXML-definitions-html=$OUTPUT_DIR/$SCHEMA_NAME-xml-definitions.html \
                $ADDITIONAL_ARGS \"$PIPELINE\" \
-               output-path=$OUTPUT_DIR \
                metaschema-id=$SCHEMA_NAME"
 
 mvn \

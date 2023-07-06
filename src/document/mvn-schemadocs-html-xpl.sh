@@ -37,6 +37,8 @@ PIPELINE="${SCRIPT_DIR}/METASCHEMA-HTML-DOCS.xpl"
 
 CALABASH_ARGS="-iMETASCHEMA=\"$METASCHEMA_XML\" $ADDITIONAL_ARGS \"$PIPELINE\" output-path=file:///${PWD}/$OUTPUT_DIR/ metaschema-id=$SCHEMA_NAME"
 
+# Possible enhancement to script: create/cleanup $OUTPUT_DIR before writing to it.
+
 mvn \
     -f "$POM_FILE" \
     exec:java \
