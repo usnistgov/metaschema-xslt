@@ -169,7 +169,7 @@
   
   <p:xslt name="style-xml-model-map">
     <p:input port="stylesheet">
-      <p:document href="hugo-css-emulator.xsl"/>
+      <p:document href="common/hugo-css-emulator.xsl"/>
     </p:input>
     <p:with-param name="with-toc" select="'no'"/>
     <p:with-param name="metaschema-code" select="$metaschema-id"/>
@@ -193,7 +193,7 @@
   <!--  Wrapping this up to write and view locally/standalone if wanted -->
   <p:xslt name="style-xml-element-reference">
     <p:input port="stylesheet">
-      <p:document href="hugo-css-emulator.xsl"/>
+      <p:document href="common/hugo-css-emulator.xsl"/>
     </p:input>
     <p:with-param name="metaschema-code" select="$metaschema-id"/>
   </p:xslt>
@@ -217,7 +217,7 @@
   <p:xslt name="style-xml-element-index">
     <!--<p:with-option name="initial-mode" select="QName('','make-page')"/>-->
     <p:input port="stylesheet">
-      <p:document href="hugo-css-emulator.xsl"/>
+      <p:document href="common/hugo-css-emulator.xsl"/>
     </p:input>
     <p:with-param name="metaschema-code" select="$metaschema-id"/>
   </p:xslt>
@@ -241,7 +241,7 @@
   
   <p:xslt name="style-xml-definitions">
     <p:input port="stylesheet">
-      <p:document href="hugo-css-emulator.xsl"/>
+      <p:document href="common/hugo-css-emulator.xsl"/>
     </p:input>
     <p:with-param name="metaschema-code" select="$metaschema-id"/>
   </p:xslt>
@@ -273,7 +273,7 @@
   <p:xslt name="style-json-model-map">
     <!--<p:with-option name="initial-mode" select="QName('','make-page')"/>-->
     <p:input port="stylesheet">
-      <p:document href="hugo-css-emulator.xsl"/>
+      <p:document href="common/hugo-css-emulator.xsl"/>
     </p:input>
     <p:with-param name="with-toc" select="'no'"/>
     <p:with-param name="metaschema-code" select="$metaschema-id"/>
@@ -304,7 +304,7 @@
   <!--  Wrapping this up to write and view locally/standalone if wanted -->
   <p:xslt name="style-json-object-reference">
     <p:input port="stylesheet">
-      <p:document href="hugo-css-emulator.xsl"/>
+      <p:document href="common/hugo-css-emulator.xsl"/>
     </p:input>
     <p:with-param name="metaschema-code" select="$metaschema-id"/>
     <p:with-param name="format"          select="'json'"/>
@@ -329,7 +329,7 @@
   
   <p:xslt name="style-json-object-index">
     <p:input port="stylesheet">
-      <p:document href="hugo-css-emulator.xsl"/>
+      <p:document href="common/hugo-css-emulator.xsl"/>
     </p:input>
     <p:with-param name="metaschema-code" select="$metaschema-id"/>
     <p:with-param name="format"          select="'json'"/>
@@ -353,7 +353,7 @@
 
   <p:xslt name="style-json-definitions">
     <p:input port="stylesheet">
-      <p:document href="hugo-css-emulator.xsl"/>
+      <p:document href="common/hugo-css-emulator.xsl"/>
     </p:input>
     <p:with-param name="metaschema-code" select="$metaschema-id"/>
     <p:with-param name="format"          select="'json'"/>
@@ -361,5 +361,4 @@
 
   <p:sink/>
 
-  
 </p:declare-step>
