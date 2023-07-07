@@ -12,7 +12,7 @@
   
   <p:serialization port="INT_0_echo-input" indent="true"  method="xml"/>
   <p:output port="INT_0_echo-input" primary="false">
-    <p:pipe port="result" step="input"/>
+    <p:pipe port="result" step="echo-input"/>
   </p:output>
   
   <p:serialization port="INT_1_composed-metaschema" indent="true" method="xml"/>
@@ -43,7 +43,7 @@
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Pipeline -->
   
-  <p:identity name="input"/>
+  <p:identity name="echo-input"/>
   
   <metaschema:metaschema-compose name="compose"/>
   
