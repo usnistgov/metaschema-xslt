@@ -17,7 +17,7 @@ This project is placed into the worldwide public domain.
 
 ## Software description
 
-Metaschema-XSLT is an XSLT-based implementation of the NIST (ITL/CSD) [Metaschema data modeling framework](https://github.com/usnistgov/metaschema).
+Metaschema-XSLT is an XSLT-based implementation of the NIST (ITL/CSD) [Metaschema Information Modeling Framework](https://github.com/usnistgov/metaschema).
 
 NIST Metaschema defines how to describe sets of data objects -- serialized information sets, considered abstractly -- *across* and *between* implementations of processing systems that are coded to manipulate and process such objects.
 

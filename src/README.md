@@ -102,7 +102,7 @@ The Schematron currently runs the composition step irrespectively. We should per
 
 Schema composition is essentially import resolution, wherein overriding imports are resolved. Semantics of metaschema composition essentially follow Metaschema specifications for resolution of *metaschema modules* in importing.
 
-The result is a single normalized and annotated metaschema instance with all defaults explicit and disambiguated, or error reports.
+The result is a single normalized and annotated Metaschema module instance with all defaults explicit and disambiguated, or error reports.
 
 source: metaschema (main module)
 
