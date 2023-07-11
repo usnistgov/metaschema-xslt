@@ -19,7 +19,7 @@ This page is for potential contributors to this project. It provides basic infor
 
 ## Project approach
 
-We track our current work items using GitHub project cards in the project's [work board](../../projects/1).
+We track our current work items using GitHub repository's [issues](../../issues).
 
 ## Making Contributions
 
@@ -59,7 +59,7 @@ All other files and directories are related to the XSLT codebase managed in this
 
 ## Contributing to Development
 
-This project is using the GitHub project cards feature in the project's [work board](../../projects/1) to track development as part of the core project work stream.
+This project is using the GitHub repository's [issues](../../issues) to track development as part of the core project work stream.
 
 ## Communications mechanisms
 
