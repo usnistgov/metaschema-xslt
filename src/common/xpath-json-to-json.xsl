@@ -9,7 +9,7 @@
     
     <!-- Purpose: Provide a discrete JSON syntax finalization step for use in pipelines -->
     <!-- Input: Any XML representing JSON -->
-    <!-- Output: raw JSON syntax, wrapped in 'JSON' tags; or a runtime error -->
+    <!-- Output: Raw JSON syntax, wrapped in 'JSON' tags; or a runtime error -->
     
     <!-- given XPath JSON, this XSLT produces JSON wrapped in a <json> element... -->
     
