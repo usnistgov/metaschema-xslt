@@ -83,7 +83,7 @@ Users are also expected to call resources in this repository from their own scri
 
 In general, at least two invocations will be offered for each process, an XProc-based invocation and a pure-XSLT-based invocation. Either may be useful in different scenarios.
 
-A convention is used indicating that an XProc (`*.xpl` file) or XSLT (`*.xsl`) intended to be invoked directly (that is, not only to be used as a module or component) is given a name entirely or partly in `ALL-CAPITALS`. For example, `src/schema-gen/METASCHEMA-ALL-SCHEMAS.xpl` is such an XProc pipeline (a step definition intended to be used directly). XSLTs that observe this convension are, additionally, higher-order transformations by virtue of using the `transform()` function.
+A convention is used indicating that an XProc (`*.xpl` file) or XSLT (`*.xsl`) intended to be invoked directly (that is, not only to be used as a module or component) is given a name entirely or partly in `ALL-CAPITALS`. For example, `src/schema-gen/METASCHEMA-ALL-SCHEMAS.xpl` is such an XProc pipeline (a step definition intended to be used directly). The XSLTs that observe this convention are, additionally, higher-order transformations by virtue of using the `transform()` function; for all other resources the convention `lower-case-hyphenated` is followed.
 
 ### Dependencies
 
