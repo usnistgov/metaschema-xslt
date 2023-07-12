@@ -32,7 +32,11 @@ Stress is therefore on:
 - Conformance in support of Metaschema-based data interchange / interop
 - Generality of support of Metaschema features
 
-What we do not emphasize:
+Additionally, we care about, but do not prioritize:
+
+- Performance
+- Portability beyond the XML/XSLT dependency stack (instead relying on other Metaschema initiatives)
+- Specific use cases
 
 - Performance
 - Portability beyond the XML/XSLT dependency stack (instead relying on other Metaschema initiatives)
