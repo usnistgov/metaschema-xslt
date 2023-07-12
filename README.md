@@ -152,7 +152,13 @@ See the Project [Wiki](https://github.com/usnistgov/metaschema-xslt/wiki)  for d
 Projects currently known to be using NIST Metaschema
 
 - [OSCAL: the Open Security Controls Assessment Language](https://pages.nist.gov/OSCAL/)
+See the Project [Wiki](https://github.com/usnistgov/metaschema-xslt/wiki)  for documentation maintained on this site.
 
+Projects in support of NIST Metaschema (at time of writing)
+
+- https://github.com/usnistgov/metaschema-java
+- https://github.com/usnistgov/metaschema-node
+- https://github.com/usnistgov/nmetaschema
 ## Required outline
 
 This page includes all the following, as described by guidelines at https://raw.githubusercontent.com/usnistgov/opensource-repo/main/README.md
