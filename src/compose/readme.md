@@ -15,7 +15,7 @@ For testing, entry points are also isolated for standalone metaschema compositio
 
 Single metaschema input, with its imports available, produces single compose metaschema results.
 
-* `../nist-metaschema-COMPOSE.xsl`
+* `nist-metaschema-COMPOSE.xsl`
 * With that XSLT as context, executing path `/*/*[@name='transformation-sequence']/*/('1. &#96;' || replace(.,'.*/','') || '&#96;') => string-join('&#xA;')` we get (in Markdown):
 
 (NB: keeping this up to date enables us to track deltas in the documentation so please do edit/amend as this pipeline changes)

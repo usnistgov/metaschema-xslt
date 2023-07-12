@@ -33,7 +33,7 @@
             <EXCEPTION problem-type="not-a-metaschema">No Metaschema found in namespace 'http://csrc.nist.gov/ns/oscal/metaschema/1.0' : instead we have a document '{ */name() }' in namespace '{ /*/namespace-uri(.) }'</EXCEPTION>
         </xsl:if>
         <xsl:apply-templates mode="acquire" select="/METASCHEMA">
-            <xsl:with-param name="so-far" tunnel="true" select="document-uri(/)"/>
+            <xsl:with-param name="so-far" tunnel="true" select="base-uri(/)"/>
         </xsl:apply-templates>
     </xsl:template>
 
