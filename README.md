@@ -147,11 +147,7 @@ See the [Metaschema Repository](https://github.com/usnistgov/metaschema) and its
 
 See the Project [Wiki](https://github.com/usnistgov/metaschema-xslt/wiki)  for documentation maintained on this site.
 
-Projects in support of NIST Metaschema (at time of writing)
-
-- https://github.com/usnistgov/metaschema-java
-- https://github.com/usnistgov/metaschema-node
-- https://github.com/usnistgov/nmetaschema
+See the Project [Wiki](https://github.com/usnistgov/metaschema-xslt/wiki)  for documentation maintained on this site.
 
 Projects currently known to be using NIST Metaschema
 
