@@ -48,7 +48,7 @@ Formerly housed in the Metaschema repository, this code base traces the history 
 
 ### Project sunset
 
-The NIST team has no long-term plan to maintain this project outside the context of the initiatives it supports, OSCAL[https://pages.nist.gov/OSCAL](https://pages.nist.gov/OSCAL) and Metaschema[https://pages.nist.gov/metaschema](https://pages.nist.gov/metaschema), while we reserve the right to change and adapt to community needs in alignment with NIST's mission. A project goal is to enable the stabilization and socialization of the Metaschema technology, as evidenced by the use and support of *other* Metaschema implementations.
+The NIST team has no long-term plan to maintain this project outside the context of the initiatives it supports, [OSCAL](https://pages.nist.gov/OSCAL) and [Metaschema](https://pages.nist.gov/metaschema), while we reserve the right to change and adapt to community needs in alignment with NIST's mission. A project goal is to enable the stabilization and socialization of the Metaschema technology, as evidenced by the use and support of *other* Metaschema implementations.
 
 The best way to ensure long-term access to the code base is to clone or fork the git repository and archive a copy for study or use.
 
