@@ -38,10 +38,6 @@ Additionally, we care about, but do not prioritize:
 - Portability beyond the XML/XSLT dependency stack (instead relying on other Metaschema initiatives)
 - Specific use cases
 
-- Performance
-- Portability beyond the XML/XSLT dependency stack (instead relying on other Metaschema initiatives)
-- Use cases in isolation
-
 ### Origins
 
 Formerly housed in the Metaschema repository, this code base traces the history of development of the Metaschema concept in the context of the OSCAL project. It was originally conceived as a demonstration and proof of concept, providing a bridge enabling JSON- and XML-based development in parallel over common problem sets and common data. Success in this effort led to a determination that multiple implementations of a platform-independent specification were needed, at which point this implementation was carved out into its own repository.
@@ -60,7 +56,7 @@ The best way to ensure long-term access to the code base is to clone or fork the
 
 ## Installation and operation
 
-To operate in trial, test or 'bare-bones' mode, scripts are offered to perform operations with no installation except Maven and `bash` as a command line environment.
+To operate in trial, test or 'bare-bones' mode, scripts are offered to perform operations with no installation except Maven (with JDK as required) and `bash` as a command line environment.
 
 The utilities are however designed for integration in a range of environments, and core functionalities are implemented in XSLT 3, which is supported across platforms including Java, node JS and C.
 
@@ -73,21 +69,25 @@ The software is designed to be used in a range of ways:
 
 The following generalized services are provided by the tools in this repository, separately or in combination
 
-- XSD and JSON schema generation - `schema-gen` folder
-- Converter XSLTs for metaschema-supported data - `converter-gen`
-- Metaschema documentation `document`.
+- XSD and JSON schema generation - [`schema-gen` folder](schema-gen)
+- Converter XSLTs for metaschema-supported data - [`converter-gen` folder](converter-gen)
+- Metaschema documentation production - [`document` folder](document).
 
 Scripts and stylesheets are documented in place using readmes and in line. Most scripts depend on Apache Maven supporting a Java runtime. Since XSLTs can call, import, include or read XSLTs from elsewhere in the repo, and sometimes do, keep the modules together: each folder on its own is *not* self-contained.
+
+Accordingly, a good place to start for further research is the `src` directory with [its `readme.md`](src/README.md).
 
 For testing, all XSpec scenarios (`*.xspec`) can be run in place to generate local test reports.
 
 Users are also expected to call resources in this repository from their own scripts. Do this either by cloning, copying and modifying scripts here; by writing your own; or by adapting code into the XML/XSLT processing framework or stack of your choice.
 
-A convention is used indicating that an XProc (`*.xpl` file) or XSLT (`*.xsl`) intended to be invoked directly (that is, not only to be used as a module or component) is given a name entirely or partly in `ALL-CAPITALS`. For example, `src/schema-gen/METASCHEMA-ALL-SCHEMAS.xpl` is such an XProc pipeline (a step definition intended to be used directly).
+In general, at least two invocations will be offered for each process, an XProc-based invocation and a pure-XSLT-based invocation. Either may be useful in different scenarios.
+
+A convention is used indicating that an XProc (`*.xpl` file) or XSLT (`*.xsl`) intended to be invoked directly (that is, not only to be used as a module or component) is given a name entirely or partly in `ALL-CAPITALS`. For example, `src/schema-gen/METASCHEMA-ALL-SCHEMAS.xpl` is such an XProc pipeline (a step definition intended to be used directly). XSLTs that observe this convension are, additionally, higher-order transformations by virtue of using the `transform()` function.
 
 ### Dependencies
 
-As a freely-available XSLT 3.0 engine, the Saxon XSLT processor can be regarded as a *de facto* dependency - while this XSLT-conformant code should in principle run in any processor implementing the language. SaxonHE can be bundled using Maven or another Java packaging technology.
+As a freely-available XSLT 3.0 engine, the Saxon XSLT processor can be regarded as a *de facto* dependency - while this XSLT-conformant code should in principle run in any processor implementing the language. Saxon-HE can be bundled using Maven or another Java packaging technology.
 
 The [POM file](support/pom.xml) for Java/Maven configuration indicates the current tested version of Saxon. At time of writing, Saxon versions 10 and 11 are known to work with this codebase. When reporting bugs please include the version of your processor.
 
@@ -143,22 +143,10 @@ Piez, Wendell (2023), Metaschema-XSLT. US National Institute of Standards and Te
 
 ## Related projects
 
-See the [Metaschema Repository](https://github.com/usnistgov/metaschema) and its [Pages Site](https://pages.nist.gov/metaschema/) for a description and specification of the technology this software is designed to support.
+See the [Metaschema Repository](https://github.com/usnistgov/metaschema) and its [Pages Site](https://pages.nist.gov/metaschema/) for a description and specification of the technology this software is designed to support. Those pages also contain links to other projects.
 
-See the Project [Wiki](https://github.com/usnistgov/metaschema-xslt/wiki)  for documentation maintained on this site.
+See the Project [Wiki](https://github.com/usnistgov/metaschema-xslt/wiki) for documentation maintained on this site.
 
-See the Project [Wiki](https://github.com/usnistgov/metaschema-xslt/wiki)  for documentation maintained on this site.
-
-Projects currently known to be using NIST Metaschema
-
-- [OSCAL: the Open Security Controls Assessment Language](https://pages.nist.gov/OSCAL/)
-See the Project [Wiki](https://github.com/usnistgov/metaschema-xslt/wiki)  for documentation maintained on this site.
-
-Projects in support of NIST Metaschema (at time of writing)
-
-- https://github.com/usnistgov/metaschema-java
-- https://github.com/usnistgov/metaschema-node
-- https://github.com/usnistgov/nmetaschema
 ## Required outline
 
 This page includes all the following, as described by guidelines at https://raw.githubusercontent.com/usnistgov/opensource-repo/main/README.md
@@ -179,6 +167,6 @@ This page includes all the following, as described by guidelines at https://raw.
    - References to user guides if stored outside of GitHub
 1. Directions on appropriate citation with example text
 1. References to any included non-public domain software modules,
-   and additional license language if needed, *e.g.* [BSD][li-bsd],
-   [GPL][li-gpl], or [MIT][li-mit]
+   and additional license language if needed, *e.g.* BSD,
+   GPL, or MIT
 
