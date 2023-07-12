@@ -63,14 +63,11 @@ This project is using the GitHub repository's [issues](../../issues) to track de
 
 ## Communications mechanisms
 
-This project originated as part of the [Open Security Controls Assessment Language](https://pages.nist.gov/OSCAL/) (OSCAL) project. We use the OSCAL communications channels for this project as well.
+This project originated as part of the [Open Security Controls Assessment Language](https://pages.nist.gov/OSCAL/) (OSCAL) project. We use the OSCAL communications channels for this project as well. Please feel free to reach out in OSCAL forums or mailing lists with your metaschema and Metaschema XSLT questions, if Github is not suitable.
 
-A Gitter [chat room](https://gitter.im/usnistgov-OSCAL/metaschema) is available for Metaschema-related discussions. This is a great place to discuss issues pertaining to this work with the community working with Metaschema. The NIST OSCAL team actively chats on the OSCAL Gitter. This room is also setup with Github integration, which provides a good summary of recent Github repo activities within the chat room.
+Since Metaschema has also been conceptualized distinctly from OSCAL (albeit in service to its requirements) it also has its own channels, starting with its [web site contact page](https://pages.nist.gov/metaschema/contribute/contact/).
 
-There are two OSCAL mailing lists, which may also be used for this project.
-
--   **OSCAL Developer List:** [oscal-dev@list.nist.gov](mailto:oscal-dev@list.nist.gov) for communication among parties interested in contributing to the development of OSCAL or exchanging ideas. Subscribe by sending an email to [oscal-dev+subscribe@list.nist.gov](mailto:oscal-dev+subscribe@list.nist.gov). To unsubscribe send an email to [oscal-dev+unsubscribe@list.nist.gov](mailto:oscal-dev+unsubscribe@list.nist.gov).
--   **OSCAL Updates List:** [oscal-updates@list.nist.gov](mailto:oscal-updates@list.nist.gov) for low-frequency updates on the status of the OSCAL project. Subscribe by sending an email to [oscal-updates+subscribe@list.nist.gov](mailto:oscal-updates+subscribe@list.nist.gov). To unsubscribe send an email to [oscal-updates+unsubscribe@list.nist.gov](mailto:oscal-updates+unsubscribe@list.nist.gov).
+A Gitter [chat room](https://gitter.im/usnistgov-OSCAL/metaschema) is available for Metaschema-related discussions. This is a great place to discuss issues pertaining to this work with the community working with Metaschema, which remains closely overlapping with the NIST OSCAL team operating the OSCAL Gitter. This room is also setup with Github integration, which provides a good summary of recent Github repo activities within the chat room.
 
 Note that the contact points offered above are subject to change without notice.
 
@@ -78,10 +75,9 @@ Note that the contact points offered above are subject to change without notice.
 
 ## This project is in the public domain
 
-This project is in the worldwide public domain.
-
-This project is in the public domain within the United States, and copyright and related rights in the work worldwide are waived through the [CC0 1.0 Universal public domain](https://creativecommons.org/publicdomain/zero/1.0/) dedication.
+This project is in the worldwide public domain. See the posted [License](LICENSE.md).
 
 ## Contributions will be released into the public domain
 
-All contributions to this project will be released under the CC0 dedication. By submitting a pull request, you are agreeing to comply with this waiver of copyright interest.
+By submitting a pull request, you are agreeing to waive copyright interest.
+

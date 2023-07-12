@@ -10,11 +10,11 @@ This project is placed into the worldwide public domain.
 
 Metaschema-XSLT is an XSLT-based implementation of the NIST (ITL/CSD) [Metaschema Information Modeling Framework](https://github.com/usnistgov/metaschema).
 
-NIST Metaschema defines how to describe sets of data objects -- serialized information sets, considered abstractly -- *across* and *between* implementations of processing systems that are coded to manipulate and process such objects.
+NIST Metaschema defines how to describe sets of data objects -- serialized information sets, considered abstractly -- *across* and *between* implementations of processing systems that are coded to manipulate and process such objects. These descriptions are provided by means of a formal *language* developed for this purpose.
 
-These descriptions are provided by means of a formal *language* developed for this purpose. In support of metaschemas defined using this language, this software can be used to generate utilities and software artifacts including XML Schema (XSD) and JSON Schema, data conversion scripts, and model documentation.
+In support of metaschemas defined using this language, this software can be used to generate utilities and software artifacts including XML Schema (XSD) and JSON Schema, data conversion scripts, and model documentation.
 
-Such utilities can in turn provide the basis for ecosystems of tools supporting data models and data sets expressed in the supported formats. ***Make-your-own Schema Kit*** except you get more than a schema, you also get many things with it, including the ability to cast to other formats and maintain formal format-agnosticism.
+Such utilities can in turn provide the basis for ecosystems of tools supporting data models and data sets expressed in the supported formats. ***Make-your-own Schema Kit*** except your schema comes with many extras, including not only documentation, but also the ability to cast your data between formats and maintain formal format-agnosticism.
 
 ### Statement of purpose
 
