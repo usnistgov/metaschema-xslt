@@ -69,9 +69,9 @@ The software is designed to be used in a range of ways:
 
 The following generalized services are provided by the tools in this repository, separately or in combination
 
-- XSD and JSON schema generation - [`schema-gen` folder](schema-gen)
-- Converter XSLTs for metaschema-supported data - [`converter-gen` folder](converter-gen)
-- Metaschema documentation production - [`document` folder](document).
+- XSD and JSON schema generation - [`src/schema-gen` folder](src/schema-gen)
+- Converter XSLTs for metaschema-supported data - [`src/converter-gen` folder](src/converter-gen)
+- Metaschema documentation production - [`src/document` folder](src/document).
 
 Scripts and stylesheets are documented in place using readmes and in line. Most scripts depend on Apache Maven supporting a Java runtime. Since XSLTs can call, import, include or read XSLTs from elsewhere in the repo, and sometimes do, keep the modules together: each folder on its own is *not* self-contained.
 
@@ -91,7 +91,7 @@ As a freely-available XSLT 3.0 engine, the Saxon XSLT processor can be regarded 
 
 The [POM file](support/pom.xml) for Java/Maven configuration indicates the current tested version of Saxon. At time of writing, Saxon versions 10 and 11 are known to work with this codebase. When reporting bugs please include the version of your processor.
 
-Developers interested in demonstrating the viability of these processes in different processors and environments are eagerly invited to participate in development of this tool or [related tools](#Related_projects).
+Developers interested in demonstrating the viability of these processes in different processors and environments are eagerly invited to participate in development of this tool or related tools.
 
 ### Git Client Setup
 
