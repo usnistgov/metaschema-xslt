@@ -1,13 +1,4 @@
-# metaschema-xslt
-
-## punchlist
-
-- [x] `CODEMETA`
-- [x] `CONTRIBUTING.md`
-- [x] `CODEOWNERS`
-- [x] `LICENSE.md`
-- [x] `CODE_OF_CONDUCT.md`
-- [x] this file (see outline/requirements at end)
+# Metaschema XSLT
 
 ## License
 
@@ -53,7 +44,7 @@ Formerly housed in the Metaschema repository, this code base traces the history 
 
 ### Project sunset
 
-Currently there is no plan to continue maintaining this project beyond the retirement of its lead researcher. A project goal is to enable the stabilization and socialization of the Metaschema technology, as evidenced by the use and support of *other* Metaschema implementations.
+The NIST team has no long-term plan to maintain this project outside the context of the initiatives it supports, OSCAL[https://pages.nist.gov/OSCAL](https://pages.nist.gov/OSCAL) and Metaschema[https://pages.nist.gov/metaschema](https://pages.nist.gov/metaschema), while we reserve the right to change and adapt to community needs in alignment with NIST's mission. A project goal is to enable the stabilization and socialization of the Metaschema technology, as evidenced by the use and support of *other* Metaschema implementations.
 
 The best way to ensure long-term access to the code base is to clone or fork the git repository and archive a copy for study or use.
 
@@ -63,22 +54,16 @@ The best way to ensure long-term access to the code base is to clone or fork the
 
 `support` includes dependent submodules with other static resources for configuration
 
-## Installation and use
+## Installation and operation
+
+To operate in trial, test or 'bare-bones' mode, scripts are offered to perform operations with no installation except Maven and `bash` as a command line environment.
+
+The utilities are however designed for integration in a range of environments, and core functionalities are implemented in XSLT 3, which is supported across platforms including Java, node JS and C.
 
 The software is designed to be used in a range of ways:
 
 - Directly, in development of metaschemas and Metaschema-based software and tools
 - Within Metaschema-based builds, including under CI/CD, to generate artifacts or productions from metaschema source under controlled conditions
-
-Accordingly (as is not uncommon with XML/XSLT-based libraries), there will generally be multiple points of entry or invocation methods for any process, with the software dependencies maintained as appropriate for different use cases.
-
-This being the case, since the applications are written in XSLT 3.0, the latest stable version of the [Saxon](https://saxonica.com/documentation11/documentation.xml) processor is regarded as the primary dependency.
-
-At one extreme, an XML IDE such as oXygen XML (or extended VS Code), integrating Saxon, can be used to run processes and tests in diagnostic mode, using its runtime and interfaces for XSLT (`*.xsl`) or XProc (`*.xproc`).
-
-At the other, command-line scripts or makefiles can be used to automate processes to run externally to produce outputs. The repository includes examples of these.
-
-In particular, a convenient way to manage dependencies is to use Maven to manage a Java-based stack deploying SaxonHE and/or XML Calabash, as open-source XML processors. Scripts are provided for running under Maven.
 
 ### To run
 
@@ -88,7 +73,7 @@ The following generalized services are provided by the tools in this repository,
 - Converter XSLTs for metaschema-supported data - `converter-gen`
 - Metaschema documentation `document`.
 
-Scripts and stylesheets will be documented *in situ* using readmes and in line. Most scripts depend on Apache Maven supporting a Java runtime. Since XSLTs can call, import, include or read XSLTs from elsewhere in the repo, and sometimes do, keep the modules together: each folder on its own is *not* self-contained.
+Scripts and stylesheets are documented in place using readmes and in line. Most scripts depend on Apache Maven supporting a Java runtime. Since XSLTs can call, import, include or read XSLTs from elsewhere in the repo, and sometimes do, keep the modules together: each folder on its own is *not* self-contained.
 
 For testing, all XSpec scenarios (`*.xspec`) can be run in place to generate local test reports.
 
@@ -98,7 +83,7 @@ A convention is used indicating that an XProc (`*.xpl` file) or XSLT (`*.xsl`) i
 
 ### Dependencies
 
-As noted, the Saxon XSLT engine can be regarded as a *de facto* dependency - while this XSLT-conformant code should in principle run in any processor implementing the language. SaxonHE can be bundled using Maven or another Java packaging technology.
+As a freely-available XSLT 3.0 engine, the Saxon XSLT processor can be regarded as a *de facto* dependency - while this XSLT-conformant code should in principle run in any processor implementing the language. SaxonHE can be bundled using Maven or another Java packaging technology.
 
 The [POM file](support/pom.xml) for Java/Maven configuration indicates the current tested version of Saxon. At time of writing, Saxon versions 10 and 11 are known to work with this codebase. When reporting bugs please include the version of your processor.
 
@@ -106,7 +91,7 @@ Developers interested in demonstrating the viability of these processes in diffe
 
 ### Git Client Setup
 
-See more on git setup on the page on [Contributing](CONTRIBUTING).
+See more on git setup on the page on the [Contributing](CONTRIBUTING) page.
 
 Clone the project:
 
@@ -144,7 +129,7 @@ Principal Investigator: Wendell Piez, NIST (US National Institute of Standards a
 
 Email w e n d e l l (dot) p i e z (at) n i s t (dot) g o v.
 
-This initiative spins off from and supports the ITL/CSD [Metaschema](https://pages.nist.gov/metaschema) Project, originally and currently being developed in support of OSCAL, the [Open Security Controls Assessment Language](https://pages.nist.gov/OSCAL).
+As this initiative spins off from and supports the ITL/CSD [Metaschema](https://pages.nist.gov/metaschema) Project, originally and currently being developed in support of OSCAL, the [Open Security Controls Assessment Language](https://pages.nist.gov/OSCAL), feedback on this project will be gratefully received in those forums.
 
 For OSCAL-related discussions see the [OSCAL Site](https://pages.nist.gov/OSCAL/contribute).
 
