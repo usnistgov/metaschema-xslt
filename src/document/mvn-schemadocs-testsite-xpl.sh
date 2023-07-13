@@ -33,7 +33,7 @@ POM_FILE="${SCRIPT_DIR}/../../support/pom.xml"
 
 MAIN_CLASS="com.xmlcalabash.drivers.Main" # XML Calabash
 
-PIPELINE="${SCRIPT_DIR}/METASCHEMA-HTML-DOCS.xpl"
+PIPELINE="${SCRIPT_DIR}/METASCHEMA-DOCS-TESTSITE.xpl"
 
 CALABASH_ARGS="-iMETASCHEMA=\"$METASCHEMA_XML\" $ADDITIONAL_ARGS \"$PIPELINE\" output-path=file:///${PWD}/$OUTPUT_DIR/ metaschema-id=$SCHEMA_NAME"
 

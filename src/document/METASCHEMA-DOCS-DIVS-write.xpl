@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step"
   version="1.0" xmlns:metaschema="http://csrc.nist.gov/ns/metaschema/1.0"
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform" type="metaschema:METASCHEMA-HTML-DOCS"
-  name="METASCHEMA-HTML-DOCS">
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform" type="metaschema:METASCHEMA-DOCS-DIVS"
+  name="METASCHEMA-DOCS-DIVS">
 
-  <!-- Purpose: Emit XML and JSON-oriented metaschema documentation -->
+  <!-- Purpose: Emit XML and JSON-oriented metaschema documentation FILE FRAGMENTS (`div` elements) -->
   <!-- Input: A valid and correct OSCAL Metaschema instance linked to its modules (also valid and correct) -->
   <!-- Input: options 'path' and 'metaschema-id' must be set, to populate a/@href in crosslinks -->
   <!-- Output: Writes outputs to designated subdirectory; exposes no ports -->
@@ -58,59 +58,57 @@
   <p:store  method="html" version="5.0">
     <p:with-option name="href" select="$json-outline-uri"/>
     <p:input port="source">
-      <p:pipe step="DOCS-PIPELINE" port="JSON-object-map-html"/>
+      <p:pipe step="DOCS-PIPELINE" port="JSON-object-map-div"/>
     </p:input>
   </p:store>
   
   <p:store method="html" version="5.0">
     <p:with-option name="href" select="$json-reference-uri"/>
     <p:input port="source">
-      <p:pipe step="DOCS-PIPELINE" port="JSON-object-reference-html"/>
+      <p:pipe step="DOCS-PIPELINE" port="JSON-object-reference-div"/>
     </p:input>
   </p:store>
   
   <p:store method="html" version="5.0">
     <p:with-option name="href" select="$json-index-uri"/>
     <p:input port="source">
-      <p:pipe step="DOCS-PIPELINE" port="JSON-object-index-html"/>
+      <p:pipe step="DOCS-PIPELINE" port="JSON-object-index-div"/>
     </p:input>
   </p:store>
   
   <p:store method="html" version="5.0">
     <p:with-option name="href" select="$json-definitions-uri"/>
     <p:input port="source">
-      <p:pipe step="DOCS-PIPELINE" port="JSON-definitions-html"/>
+      <p:pipe step="DOCS-PIPELINE" port="JSON-definitions-div"/>
     </p:input>
   </p:store>
   
   <p:store method="html" version="5.0">
     <p:with-option name="href" select="$xml-outline-uri"/>
     <p:input port="source">
-      <p:pipe step="DOCS-PIPELINE" port="XML-element-map-html"/>
+      <p:pipe step="DOCS-PIPELINE" port="XML-element-map-div"/>
     </p:input>
   </p:store>
   
   <p:store method="html" version="5.0">
     <p:with-option name="href" select="$xml-reference-uri"/>
     <p:input port="source">
-      <p:pipe step="DOCS-PIPELINE" port="XML-element-reference-html"/>
+      <p:pipe step="DOCS-PIPELINE" port="XML-element-reference-div"/>
     </p:input>
   </p:store>
   
   <p:store method="html" version="5.0">
     <p:with-option name="href" select="$xml-index-uri"/>
     <p:input port="source">
-      <p:pipe step="DOCS-PIPELINE" port="XML-element-index-html"/>
+      <p:pipe step="DOCS-PIPELINE" port="XML-element-index-div"/>
     </p:input>
   </p:store>
   
-  <p:store >
+  <p:store method="html" version="5.0">
     <p:with-option name="href" select="$xml-definitions-uri"/>
     <p:input port="source">
-      <p:pipe step="DOCS-PIPELINE" port="XML-definitions-html"/>
+      <p:pipe step="DOCS-PIPELINE" port="XML-definitions-div"/>
     </p:input>
-  </p:store>
-  
-  
+  </p:store> 
   
 </p:declare-step>
