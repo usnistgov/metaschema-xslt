@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step"
   version="1.0" xmlns:metaschema="http://csrc.nist.gov/ns/metaschema/1.0"
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform" type="metaschema:METASCHEMA-DOCS-TESTSITE"
-  name="METASCHEMA-DOCS-TESTSITE">
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform" type="metaschema:METASCHEMA-DOCS-TESTSITE-write"
+  name="METASCHEMA-DOCS-TESTSITE-write">
 
   <!-- Purpose: Emit XML and JSON-oriented metaschema documentation -->
   <!-- Input: A valid and correct OSCAL Metaschema instance linked to its modules (also valid and correct) -->
