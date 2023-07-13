@@ -5,9 +5,10 @@ set -Eeuo pipefail
 
 usage() {
     cat <<EOF
-Usage: $(basename "${BASH_SOURCE[0]}") METASCHEMA_SOURCE XSD_RESULT [ADDITIONAL_ARGS]
+Usage: $(basename "${BASH_SOURCE[0]}") METASCHEMA_SOURCE XSL_RESULT [ADDITIONAL_ARGS]
 
-Produces an XSD (XML Schema Definition) from a valid and well-ordered NIST (ITL/CSD) metaschema (Metaschema instance) using Saxon invoked from Maven.
+Produces an XSLT (stylesheet) from a valid and well-ordered NIST (ITL/CSD) metaschema (Metaschema instance) using Saxon invoked from Maven.
+The resulting XSLT is capable of converting JSON valid to metaschema-defined models into equivalent XML valid to the same model.
 Please install Maven first.
 
 Additional arguments are provided to SaxonHE - see https://www.saxonica.com/documentation11/#!using-xsl/commandline
@@ -21,8 +22,8 @@ fi
 
 [[ -z "${1-}" ]] && { echo "Error: METASCHEMA_SOURCE not specified"; usage; exit 1; }
 METASCHEMA_SOURCE=$1
-[[ -z "${2-}" ]] && { echo "Error: XSD_RESULT not specified"; usage; exit 1; }
-XSD_RESULT=$2
+[[ -z "${2-}" ]] && { echo "Error: XSL_RESULT not specified"; usage; exit 1; }
+XSL_RESULT=$2
 
 ADDITIONAL_ARGS=$(shift 2; echo ${*// /\\ })
 
@@ -31,19 +32,19 @@ POM_FILE="${SCRIPT_DIR}/../../support/pom.xml"
 
 MAIN_CLASS="net.sf.saxon.Transform" # Saxon defined in pom.xml
 
-if [ -e "$XSD_RESULT" ]
+if [ -e "$XSL_RESULT" ]
 then 
-    echo "Deleting prior $XSD_RESULT ..."
-    rm -f ./$XSD_RESULT
+    echo "Deleting prior $XSL_RESULT ..."
+    rm -f ./$XSL_RESULT
 fi
 
 mvn \
     -f "$POM_FILE" \
     exec:java \
     -Dexec.mainClass="$MAIN_CLASS" \
-    -Dexec.args="-xsl:${SCRIPT_DIR}/nist-metaschema-MAKE-XSD.xsl -s:\"$METASCHEMA_SOURCE\" -o:\"$XSD_RESULT\" $ADDITIONAL_ARGS"
+    -Dexec.args="-xsl:${SCRIPT_DIR}/nist-metaschema-MAKE-JSON-TO-XML-CONVERTER.xsl -s:\"$METASCHEMA_SOURCE\" -o:\"$XSL_RESULT\" $ADDITIONAL_ARGS"
 
-if [ -e "$XSD_RESULT" ]
+if [ -e "$XSL_RESULT" ]
 then 
-    echo "XSD schema written to file $XSD_RESULT"
+    echo "XSLT instance written to file $XSL_RESULT"
 fi
