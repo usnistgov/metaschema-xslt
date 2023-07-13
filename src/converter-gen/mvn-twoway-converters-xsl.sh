@@ -10,8 +10,9 @@ usage() {
     cat <<EOF
 Usage: $(basename "${BASH_SOURCE[0]}") METASCHEMA_SOURCE SCHEMA_NAME [ADDITIONAL_ARGS]
 
-Produces an XSLT (stylesheet) from a valid and well-ordered NIST (ITL/CSD) metaschema (Metaschema instance) using Saxon invoked from Maven.
-The resulting XSLT is capable of converting JSON valid to metaschema-defined models into equivalent XML valid to the same model.
+Writes two XSLTs (stylesheets) from a valid and well-ordered NIST (ITL/CSD) metaschema (Metaschema instance) using Saxon invoked from Maven.
+One XSLT is capable of converting JSON valid to metaschema-defined models into equivalent XML valid to the same model,
+while the other does the opposite.
 Please install Maven first.
 
 Additional arguments are provided to SaxonHE - see https://www.saxonica.com/documentation11/#!using-xsl/commandline
@@ -25,8 +26,8 @@ fi
 
 [[ -z "${1-}" ]] && { echo "Error: METASCHEMA_SOURCE not specified"; usage; exit 1; }
 METASCHEMA_SOURCE=$1
-[[ -z "${2-}" ]] && { echo "Error: XSL_RESULT not specified"; usage; exit 1; }
-XSL_RESULT=$2
+[[ -z "${2-}" ]] && { echo "Error: SCHEMA_NAME not specified"; usage; exit 1; }
+SCHEMA_NAME=$2
 
 ADDITIONAL_ARGS=$(shift 2; echo ${*// /\\ })
 
