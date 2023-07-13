@@ -5,12 +5,14 @@ set -Eeuo pipefail
 
 usage() {
     cat <<EOF
-Usage: $(basename "${BASH_SOURCE[0]}") METASCHEMA_XML SCHEMA_NAME [ADDITIONAL_ARGS]
+Usage: ${BASE_COMMAND:-$(basename "${BASH_SOURCE[0]}")} METASCHEMA_XML OUTPUT_DIR SCHEMA_NAME [ADDITIONAL_ARGS]
 
 Produces XML Schema (XSD) and JSON Schema from Metaschema XML source, using XML Calabash invoked from Maven.
-Please install Maven first.
 
-Additional arguments for XML Calabash should be specified in the `key=value` format.
+SCHEMA_NAME specifies the prefix output files will be written to, for example:
+    outdir/a-metaschema -> outdir/a-metaschema_schema.xsd, outdir/a-metaschema_schema.json
+
+Additional arguments for XML Calabash should be specified in the 'key=value' format.
 EOF
 }
 
@@ -24,9 +26,9 @@ METASCHEMA_XML=$1
 [[ -z "${2-}" ]] && { echo "Error: SCHEMA_NAME not specified"; usage; exit 1; }
 SCHEMA_NAME=$2
 
-ADDITIONAL_ARGS=$(shift 2; echo ${*// /\\ })
+ADDITIONAL_ARGS=$(shift 2; echo "${*// /\\ }")
 
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 POM_FILE="${SCRIPT_DIR}/../../support/pom.xml"
 
 MAIN_CLASS="com.xmlcalabash.drivers.Main" # XML Calabash
@@ -44,24 +46,27 @@ CALABASH_ARGS="-i METASCHEMA=\"$METASCHEMA_XML\" \
                -o OUT_xml-schema=\"$XSD_FILE\" \
                $ADDITIONAL_ARGS \"$PIPELINE\""
 
+# Ensure the base directory exists
+mkdir -p "$(dirname "$SCHEMA_NAME")"
+
 if [ -e "$XSD_FILE" ]
 then 
-    echo "Deleting prior $XSD_FILE ..."
-    rm -f ./$XSD_FILE
+    echo "Deleting prior $XSD_FILE..." >&2
+    rm -f "$XSD_FILE"
 fi
 if [ -e "$JSONSCHEMA_FILE" ]
 then 
-    echo "Deleting prior $JSONSCHEMA_FILE ..."
-    rm -f ./$JSONSCHEMA_FILE
+    echo "Deleting prior $JSONSCHEMA_FILE..." >&2
+    rm -f "$JSONSCHEMA_FILE"
 fi
 
-mvn \
+mvn --quiet \
     -f "$POM_FILE" \
     exec:java \
     -Dexec.mainClass="$MAIN_CLASS" \
     -Dexec.args="${CALABASH_ARGS}"
 
-if [ -e "$XSD_FILE" -a -e "$JSONSCHEMA_FILE" ]
+if [ -e "$XSD_FILE" ] && [ -e "$JSONSCHEMA_FILE" ]
 then 
-    echo "Results can be found in $XSD_FILE and $JSONSCHEMA_FILE"
+    echo "Results can be found in $XSD_FILE and $JSONSCHEMA_FILE" >&2
 fi

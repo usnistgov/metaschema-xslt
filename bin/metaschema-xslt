@@ -13,6 +13,10 @@ function msg() {
 usage() {
     cat <<EOF
 Usage: $(basename "${BASH_SOURCE[0]}") [ARGS] SUBCOMMAND [SUBCOMMAND ARGS]
+
+Subcommands:
+- schema-gen METASCHEMA_XML SCHEMA_NAME [ADDITIONAL_ARGS]
+    Generate JSON and XML schemas for a given metaschema
 EOF
 }
 
@@ -35,13 +39,19 @@ shift "$((OPTIND -1))"
 # Direct subcommand
 [[ -z "${1-}" ]] && { echo "Error: SUBCOMMAND not specified"; usage >&2; exit 1; }
 
-case "$1" in
-    # TODO: add a subcommand for each verb
-    # document)
-    #     "$SRC_DIR"/document/command.sh "$@"
-    #     ;;
+SUBCOMMAND=$1
+shift 1
+
+# used by subcommands to display their invocation
+BASE_COMMAND="$(basename "${BASH_SOURCE[0]}") $SUBCOMMAND"
+export BASE_COMMAND
+
+case "$SUBCOMMAND" in
+    schema-gen)
+        "$SRC_DIR"/schema-gen/mvn-schemas-xpl.sh "$@"
+        ;;
     ?)
-        msg "Unknown subcommand: $1"
+        msg "Unknown subcommand: $SUBCOMMAND"
         exit 1
         ;;
 esac
