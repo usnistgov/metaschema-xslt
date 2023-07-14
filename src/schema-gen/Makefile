@@ -9,7 +9,7 @@ test: smoke-test ## Run all tests
 
 .PHONY: smoke-test
 smoke-test: ## Run all smoke-tests
-	./mvn-schemas-xpl.sh "$(test_metaschema)" $(output_folder)/models_metaschema
+	./mvn-schemas-xpl.sh "$(test_metaschema)" $(output_folder) models_metaschema
 
 .PHONY: clean
 clean: ## Remove test output
