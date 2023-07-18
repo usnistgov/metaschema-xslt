@@ -15,7 +15,8 @@ usage() {
 Usage: $(basename "${BASH_SOURCE[0]}") [ARGS] SUBCOMMAND [SUBCOMMAND ARGS]
 
 Subcommands:
-- schema-gen METASCHEMA_XML SCHEMA_NAME [ADDITIONAL_ARGS]
+- schema-gen METASCHEMA_XML OUTPUT_DIR SCHEMA_NAME [ADDITIONAL_ARGS]
+- converter-gen METASCHEMA_XML OUTPUT_DIR SCHEMA_NAME [ADDITIONAL_ARGS]
     Generate JSON and XML schemas for a given metaschema
 EOF
 }
@@ -49,6 +50,9 @@ export BASE_COMMAND
 case "$SUBCOMMAND" in
     schema-gen)
         "$SRC_DIR"/schema-gen/mvn-schemas-xpl.sh "$@"
+        ;;
+    converter-gen)
+        "$SRC_DIR"/converter-gen/mvn-converters-xpl.sh "$@"
         ;;
     ?)
         msg "Unknown subcommand: $SUBCOMMAND"
