@@ -48,9 +48,6 @@ CALABASH_ARGS="-iMETASCHEMA=\"$METASCHEMA_XML\" \
                -oINT_5J_json-supermodel-converter=/dev/null \
                -oOUT_xml-to-json-converter=\"$XMLTOJSON_CONVERTER_FILE\" \
                -oOUT_json-to-xml-converter=\"$JSONTOXML_CONVERTER_FILE\" \
-               -oOUT_json-schema-xml=/dev/null \
-               -oOUT_json-schema=\"$JSONSCHEMA_FILE\" \
-               -oOUT_xml-schema=\"$XSD_FILE\" \
                 $ADDITIONAL_ARGS \"$PIPELINE\""
 
 if [ -e "$XSD_FILE" ]
