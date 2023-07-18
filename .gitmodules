@@ -4,8 +4,8 @@
 	branch = master
 [submodule "support/xspec"]
 	path = support/xspec
-	url = https://github.com/xspec/xspec.git
-	branch = d8bbeca51eaccc8b3e07c82547f6aff4a2072aef
+	url = https://github.com/AirQuick/xspec.git
+	branch = test_saxon-12-3
 [submodule "support/metaschema"]
 	path = support/metaschema
 	url = https://github.com/usnistgov/metaschema.git
