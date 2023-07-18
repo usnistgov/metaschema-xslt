@@ -15,11 +15,10 @@
 <!-- Output:  An XSLT -->
 
     <!-- Path conversion logic is here -->
-    <xsl:import href="../metapath/metapath-jsonize.xsl"/>
+    <xsl:import href="../../metapath/metapath-jsonize.xsl"/>
 
     <!-- Most of the logic is the same as the XML converter. -->
-    <xsl:import href="produce-xml-converter.xsl"/>
-    
+    <xsl:import href="../xml-to-json/produce-xml-converter.xsl"/>
     
     <xsl:output indent="yes"/>
     
@@ -51,10 +50,10 @@
     
     <xsl:template name="provide-namespace">
         <!-- iff at the top -->
-        <xsl:for-each select="parent::model" expand-text="true">
+        <xsl:for-each select="parent::model">
             <!-- likewise the XSLT provides a namespace only if at the top -->
             <XSLT:if test=".. is /j:map">
-                <XSLT:attribute name="namespace">{ $source-namespace }</XSLT:attribute>
+                <XSLT:attribute name="namespace" select="$metaschema-namespace"/>
                 <!-- don't need unless we have a requirement to prefix in serialization: <XSLT:attribute name="prefix">{ $source-prefix }</XSLT:attribute>-->
             </XSLT:if>
         </xsl:for-each>

@@ -51,46 +51,12 @@
   
   <xsl:mode name="package-converter" on-no-match="shallow-copy"/>
   
-  <xsl:param name="trace" as="xs:string">off</xsl:param>
-  <xsl:variable name="louder" select="$trace = 'on'"/>
-  
-  <xsl:variable name="xslt-base" select="document('')/document-uri()"/>
-  
-  <xsl:import href="../common/nist-metaschema-metaprocess.xsl"/>
-  
-  <!-- The $transformation-sequence declares transformations to be applied in order. -->
-  <xsl:variable name="produce-xml-converter" expand-text="true">
-    <xsl:variable as="xs:string" name="composer-dir">../compose</xsl:variable>
-    <nm:transform version="3.0">{ $composer-dir }/metaschema-collect.xsl</nm:transform>
-    <nm:transform version="3.0">{ $composer-dir }/metaschema-build-refs.xsl</nm:transform>
-    <nm:transform version="3.0">{ $composer-dir }/metaschema-trim-extra-modules.xsl</nm:transform>
-    <nm:transform version="3.0">{ $composer-dir }/metaschema-prune-unused-definitions.xsl</nm:transform>
-    <nm:transform version="3.0">{ $composer-dir }/metaschema-resolve-use-names.xsl</nm:transform>
-    <nm:transform version="3.0">{ $composer-dir }/metaschema-resolve-sibling-names.xsl</nm:transform>
-    <nm:transform version="3.0">{ $composer-dir }/metaschema-digest.xsl</nm:transform>
-    <nm:transform version="3.0">{ $composer-dir }/annotate-composition.xsl</nm:transform>
-    
-    <!-- next produce definition map -->
-    <nm:transform version="3.0">{ $composer-dir }/make-model-map.xsl</nm:transform>
-    <nm:transform version="3.0">{ $composer-dir }/unfold-model-map.xsl</nm:transform>
-    <nm:transform version="3.0">{ $composer-dir }/reduce-map.xsl</nm:transform>
-    
-    <nm:transform version="3.0">xml-to-json/produce-xml-converter.xsl</nm:transform>
-    
-  </xsl:variable>
-  
-  <xsl:variable name="metaschema-source" select="/"/>
+  <xsl:variable name="xslt-base" select="document('')/base-uri()"/>
   
   <xsl:variable name="json-serializer-xslt" select="document('supermodel-to-json.xsl')"/>
   
   <xsl:template match="/">
-    <xsl:variable name="converter">
-      <xsl:call-template name="nm:process-pipeline">
-        <xsl:with-param name="sequence" select="$produce-xml-converter"/>
-      </xsl:call-template>
-    </xsl:variable>
-    
-    <xsl:apply-templates select="$converter" mode="package-converter"/>
+     <xsl:apply-templates mode="package-converter"/>
   </xsl:template>
   
 <!-- 'package-converter' enhances the code produced from the metaschema-json-converter pipeline:
