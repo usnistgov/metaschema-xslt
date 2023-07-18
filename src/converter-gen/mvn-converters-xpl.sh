@@ -29,7 +29,7 @@ SCHEMA_NAME=$3
 
 ADDITIONAL_ARGS=$(shift 3; echo "${*// /\\ }")
 
-PIPELINE="${SCRIPT_DIR}/METASCHEMA-ALL-SCHEMAS.xpl"
+PIPELINE="${SCRIPT_DIR}/METASCHEMA-ALL-CONVERTERS.xpl"
 
 XMLTOJSON_CONVERTER_FILE="${OUTPUT_DIR}/${SCHEMA_NAME}-xml-to-json.xsl"
 
@@ -39,7 +39,7 @@ CALABASH_ARGS="-iMETASCHEMA=\"$METASCHEMA_XML\" \
                -oINT_0_echo-input=/dev/null \
                -oINT_1_composed-metaschema=/dev/null \
                -oINT_2_initial-model-map=/dev/null \
-               -oINT_3_unfolded-model-ma=/dev/null \p
+               -oINT_3_unfolded-model-map=/dev/null \
                -oINT_4_definition-model=/dev/null \
                -oINT_5X_xml-supermodel-converter=/dev/null \
                -oINT_5J_json-supermodel-converter=/dev/null \
@@ -59,7 +59,6 @@ if [ -e "$XMLTOJSON_CONVERTER_FILE" ]; then
     rm -f "./$XMLTOJSON_CONVERTER_FILE"
 fi
 
-echo
 invoke_calabash "${CALABASH_ARGS}"
 
 if [ -e "$XMLTOJSON_CONVERTER_FILE" ] && [ -e "$JSONTOXML_CONVERTER_FILE" ]

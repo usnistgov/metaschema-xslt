@@ -16,8 +16,9 @@ Usage: $(basename "${BASH_SOURCE[0]}") [ARGS] SUBCOMMAND [SUBCOMMAND ARGS]
 
 Subcommands:
 - schema-gen METASCHEMA_XML OUTPUT_DIR SCHEMA_NAME [ADDITIONAL_ARGS]
-- converter-gen METASCHEMA_XML OUTPUT_DIR SCHEMA_NAME [ADDITIONAL_ARGS]
     Generate JSON and XML schemas for a given metaschema
+- converter-gen METASCHEMA_XML OUTPUT_DIR SCHEMA_NAME [ADDITIONAL_ARGS]
+    Generate converter transformations (XSLT) between JSON and XML for a given metaschema
 EOF
 }
 
