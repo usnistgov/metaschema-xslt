@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 
-# Fail early if an error occurs
-set -Eeuo pipefail
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)"
+# shellcheck source=../common/subcommand_common.bash
+source "$SCRIPT_DIR/../common/subcommand_common.bash"
 
 usage() {
     cat <<EOF
-Usage: $(basename "${BASH_SOURCE[0]}") METASCHEMA_XML SCHEMA_NAME [ADDITIONAL_ARGS]
+Usage: ${BASE_COMMAND:-$(basename "${BASH_SOURCE[0]}")} METASCHEMA_XML OUTPUT_DIR SCHEMA_NAME [ADDITIONAL_ARGS]
 
 Produces XML-to-JSON and JSON-to-XML conversion transformations (XSLTs) from Metaschema XML source, using XML Calabash invoked from Maven.
 Please install Maven first.
@@ -21,22 +22,18 @@ fi
 
 [[ -z "${1-}" ]] && { echo "Error: METASCHEMA_XML not specified"; usage; exit 1; }
 METASCHEMA_XML=$1
-[[ -z "${2-}" ]] && { echo "Error: SCHEMA_NAME not specified"; usage; exit 1; }
-SCHEMA_NAME=$2
+[[ -z "${2-}" ]] && { echo "Error: OUTPUT_DIR not specified"; usage; exit 1; }
+OUTPUT_DIR=$2
+[[ -z "${3-}" ]] && { echo "Error: SCHEMA_NAME not specified"; usage; exit 1; }
+SCHEMA_NAME=$3
 
-ADDITIONAL_ARGS=$(shift 2; echo ${*// /\\ })
-
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)"
-POM_FILE="${SCRIPT_DIR}/../../support/pom.xml"
-
-MAIN_CLASS="com.xmlcalabash.drivers.Main" # XML Calabash
+ADDITIONAL_ARGS=$(shift 3; echo "${*// /\\ }")
 
 PIPELINE="${SCRIPT_DIR}/METASCHEMA-ALL-SCHEMAS.xpl"
 
+XMLTOJSON_CONVERTER_FILE="${OUTPUT_DIR}/${SCHEMA_NAME}-xml-to-json.xsl"
 
-XMLTOJSON_CONVERTER_FILE="${SCHEMA_NAME}-xml-to-json.xsl"
-
-JSONTOXML_CONVERTER_FILE="${SCHEMA_NAME}-json-to-xml.xsl"
+JSONTOXML_CONVERTER_FILE="${OUTPUT_DIR}/${SCHEMA_NAME}-json-to-xml.xsl"
 
 CALABASH_ARGS="-iMETASCHEMA=\"$METASCHEMA_XML\" \
                -oINT_0_echo-input=/dev/null \
@@ -50,24 +47,22 @@ CALABASH_ARGS="-iMETASCHEMA=\"$METASCHEMA_XML\" \
                -oOUT_json-to-xml-converter=\"$JSONTOXML_CONVERTER_FILE\" \
                 $ADDITIONAL_ARGS \"$PIPELINE\""
 
-if [ -e "$XSD_FILE" ]
-then 
-    echo "Deleting prior $XSD_FILE ..."
-    rm -f ./$XSD_FILE
+# Ensure the output directory exists
+mkdir -p "$OUTPUT_DIR"
+
+if [ -e "$JSONTOXML_CONVERTER_FILE" ]; then
+    echo "Deleting prior $JSONTOXML_CONVERTER_FILE ..."
+    rm -f "./$JSONTOXML_CONVERTER_FILE"
 fi
-if [ -e "$JSONSCHEMA_FILE" ]
-then 
-    echo "Deleting prior $JSONSCHEMA_FILE ..."
-    rm -f ./$JSONSCHEMA_FILE
+if [ -e "$XMLTOJSON_CONVERTER_FILE" ]; then
+    echo "Deleting prior $XMLTOJSON_CONVERTER_FILE ..."
+    rm -f "./$XMLTOJSON_CONVERTER_FILE"
 fi
 
-mvn \
-    -f "$POM_FILE" \
-    exec:java \
-    -Dexec.mainClass="$MAIN_CLASS" \
-    -Dexec.args="${CALABASH_ARGS}"
+echo
+invoke_calabash "${CALABASH_ARGS}"
 
-if [ -e "$XSD_FILE" -a -e "$JSONSCHEMA_FILE" ]
+if [ -e "$XMLTOJSON_CONVERTER_FILE" ] && [ -e "$JSONTOXML_CONVERTER_FILE" ]
 then 
-    echo "Results can be found in $XSD_FILE and $JSONSCHEMA_FILE"
+    echo "Results can be found in $XMLTOJSON_CONVERTER_FILE and $JSONTOXML_CONVERTER_FILE"
 fi
