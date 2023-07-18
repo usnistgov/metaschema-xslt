@@ -8,7 +8,7 @@ output_folder:=$(abspath test_output)
 test: smoke-test ## Run all tests
 
 .PHONY: smoke-test
-smoke-test: smoke-test-hugo smoke-test-standalone
+smoke-test: smoke-test-hugo smoke-test-standalone ## Run all smoke-tests
 
 .PHONY: smoke-test-hugo
 smoke-test-hugo: ## Test verifies that 'write-hugo-metaschema-docs.xpl' runs without error
