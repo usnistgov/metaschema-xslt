@@ -8,5 +8,5 @@
 	branch = test_saxon-12-3
 [submodule "support/metaschema"]
 	path = support/metaschema
-	url = https://github.com/usnistgov/metaschema.git
+	url = https://github.com/nikitawootten-nist/metaschema.git
 	fetchRecurseSubmodules = false
