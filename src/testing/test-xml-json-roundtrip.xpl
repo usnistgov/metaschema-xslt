@@ -136,7 +136,7 @@ Dependencies //p:xslt/p:input[@port='stylesheet']/p:*/@href  => string-join(' &#
   
   <p:xslt name="make-xml-converter">
     <p:input port="stylesheet">
-      <p:document href="../converter-gen/produce-xml-converter.xsl"/>
+      <p:document href="../converter-gen/xml-to-json/produce-xml-converter.xsl"/>
     </p:input>
   </p:xslt>
   
@@ -155,7 +155,7 @@ Dependencies //p:xslt/p:input[@port='stylesheet']/p:*/@href  => string-join(' &#
     <!-- Now going back downhill to XML -->
     <p:xslt name="convert-supermodel.1-to-xml">
       <p:input port="stylesheet">
-        <p:document href="../converter-gen/supermodel-to-xml.xsl"/>
+        <p:document href="../converter-gen/json-to-xml/supermodel-to-xml.xsl"/>
       </p:input>
     </p:xslt>
     
@@ -170,14 +170,14 @@ Dependencies //p:xslt/p:input[@port='stylesheet']/p:*/@href  => string-join(' &#
         <p:pipe port="result" step="convert-xml-testdata"/>
       </p:input>
       <p:input port="stylesheet">
-        <p:document href="../converter-gen/supermodel-to-json.xsl"/>
+        <p:document href="../converter-gen/xml-to-json/supermodel-to-json.xsl"/>
       </p:input>
     </p:xslt>
     
     <!-- Finally we serialize to ensure JSONness -->
     <p:xslt name="serialize-supermodel.1-as-json">
       <p:input port="stylesheet">
-        <p:document href="../util/xpath-json-to-json.xsl"/>
+        <p:document href="../common/xpath-json-to-json.xsl"/>
       </p:input>
     </p:xslt>
     
@@ -191,7 +191,7 @@ Dependencies //p:xslt/p:input[@port='stylesheet']/p:*/@href  => string-join(' &#
         <p:pipe port="result" step="definition-map"/>
       </p:input>
       <p:input port="stylesheet">
-        <p:document href="../converter-gen/produce-json-converter.xsl"/>
+        <p:document href="../converter-gen/json-to-xml/produce-json-converter.xsl"/>
       </p:input>
     </p:xslt>
     
@@ -211,14 +211,14 @@ Dependencies //p:xslt/p:input[@port='stylesheet']/p:*/@href  => string-join(' &#
     <!--<p:identity name="convert-markdown-to-markup"/>-->
     <p:xslt name="convert-markdown-to-markup">
       <p:input port="stylesheet">
-        <p:document href="../converter-gen/markdown-to-supermodel-xml-converter.xsl"/>
+        <p:document href="../converter-gen/json-to-xml/markdown-to-supermodel-xml-converter.xsl"/>
       </p:input>
     </p:xslt>
     
     <!-- Go back down hill to XML -->
     <p:xslt name="convert-json-supermodel-to-xml">
       <p:input port="stylesheet">
-        <p:document href="../converter-gen/supermodel-to-xml.xsl"/>
+        <p:document href="../converter-gen/json-to-xml/supermodel-to-xml.xsl"/>
       </p:input>
     </p:xslt>
     
