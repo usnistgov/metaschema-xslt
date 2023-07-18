@@ -6,96 +6,20 @@
   xpath-default-namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0/supermodel"
   xmlns:XSLT="http://csrc.nist.gov/ns/oscal/metaschema/xslt-alias"
   exclude-result-prefixes="#all"
-  
   version="3.0">
 
-  <!-- Purpose: Produce an XSLT transformation capable of converting a JSON format defined in a metaschema, into an XML JSON format capturing an equivalent data set -->
-  <!-- Dependencies: This is a 'shell' XSLT and calls several steps in sequence, each implemented as an XSLT -->
-  <!-- Dependencies: Additionally, it directly calls resources in the converter-gen subdirectory as follows: converter-gen/markdown-to-supermodel-xml-converter.xsl, converter-gen/supermodel-to-xml.xsl (see lines 132, 136) -->
-  <!-- Input: A top-level metaschema; this XSLT also composes metaschema input so composition is not necessary -->
-  <!-- Output: A standalone XSLT suitable for use or deployment, accepting JSON valid to the metaschema-defined constraints -->
-  <!-- Note: see the result XSLT for information regarding its runtime interface -->
-  <!-- Note: This XSLT uses the transform() function to execute a series of transformations (referenced out of line) over its input -->
-  
   <xsl:output indent="yes"/>
 
   <xsl:namespace-alias stylesheet-prefix="XSLT" result-prefix="xsl"/>
-<!-- 
-    From a metaschema
-    Produces a single XSLT with simple interfaces
-      named shortname=json-to-xml-converter.xsl
-      -it initial-template 'from-json' or 'from-xdm-json-xml'
-      -'file' parameter indicates file name f source data
-      -produce=xml is default
-      -produce=supermodel produces supermodel (intermediate)
-
-    stylesheet sequence
-    
-    source: metaschema
-      pipeline through external calls to
-        compose
-        produce definition map
-        produce JSON converter
-      result is JSON converter: stitch that into a result XSLT
-        i:'from-json'
-          JSON parsing 'file'
-        i:'from=xdm-json-xml'
-          reading XML source directly
-        JSON converter +
-        post-process supermodel results with XML serializer code
-      
-      output XSLT performs a three step:
-        convert (or read) JSON in
-        convert to supermodel
-        convert to XML
-    -->
   
   <xsl:output method="xml" indent="yes"/>
   
-  <!-- Turning $trace to 'on' will
-         - emit runtime messages with each transformation, and
-         - retain nm:ERROR and nm:WARNING messages in results. -->
-  
   <xsl:mode name="package-converter" on-no-match="shallow-copy"/>
   
-  <xsl:param name="trace" as="xs:string">off</xsl:param>
-  <xsl:variable name="louder" select="$trace = 'on'"/>
-  
-  <xsl:variable name="xslt-base" select="document('')/document-uri()"/>
-  
-  <xsl:import href="../common/nist-metaschema-metaprocess.xsl"/>
-  
-  <!-- The $transformation-sequence declares transformations to be applied in order. -->
-  <xsl:variable name="produce-json-converter" expand-text="true">
-    <!-- first compose the metaschema -->
-    <xsl:variable as="xs:string" name="composer-dir">../compose</xsl:variable>
-    <nm:transform version="3.0">{ $composer-dir }/metaschema-collect.xsl</nm:transform>
-    <nm:transform version="3.0">{ $composer-dir }/metaschema-build-refs.xsl</nm:transform>
-    <nm:transform version="3.0">{ $composer-dir }/metaschema-trim-extra-modules.xsl</nm:transform>
-    <nm:transform version="3.0">{ $composer-dir }/metaschema-prune-unused-definitions.xsl</nm:transform>
-    <nm:transform version="3.0">{ $composer-dir }/metaschema-resolve-use-names.xsl</nm:transform>
-    <nm:transform version="3.0">{ $composer-dir }/metaschema-resolve-sibling-names.xsl</nm:transform>
-    <nm:transform version="3.0">{ $composer-dir }/metaschema-digest.xsl</nm:transform>
-    <nm:transform version="3.0">{ $composer-dir }/annotate-composition.xsl</nm:transform>
-    
-    <!-- next produce definition map -->
-    <nm:transform version="3.0">{ $composer-dir }/make-model-map.xsl</nm:transform>
-    <nm:transform version="3.0">{ $composer-dir }/unfold-model-map.xsl</nm:transform>
-    <nm:transform version="3.0">{ $composer-dir }/reduce-map.xsl</nm:transform>
-    
-    <nm:transform version="3.0">json-to-xml/produce-json-converter.xsl</nm:transform>
-    <!--<nm:transform version="3.0">package-json-converter.xsl</nm:transform>-->
-  </xsl:variable>
-  
-  <xsl:variable name="metaschema-source" select="/"/>
+  <xsl:variable name="xslt-base" select="document('')/base-uri()"/>
   
   <xsl:template match="/">
-    <xsl:variable name="json-converter">
-      <xsl:call-template name="nm:process-pipeline">
-        <xsl:with-param name="sequence" select="$produce-json-converter"/>
-      </xsl:call-template>
-    </xsl:variable>
-    <xsl:apply-templates select="$json-converter" mode="package-converter"/>
+    <xsl:apply-templates mode="package-converter"/>
   </xsl:template>
   
 <!-- 'package-converter' enhances the code produced from the metaschema-json-converter pipeline:
@@ -108,6 +32,7 @@
        we also rewrite its templates for producing contents of markup-line and markup-multiline,
        hitting the 'parse-markdown' template from the markdown processor. -->
   
+  <xsl:variable name="metaschema-namespace" select="/xsl:*/xsl:variable[@name='metaschema-namespace']"/>
 
   <xsl:template match="xsl:stylesheet | xsl:transform" mode="package-converter">
     <xsl:copy copy-namespaces="true">
@@ -149,7 +74,7 @@
   
   <xsl:template mode="package-converter"
     match="xsl:template[@mode=('write-xml','cast-prose')]/xsl:element/@namespace">
-    <xsl:attribute name="namespace" select="$metaschema-source/*/namespace" xpath-default-namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0"/>
+    <xsl:attribute name="namespace" select="$metaschema-namespace" xpath-default-namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0"/>
   </xsl:template>
   
   <xsl:template mode="package-converter" match="xsl:template[@name='run-tests']"/>

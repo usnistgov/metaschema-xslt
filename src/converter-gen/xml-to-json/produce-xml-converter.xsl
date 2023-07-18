@@ -47,8 +47,9 @@
             <xsl:comment> ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ </xsl:comment>
             <xsl:text>&#xA;</xsl:text>
             <xsl:comment expand-text="true"> METASCHEMA: { schema-name}{ schema-version ! (' (version ' || . || ')' ) } in namespace "{ $source-namespace }"</xsl:comment>
+            <xsl:call-template name="namespace-variable"/>
             <xsl:text>&#xA;</xsl:text>
-
+            
             <!--<XSLT:character-map name="delimiters">
                 <!-\- Rewrites Unicode PUA char E0000 to reverse solidus -\->
                 <!-\-<XSLT:output-character character="&#xE0000;" string="\"/>-\->
@@ -99,7 +100,10 @@
         </XSLT:stylesheet> 
     </xsl:template>
     
-    
+    <xsl:template name="namespace-variable" expand-text="true">
+        <xsl:text>&#xA;</xsl:text>
+        <XSLT:variable as="xs:string" name="metaschema-namespace">{ $source-namespace }</XSLT:variable>
+    </xsl:template>
     
     <xsl:template name="xpath-namespace">
         <xsl:attribute name="xpath-default-namespace" select="$source-namespace"/>
@@ -118,7 +122,7 @@
         <xsl:for-each select="parent::model" expand-text="true">
             <!-- likewise the XSLT provides a namespace only if at the top -->
             <XSLT:if test=". is /*">
-                <XSLT:attribute name="namespace">{ $source-namespace }</XSLT:attribute>
+                <XSLT:attribute name="namespace" select="$metaschema-namespace"/>
                 <!-- don't need unless we have a requirement to prefix in serialization: <XSLT:attribute name="prefix">{ $source-prefix }</XSLT:attribute>-->
             </XSLT:if>
         </xsl:for-each>
