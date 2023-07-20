@@ -42,7 +42,7 @@
     <!-- -->
     <define-assembly name="everything">
         <formal-name>EVERYTHING</formal-name>
-        <description>assembly everything</description>
+        <description>assembly everything.</description>
         <root-name>EVERYTHING</root-name>
         <flag ref="id"/>
         <model>
