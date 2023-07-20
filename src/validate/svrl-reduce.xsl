@@ -18,7 +18,7 @@
   
   <xsl:template match="/">
     <report>
-      <xsl:if test="not($incidents)">You are well formed</xsl:if>
+      <xsl:if test="not($incidents)">You are good - well-formed, no reported errors</xsl:if>
       <xsl:apply-templates select="$incidents"/>
     </report>
   </xsl:template>
