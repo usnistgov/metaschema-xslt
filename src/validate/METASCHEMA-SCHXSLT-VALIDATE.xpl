@@ -23,7 +23,7 @@
     <p:pipe port="report" step="schematron-check"/>
   </p:output>
   
-  <p:serialization port="OUT_report-plaintext" indent="true"  method="xml"/>
+  <p:serialization port="OUT_report-plaintext" indent="true"  method="text"/>
   <p:output port="OUT_report-plaintext" primary="false">
     <p:pipe port="result" step="plaintext-report"/>
   </p:output>

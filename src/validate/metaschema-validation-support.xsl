@@ -27,7 +27,9 @@
     
     <xsl:key name="index-by-name" match="m:index | m:is-unique" use="@name"/>
     
-    <!-- The $transformation-sequence declares transformations to be applied in order. -->
+    <!-- Defining transformations to be applied in order for composition. -->
+    <!-- todo: see if we can call ../compose/nist-metaschema-COMPOSE.xsl in place of (same) pipeline
+         then we can get rid of metaprocess here -->
     <xsl:variable name="composition-sequence">
         <nm:transform version="3.0">../compose/metaschema-collect.xsl</nm:transform>
         <nm:transform version="3.0">../compose/metaschema-build-refs.xsl</nm:transform>
