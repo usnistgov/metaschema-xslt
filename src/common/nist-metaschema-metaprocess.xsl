@@ -36,9 +36,6 @@
         <xsl:call-template name="alert">
             <xsl:with-param name="msg" expand-text="yes"> COMPOSING METASCHEMA { base-uri($source) } </xsl:with-param>
         </xsl:call-template>
-        <xsl:call-template name="alert">
-            <xsl:with-param name="msg" expand-text="yes"> SEQUENCE: { $sequence/*/name() => string-join(', ') } </xsl:with-param>
-        </xsl:call-template>
         <xsl:iterate select="$sequence/*">
             <xsl:param name="doc" select="$source" as="document-node()"/>
             <xsl:on-completion select="$doc"/>
