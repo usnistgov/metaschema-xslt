@@ -55,6 +55,9 @@ case "$SUBCOMMAND" in
     converter-gen)
         "$SRC_DIR"/converter-gen/mvn-converters-xpl.sh "$@"
         ;;
+    composition-validate)
+        "$SRC_DIR"/validate/mvn-composition-validate-xpl.sh "$@"
+        ;; 
     ?)
         msg "Unknown subcommand: $SUBCOMMAND"
         exit 1
