@@ -18,7 +18,7 @@
     
     <!--<xsl:import href="oscal-datatypes-check.xsl"/>-->
     
-    <xsl:import href="oscal-datatypes-check.xsl"/>
+    <xsl:include href="oscal-datatypes-check.xsl"/>
     
     <!--<xsl:param    name="global-context" select="/"/>-->
     
