@@ -2,8 +2,9 @@
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
   xmlns:c="http://www.w3.org/ns/xproc-step" version="1.0"
   xmlns:metaschema="http://csrc.nist.gov/ns/metaschema/1.0"
-  type="metaschema:METASCHEMA-ALL-SCHEMAS" name="METASCHEMA-ALL-SCHEMAS">
+  type="metaschema:METASCHEMA-VALIDATE" name="METASCHEMA-VALIDATE">
   
+  <!--For validating using the Schematron Skeleton - if we can get 'allow-foreign' working -->
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Ports -->
   
@@ -17,21 +18,34 @@
   
   <p:serialization port="OUT_report-SVRL" indent="true"  method="xml"/>
   <p:output port="OUT_report-SVRL" primary="false">
-    <p:pipe port="report" step="simple-check"/>
+    <p:pipe port="report" step="schematron-check"/>
   </p:output>
+  
+  <!-- <p:serialization port="OUT_report-plaintext" indent="true"  method="text"/>
+  <p:output port="OUT_report-plaintext" primary="false">
+    <p:pipe port="result" step="plaintext-report"/>
+  </p:output>-->
   
   <p:identity name="echo-input"/>
   
-  <p:validate-with-schematron name="simple-check" assert-valid="false">
+  <p:validate-with-schematron name="schematron-check" assert-valid="false">
     <p:input port="schema">
       <p:document href="metaschema-composition-check.sch"/>
     </p:input>
+    <p:with-param name="allow-foreign" select="true()"/>
   </p:validate-with-schematron>
   
+  <!-- primary result is the document again, which we are done with -->
   <p:sink/>
-  <!--<p:xslt name="serialize-json">
+  
+  <!--<p:identity name="plaintext-report"/>-->
+  
+  <!--<p:xslt name="plaintext-report">
+    <p:input port="source">
+      <p:pipe port="report" step="schematron-check"/>
+    </p:input>
     <p:input port="stylesheet">
-      <p:document href="../common/xpath-json-to-json.xsl"/>
+      <p:document href="svrl-reduce.xsl"/>
     </p:input>
   </p:xslt>-->
   
