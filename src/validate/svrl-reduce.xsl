@@ -5,12 +5,13 @@
   xmlns:nm="http://csrc.nist.gov/ns/metaschema"
   exclude-result-prefixes="#all" version="3.0">
 
+
+  <!-- Purpose: Rewrites SVRL coming back from SCHXSLT into quiet, legible plain text -->
+  
   <xsl:output method="text" indent="no"/>
   <!-- when embedded in XProc, serialize as plain text to
        avoid XML markup in the results -->
-
-  <!-- Rewrites SVRL coming back from SCHXSLT -->
-
+  
   <xsl:variable name="incidents"
     select="//svrl:failed-assert | //svrl:successful-report"/>
 
@@ -25,7 +26,6 @@
 
   <xsl:template match="svrl:failed-assert | svrl:successful-report">
     <incident>
-      <xsl:text>&#xA;</xsl:text>
       <xsl:variable name="code">
         <xsl:value-of select="@role"/>
         <xsl:if test="@role and @id">:</xsl:if>
@@ -39,8 +39,8 @@
       <xsl:text>- </xsl:text>
       <xsl:value-of select="nm:path-ns-prefix(@location)"/>
       <xsl:text> - </xsl:text>
-      
       <xsl:value-of select="normalize-space(.)"/>
+      <xsl:text>&#xA;</xsl:text>
     </incident>
   </xsl:template>
 
@@ -59,8 +59,10 @@
     </xsl:analyze-string>
     </xsl:value-of>
   </xsl:function>
+  
   <xsl:function name="nm:prefix-for-ns" as="xs:string?">
     <xsl:param name="uri" as="xs:string"/>
     <xsl:sequence select="$home/*/*[@uri=$uri]/@prefix/string()"/>
   </xsl:function>
+  
 </xsl:stylesheet>
