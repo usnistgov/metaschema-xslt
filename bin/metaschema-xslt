@@ -19,6 +19,8 @@ Subcommands:
     Generate JSON and XML schemas for a given metaschema
 - converter-gen METASCHEMA_XML OUTPUT_DIR SCHEMA_NAME [ADDITIONAL_ARGS]
     Generate converter transformations (XSLT) between JSON and XML for a given metaschema
+- composition-validate METASCHEMA_XML [ADDITIONAL_ARGS]
+    Test metaschema composition (assembling modules and linking definitions) and report issues
 EOF
 }
 
