@@ -5,7 +5,7 @@
   xmlns:schxslt="https://doi.org/10.5281/zenodo.1495494"
   type="metaschema:METASCHEMA-ALL-SCHEMAS" name="METASCHEMA-ALL-SCHEMAS">
   
-  <p:import href="../../support/schxslt-1.9.5/xproc/1.0/validate-with-schematron.xpl"/>
+  <p:import href="../../support/schxslt/core/src/main/resources/xproc/1.0/validate-with-schematron.xpl"/>
   
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Ports -->

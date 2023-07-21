@@ -1,7 +1,3 @@
-[submodule "support/schematron"]
-	path = support/schematron
-	url = https://github.com/usnistgov/schematron.git
-	branch = master
 [submodule "support/xspec"]
 	path = support/xspec
 	url = https://github.com/AirQuick/xspec.git
@@ -10,3 +6,6 @@
 	path = support/metaschema
 	url = https://github.com/nikitawootten-nist/metaschema.git
 	fetchRecurseSubmodules = false
+[submodule "support/schxslt"]
+	path = support/schxslt
+	url = https://github.com/schxslt/schxslt.git
