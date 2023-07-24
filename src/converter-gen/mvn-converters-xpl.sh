@@ -11,7 +11,7 @@ Usage: ${BASE_COMMAND:-$(basename "${BASH_SOURCE[0]}")} METASCHEMA_XML OUTPUT_DI
 Produces XML-to-JSON and JSON-to-XML conversion transformations (XSLTs) from Metaschema XML source, using XML Calabash invoked from Maven.
 Please install Maven first.
 
-Additional arguments for XML Calabash should be specified in the `key=value` format.
+Additional arguments for XML Calabash should be specified in the "key=value" format.
 EOF
 }
 
@@ -31,9 +31,9 @@ ADDITIONAL_ARGS=$(shift 3; echo "${*// /\\ }")
 
 PIPELINE="${SCRIPT_DIR}/METASCHEMA-ALL-CONVERTERS.xpl"
 
-XMLTOJSON_CONVERTER_FILE="${OUTPUT_DIR}/${SCHEMA_NAME}-xml-to-json.xsl"
+XMLTOJSON_CONVERTER_FILE="${OUTPUT_DIR}/${SCHEMA_NAME}_xml-to-json-converter.xsl"
 
-JSONTOXML_CONVERTER_FILE="${OUTPUT_DIR}/${SCHEMA_NAME}-json-to-xml.xsl"
+JSONTOXML_CONVERTER_FILE="${OUTPUT_DIR}/${SCHEMA_NAME}_json-to-xml-converter.xsl"
 
 CALABASH_ARGS="-iMETASCHEMA=\"$METASCHEMA_XML\" \
                -oINT_0_echo-input=/dev/null \
