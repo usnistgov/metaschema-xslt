@@ -127,11 +127,11 @@
       <xsl:text>&#xA;</xsl:text>
       <xsl:comment> JSON to XML conversion: Markdown to markup inferencing </xsl:comment>
       
-      <xsl:apply-templates mode="package-converter" select="document('markdown-to-supermodel-xml-converter.xsl')/xsl:*/( xsl:* except (xsl:output | xsl:mode) )"/>
+      <xsl:apply-templates mode="package-converter" select="document('json-to-xml/markdown-to-supermodel-xml-converter.xsl')/xsl:*/( xsl:* except (xsl:output | xsl:mode) )"/>
       
       <xsl:text>&#xA;</xsl:text>
       <xsl:comment> JSON to XML conversion: Supermodel serialization as XML </xsl:comment>
-      <xsl:apply-templates mode="package-converter" select="document('supermodel-to-xml.xsl')/xsl:*/( xsl:* except xsl:output )"/>
+      <xsl:apply-templates mode="package-converter" select="document('json-to-xml/supermodel-to-xml.xsl')/xsl:*/( xsl:* except xsl:output )"/>
     </xsl:copy>
   </xsl:template>
  
@@ -178,7 +178,7 @@
   
 <!--  -->
     <XSLT:template name="from-json">
-      <XSLT:if test="not(unparsed-text-available($file))" expand-text="true">
+      <XSLT:if test="matches($file, '\S') and not(unparsed-text-available($file))" expand-text="true">
         <nm:ERROR>No file found at { $file }</nm:ERROR>
       </XSLT:if>
       <XSLT:variable name="source">

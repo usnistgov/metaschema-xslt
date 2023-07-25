@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
-# Fail early if an error occurs
-set -Eeuo pipefail
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)"
+# shellcheck source=../common/subcommand_common.bash
+source "$SCRIPT_DIR/../common/subcommand_common.bash"
 
 usage() {
     cat <<EOF
@@ -25,12 +26,7 @@ METASCHEMA_SOURCE=$1
 [[ -z "${2-}" ]] && { echo "Error: XSL_RESULT not specified"; usage; exit 1; }
 XSL_RESULT=$2
 
-ADDITIONAL_ARGS=$(shift 2; echo ${*// /\\ })
-
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)"
-POM_FILE="${SCRIPT_DIR}/../../support/pom.xml"
-
-MAIN_CLASS="net.sf.saxon.Transform" # Saxon defined in pom.xml
+ADDITIONAL_ARGS=$(shift 2; echo "${*// /\\ }")
 
 if [ -e "$XSL_RESULT" ]
 then 
@@ -38,11 +34,7 @@ then
     rm -f ./$XSL_RESULT
 fi
 
-mvn \
-    -f "$POM_FILE" \
-    exec:java \
-    -Dexec.mainClass="$MAIN_CLASS" \
-    -Dexec.args="-xsl:${SCRIPT_DIR}/nist-metaschema-MAKE-XML-TO-JSON-CONVERTER.xsl -s:\"$METASCHEMA_SOURCE\" -o:\"$XSL_RESULT\" $ADDITIONAL_ARGS"
+invoke_saxon "-xsl:${SCRIPT_DIR}/nist-metaschema-MAKE-XML-TO-JSON-CONVERTER.xsl -s:\"$METASCHEMA_SOURCE\" -o:\"$XSL_RESULT\" $ADDITIONAL_ARGS"
 
 if [ -e "$XSL_RESULT" ]
 then 
