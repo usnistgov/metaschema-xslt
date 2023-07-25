@@ -81,7 +81,7 @@
   
   <xsl:variable name="metaschema-source" select="/"/>
   
-  <xsl:variable name="json-serializer-xslt" select="document('supermodel-to-json.xsl')"/>
+  <xsl:variable name="json-serializer-xslt" select="document('xml-to-json/supermodel-to-json.xsl')"/>
   
   <xsl:template match="/">
     <xsl:variable name="converter">
