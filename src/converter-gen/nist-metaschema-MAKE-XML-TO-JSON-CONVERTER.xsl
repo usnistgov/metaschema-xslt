@@ -76,141 +76,14 @@
     <nm:transform version="3.0">{ $composer-dir }/reduce-map.xsl</nm:transform>
     
     <nm:transform version="3.0">xml-to-json/produce-xml-converter.xsl</nm:transform>
+    <nm:transform version="3.0">xml-to-json/package-xml-converter.xsl</nm:transform>
     
   </xsl:variable>
-  
-  <xsl:variable name="metaschema-source" select="/"/>
-  
-  <xsl:variable name="json-serializer-xslt" select="document('xml-to-json/supermodel-to-json.xsl')"/>
   
   <xsl:template match="/">
-    <xsl:variable name="converter">
-      <xsl:call-template name="nm:process-pipeline">
-        <xsl:with-param name="sequence" select="$produce-xml-converter"/>
-      </xsl:call-template>
-    </xsl:variable>
-    
-    <xsl:apply-templates select="$converter" mode="package-converter"/>
-  </xsl:template>
-  
-<!-- 'package-converter' enhances the code produced from the metaschema-json-converter pipeline:
-       adds interfaces for handling json inputs ($transformation-architecture)
-       provides pipeline infrastructure for supermodel production and serialization
-       provides templates from utility filters (Markdown to markup; XML writing)
-  -->
-
-  <!-- nb since by default the json converter passes markdown through, in mode 'package-converter'
-       we also rewrite its templates for producing contents of markup-line and markup-multiline,
-       hitting the 'parse-markdown' template from the markdown processor. -->
-  
-
-  <xsl:template match="xsl:stylesheet | xsl:transform" mode="package-converter">
-    <xsl:copy copy-namespaces="true">
-      <xsl:copy-of select="@*"/>
-      <xsl:text>&#xA;</xsl:text>
-      <xsl:comment> XML to JSON conversion: pipeline </xsl:comment>
-      <xsl:copy-of select="$transformation-architecture"/>
-      
-      <xsl:comment> XML to JSON conversion: object filters </xsl:comment>
-      
-      <xsl:text>&#xA;</xsl:text>
-      <xsl:apply-templates mode="#current"/>
-      
-      <xsl:text>&#xA;</xsl:text>
-      <xsl:comment> XML to JSON conversion: Supermodel serialization as JSON
-        including markdown production </xsl:comment>
-      <xsl:apply-templates mode="package-converter" select="$json-serializer-xslt/xsl:*/( xsl:variable | xsl:template )"/>
-    </xsl:copy>
-  </xsl:template>
- 
-  <xsl:variable name="transformation-architecture">
-    <xsl:text>&#xA;</xsl:text>
-    <xsl:comment> Supports either of two interfaces:
-      simply handle the XML as source (easier), producing the JSON as output, or
-      use arguments (equivalent to): -it from-xml produce=json file=[file] (mirrors the JSON converter interface) </xsl:comment>
-    <xsl:text>&#xA;</xsl:text>
-    <xsl:comment> Parameter 'produce' supports acquiring outputs other than JSON:
-      produce=xpath produces XPath JSON (an XML syntax)
-      produce=supermodel produces intermediate (internal) 'supermodel' format</xsl:comment>
-    <xsl:text>&#xA;</xsl:text>
-    <xsl:comment> Parameter setting 'json-indent=yes' produces JSON indented using the internal serializer</xsl:comment>
-    <XSLT:param name="file" as="xs:string?"/>
-    <XSLT:param name="produce" as="xs:string">json</XSLT:param>
-    <!-- set to 'xdm-json-xml' or 'xpath' for XPath JSON XML
-                'supermodel' to produce supermodel intermediate -->
-    <XSLT:param name="json-indent" as="xs:string">no</XSLT:param>
-    
-    <xsl:comment> NB the output method is XML but serialized JSON is written with disable-output-escaping (below)
-     permitting inspection of intermediate results without changing the serialization method.</xsl:comment>
-    <XSLT:output omit-xml-declaration="true" method="xml"/>
-    
-    <XSLT:variable name="write-options" as="map(*)">
-      <XSLT:map>
-        <XSLT:map-entry key="'indent'" select="$json-indent='yes'"/>
-      </XSLT:map>
-    </XSLT:variable>
-    
-    <XSLT:variable name="source-xml" select="/"/>
-      
-    <XSLT:template match="/" name="from-xml">
-      <!-- Take source to be JSON in XPath 3.1 (XDM) representation -->
-      <XSLT:param name="source">
-        <XSLT:choose>
-          <xsl:comment> evaluating $file as URI relative to nominal source directory </xsl:comment>
-          <XSLT:when test="exists($file)">
-            <XSLT:try select="$file ! document(.,$source-xml)" xmlns:err="http://www.w3.org/2005/xqt-errors">
-              <XSLT:catch expand-text="true">
-                <nm:ERROR code="{{ $err:code }}">{ $err:description }</nm:ERROR>
-              </XSLT:catch>
-            </XSLT:try>    
-          </XSLT:when>
-          <XSLT:otherwise>
-            <XSLT:sequence select="/"/>
-          </XSLT:otherwise>
-        </XSLT:choose>
-      </XSLT:param>
-      <!-- first step produces supermodel from input XML -->
-      <XSLT:variable name="supermodel">
-        <XSLT:apply-templates select="$source/*"/>
-      </XSLT:variable>
-      <XSLT:variable name="result">
-      <XSLT:choose>
-        <XSLT:when test="$produce = 'supermodel'">
-          <XSLT:sequence select="$supermodel"/>
-        </XSLT:when>
-        <XSLT:otherwise>
-          <XSLT:variable name="new-json-xml">
-            <XSLT:apply-templates select="$supermodel/*" mode="write-json"/>
-          </XSLT:variable>
-            <XSLT:choose>
-              <XSLT:when test="matches($produce,('xpath|xdm|xml'))">
-                <XSLT:sequence select="$new-json-xml"/>
-              </XSLT:when>
-              <XSLT:otherwise>
-                <XSLT:try select="xml-to-json($new-json-xml, $write-options)"
-                  xmlns:err="http://www.w3.org/2005/xqt-errors">
-                  <XSLT:catch expand-text="true">
-                    <nm:ERROR code="{{ $err:code }}">{ $err:description }</nm:ERROR>
-                  </XSLT:catch>
-                </XSLT:try>
-              </XSLT:otherwise>
-            </XSLT:choose>
-        </XSLT:otherwise>
-      </XSLT:choose>   
-      </XSLT:variable>
-      <XSLT:sequence select="$result/*"/>
-      <XSLT:if test="matches($result,'\S') and empty($result/*)">
-        <XSLT:value-of select="$result" disable-output-escaping="true"/>
-      </XSLT:if>
-    </XSLT:template>
-  </xsl:variable>
-  
-  <xsl:template match="xsl:template" mode="package-converter">
-    <xsl:copy>
-      <xsl:copy-of select="@*"/>
-      <xsl:copy-of select="ancestor::*/@xpath-default-namespace"/>
-      <xsl:apply-templates mode="#current"/>
-    </xsl:copy>
+    <xsl:call-template name="nm:process-pipeline">
+      <xsl:with-param name="sequence" select="$produce-xml-converter"/>
+    </xsl:call-template>
   </xsl:template>
   
 </xsl:stylesheet>
