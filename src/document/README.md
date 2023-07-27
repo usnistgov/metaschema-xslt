@@ -10,26 +10,22 @@ The scripts are written in `bash` and rely on [Apache Maven](https://maven.apach
 
 Produces a set of interlinked HTML files documenting the models (XML and object/JSON) for a metaschema, in a subdirectory.
 
+Arguments are provided to the script as `METASCHEMA_XML OUTPUT_DIR SCHEMA_NAME`, for example
+
 ```
-> ./mvn-schemadocs-html-xpl.sh a-metaschema.xml metaschemaA docs METASCHEMA_XML SCHEMA_NAME OUTPUT_DIR
+> ./mvn-schemadocs-testsite-xpl.sh a-metaschema.xml docs metaschemaA
 ```
 
 where
 
 - the script `./mvn-schemadocs-html-xpl.sh` is available (in the directory or on the system path)
 - `a-metaschema.xml` is a metaschema (top-level module) as a relative path (file URI)
-- `metaschemaA` is the label to use in the documentation produced (file names and links)
 - `docs` is a *relative* path (URI syntax) for writing serialized outputs (HTML files)
+- `metaschemaA` is the label to use in the documentation produced (file names and links)
 
 Assuming the incoming metaschema is valid, correct, and correctly linked (imports resolved), HTML file outputs are written to the indicated subdirectory.
 
-The result file names are defined in the underlying XProc, `METASCHEMA-HTML-DOCS.xpl`.
-
-### `mvn-schemadocs-debug-xpl.sh`
-
-This script invokes the base 'traceable' XProc, `METASCHEMA-DOCS-TRACE.xpl`. By managing exposed ports (now binding to `/dev/null` for intermediate results and file paths for HTML results) through this script, intermediate and final outputs can be examined and assessed. Use for debugging.
-
-As set up, this script writes outputs similarly to `mvn-schemadocs-testsite-xpl.sh`, except without hardcoding file names and writing to a path.
+The result file names are defined in the underlying XProc, `METASCHEMA-DOCS-TESTSITE-write.xpl`.
 
 ## Pipelines
 
