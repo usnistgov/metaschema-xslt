@@ -40,7 +40,7 @@ Additionally, we care about, but do not prioritize:
 
 ### Origins
 
-Formerly housed in the Metaschema repository, this code base traces the history of development of the Metaschema concept in the context of the OSCAL project. It was originally conceived as a demonstration and proof of concept, providing a bridge enabling JSON- and XML-based development in parallel over common problem sets and common data. Success in this effort led to a determination that multiple implementations of a platform-independent specification were needed, at which point this implementation was carved out into its own repository.
+Formerly housed in the [Metaschema repository](https://github.com/usnistgov/metaschema), this code base traces the history of development of the Metaschema concept in the context of the OSCAL project. It was originally conceived as a demonstration and proof of concept, providing a bridge enabling JSON- and XML-based development in parallel over common problem sets and common data. Success in this effort led to a determination that multiple implementations of a platform-independent specification were needed, at which point this implementation was carved out into its own repository.
 
 ### Project sunset
 
