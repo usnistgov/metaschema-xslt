@@ -58,14 +58,32 @@ The best way to ensure long-term access to the code base is to clone or fork the
 
 To operate in trial, test or 'bare-bones' mode, scripts are offered to perform operations with no installation except Maven (with JDK as required) and `bash` as a command line environment.
 
-The utilities are however designed for integration in a range of environments, and core functionalities are implemented in XSLT 3, which is supported across platforms including Java, node JS and C.
+For more regular use or for easier integration (in some contexts), the same functionalities are provided through a `make` interface.
+
+The utilities themselves are designed for integration in a range of environments, and core functionalities are implemented in XSLT 3, which is supported across platforms including Java, node JS and C. Please deconstruct and reverse engineer. (Consider proposing improvements as [contributions](CONTRIBUTING.md).)
 
 The software is designed to be used in a range of ways:
 
 - Directly, in development of metaschemas and Metaschema-based software and tools
 - Within Metaschema-based builds, including under CI/CD, to generate artifacts or productions from metaschema source under controlled conditions
 
-### To run
+### Using `make` utility
+
+**Work in progress. Please work with us.**
+
+[`make`](https://www.gnu.org/software/make/) is helpful for providing a clean and versatile interface on the command line, with features supporting build management and process dispatching (parallelization). `make` comes pre-installed in many Linux distributions.
+
+We recommend running `make` from a bash command line under Linux or WSL, and using `make help` for discovery of its features (from any subdirectory in the project):
+
+```bash
+$ make help
+```
+
+Note that depending on the subdirectory, the help offered will be different.
+
+Run directly from script for more transparency, and see the next section for more details on available processes.
+
+### Directly from script
 
 The following generalized services are provided by the tools in this repository, separately or in combination
 
@@ -73,25 +91,38 @@ The following generalized services are provided by the tools in this repository,
 - Converter XSLTs for metaschema-supported data - [`src/converter-gen` folder](src/converter-gen)
 - Metaschema documentation production - [`src/document` folder](src/document).
 
-Scripts and stylesheets are documented in place using readmes and in line. Most scripts depend on Apache Maven supporting a Java runtime. Since XSLTs can call, import, include or read XSLTs from elsewhere in the repo, and sometimes do, keep the modules together: each folder on its own is *not* self-contained.
+Recognize the scripts in any of these folders by their `.sh` file suffix. The scripts follow a naming convention, with an initial segment identifying the primary executable invoked by the script (usually `mvn` for Maven); a final segment `xpl` or `xsl` indicating XPoc or XSLT entries, and intermediate segments indicating what the script produces.
 
-Accordingly, a good place to start for further research is the `src` directory with [its `readme.md`](src/README.md).
+For example, `mvn-xsd-schema-xsl.sh` can be run to produce an XSD schema from a metaschema, using an XSLT-based process (i.e., Saxon with an appropriate XSLT transformation), run under Maven.
+
+Each script also requires arguments, typically the path to the metaschema source (input) file along with a name or keyword directing where to write results. Invoke the script without arguments to get help on its syntax requirements.
+
+Scripts and stylesheets are also documented in place using readmes and in line. Since XSLTs can call, import, include or read XSLTs from elsewhere in the distribution, and sometimes do, keep the modules together: each folder on its own is *not* self-contained.
+
+A good place to start for further research is the `src` directory with [its `readme.md`](src/README.md).
 
 For testing, all XSpec scenarios (`*.xspec`) can be run in place to generate local test reports.
 
-Users are also expected to call resources in this repository from their own scripts. Do this either by cloning, copying and modifying scripts here; by writing your own; or by adapting code into the XML/XSLT processing framework or stack of your choice.
-
-In general, at least two invocations will be offered for each process, an XProc-based invocation and a pure-XSLT-based invocation. Either may be useful in different scenarios.
+Users are also expected to call resources in this repository from their own scripts. Do this either by cloning, copying and modifying scripts here; by writing your own scripts or shells; or by adapting code into the XML/XSLT processing framework or stack of your choice.
 
 A convention is used indicating that an XProc (`*.xpl` file) or XSLT (`*.xsl`) intended to be invoked directly (that is, not only to be used as a module or component) is given a name entirely or partly in `ALL-CAPITALS`. For example, `src/schema-gen/METASCHEMA-ALL-SCHEMAS.xpl` is such an XProc pipeline (a step definition intended to be used directly). The XSLTs that observe this convention are, additionally, higher-order transformations by virtue of using the `transform()` function; for all other resources the convention `lower-case-hyphenated` is followed.
 
 ### Dependencies
 
-As a freely-available XSLT 3.0 engine, the Saxon XSLT processor can be regarded as a *de facto* dependency - while this XSLT-conformant code should in principle run in any processor implementing the language. Saxon-HE can be bundled using Maven or another Java packaging technology.
+Within the Maven architecture, the software depends on two libraries:
+
+- [**XML Calabash**](https://xmlcalabash.com/) XProc processor, by Norman Walsh
+- **Saxon** XSLT processor from [Saxonica](https://saxonica.com/welcome/welcome.xml)
+
+Note however that the underlying XSLT-conformant code should in principle run in any processor implementing the language (version 3.0).
 
 The [POM file](support/pom.xml) for Java/Maven configuration indicates the current tested version of Saxon. At time of writing, Saxon versions 10 and 11 are known to work with this codebase. When reporting bugs please include the version of your processor.
 
+Some processes are also configured to run using XProc, the XML Pipelining Language, for greater runtime efficiency and transparency (debuggability). XProc is supported by XML Calabash, which also includes Saxon as a dependency.
+
 Developers interested in demonstrating the viability of these processes in different processors and environments are eagerly invited to participate in development of this tool or related tools.
+
+Additional dependencies for some functionalities (XSLT libraries) are included as submodule repositories, in the [support](support) subdirectory.
 
 ### Git Client Setup
 

@@ -1,4 +1,4 @@
-# XSLT-M4 `src`
+# Metaschema-XSLT `src`
 
 An XSLT implementation of the [Metaschema](https://pages.nist.gov/metaschema) toolchain for generating schemas, converters, and model documentation.
 
@@ -9,7 +9,6 @@ More details (produced by surveying the files) can be seen in [file-manifest.md]
 In addition to this readme, this folder contains XSLT transformations (`*.xsl`), and XProc pipelines (`xpl`). The XSLT provides stable runtimes to the supported operations as described below. The XProc provides optimized runtimes when producing multiple outputs (results) from single inputs.
 
 See each subdirectory README for more instructions.
-
 
 ## common
 
