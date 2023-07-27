@@ -7,7 +7,7 @@
   <!-- Purpose: Emit XML and JSON-oriented metaschema documentation FILE FRAGMENTS (`div` elements) -->
   <!-- Input: A valid and correct OSCAL Metaschema instance linked to its modules (also valid and correct) -->
   <!-- Input: options 'path' and 'metaschema-id' must be set, to populate a/@href in crosslinks -->
-  <!-- Output: Writes outputs to designated subdirectory; exposes no ports -->
+  <!-- Output: exposes outputs on named ports -->
   
   <!-- NIST/ITL Metaschema github.com/usnistgov/metaschema https://pages.nist.gov/metaschema/ -->
   
