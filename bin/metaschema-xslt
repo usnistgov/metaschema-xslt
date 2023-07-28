@@ -54,6 +54,9 @@ case "$SUBCOMMAND" in
     schema-gen)
         "$SRC_DIR"/schema-gen/mvn-schemas-xpl.sh "$@"
         ;;
+    xsd-proofcheck)
+        "$SRC_DIR"/schema-gen/mvn-xsd-proofcheck-xpl.sh "$@"
+        ;;
     converter-gen)
         "$SRC_DIR"/converter-gen/mvn-converters-xpl.sh "$@"
         ;;
