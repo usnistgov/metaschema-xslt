@@ -31,6 +31,8 @@ The result file names are defined in the underlying XProc, `METASCHEMA-DOCS-TEST
 
 All these pipelines have a primary input source port named `METASCHEMA`, which should be provided with a valid metaschema whose imports are resolvable and valid.
 
+Ports for outputs (terminal and intermediate results) are not always exposed, for example if the XProc pipeline is configured to write outputs to the file system.
+
 ### `METASCHEMA-DOCS-DIVS-write.xpl`
 
 Given a `path` to write to and a key name (schema name), this pipeline serializes and writes a set of documentation rooted at HTML `div` elements, suitable for ingestion into Hugo or any other HTML-based publishing system.
@@ -39,18 +41,17 @@ NB: Markdown can be acquired for docs by reducing this HTML to Markdown. Make in
 
 ### `METASCHEMA-DOCS-DIVS.xpl`
 
-For ease of configurability, this pipeline works like `METASCHEMA-DOCS-TESTSITE-write.xpl` except Given a `path` to write to and a key name (schema name), this pipeline serializes and writes a set of documentation rooted at HTML `div` elements, suitable for ingestion into Hugo or any other HTML-based publishing system.
+This pipeline produces the same outputs as the preceding, except:
 
-NB: Markdown can be acquired for docs by reducing this HTML to Markdown. Make inquiries if this is of use.
+- instead of serializing outputs as files, it exposes results on ports
+- it permits renaming and redirecting outputs (names and locations) via runtime options
 
 ### `METASCHEMA-DOCS-TESTSITE-write.xpl`
 
-Just like `METASCHEMA-DOCS-DIVS.xpl`, except this pipeline writes HTML files into a path provided at runtime.
+Just like `METASCHEMA-DOCS-DIVS.xpl`, except this pipeline writes complete HTML files, not only fragments (rooted at `\<div>`, to a path provided at runtime. The files are linked and styled using CSS provided in the pipeline.
 
 Use this pipeline to produce a set of standalone documentation ready to preview and use.
 
-Both these pipelines include the base pipeline `METASCHEMA-DOCS-TRACE.xpl` as a defined step, and invoke it with metaschema input while configuring its runtime.
-
 ### `METASCHEMA-DOCS-TRACE.xpl`
 
-The base pipeline called by the HTML rendering pipeline, exposing ports for debugging,
+The base pipeline called by all other HTML rendering pipelines (just listed), exposing ports for debugging,
