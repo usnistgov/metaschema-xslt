@@ -67,6 +67,16 @@ The software is designed to be used in a range of ways:
 
 ### To run
 
+#### Using `make`
+
+A `make` scripting infrastructure is provided to make common operations easy to invoke, from the command line or via script/CI/CD.
+
+The command to use is `bin/metaschema-xslt`. With `make` installed, invoke this script from the command line, with arguments as described in its `--help` message.
+
+It includes commands for schema generation, converter generation and metaschema validation.
+
+#### Calling XSLT and XProc from script and directly
+
 The following generalized services are provided by the tools in this repository, separately or in combination
 
 - XSD and JSON schema generation - [`src/schema-gen` folder](src/schema-gen)

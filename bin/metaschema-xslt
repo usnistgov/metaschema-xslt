@@ -18,7 +18,7 @@ Subcommands:
 - schema-gen METASCHEMA_XML OUTPUT_DIR SCHEMA_NAME [ADDITIONAL_ARGS]
     Generate JSON and XML schemas from a metaschema
 - xsd-proofcheck METASCHEMA_XML [ADDITIONAL_ARGS]
-    Generate and dynamically test XSD (XML Schema) for viability
+    Generate and dynamically test XSD (XML Schema Definition) for viability
 - converter-gen METASCHEMA_XML OUTPUT_DIR SCHEMA_NAME [ADDITIONAL_ARGS]
     Generate converter transformations (XSLT) between JSON and XML for a given metaschema
 - composition-validate METASCHEMA_XML [ADDITIONAL_ARGS]
