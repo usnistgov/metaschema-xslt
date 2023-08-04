@@ -82,7 +82,8 @@ div.OM-map p { margin: 0ex }
    
    
    <xsl:template match="*[exists(@_tree-xml-id)]" mode="linked-name">
-      <a class="OM-name" href="{ $reference-link }#{ @_tree-xml-id }">
+      <xsl:variable as="xs:string" name="url-stem" select="replace($reference-link, '.html', '/')" />
+      <a class="OM-name" href="{ $url-stem }#{ @_tree-xml-id }">
          <xsl:value-of select="(@gi,@name)[1]"/>
       </a>
    </xsl:template> 

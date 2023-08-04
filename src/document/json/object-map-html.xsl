@@ -217,7 +217,8 @@ details:not([open]) .show-closed { display: inline }
       <xsl:if test="empty(@_tree-json-id)">
          <xsl:message expand-text="true">not seeing json tree id for { name(.) }</xsl:message>
       </xsl:if>
-      <a class="OM-name" href="{ $reference-link }#{  @_tree-json-id }">
+      <xsl:variable as="xs:string" name="url-stem" select="replace($reference-link, '.html', '/')" />
+      <a class="OM-name" href="{ $url-stem }#{  @_tree-json-id }">
          <xsl:value-of select="(@key,@gi,@name)[1]"/>
       </a>
    </xsl:template>
