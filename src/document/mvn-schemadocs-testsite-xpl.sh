@@ -6,7 +6,7 @@ source "$SCRIPT_DIR/../common/subcommand_common.bash"
 
 usage() {
     cat <<EOF
-Usage: $(basename "${BASH_SOURCE[0]}") METASCHEMA_XML OUTPUT_DIR SCHEMA_NAME [ADDITIONAL_ARGS]
+Usage: ${BASE_COMMAND:-$(basename "${BASH_SOURCE[0]}")} METASCHEMA_XML OUTPUT_DIR SCHEMA_NAME [ADDITIONAL_ARGS]
 
 Produces HTML documentation from Metaschema XML source, using XML Calabash invoked from Maven.
 Please install Maven first.
