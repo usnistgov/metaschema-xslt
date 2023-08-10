@@ -63,9 +63,19 @@
     <p:pipe        port="result"               step="make-json-object-tree"/>
   </p:output>
   
+  <p:serialization port="JSON-object-map-div" indent="true"/>
+  <p:output        port="JSON-object-map-div" primary="false">
+    <p:pipe        port="result"               step="make-json-model-map"/>
+  </p:output>
+  
   <p:serialization port="JSON-object-map-html" indent="true"/>
   <p:output        port="JSON-object-map-html" primary="false">
     <p:pipe        port="result"               step="style-json-model-map"/>
+  </p:output>
+  
+  <p:serialization port="JSON-object-reference-div" indent="true"/>
+  <p:output        port="JSON-object-reference-div" primary="false">
+    <p:pipe        port="result"                     step="render-json-object-reference"/>
   </p:output>
   
   <p:serialization port="JSON-object-reference-html" indent="true"/>
@@ -73,19 +83,34 @@
     <p:pipe        port="result"                     step="style-json-object-reference"/>
   </p:output>
   
+  <p:serialization port="JSON-object-index-div" indent="true"/>
+  <p:output        port="JSON-object-index-div" primary="false">
+    <p:pipe        port="result"                 step="render-json-object-index"/>
+  </p:output>
+  
   <p:serialization port="JSON-object-index-html" indent="true"/>
   <p:output        port="JSON-object-index-html" primary="false">
     <p:pipe        port="result"                 step="style-json-object-index"/>
+  </p:output>
+  
+  <p:serialization port="JSON-definitions-div" indent="true"/>
+  <p:output        port="JSON-definitions-div" primary="false">
+    <p:pipe        port="result"                step="render-json-definitions"/>
   </p:output>
   
   <p:serialization port="JSON-definitions-html" indent="true"/>
   <p:output        port="JSON-definitions-html" primary="false">
     <p:pipe        port="result"                step="style-json-definitions"/>
   </p:output>
-
+  
   <p:serialization port="XML-element-tree-xml" indent="true"/>
   <p:output        port="XML-element-tree-xml" primary="false">
     <p:pipe        port="result"               step="make-xml-element-tree"/>
+  </p:output>
+  
+  <p:serialization port="XML-element-map-div" indent="true"/>
+  <p:output        port="XML-element-map-div" primary="false">
+    <p:pipe        port="result"               step="make-xml-model-map"/>
   </p:output>
   
   <p:serialization port="XML-element-map-html" indent="true"/>
@@ -93,14 +118,29 @@
     <p:pipe        port="result"               step="style-xml-model-map"/>
   </p:output>
   
+  <p:serialization port="XML-element-reference-div" indent="true"/>
+  <p:output        port="XML-element-reference-div" primary="false">
+    <p:pipe        port="result"               step="render-xml-element-reference"/>
+  </p:output>
+  
   <p:serialization port="XML-element-reference-html" indent="true"/>
   <p:output        port="XML-element-reference-html" primary="false">
     <p:pipe        port="result"               step="style-xml-element-reference"/>
   </p:output>
   
+  <p:serialization port="XML-element-index-div" indent="true"/>
+  <p:output        port="XML-element-index-div" primary="false">
+    <p:pipe        port="result"                 step="render-xml-element-index"/>
+  </p:output>
+  
   <p:serialization port="XML-element-index-html" indent="true"/>
   <p:output        port="XML-element-index-html" primary="false">
     <p:pipe        port="result"                 step="style-xml-element-index"/>
+  </p:output>
+  
+  <p:serialization port="XML-definitions-div" indent="true"/>
+  <p:output        port="XML-definitions-div" primary="false">
+    <p:pipe        port="result"                step="render-xml-definitions"/>
   </p:output>
   
   <p:serialization port="XML-definitions-html" indent="true"/>

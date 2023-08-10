@@ -8,22 +8,20 @@ output_folder:=$(abspath test_output)
 test: smoke-test ## Run all tests
 
 .PHONY: smoke-test
-smoke-test: smoke-test-hugo smoke-test-standalone ## Run all smoke-tests
+smoke-test: smoke-test-hugo smoke-test-testsite ## Run all smoke-tests
 
 .PHONY: smoke-test-hugo
-smoke-test-hugo: ## Test verifies that 'write-hugo-metaschema-docs.xpl' runs without error
-	$(call EXEC_CALABASH,-i source=$(test_metaschema) output-path=file://$(output_folder)/smoke/hugo/ write-hugo-metaschema-docs.xpl)
+smoke-test-hugo: ## Test verifies that 'METASCHEMA-DOCS-DIVS-write.xpl' runs without error
+	$(call EXEC_CALABASH,-iMETASCHEMA=$(test_metaschema) METASCHEMA-DOCS-DIVS-write.xpl output-path=file://$(output_folder)/smoke/hugo/ metaschema-id=models_metaschema)
 
-.PHONY: smoke-test-standalone
-smoke-test-standalone: ## Test verifies that make-metaschema-standalone-docs.xpl runs without error
-	$(call EXEC_CALABASH,-i source=$(test_metaschema) \
-		output-path=file://$(output_folder)/smoke/standalone/ \
-		-o INT_0_echo-input=/dev/null \
-		-o INT_1_composed=/dev/null \
-		-o INT_2_abstract-model-map=/dev/null \
-		-o INT_3_unfolded-instance-map=/dev/null \
-		-o INT_4_marked-instance-map=/dev/null \
-		make-metaschema-standalone-docs.xpl)
+.PHONY: smoke-test-testsite
+smoke-test-testsite: ## Test verifies that METASCHEMA-DOCS-TESTSITE-write.xpl runs without error
+	./mvn-schemadocs-testsite-xpl.sh "$(test_metaschema)" test_output/smoke/testsite models_metaschema
+
+#	$(call EXEC_CALABASH,-iMETASCHEMA=$(test_metaschema) \
+#		METASCHEMA-DOCS-TESTSITE-write.xpl \
+#		output-path=file://$(output_folder)/smoke/testsite/ \
+#		metaschema-id=models_metaschema)
 
 clean: ## Remove test output
-	rm -fr $(smoke-test_output)
+	rm -fr $(output_folder)
