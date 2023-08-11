@@ -6,21 +6,47 @@ Typically any of these operations will combine several lower-level operations in
 
 ## To run
 
-See each subdirectory README for more instructions, and see the top-level [README](../README.md) for general description of the entry points available, including not only the scripts in each folder but also a global `make` configuration available to any client.
+Also see the [site README](../README.md) for background information.
 
-### `make` quick setup
+### `bash` scripts
 
-This distribution includes [a `make` configuration (script)](bin/metaschema-xslt) enabling access to its runtimes with a simple command line interface. It is not intended as the only means to invoke these processes, but it can be convenient.
-
-Confirm you have [`make`](https://www.gnu.org/software/make/), or install it. Add the [bin](../bin)`../bin` directory in this repository (distribution) to your system path.
-
-From a command line, test `make`:
+A bash script located in this distribution provides a single unified interface to functionalities provided by this library. Add [../bin](../bin) to your path, or invoke the script directly for help:
 
 ```
-> path/to/metaschema-xslt/bin/metaschema-xslt
+> path/to/bin/metaschema-xslt -h
 ```
 
-On the console the system will report `Error: SUBCOMMAND not specified`, followed by a list of subcommands you can give.
+The help message includes a list of the supported subcommands, indicating which processes are to be run on given inputs with a particular configuration. (If provided with no arguments, the script returns an error `Error: SUBCOMMAND not specified` along with the same help.) Typically scripts use Maven and rely on it for dependency management.
+
+See each subdirectory README for more instructions.
+
+#### Dedicated scripts
+
+Within any of the subdirectories in `src`, recognize the scripts by their `.sh` file suffix. The scripts follow a naming convention, with an initial segment identifying the primary executable invoked by the script (usually `mvn` for Maven); a final segment `xpl` or `xsl` indicating XPoc or XSLT entries, and intermediate segments indicating what the script produces.
+
+For example, `mvn-xsd-schema-xsl.sh` can be run to produce an XSD schema from a metaschema, using an XSLT-based process (i.e., Saxon with an appropriate XSLT transformation), run under Maven.
+
+Each script also requires arguments, typically the path to the metaschema source (input) file along with a name or keyword directing where to write results. Invoke the script without arguments to get help on its syntax requirements.
+
+Scripts and stylesheets are also documented in place using readmes and in line. Since XSLTs can call, import, include or read XSLTs from elsewhere in the distribution, and sometimes do, keep the modules together: each folder on its own is *not* self-contained.
+
+A good place to start for further research is the `src` directory with [its `readme.md`](src/README.md).
+
+Users are also expected to call resources in this repository from their own scripts. Do this either by cloning, copying and modifying scripts here; by writing your own scripts or shells; or by adapting code into the XML/XSLT processing framework or stack of your choice.
+
+A convention is used indicating that an XProc (`*.xpl` file) or XSLT (`*.xsl`) intended to be invoked directly (that is, not only to be used as a module or component) is given a name entirely or partly in `ALL-CAPITALS`. For example, `src/schema-gen/METASCHEMA-ALL-SCHEMAS.xpl` is such an XProc pipeline (a step definition intended to be used directly). The XSLTs that observe this convention are, additionally, higher-order transformations by virtue of using the `transform()` function; for all other resources the convention `lower-case-hyphenated` is followed.
+
+### `make` support
+
+Additionally, some subdirectories include `make` configurations. These are used for testing including regression testing, but may also be used to support processing.
+
+To use `make`, confirm you have [`make`](https://www.gnu.org/software/make/), or install it. In any directory with a Makefile, including this one, test it:
+
+```
+> src/schema-gen make
+```
+
+The system returns a list of available (configured) targets, typically running tests.
 
 ## Subdirectories
 

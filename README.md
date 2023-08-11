@@ -56,18 +56,22 @@ The best way to ensure long-term access to the code base is to clone or fork the
 
 ## Installation and operation
 
-To operate in trial, test or 'bare-bones' mode, scripts are offered to perform operations with no installation except Maven (with JDK as required) and `bash` as a command line environment.
-
-For more regular use or for easier integration (in some contexts), the same functionalities are provided through a `make` interface.
-
-The utilities themselves are designed for integration in a range of environments, and core functionalities are implemented in XSLT 3, which is supported across platforms including Java, Node.js and C. Please deconstruct and reverse engineer. (Consider proposing improvements as [contributions](CONTRIBUTING.md).)
+These utilities are designed for integration in a range of environments, and core functionalities are implemented in XSLT 3, which is supported across platforms including Java, Node.js and C. Please deconstruct and reverse engineer. (Consider proposing improvements as [contributions](CONTRIBUTING.md).)
 
 The software is designed to be used in a range of ways:
 
 - Directly, in development of metaschemas and Metaschema-based software and tools
 - Within Metaschema-based builds, including under CI/CD, to generate artifacts or productions from metaschema source under controlled conditions
 
+The following generalized services are provided by the tools in this repository, separately or in combination
+
+- XSD and JSON schema generation - [`src/schema-gen` folder](src/schema-gen)
+- Converter XSLTs for metaschema-supported data - [`src/converter-gen` folder](src/converter-gen)
+- Metaschema documentation production - [`src/document` folder](src/document).
+
 ### Using `make` utility
+
+Currently we are supporting "smoke testing" and regression testing via `make`. See more details in [src/README.md](src/README.md).
 
 **Work in progress. Please work with us.**
 
@@ -85,27 +89,17 @@ Run directly from script for more transparency, and see the next section for mor
 
 ### Directly from script
 
-The following generalized services are provided by the tools in this repository, separately or in combination
+The `make` support calls scripts that can also be used directly for a more dynamic and versatile interface, for example for developers of new Metaschema instances who wish to generate artifacts or documentation for their metaschemas.
 
-- XSD and JSON schema generation - [`src/schema-gen` folder](src/schema-gen)
-- Converter XSLTs for metaschema-supported data - [`src/converter-gen` folder](src/converter-gen)
-- Metaschema documentation production - [`src/document` folder](src/document).
+[bin/metaschema-xslt](bin/metaschema-xslt) is a top-level `bash` script that dispatches to lower-level scripts for the processes. With the `bin` directory on your path invoke it directly for more help:
 
-Recognize the scripts in any of these folders by their `.sh` file suffix. The scripts follow a naming convention, with an initial segment identifying the primary executable invoked by the script (usually `mvn` for Maven); a final segment `xpl` or `xsl` indicating XPoc or XSLT entries, and intermediate segments indicating what the script produces.
+``
+> bin/metaschema-xslt -h
+```
 
-For example, `mvn-xsd-schema-xsl.sh` can be run to produce an XSD schema from a metaschema, using an XSLT-based process (i.e., Saxon with an appropriate XSLT transformation), run under Maven.
+#### Dedicated scripts
 
-Each script also requires arguments, typically the path to the metaschema source (input) file along with a name or keyword directing where to write results. Invoke the script without arguments to get help on its syntax requirements.
-
-Scripts and stylesheets are also documented in place using readmes and in line. Since XSLTs can call, import, include or read XSLTs from elsewhere in the distribution, and sometimes do, keep the modules together: each folder on its own is *not* self-contained.
-
-A good place to start for further research is the `src` directory with [its `readme.md`](src/README.md).
-
-For testing, all XSpec scenarios (`*.xspec`) can be run in place to generate local test reports.
-
-Users are also expected to call resources in this repository from their own scripts. Do this either by cloning, copying and modifying scripts here; by writing your own scripts or shells; or by adapting code into the XML/XSLT processing framework or stack of your choice.
-
-A convention is used indicating that an XProc (`*.xpl` file) or XSLT (`*.xsl`) intended to be invoked directly (that is, not only to be used as a module or component) is given a name entirely or partly in `ALL-CAPITALS`. For example, `src/schema-gen/METASCHEMA-ALL-SCHEMAS.xpl` is such an XProc pipeline (a step definition intended to be used directly). The XSLTs that observe this convention are, additionally, higher-order transformations by virtue of using the `transform()` function; for all other resources the convention `lower-case-hyphenated` is followed.
+See more details in the [src/README](src/README.md). Using the scripts directly provides more fine-grained access to the logic (for example, if only a single kind of schema output is wanted), while not always offering the same efficiencies.
 
 ### Dependencies
 
