@@ -8,9 +8,13 @@ Typically any of these operations will combine several lower-level operations in
 
 Also see the [site README](../README.md) for background information.
 
+Runtime support and dependency management are provided with [Apache Maven](https://maven.apache.org/). The included stylesheets (XSLT) and pipeline configurations (XProc) should also be portable to other environments and runtimes.
+
+Please install Maven, configure its system paths, and test before proceeding.
+
 ### `bash` scripts
 
-A bash script located in this distribution provides a single unified interface to functionalities provided by this library. Add [../bin](../bin) to your path, or invoke the script directly for help:
+A bash script located in this distribution provides a single unified interface to functionalities provided by this library. Add [../bin](../bin) to your path, or invoke the script directly, using `-h` for help:
 
 ```
 > path/to/bin/metaschema-xslt -h

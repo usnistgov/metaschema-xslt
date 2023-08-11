@@ -93,7 +93,7 @@ The `make` support calls scripts that can also be used directly for a more dynam
 
 [bin/metaschema-xslt](bin/metaschema-xslt) is a top-level `bash` script that dispatches to lower-level scripts for the processes. With the `bin` directory on your path invoke it directly for more help:
 
-``
+```
 > bin/metaschema-xslt -h
 ```
 
