@@ -50,9 +50,11 @@ The best way to ensure long-term access to the code base is to clone or fork the
 
 ## Repository contents
 
-`src` includes XSLT source code, with supporting infrastructure including ad-hoc testing
+`bin` includes utility scripting and might be useful to have on your system path.
 
-`support` includes dependent submodules with other static resources for configuration
+`src` includes XSLT source code, with supporting infrastructure including ad-hoc testing.
+
+`support` includes dependent submodules with other static resources.
 
 ## Installation and operation
 
@@ -68,6 +70,7 @@ The following generalized services are provided by the tools in this repository,
 - XSD and JSON schema generation - [`src/schema-gen` folder](src/schema-gen)
 - Converter XSLTs for metaschema-supported data - [`src/converter-gen` folder](src/converter-gen)
 - Metaschema documentation production - [`src/document` folder](src/document).
+- (*Forthcoming*) Schematron generation and more
 
 ### Using `make` utility
 
@@ -89,7 +92,7 @@ Run directly from script for more transparency, and see the next section for mor
 
 ### Directly from script
 
-The `make` support calls scripts that can also be used directly for a more dynamic and versatile interface, for example for developers of new Metaschema instances who wish to generate artifacts or documentation for their metaschemas.
+The same scripts used by `make` can also be used directly for a more dynamic and versatile interface, for example for developers of new Metaschema instances who wish to generate artifacts or documentation for their metaschemas.
 
 [bin/metaschema-xslt](bin/metaschema-xslt) is a top-level `bash` script that dispatches to lower-level scripts for the processes. With the `bin` directory on your path invoke it directly for more help:
 
