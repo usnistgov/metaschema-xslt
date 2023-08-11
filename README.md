@@ -60,7 +60,7 @@ To operate in trial, test or 'bare-bones' mode, scripts are offered to perform o
 
 For more regular use or for easier integration (in some contexts), the same functionalities are provided through a `make` interface.
 
-The utilities themselves are designed for integration in a range of environments, and core functionalities are implemented in XSLT 3, which is supported across platforms including Java, node JS and C. Please deconstruct and reverse engineer. (Consider proposing improvements as [contributions](CONTRIBUTING.md).)
+The utilities themselves are designed for integration in a range of environments, and core functionalities are implemented in XSLT 3, which is supported across platforms including Java, Node.js and C. Please deconstruct and reverse engineer. (Consider proposing improvements as [contributions](CONTRIBUTING.md).)
 
 The software is designed to be used in a range of ways:
 
