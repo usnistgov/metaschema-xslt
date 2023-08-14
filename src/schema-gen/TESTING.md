@@ -1,10 +1,10 @@
 # Schema generation testing
 
-Currently we are producing two schema language variant expressions of metaschema constraints, and planning a third:
+One application of Metaschema is to generate schema instances in multiple languages.
 
-- XSD
-- JSON Schema, v7
-- (planned) Schematron
+Both the mappings from Metaschema syntax into a schema syntax, and the function of any schema so produced (in detecting errors and validating instances), can be unit tested.
+
+The specific languages currently include XSD (for XML) and JSON Schema, v7 (for JSON, YAML and isomorphic object notations). More schema languages for these and other data notations are under development.
 
 ## Smoke tests
 
