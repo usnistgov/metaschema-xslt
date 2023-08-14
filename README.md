@@ -40,7 +40,7 @@ Additionally, we care about, but do not prioritize:
 
 ### Origins
 
-Formerly housed in the Metaschema repository, this code base traces the history of development of the Metaschema concept in the context of the OSCAL project. It was originally conceived as a demonstration and proof of concept, providing a bridge enabling JSON- and XML-based development in parallel over common problem sets and common data. Success in this effort led to a determination that multiple implementations of a platform-independent specification were needed, at which point this implementation was carved out into its own repository.
+Formerly housed in the [Metaschema repository](https://github.com/usnistgov/metaschema), this code base traces the history of development of the Metaschema concept in the context of the OSCAL project. It was originally conceived as a demonstration and proof of concept, providing a bridge enabling JSON- and XML-based development in parallel over common problem sets and common data. Success in this effort led to a determination that multiple implementations of a platform-independent specification were needed, at which point this implementation was carved out into its own repository.
 
 ### Project sunset
 
@@ -50,58 +50,76 @@ The best way to ensure long-term access to the code base is to clone or fork the
 
 ## Repository contents
 
-`src` includes XSLT source code, with supporting infrastructure including ad-hoc testing
+`bin` includes utility scripting and might be useful to have on your system path.
 
-`support` includes dependent submodules with other static resources for configuration
+`src` includes XSLT source code, with supporting infrastructure including ad-hoc testing.
+
+`support` includes dependent submodules with other static resources.
 
 ## Installation and operation
 
-To operate in trial, test or 'bare-bones' mode, scripts are offered to perform operations with no installation except Maven (with JDK as required) and `bash` as a command line environment.
-
-The utilities are however designed for integration in a range of environments, and core functionalities are implemented in XSLT 3, which is supported across platforms including Java, node JS and C.
+These utilities are designed for integration in a range of environments, and core functionalities are implemented in XSLT 3, which is supported across platforms including Java, Node.js and C. Please deconstruct and reverse engineer. (Consider proposing improvements as [contributions](CONTRIBUTING.md).)
 
 The software is designed to be used in a range of ways:
 
 - Directly, in development of metaschemas and Metaschema-based software and tools
 - Within Metaschema-based builds, including under CI/CD, to generate artifacts or productions from metaschema source under controlled conditions
 
-### To run
-
-#### Using `make`
-
-A `make` scripting infrastructure is provided to make common operations easy to invoke, from the command line or via script/CI/CD.
-
-The command to use is `bin/metaschema-xslt`. With `make` installed, invoke this script from the command line, with arguments as described in its `--help` message.
-
-It includes commands for schema generation, converter generation and metaschema validation.
-
-#### Calling XSLT and XProc from script and directly
-
 The following generalized services are provided by the tools in this repository, separately or in combination
 
 - XSD and JSON schema generation - [`src/schema-gen` folder](src/schema-gen)
 - Converter XSLTs for metaschema-supported data - [`src/converter-gen` folder](src/converter-gen)
 - Metaschema documentation production - [`src/document` folder](src/document).
+- (*Forthcoming*) Schematron generation and more
 
-Scripts and stylesheets are documented in place using readmes and in line. Most scripts depend on Apache Maven supporting a Java runtime. Since XSLTs can call, import, include or read XSLTs from elsewhere in the repo, and sometimes do, keep the modules together: each folder on its own is *not* self-contained.
+### Using `make` utility
 
-Accordingly, a good place to start for further research is the `src` directory with [its `readme.md`](src/README.md).
+Currently we are supporting "smoke testing" and regression testing via `make`. See more details in [src/README.md](src/README.md).
 
-For testing, all XSpec scenarios (`*.xspec`) can be run in place to generate local test reports.
+**Work in progress. Please work with us.**
 
-Users are also expected to call resources in this repository from their own scripts. Do this either by cloning, copying and modifying scripts here; by writing your own; or by adapting code into the XML/XSLT processing framework or stack of your choice.
+[`make`](https://www.gnu.org/software/make/) is helpful for providing a clean and versatile interface on the command line, with features supporting build management and process dispatching (parallelization). `make` comes pre-installed in many Linux distributions.
 
-In general, at least two invocations will be offered for each process, an XProc-based invocation and a pure-XSLT-based invocation. Either may be useful in different scenarios.
+We recommend running `make` from a bash command line under Linux or WSL, and using `make help` for discovery of its features (from any subdirectory in the project):
 
-A convention is used indicating that an XProc (`*.xpl` file) or XSLT (`*.xsl`) intended to be invoked directly (that is, not only to be used as a module or component) is given a name entirely or partly in `ALL-CAPITALS`. For example, `src/schema-gen/METASCHEMA-ALL-SCHEMAS.xpl` is such an XProc pipeline (a step definition intended to be used directly). The XSLTs that observe this convention are, additionally, higher-order transformations by virtue of using the `transform()` function; for all other resources the convention `lower-case-hyphenated` is followed.
+```bash
+$ make help
+```
+
+Note that depending on the subdirectory, the help offered will be different.
+
+Run directly from script for more transparency, and see the next section for more details on available processes.
+
+### Directly from script
+
+The same scripts used by `make` can also be used directly for a more dynamic and versatile interface, for example for developers of new Metaschema instances who wish to generate artifacts or documentation for their metaschemas.
+
+[bin/metaschema-xslt](bin/metaschema-xslt) is a top-level `bash` script that dispatches to lower-level scripts for the processes. With the `bin` directory on your path invoke it directly for more help:
+
+```
+> bin/metaschema-xslt -h
+```
+
+#### Dedicated scripts
+
+See more details in the [src/README](src/README.md). Using the scripts directly provides more fine-grained access to the logic (for example, if only a single kind of schema output is wanted), while not always offering the same efficiencies.
 
 ### Dependencies
 
-As a freely-available XSLT 3.0 engine, the Saxon XSLT processor can be regarded as a *de facto* dependency - while this XSLT-conformant code should in principle run in any processor implementing the language. Saxon-HE can be bundled using Maven or another Java packaging technology.
+Within the Maven architecture, the software depends on two libraries:
+
+- [**XML Calabash**](https://xmlcalabash.com/) XProc processor, by Norman Walsh
+- **Saxon** XSLT processor from [Saxonica](https://saxonica.com/welcome/welcome.xml)
+
+Note however that the underlying XSLT-conformant code should in principle run in any processor implementing the language (version 3.0).
 
 The [POM file](support/pom.xml) for Java/Maven configuration indicates the current tested version of Saxon. At time of writing, Saxon versions 10 and 11 are known to work with this codebase. When reporting bugs please include the version of your processor.
 
+Some processes are also configured to run using XProc, the XML Pipelining Language, for greater runtime efficiency and transparency (debuggability). XProc is supported by XML Calabash, which also includes Saxon as a dependency.
+
 Developers interested in demonstrating the viability of these processes in different processors and environments are eagerly invited to participate in development of this tool or related tools.
+
+Additional dependencies for some functionalities (XSLT libraries) are included as submodule repositories, in the [support](support) subdirectory.
 
 ### Git Client Setup
 

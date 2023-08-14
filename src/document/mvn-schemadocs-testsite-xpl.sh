@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 
-# Fail early if an error occurs
-set -Eeuo pipefail
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=../common/subcommand_common.bash
+source "$SCRIPT_DIR/../common/subcommand_common.bash"
 
 usage() {
     cat <<EOF
-Usage: $(basename "${BASH_SOURCE[0]}") METASCHEMA_XML SCHEMA_NAME OUTPUT_DIR [ADDITIONAL_ARGS]
+Usage: ${BASE_COMMAND:-$(basename "${BASH_SOURCE[0]}")} METASCHEMA_XML OUTPUT_DIR SCHEMA_NAME [ADDITIONAL_ARGS]
 
 Produces HTML documentation from Metaschema XML source, using XML Calabash invoked from Maven.
 Please install Maven first.
@@ -21,29 +22,21 @@ fi
 
 [[ -z "${1-}" ]] && { echo "Error: METASCHEMA_XML not specified"; usage; exit 1; }
 METASCHEMA_XML=$1
-[[ -z "${2-}" ]] && { echo "Error: SCHEMA_NAME not specified"; usage; exit 1; }
-SCHEMA_NAME=$2
-[[ -z "${3-}" ]] && { echo "Error: OUTPUT_DIR not specified"; usage; exit 1; }
-OUTPUT_DIR=$3
+[[ -z "${2-}" ]] && { echo "Error: OUTPUT_DIR not specified"; usage; exit 1; }
+OUTPUT_DIR=$2
+[[ -z "${3-}" ]] && { echo "Error: SCHEMA_NAME not specified"; usage; exit 1; }
+SCHEMA_NAME=$3
 
 ADDITIONAL_ARGS=$(shift 3; echo ${*// /\\ })
 
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)"
-POM_FILE="${SCRIPT_DIR}/../../support/pom.xml"
-
-MAIN_CLASS="com.xmlcalabash.drivers.Main" # XML Calabash
-
-PIPELINE="${SCRIPT_DIR}/METASCHEMA-HTML-DOCS.xpl"
+PIPELINE="${SCRIPT_DIR}/METASCHEMA-DOCS-TESTSITE-write.xpl"
 
 CALABASH_ARGS="-iMETASCHEMA=\"$METASCHEMA_XML\" $ADDITIONAL_ARGS \"$PIPELINE\" output-path=file:///${PWD}/$OUTPUT_DIR/ metaschema-id=$SCHEMA_NAME"
 
 # Possible enhancement to script: create/cleanup $OUTPUT_DIR before writing to it.
 
-mvn \
-    -f "$POM_FILE" \
-    exec:java \
-    -Dexec.mainClass="$MAIN_CLASS" \
-    -Dexec.args="${CALABASH_ARGS}"
+
+invoke_calabash "${CALABASH_ARGS}"
 
 if [ -d "$OUTPUT_DIR" ]
 then 

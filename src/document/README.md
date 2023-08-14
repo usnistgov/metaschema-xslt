@@ -6,41 +6,54 @@ Metaschema in, documentation out.
 
 The scripts are written in `bash` and rely on [Apache Maven](https://maven.apache.org/) for Java dependency management.
 
-### `mvn-schemadocs-html-xpl.sh`
+### `mvn-schemadocs-testsite-xpl.sh`
 
 Produces a set of interlinked HTML files documenting the models (XML and object/JSON) for a metaschema, in a subdirectory.
 
+Arguments are provided to the script as `METASCHEMA_XML OUTPUT_DIR SCHEMA_NAME`, for example
+
 ```
-> ./mvn-schemadocs-html-xpl.sh a-metaschema.xml metaschemaA docs METASCHEMA_XML SCHEMA_NAME OUTPUT_DIR
+> ./mvn-schemadocs-testsite-xpl.sh a-metaschema.xml docs metaschemaA
 ```
 
 where
 
-- the script `./mvn-schemadocs-html-xpl.sh` is available (in the directory or on the system path)
+- the script `./mvn-schemadocs-testsite-xpl.sh` is available (in the directory or on the system path)
 - `a-metaschema.xml` is a metaschema (top-level module) as a relative path (file URI)
-- `metaschemaA` is the label to use in the documentation produced (file names and links)
 - `docs` is a *relative* path (URI syntax) for writing serialized outputs (HTML files)
+- `metaschemaA` is the label to use in the documentation produced (file names and links)
 
 Assuming the incoming metaschema is valid, correct, and correctly linked (imports resolved), HTML file outputs are written to the indicated subdirectory.
 
-The result file names are defined in the underlying XProc, `METASCHEMA-HTML-DOCS.xpl`.
-
-### `mvn-schemadocs-debug-xpl.sh`
-
-This script invokes the base 'traceable' XProc, `METASCHEMA-DOCS-TRACE.xpl`. By managing exposed ports (now binding to `/dev/null` for intermediate results and file paths for HTML results) through this script, intermediate and final outputs can be examined and assessed. Use for debugging.
+The result file names are defined in the underlying XProc, `METASCHEMA-DOCS-TESTSITE-write.xpl`.
 
 ## Pipelines
 
-### `METASCHEMA-HTML-DOCS.xpl`
+All these pipelines have a primary input source port named `METASCHEMA`, which should be provided with a valid metaschema whose imports are resolvable and valid.
 
-This 'wrapper' pipeline includes the base pipeline `METASCHEMA-DOCS-TRACE.xpl` as a defined step, and invokes it with metaschema input while configuring its runtime. Consequently it is much simpler to run.
+Ports for outputs (terminal and intermediate results) are not always exposed, for example if the XProc pipeline is configured to write outputs to the file system.
 
-Use this pipeline with metaschema input when you want HTML file results written to a specific location by the XProc.
+### `METASCHEMA-DOCS-DIVS-write.xpl`
+
+Given a `path` to write to and a key name (schema name), this pipeline serializes and writes a set of documentation rooted at HTML `div` elements, suitable for ingestion into Hugo or any other HTML-based publishing system.
+
+NB: Markdown can be acquired for docs by reducing this HTML to Markdown. Make inquiries if this would be a useful feature for this pipeline.
+
+### `METASCHEMA-DOCS-DIVS.xpl`
+
+This pipeline produces the same outputs as the preceding, except:
+
+- instead of serializing outputs as files, it exposes results on ports
+- it permits renaming and redirecting outputs (names and locations) via runtime options
+
+Use this pipeline from script or in an IDE to debug the basic pipeline.
+
+### `METASCHEMA-DOCS-TESTSITE-write.xpl`
+
+Like `METASCHEMA-DOCS-DIVS-write.xpl`, this pipeline writes files to the system, except they are complete HTML files, not only fragments (rooted at `\<div>`). The files are written in a directory whose path provided at runtime, linked and styled using CSS provided in the pipeline.
+
+Use this pipeline to produce a set of standalone documentation ready to preview and use. This is the pipeline called by the script `mvn-schemadocs-testsite-xpl.sh`.
 
 ### `METASCHEMA-DOCS-TRACE.xpl`
 
-The base pipeline called by the HTML rendering pipeline, exposing ports for debugging,
-
-TO DO: extend this to support a new pipeline optimizing for Hugo - means showing new ports exposing HTML results before they are wrapped. This can replace the current Hugo-writing pipeline.
-
-Text
+The base pipeline called by all other HTML rendering pipelines (just listed), exposing all intermediate and final ports for debugging. Use this pipeline directly from script (binding all its ports), from another pipeline (as in other XProcs in this directory) or in an IDE or debugging framework.
