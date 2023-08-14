@@ -14,7 +14,9 @@ Please install Maven, configure its system paths, and test before proceeding.
 
 ### `bash` scripts
 
-A bash script located in this distribution provides a single unified interface to functionalities provided by this library. Add [../bin](../bin) to your path, or invoke the script directly, using `-h` for help:
+#### Top-level script
+
+A bash script in this distribution provides a unified interface to functionalities provided by this library. Add [../bin](../bin) to your path, or invoke the script directly, using `-h` for help:
 
 ```
 > path/to/bin/metaschema-xslt -h
@@ -23,6 +25,36 @@ A bash script located in this distribution provides a single unified interface t
 The help message includes a list of the supported subcommands, indicating which processes are to be run on given inputs with a particular configuration. (If provided with no arguments, the script returns an error `Error: SUBCOMMAND not specified` along with the same help.) Typically scripts use Maven and rely on it for dependency management.
 
 See each subdirectory README for more instructions.
+
+#### Dedicated scripts
+
+Within any of the subdirectories in `src`, recognize the scripts by their `.sh` file suffix. The scripts follow a naming convention, with an initial segment identifying the primary executable invoked by the script (usually `mvn` for Maven); a final segment `xpl` or `xsl` indicating XPoc or XSLT entries, and intermediate segments indicating what the script produces.
+
+For example, `mvn-xsd-schema-xsl.sh` can be run to produce an XSD schema from a metaschema, using an XSLT-based process (i.e., Saxon with an appropriate XSLT transformation), run under Maven.
+
+Each script also requires arguments, typically the path to the metaschema source (input) file along with a name or keyword directing where to write results. Invoke the script without arguments to get help on its syntax requirements.
+
+Scripts and stylesheets are also documented in place using readmes and in line. Since XSLTs can call, import, include or read XSLTs from elsewhere in the distribution, and sometimes do, keep the modules together: each folder on its own is *not* self-contained.
+
+Users may also apply and use resources in this repository in their own scripts. Do this either by cloning, copying and modifying scripts here; by writing your own scripts or shells; or by adapting code into the XML/XSLT processing framework or stack of your choice.
+
+A convention is used indicating that an XProc (`*.xpl` file) or XSLT (`*.xsl`) intended to be invoked directly (that is, not only to be used as a module or component) is given a name entirely or partly in `ALL-CAPITALS`. For example, `src/schema-gen/METASCHEMA-ALL-SCHEMAS.xpl` is such an XProc pipeline (a step definition intended to be used directly). The XSLTs that observe this convention are, additionally, higher-order transformations by virtue of using the `transform()` function; for all other resources the convention `lower-case-hyphenated` is followed.
+
+### `make` support
+
+GNU `make` is an open source build utility adaptable for use as a production (orchestration) engine.
+
+Some subdirectories include `make` configurations. These are used for testing including regression testing, but may also be used to support processing.
+
+To use `make`, confirm you have [`make`](https://www.gnu.org/software/make/), or install it. In any directory with a Makefile, including this one, test it:
+
+```
+> src/schema-gen make
+```
+
+The system returns a list of available (configured) targets, typically running tests.
+
+## Subdirectories
 
 ### common
 
