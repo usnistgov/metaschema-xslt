@@ -46,7 +46,7 @@
             <xsl:text>&#xA;</xsl:text>
             <xsl:comment> ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ </xsl:comment>
             <xsl:text>&#xA;</xsl:text>
-            <xsl:comment expand-text="true"> METASCHEMA: { schema-name}{ schema-version ! (' (version ' || . || ')' ) } in namespace "{ $source-namespace }"</xsl:comment>
+            <xsl:comment expand-text="true"> METASCHEMA: { metadata/schema-name }{ metadata/schema-version ! (' (version ' || . || ')' ) } in namespace "{ $source-namespace }"</xsl:comment>
             <xsl:call-template name="namespace-variable"/>
             <xsl:text>&#xA;</xsl:text>
             

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description
+    xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+    xmlns:x="http://www.jenitennison.com/xslt/xspec"
+    xmlns:XSLT="http://www.w3.org/1999/XSL/Transform"
+    stylesheet="../../xml-to-json/produce-xml-converter.xsl"
+    xslt-version="3.0">
+
+    <x:variable name="source-namespace" select="'http://csrc.nist.gov/ns/oscal/1.0'"/>
+    <x:variable name="source-prefix" select="'oscal-profile'"/>
+
+    <x:scenario label="Tests for match=/model template">
+        <x:scenario label="Skeletal case with no assemblies, flags, or fields">
+            <x:context href="../definition-maps/computer-build-reduce-map-output.xml"
+                select="/m:model"/>
+            <x:expect label="XSLT stylesheet element with correct attributes">
+                <XSLT:stylesheet version="3.0"
+                    exclude-result-prefixes="#all"
+                    xpath-default-namespace="http://csrc.nist.gov/ns/oscal/1.0"
+                    >...</XSLT:stylesheet>
+            </x:expect>
+            <x:expect test="/XSLT:stylesheet/node()">
+                <x:label>XSLT strip-space, comments, global variable, and hard-coded line breaks</x:label>
+                <XSLT:strip-space elements=""/>
+                <!-- METASCHEMA conversion stylesheet supports XML -> METASCHEMA/SUPERMODEL conversion -->
+                <x:text>&#xA;</x:text>
+                <!-- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
+                <x:text>&#xA;</x:text>
+                <!-- METASCHEMA: Computer Build (version 1.0) in namespace "http://csrc.nist.gov/ns/oscal/1.0"-->
+                <x:text>&#xA;</x:text>
+                <XSLT:variable as="xs:string" name="metaschema-namespace"
+                    >http://csrc.nist.gov/ns/oscal/1.0</XSLT:variable>
+                <x:text>&#xA;</x:text>
+            </x:expect>
+            <x:expect label="Schema name and version appear in comment (confirm fix for #62)"
+                test="exists($x:result//comment()[contains(.,'Computer Build (version 1.0)')])"/>
+        </x:scenario>
+    </x:scenario>
+</x:description>
