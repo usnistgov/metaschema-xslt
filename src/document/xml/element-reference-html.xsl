@@ -16,7 +16,7 @@
    <xsl:param name="xml-map-page"> xml/outline</xsl:param>
    <xsl:param name="xml-definitions-page">xml/definitions</xsl:param>
 
-   <xsl:variable name="datatype-page" as="xs:string">/reference/datatypes</xsl:variable>
+   <xsl:variable name="datatype-page" as="xs:string">/models/datatypes</xsl:variable>
 
    <xsl:template match="metadata/json-base-uri"/>
 

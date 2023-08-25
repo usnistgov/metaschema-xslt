@@ -11,7 +11,7 @@
     <xsl:key name="field-definition-by-name" match="/METASCHEMA/define-field"       use="@_key-name"/>
     <xsl:key name="flag-definition-by-name" match="/METASCHEMA/define-flag"         use="@_key-name"/>
     
-    <xsl:variable name="datatype-page" as="xs:string">/reference/datatypes</xsl:variable>
+    <xsl:variable name="datatype-page" as="xs:string">/models/datatypes</xsl:variable>
     
     <xsl:variable name="indenting" as="element()"
         xmlns:output="http://www.w3.org/2010/xslt-xquery-serialization">

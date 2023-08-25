@@ -32,7 +32,7 @@
 
    <xsl:variable name="metaschema-code" select="/*/short-name || '-xml'"/>
 
-   <xsl:variable name="datatype-page" as="xs:string"> /reference/datatypes</xsl:variable>
+   <xsl:variable name="datatype-page" as="xs:string"> /models/datatypes</xsl:variable>
 
    <xsl:strip-space elements="*"/>
 

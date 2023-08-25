@@ -12,7 +12,7 @@
    <xsl:param name="json-map-page"> json/outline</xsl:param>
    <xsl:param name="json-definitions-page">json/definitions</xsl:param>
 
-   <xsl:variable name="datatype-page" as="xs:string">/reference/datatypes</xsl:variable>
+   <xsl:variable name="datatype-page" as="xs:string">/models/datatypes</xsl:variable>
 
    <xsl:template match="metadata/namespace"/>
 
