@@ -4,8 +4,11 @@
 	branch = test_saxon-12-3
 [submodule "support/metaschema"]
 	path = support/metaschema
-	url = https://github.com/nikitawootten-nist/metaschema.git
+	url = https://github.com/usnistgov/metaschema.git
+	branch = develop
 	fetchRecurseSubmodules = false
 [submodule "support/schxslt"]
 	path = support/schxslt
 	url = https://github.com/schxslt/schxslt.git
+[submodule "metaschema"]
+	url = https://github.com/usnistgov/metaschema.git
