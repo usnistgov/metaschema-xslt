@@ -11,8 +11,8 @@
     <xsl:key name="field-definition-by-name" match="/METASCHEMA/define-field"       use="@_key-name"/>
     <xsl:key name="flag-definition-by-name" match="/METASCHEMA/define-flag"         use="@_key-name"/>
     
-    <xsl:variable name="datatype-page" as="xs:string">/reference/datatypes</xsl:variable>
-    
+    <xsl:variable name="meta-schema-reference-url" as="xs:string">https://pages.nist.gov/metaschema/specification/datatypes</xsl:variable>
+
     <xsl:variable name="indenting" as="element()"
         xmlns:output="http://www.w3.org/2010/xslt-xquery-serialization">
         <output:serialization-parameters>
@@ -241,7 +241,7 @@
         
     <!-- expect overriding XSLT to provide metaschema type with appropriate link  -->
     <xsl:template mode="metaschema-type" match="*[exists(@as-type)]" expand-text="true">
-        <a href="{$datatype-page}/#{(lower-case(@as-type))}">{ @as-type }</a>
+        <a href="{$meta-schema-reference-url}/#{(lower-case(@as-type))}">{@as-type}</a>
     </xsl:template>
     
     <xsl:template priority="5" match="choice">

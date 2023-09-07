@@ -18,7 +18,7 @@
    <xsl:variable name="reference-link" select="$path-to-common || $reference-page"/>
    
    
-   <xsl:variable name="datatype-page">/reference/datatypes</xsl:variable>
+   <xsl:variable name="meta-schema-reference-url" as="xs:string">https://pages.nist.gov/metaschema/specification/datatypes</xsl:variable>
    
 <!--http://localhost:1313/OSCAL/documentation/schema/catalog-layer/catalog/xml-model-map/
 http://localhost:1313/OSCAL/documentation/schema/catalog-layer/catalog/xml-schema/-->
@@ -82,8 +82,7 @@ div.OM-map p { margin: 0ex }
    
    
    <xsl:template match="*[exists(@_tree-xml-id)]" mode="linked-name">
-      <xsl:variable as="xs:string" name="url-stem" select="replace($reference-link, '.html', '/')" />
-      <a class="OM-name" href="{ $url-stem }#{ @_tree-xml-id }">
+      <a class="OM-name" href="{ $reference-link }#{ @_tree-xml-id }">
          <xsl:value-of select="(@gi,@name)[1]"/>
       </a>
    </xsl:template> 
@@ -94,7 +93,7 @@ div.OM-map p { margin: 0ex }
    
    <xsl:template priority="2" mode="linked-datatype" match="*" expand-text="true">
       <xsl:variable name="type" select="(lower-case(@as-type),'string')[1]"/>
-      <span class="OM-datatype"><a href="{$datatype-page}/#{$type}">{ $type }</a></span>
+      <span class="OM-datatype"><a href="{$meta-schema-reference-url}/#{$type}">{ $type }</a></span>
    </xsl:template>
    
    <xsl:template match="m:element">

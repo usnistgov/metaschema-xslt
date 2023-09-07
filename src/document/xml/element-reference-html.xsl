@@ -16,7 +16,8 @@
    <xsl:param name="xml-map-page"> xml/outline</xsl:param>
    <xsl:param name="xml-definitions-page">xml/definitions</xsl:param>
 
-   <xsl:variable name="datatype-page" as="xs:string">/reference/datatypes</xsl:variable>
+   <xsl:variable name="datatype-page" as="xs:string">/models/datatypes</xsl:variable>
+   <xsl:variable name="meta-schema-reference-url" as="xs:string">https://pages.nist.gov/metaschema/specification/datatypes</xsl:variable>
 
    <xsl:template match="metadata/json-base-uri"/>
 
@@ -185,7 +186,7 @@
          <div class="body">
             <p>
                <xsl:text>This use of the </xsl:text>
-               <a href="{$datatype-page}/#markup-multiline">markup-multiline</a>
+               <a href="{$meta-schema-reference-url}/#markup-multiline">markup-multiline</a>
                <xsl:text> type permits unwrapped block-level markup.</xsl:text>
             </p>
          </div>
@@ -225,7 +226,7 @@
    </xsl:template>
 
    <xsl:template mode="metaschema-type" match="*[exists(@as-type)]" expand-text="true">
-      <a href="{$datatype-page}/#{(lower-case(@as-type))}">{ @as-type }</a>
+      <a href="{$meta-schema-reference-url}/#{(lower-case(@as-type))}">{ @as-type }</a>
    </xsl:template>
 
    <xsl:import href="../common/common-reference.xsl"/>
