@@ -16,10 +16,7 @@
       <xsl:for-each select="tokenize($outline-page,'/')">../</xsl:for-each>
    </xsl:variable>
    <xsl:variable name="reference-link" select="$path-to-common || $reference-page"/>
-   
-   
-   <xsl:variable name="meta-schema-reference-url" as="xs:string">https://pages.nist.gov/metaschema/specification/datatypes</xsl:variable>
-   
+      
 <!--http://localhost:1313/OSCAL/documentation/schema/catalog-layer/catalog/xml-model-map/
 http://localhost:1313/OSCAL/documentation/schema/catalog-layer/catalog/xml-schema/-->
 
@@ -91,9 +88,12 @@ div.OM-map p { margin: 0ex }
       <xsl:value-of select="(@gi,@name)[1]"/>
    </xsl:template> 
    
+   <xsl:import href="../../common/datatypes.xsl"/>
    <xsl:template priority="2" mode="linked-datatype" match="*" expand-text="true">
-      <xsl:variable name="type" select="(lower-case(@as-type),'string')[1]"/>
-      <span class="OM-datatype"><a href="{$meta-schema-reference-url}/#{$type}">{ $type }</a></span>
+      <xsl:variable name="type" select="(@as-type,'string')[1]"/>
+      <span class="OM-datatype">
+         <xsl:sequence select="m:datatype-create-link($type)"/>
+      </span>
    </xsl:template>
    
    <xsl:template match="m:element">

@@ -30,9 +30,7 @@
    <!--  XXX TO DO XXX -->
    <xsl:param name="content-converter-path" select="'#'"/>
 
-   <xsl:variable name="metaschema-code" select="/*/short-name || '-xml'"/> 
-
-   <xsl:variable name="meta-schema-reference-url" as="xs:string">https://pages.nist.gov/metaschema/specification/datatypes</xsl:variable>
+   <xsl:variable name="metaschema-code" select="/*/short-name || '-xml'"/>
 
    <xsl:strip-space elements="*"/>
 
@@ -1106,21 +1104,18 @@
       <xsl:apply-templates select="key('assembly-definitions', @ref)" mode="#current"/>
    </xsl:template>
 
+   <xsl:import href="../../common/datatypes.xsl"/>
 
    <xsl:template mode="metaschema-type" match="flag | define-flag">
       <xsl:variable name="given-type"
          select="(@as-type, key('flag-definitions', @ref)/@as-type, 'string')[1]"/>
-      <a href="{$meta-schema-reference-url}/#{(lower-case($given-type))}">
-         <xsl:apply-templates mode="#current" select="$given-type"/>
-      </a>
+      <xsl:sequence select="m:datatype-create-link($given-type)"/>
    </xsl:template>
 
    <xsl:template mode="metaschema-type" match="define-field">
       <xsl:variable name="given-type"
          select="(@as-type, key('field-definitions', @ref)/@as-type, 'string')[1]"/>
-      <a href="{$meta-schema-reference-url}/#{(lower-case($given-type))}">
-         <xsl:apply-templates mode="#current" select="$given-type"/>
-      </a>
+      <xsl:sequence select="m:datatype-create-link($given-type)"/>
    </xsl:template>
 
    <xsl:template mode="metaschema-type" match="define-assembly">element</xsl:template>
