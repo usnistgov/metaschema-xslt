@@ -42,8 +42,14 @@
     <xsl:function name="m:datatype-create-link" as="element()">
         <xsl:param name="raw-datatype" as="xs:string" />
         <xsl:variable name="datatype" as="xs:string" select="m:datatype-normalize($raw-datatype)" />
-        <a href="{$metaschema-reference-url}/#{$datatype}">
+        
+        <xsl:element name="a">
+            <xsl:attribute name="href">
+                <xsl:value-of select="$metaschema-reference-url"/>
+                <xsl:text>/#</xsl:text>
+                <xsl:value-of select="$datatype"/>
+            </xsl:attribute>
             <xsl:value-of select="$datatype"/>
-        </a>
+        </xsl:element>
     </xsl:function>
 </xsl:stylesheet>
