@@ -33,7 +33,7 @@
     </xsl:function>
     
     <!-- used in documentation generation pipelines -->
-    <xsl:variable name="metaschema-reference-url" as="xs:string">https://pages.nist.gov/metaschema/specification/datatypes</xsl:variable>
+    <xsl:param name="metaschema-reference-url" as="xs:string">https://pages.nist.gov/metaschema/specification/datatypes</xsl:param>
     
     <!--
          Create an href link to the metaschema documentation for a given datatype
