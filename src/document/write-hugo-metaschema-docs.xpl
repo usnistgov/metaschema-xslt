@@ -17,9 +17,11 @@
 
   <p:input port="parameters" kind="parameter" />
 
-  <!-- expect an absolute URI -->
-
-  <p:option name="output-path" required="true" />
+  <p:option name="output-path" required="true">
+    <p:documentation>
+      The output directory to write to. This should be an absolute URI.
+    </p:documentation>
+  </p:option>
 
   <p:option name="json-outline-filename" select="'json-outline.html'" />
   <p:option name="json-reference-filename" select="'json-reference.html'" />
@@ -30,11 +32,25 @@
   <p:option name="xml-index-filename" select="'xml-index.html'" />
   <p:option name="xml-definitions-filename" select="'xml-definitions.html'" />
 
+  <p:option name="page-base-path" select="''">
+    <p:documentation>
+      The base path that will be prepended to all relative links (e.g. '' or 'model-name/').
+    </p:documentation>
+  </p:option>
+  
+  <p:option name="json-outline-page" select="concat($page-base-path, replace($json-outline-filename, '.html', '/'))" />
+  <p:option name="json-reference-page" select="concat($page-base-path, replace($json-reference-filename, '.html', '/'))" />
+  <p:option name="json-index-page" select="concat($page-base-path, replace($json-index-filename, '.html', '/'))" />
+  <p:option name="json-definitions-page" select="concat($page-base-path, replace($json-definitions-filename, '.html', '/'))" />
+  <p:option name="xml-outline-page" select="concat($page-base-path, replace($xml-outline-filename, '.html', '/'))" />
+  <p:option name="xml-reference-page" select="concat($page-base-path, replace($xml-reference-filename, '.html', '/'))" />
+  <p:option name="xml-index-page" select="concat($page-base-path, replace($xml-index-filename, '.html', '/'))" />
+  <p:option name="xml-definitions-page" select="concat($page-base-path, replace($xml-definitions-filename, '.html', '/'))" />
+
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Import (subpipeline) -->
 
   <p:import href="../compose/metaschema-compose.xpl" />
-
 
   <p:variable name="xml-outline-uri" select="resolve-uri($xml-outline-filename,     $output-path)" />
   <p:variable name="xml-reference-uri" select="resolve-uri($xml-reference-filename,   $output-path)" />
@@ -93,8 +109,8 @@
     <p:input port="stylesheet">
       <p:document href="xml/element-map-html.xsl" />
     </p:input>
-    <p:with-param name="outline-page" select="$xml-outline-filename" />
-    <p:with-param name="reference-page" select="$xml-reference-filename" />
+    <p:with-param name="outline-page" select="$xml-outline-page" />
+    <p:with-param name="reference-page" select="$xml-reference-page" />
   </p:xslt>
 
   <!-- Done with that. -->
@@ -107,10 +123,10 @@
     <p:input port="stylesheet">
       <p:document href="xml/element-reference-html.xsl" />
     </p:input>
-    <p:with-param name="xml-reference-page" select="$xml-reference-filename" />
-    <p:with-param name="xml-definitions-page" select="$xml-definitions-filename" />
-    <p:with-param name="json-reference-page" select="$json-reference-filename" />
-    <p:with-param name="xml-map-page" select="$xml-outline-filename" />
+    <p:with-param name="xml-reference-page" select="$xml-reference-page" />
+    <p:with-param name="xml-definitions-page" select="$xml-definitions-page" />
+    <p:with-param name="json-reference-page" select="$json-reference-page" />
+    <p:with-param name="xml-map-page" select="$xml-outline-page" />
   </p:xslt>
 
   <p:sink />
@@ -122,9 +138,9 @@
     <p:input port="stylesheet">
       <p:document href="xml/element-index-html.xsl" />
     </p:input>
-    <p:with-param name="index-page" select="$xml-index-filename" />
-    <p:with-param name="reference-page" select="$xml-reference-filename" />
-    <p:with-param name="definitions-page" select="$xml-definitions-filename" />
+    <p:with-param name="index-page" select="$xml-index-page" />
+    <p:with-param name="reference-page" select="$xml-reference-page" />
+    <p:with-param name="definitions-page" select="$xml-definitions-page" />
   </p:xslt>
 
   <p:sink />
@@ -139,9 +155,9 @@
       <!-- XXX fix up / reduce this XSLT (from RC2) -->
       <p:document href="xml/xml-definitions.xsl" />
     </p:input>
-    <p:with-param name="xml-definitions-page" select="$xml-definitions-filename" />
-    <p:with-param name="json-definitions-page" select="$json-definitions-filename" />
-    <p:with-param name="xml-reference-page" select="$xml-reference-filename" />
+    <p:with-param name="xml-definitions-page" select="$xml-definitions-page" />
+    <p:with-param name="json-definitions-page" select="$json-definitions-page" />
+    <p:with-param name="xml-reference-page" select="$xml-reference-page" />
   </p:xslt>
 
   <p:sink />
@@ -164,8 +180,8 @@
     <p:input port="stylesheet">
       <p:document href="json/object-map-html.xsl" />
     </p:input>
-    <p:with-param name="outline-page" select="$json-outline-filename" />
-    <p:with-param name="reference-page" select="$json-reference-filename" />
+    <p:with-param name="outline-page" select="$json-outline-page" />
+    <p:with-param name="reference-page" select="$json-reference-page" />
   </p:xslt>
 
   <!-- Done with that. -->
@@ -185,10 +201,10 @@
     <p:input port="stylesheet">
       <p:document href="json/object-reference-html.xsl" />
     </p:input>
-    <p:with-param name="json-reference-page" select="$json-reference-filename" />
-    <p:with-param name="json-definitions-page" select="$json-definitions-filename" />
-    <p:with-param name="xml-reference-page" select="$xml-reference-filename" />
-    <p:with-param name="json-map-page" select="$json-outline-filename" />
+    <p:with-param name="json-reference-page" select="$json-reference-page" />
+    <p:with-param name="json-definitions-page" select="$json-definitions-page" />
+    <p:with-param name="xml-reference-page" select="$xml-reference-page" />
+    <p:with-param name="json-map-page" select="$json-outline-page" />
   </p:xslt>
 
   <p:sink />
@@ -204,9 +220,9 @@
     <p:input port="stylesheet">
       <p:document href="json/object-index-html.xsl" />
     </p:input>
-    <p:with-param name="index-page" select="$json-index-filename" />
-    <p:with-param name="reference-page" select="$json-reference-filename" />
-    <p:with-param name="definitions-page" select="$json-definitions-filename" />
+    <p:with-param name="index-page" select="$json-index-page" />
+    <p:with-param name="reference-page" select="$json-reference-page" />
+    <p:with-param name="definitions-page" select="$json-definitions-page" />
   </p:xslt>
 
   <p:sink />
@@ -221,9 +237,9 @@
       <!-- XXX fix up / reduce this XSLT (from RC2) -->
       <p:document href="json/json-definitions.xsl" />
     </p:input>
-    <p:with-param name="json-definitions-page" select="$json-definitions-filename" />
-    <p:with-param name="xml-definitions-page" select="$xml-definitions-filename" />
-    <p:with-param name="json-reference-page" select="$json-reference-filename" />
+    <p:with-param name="json-definitions-page" select="$json-definitions-page" />
+    <p:with-param name="xml-definitions-page" select="$xml-definitions-page" />
+    <p:with-param name="json-reference-page" select="$json-reference-page" />
   </p:xslt>
 
   <p:sink />
