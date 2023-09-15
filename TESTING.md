@@ -4,7 +4,7 @@ An important secondary goal of this project is that its processes should be *val
 
 Testing in this context is very broad, including application-level testing of functionalities; testing of behaviors against documented specifications (both in this repository and elsewhere); and lower-level functional tests.
 
-Any directory (folder) may also have its own `TESTING.md` file with information and instructions, in addition to its README file and any other documentation.
+Any directory (folder) may also have its own `TESTING.md` file with information and instructions, in addition to its `README.md` file and any other documentation.
 
 Like each of these, this document constitutes work in progress, and contributors are invited to offer edits, corrections, clarifications and updates.
 
