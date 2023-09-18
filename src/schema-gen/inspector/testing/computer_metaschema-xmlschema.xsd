@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://example.com/ns/computer"
+           xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           elementFormDefault="qualified"
+           targetNamespace="http://example.com/ns/computer"
+           version="0.0.5">
+   <xs:annotation>
+      <xs:appinfo>
+         <m:schema-name>Computer Model</m:schema-name>
+         <m:schema-version>0.0.5</m:schema-version>
+         <m:short-name>computer</m:short-name>
+         <m:root>computer</m:root>
+      </xs:appinfo>
+   </xs:annotation>
+   <xs:complexType name="computer-vendor-ASSEMBLY">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Vendor Information</m:formal-name>
+            <m:description>Information about a vendor of a computer part.</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Vendor Information</b>: Information about a vendor of a computer part.</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="name" minOccurs="1" maxOccurs="1">
+            <xs:simpleType>
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name>Vendor Name</m:formal-name>
+                     <m:description>The registered company name of the vendor.</m:description>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b>Vendor Name</b>: The registered company name of the vendor.</xs:documentation>
+               </xs:annotation>
+               <xs:restriction base="StringDatatype"/>
+            </xs:simpleType>
+         </xs:element>
+         <xs:element name="address" minOccurs="1" maxOccurs="1">
+            <xs:simpleType>
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name>Vendor Address</m:formal-name>
+                     <m:description>The physical address of an office location for the vendor.</m:description>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b>Vendor Address</b>: The physical address of an office location for the vendor.</xs:documentation>
+               </xs:annotation>
+               <xs:restriction base="StringDatatype"/>
+            </xs:simpleType>
+         </xs:element>
+         <xs:element name="website" minOccurs="1" maxOccurs="1">
+            <xs:simpleType>
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name>Vendor Website</m:formal-name>
+                     <m:description>A public website made by the vendor documenting their parts as used in the computer.</m:description>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b>Vendor Website</b>: A public website made by the vendor documenting their parts as used in the computer.</xs:documentation>
+               </xs:annotation>
+               <xs:restriction base="URIDatatype"/>
+            </xs:simpleType>
+         </xs:element>
+      </xs:sequence>
+      <xs:attribute name="id" use="required" type="StringDatatype">
+         <xs:annotation>
+            <xs:appinfo>
+               <m:formal-name>Vendor Identifier</m:formal-name>
+               <m:description>An identifier for classifying a unique computer parts vendor.</m:description>
+            </xs:appinfo>
+            <xs:documentation>
+               <b>Vendor Identifier</b>: An identifier for classifying a unique computer parts vendor.</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+   </xs:complexType>
+   <xs:simpleType name="computer-product-name-FIELD">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Product Name</m:formal-name>
+            <m:description>The product name from the vendor of the computer part.</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Product Name</b>: The product name from the vendor of the computer part.</xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="StringDatatype"/>
+   </xs:simpleType>
+   <xs:element name="computer" type="computer-computer-ASSEMBLY"/>
+   <xs:complexType name="computer-computer-ASSEMBLY">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Computer Assembly</m:formal-name>
+            <m:description>A container object for a computer, its parts, and its sub-parts.</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Computer Assembly</b>: A container object for a computer, its parts, and its sub-parts.</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="motherboard" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name>Motherboard Assembly</m:formal-name>
+                     <m:description>A container object for a motherboard in a computer and its sub-parts.</m:description>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b>Motherboard Assembly</b>: A container object for a motherboard in a computer and its sub-parts.</xs:documentation>
+               </xs:annotation>
+               <xs:sequence>
+                  <xs:element name="vendor"
+                              type="computer-vendor-ASSEMBLY"
+                              minOccurs="0"
+                              maxOccurs="1"/>
+                  <xs:element name="type" minOccurs="1" maxOccurs="1">
+                     <xs:simpleType>
+                        <xs:annotation>
+                           <xs:appinfo>
+                              <m:formal-name>Motherboard Type</m:formal-name>
+                              <m:description>The type motherboard layout, <code>at</code>, <code>atx</code>, <code>mini-itx</code> or an alternative.</m:description>
+                           </xs:appinfo>
+                           <xs:documentation>
+                              <b>Motherboard Type</b>: The type motherboard layout, at, atx, mini-itx or an alternative.</xs:documentation>
+                        </xs:annotation>
+                        <xs:restriction base="StringDatatype"/>
+                     </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="cpu" minOccurs="0" maxOccurs="1">
+                     <xs:complexType>
+                        <xs:annotation>
+                           <xs:appinfo>
+                              <m:formal-name>Motherboard Central Processing Unit (CPU)</m:formal-name>
+                              <m:description>The model number of the CPU on the motherboard of a computer.</m:description>
+                           </xs:appinfo>
+                           <xs:documentation>
+                              <b>Motherboard Central Processing Unit (CPU)</b>: The model number of the CPU on the motherboard of a computer.</xs:documentation>
+                        </xs:annotation>
+                        <xs:sequence>
+                           <xs:element name="vendor"
+                                       type="computer-vendor-ASSEMBLY"
+                                       minOccurs="0"
+                                       maxOccurs="1"/>
+                           <xs:element name="product-name"
+                                       type="computer-product-name-FIELD"
+                                       minOccurs="1"
+                                       maxOccurs="1"/>
+                           <xs:element name="architecture" minOccurs="1" maxOccurs="1">
+                              <xs:simpleType>
+                                 <xs:annotation>
+                                    <xs:appinfo>
+                                       <m:formal-name>CPU Architecture</m:formal-name>
+                                       <m:description>The Instruction Set Architecture (ISA) of the processor, <code>x86</code>, <code>x86-64</code>, <code>arm</code>, or an alternative.</m:description>
+                                    </xs:appinfo>
+                                    <xs:documentation>
+                                       <b>CPU Architecture</b>: The Instruction Set Architecture (ISA) of the processor, x86, x86-64, arm, or an alternative.</xs:documentation>
+                                 </xs:annotation>
+                                 <xs:restriction base="StringDatatype"/>
+                              </xs:simpleType>
+                           </xs:element>
+                           <xs:element name="speed" minOccurs="1" maxOccurs="1">
+                              <xs:simpleType>
+                                 <xs:annotation>
+                                    <xs:appinfo>
+                                       <m:formal-name>CPU Speed</m:formal-name>
+                                       <m:description>The clock speed of the CPU in megahertz or gigahertz.</m:description>
+                                    </xs:appinfo>
+                                    <xs:documentation>
+                                       <b>CPU Speed</b>: The clock speed of the CPU in megahertz or gigahertz.</xs:documentation>
+                                 </xs:annotation>
+                                 <xs:restriction base="StringDatatype"/>
+                              </xs:simpleType>
+                           </xs:element>
+                        </xs:sequence>
+                     </xs:complexType>
+                  </xs:element>
+                  <xs:element name="ata-socket" minOccurs="0" maxOccurs="1">
+                     <xs:complexType>
+                        <xs:annotation>
+                           <xs:appinfo>
+                              <m:formal-name>Motherboard Advanced Technology Attachment (ATA) Socket</m:formal-name>
+                              <m:description>The model number of ATA socket on the motherboard of a computer. There will only be one socket on any motherboard.</m:description>
+                           </xs:appinfo>
+                           <xs:documentation>
+                              <b>Motherboard Advanced Technology Attachment (ATA) Socket</b>: The model number of ATA socket on the motherboard of a computer. There will only be one socket on any motherboard.</xs:documentation>
+                        </xs:annotation>
+                        <xs:sequence>
+                           <xs:element name="vendor"
+                                       type="computer-vendor-ASSEMBLY"
+                                       minOccurs="0"
+                                       maxOccurs="1"/>
+                           <xs:element name="product-name"
+                                       type="computer-product-name-FIELD"
+                                       minOccurs="1"
+                                       maxOccurs="1"/>
+                           <xs:element name="type" minOccurs="1" maxOccurs="1">
+                              <xs:simpleType>
+                                 <xs:annotation>
+                                    <xs:appinfo>
+                                       <m:formal-name>ATA Socket Type</m:formal-name>
+                                       <m:description>The type of ATA socket on the motherboard , <code>pata</code> (parallel ATA), <code>sata</code> (Serial ATA), or an alternative.</m:description>
+                                    </xs:appinfo>
+                                    <xs:documentation>
+                                       <b>ATA Socket Type</b>: The type of ATA socket on the motherboard , pata (parallel ATA), sata (Serial ATA), or an alternative.</xs:documentation>
+                                 </xs:annotation>
+                                 <xs:restriction base="StringDatatype"/>
+                              </xs:simpleType>
+                           </xs:element>
+                        </xs:sequence>
+                     </xs:complexType>
+                  </xs:element>
+                  <xs:element name="memory" minOccurs="1" maxOccurs="unbounded">
+                     <xs:complexType>
+                        <xs:annotation>
+                           <xs:appinfo>
+                              <m:formal-name>Motherboard Random Access Memory (RAM) Module(s)</m:formal-name>
+                              <m:description>Random access memory hardware installed on the motherboard of a computer.</m:description>
+                           </xs:appinfo>
+                           <xs:documentation>
+                              <b>Motherboard Random Access Memory (RAM) Module(s)</b>: Random access memory hardware installed on the motherboard of a computer.</xs:documentation>
+                        </xs:annotation>
+                        <xs:sequence>
+                           <xs:element name="vendor"
+                                       type="computer-vendor-ASSEMBLY"
+                                       minOccurs="0"
+                                       maxOccurs="1"/>
+                           <xs:element name="product-name"
+                                       type="computer-product-name-FIELD"
+                                       minOccurs="1"
+                                       maxOccurs="1"/>
+                           <xs:element name="byte-size" minOccurs="1" maxOccurs="1">
+                              <xs:simpleType>
+                                 <xs:annotation>
+                                    <xs:appinfo>
+                                       <m:formal-name>Memory Module Size</m:formal-name>
+                                       <m:description>Size of the memory module in binary, not SI base-10 units, meaning a kilobyte is 1024 bytes, not 1000 bytes.</m:description>
+                                    </xs:appinfo>
+                                    <xs:documentation>
+                                       <b>Memory Module Size</b>: Size of the memory module in binary, not SI base-10 units, meaning a kilobyte is 1024 bytes, not 1000 bytes.</xs:documentation>
+                                 </xs:annotation>
+                                 <xs:restriction base="PositiveIntegerDatatype"/>
+                              </xs:simpleType>
+                           </xs:element>
+                        </xs:sequence>
+                     </xs:complexType>
+                  </xs:element>
+                  <xs:element name="expansion-card" minOccurs="0" maxOccurs="unbounded">
+                     <xs:complexType>
+                        <xs:annotation>
+                           <xs:appinfo>
+                              <m:formal-name>Motherboard Expansion Card</m:formal-name>
+                              <m:description>The model number of an expansion card connected to the motherboard of a computer.</m:description>
+                           </xs:appinfo>
+                           <xs:documentation>
+                              <b>Motherboard Expansion Card</b>: The model number of an expansion card connected to the motherboard of a computer.</xs:documentation>
+                        </xs:annotation>
+                        <xs:sequence>
+                           <xs:element name="vendor"
+                                       type="computer-vendor-ASSEMBLY"
+                                       minOccurs="0"
+                                       maxOccurs="1"/>
+                           <xs:element name="product-name"
+                                       type="computer-product-name-FIELD"
+                                       minOccurs="1"
+                                       maxOccurs="1"/>
+                           <xs:element name="type" minOccurs="1" maxOccurs="1">
+                              <xs:simpleType>
+                                 <xs:annotation>
+                                    <xs:appinfo>
+                                       <m:formal-name>Expansion Card Type</m:formal-name>
+                                       <m:description>The type of expansion card on a motherboard of a computer, such as <code>pci</code> (PCI, e.g. Peripheral Component Interconnect), <code>pcie</code> (PCI Express), or an alternative.</m:description>
+                                    </xs:appinfo>
+                                    <xs:documentation>
+                                       <b>Expansion Card Type</b>: The type of expansion card on a motherboard of a computer, such as pci (PCI, e.g. Peripheral Component Interconnect), pcie (PCI Express), or an alternative.</xs:documentation>
+                                 </xs:annotation>
+                                 <xs:restriction base="StringDatatype"/>
+                              </xs:simpleType>
+                           </xs:element>
+                        </xs:sequence>
+                     </xs:complexType>
+                  </xs:element>
+               </xs:sequence>
+            </xs:complexType>
+         </xs:element>
+      </xs:sequence>
+      <xs:attribute name="id" use="required" type="StringDatatype">
+         <xs:annotation>
+            <xs:appinfo>
+               <m:formal-name>Computer Identifier</m:formal-name>
+               <m:description>An identifier for classifying a unique make and model of computer.</m:description>
+            </xs:appinfo>
+            <xs:documentation>
+               <b>Computer Identifier</b>: An identifier for classifying a unique make and model of computer.</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+   </xs:complexType>
+   <xs:simpleType name="PositiveIntegerDatatype">
+      <xs:annotation>
+         <xs:documentation>An integer value that is greater than 0.</xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:positiveInteger">
+         <xs:pattern value="\S(.*\S)?">
+            <xs:annotation>
+               <xs:documentation>This pattern ensures that leading and trailing whitespace is
+						disallowed. This helps to even the user experience between implementations
+						related to whitespace.</xs:documentation>
+            </xs:annotation>
+         </xs:pattern>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="StringDatatype">
+      <xs:annotation>
+         <xs:documentation>A non-empty string of Unicode characters with leading and trailing whitespace
+				disallowed. Whitespace is: U+9, U+10, U+32 or [ \n\t]+</xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:string">
+         <xs:annotation>
+            <xs:documentation>The 'string' datatype restricts the XSD type by prohibiting leading 
+					and trailing whitespace, and something (not only whitespace) is required.</xs:documentation>
+         </xs:annotation>
+         <xs:whiteSpace value="preserve"/>
+         <xs:pattern value="\S(.*\S)?">
+            <xs:annotation>
+               <xs:documentation>This pattern ensures that leading and trailing whitespace is
+						disallowed. This helps to even the user experience between implementations
+						related to whitespace.</xs:documentation>
+            </xs:annotation>
+         </xs:pattern>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="URIDatatype">
+      <xs:annotation>
+         <xs:documentation>A universal resource identifier (URI) formatted according to RFC3986.</xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:anyURI">
+         <xs:pattern value="[a-zA-Z][a-zA-Z0-9+\-.]+:.*\S">
+            <xs:annotation>
+               <xs:documentation>Requires a scheme with colon per RFC 3986.</xs:documentation>
+            </xs:annotation>
+         </xs:pattern>
+      </xs:restriction>
+   </xs:simpleType>
+</xs:schema>
