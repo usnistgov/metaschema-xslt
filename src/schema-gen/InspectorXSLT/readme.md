@@ -22,8 +22,8 @@ This XSLT when applied to an instance produces errors and warnings.
 ### Under Java/Maven
 
 This XSLT can be scripted and run from the command line
-  - delivering SVRL results
-  - or plain text
+  - delivering HTML results
+  - or Markdown
 
 ### Under NodeJS
 
@@ -37,3 +37,15 @@ Another SEF with interface and SVRL rendering templates could provide this funct
 
 We know that we can't do everything under XSLT 1.0 (such as regular expressions for lexical type checking) but we might be able to provide a significant subset, as a "sine qua non" first-cut validator.
 
+## Punchlist
+
+- [x] stand up apply-validator to run a 'null validation' in no-mode
+- [x] inject as boilerplate into input doc for XSLT generator
+  - [ ] any more static code to consolidate in boilerplate?
+- [ ] provide and test datatype validation
+- [ ] deliver as XSLT with optional post-processes applied
+  - embedded report (annotated tree)
+  - report only - summary/detail HTML
+  - report only - summary/detail Markdown
+  - offer the same, only XProc?
+- [ ] constraints!
