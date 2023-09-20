@@ -2,14 +2,14 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:XSLT="http://www.w3.org/1999/XSL/Transform/alias"
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
-  xmlns:pb="http://github.com/wendellpiez/XMLjellysandwich"
-  xmlns="http://www.w3.org/1999/xhtml"
-  xmlns:mx="http://csrc.nist.gov/ns/oscal/metaschema-xslt"
+  xmlns:mx="http://csrc.nist.gov/ns/csd/metaschema-xslt"
   xpath-default-namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
   version="3.0">
   
   <xsl:output indent="yes"/>
   
+  <xsl:variable name="XSLT-template" as="document-node()"
+    select="document('apply-validator.xsl')"/>
   
   <!--
     still to do
@@ -48,6 +48,17 @@
       <xsl:comment expand-text="true"> Generated { current-dateTime() } </xsl:comment>
       
       <xsl:call-template name="comment-xsl">
+        <xsl:with-param name="head">Templates copied from boilerplate</xsl:with-param>
+      </xsl:call-template>
+      
+      <xsl:copy-of select="$XSLT-template/*/*"/>
+
+      <xsl:call-template name="comment-xsl">
+        <xsl:with-param name="head">Generated rules - first, any roots</xsl:with-param>
+      </xsl:call-template>
+      
+      
+      <xsl:call-template name="comment-xsl">
         <xsl:with-param name="head"> Root </xsl:with-param>
       </xsl:call-template>
       <xsl:apply-templates select="define-assembly[exists(root-name)]" mode="require-of"/>
@@ -76,14 +87,14 @@
       <XSLT:template mode="test" match="{ string-join($known-elements,' | ') }">
         <XSLT:call-template name="notice">
           <XSLT:with-param name="cat">context</XSLT:with-param>
-          <XSLT:with-param name="msg" expand-text="true"><code>{ name() }</code> is not expected here.</XSLT:with-param>
+          <XSLT:with-param name="msg" expand-text="true"><mx:gi>{ name() }</mx:gi> is not expected here.</XSLT:with-param>
         </XSLT:call-template>
       </XSLT:template>
       <xsl:variable name="known-attributes" select="((//flag | //define-assembly/define-flag | define-field/define-flag)/mx:use-name(.) => distinct-values()) ! ('@' || .)" />
       <XSLT:template mode="test" match="{ string-join($known-attributes,' | ') }">
         <XSLT:call-template name="notice">
           <XSLT:with-param name="cat">context</XSLT:with-param>
-          <XSLT:with-param name="msg" expand-text="true"><code>@{ name() }</code> is not expected here.</XSLT:with-param>
+          <XSLT:with-param name="msg" expand-text="true"><mx:gi>@{ name() }</mx:gi> is not expected here.</XSLT:with-param>
         </XSLT:call-template>
       </XSLT:template>
       
@@ -98,11 +109,12 @@
       <xsl:for-each-group select="//@as-type[not(.= ('markup-line','markup-multiline') )]/.." group-by="string(@as-type)" expand-text="true">
         <XSLT:template name="check-{ current-grouping-key() }-datatype">
           <!--<XSLT:param tunnel="true" name="matching" as="xs:string" required="true"/>-->
+          <xsl:variable name="test" as="xs:string">not( mx:datatype-validate(.,'{current-grouping-key()}') )</xsl:variable>
           <XSLT:call-template name="notice">
             <XSLT:with-param name="cat">datatype</XSLT:with-param>
-            <XSLT:with-param name="condition"
-              select="not( mx:datatype-validate(.,'{ current-grouping-key() }') )"/>
-            <XSLT:with-param name="msg" expand-text="true"><code>{{ name() }}</code> does not conform to <em>{ current-grouping-key() }</em> datatype.</XSLT:with-param>
+            <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
+            <XSLT:with-param name="condition" select="{$test}"/>
+            <XSLT:with-param name="msg" expand-text="true"><mx:gi>{{ name() }}</mx:gi> does not conform to <em>{ current-grouping-key() }</em> datatype.</XSLT:with-param>
           </XSLT:call-template>
         </XSLT:template>
       </xsl:for-each-group>
@@ -148,30 +160,6 @@
       <XSLT:template match="em/text() | i/text() | strong/text() | b/text() | u/text() | q/text() | code/text() | a/text()" mode="test"/>
       
       
-<!-- TODO: FIX THESE BY ACQUIRING FROM  csx/apply-validator.xsl    -->
-      <XSLT:template name="notice">
-        <XSLT:param name="cat"/>
-        <XSLT:param name="condition"/>
-        <XSLT:param name="msg"/>
-        <XSLT:if test="$condition">
-        <notice cat="{{$cat}}" condition="$condition">
-          <XSLT:copy-of select="$msg"/>
-        </notice>
-        </XSLT:if>
-      </XSLT:template>      
-      
-      <XSLT:template name="notice-multiline"/>
-      
-      <XSLT:function name="mx:datatype-validate">
-        <XSLT:param name="who"/>
-        <XSLT:param name="waht"/>
-      </XSLT:function>
-      
-      <XSLT:template match="/">
-        <result>
-          <XSLT:apply-templates mode="test"/>
-        </result>
-      </XSLT:template>
     </XSLT:transform>
   </xsl:template>
   
@@ -266,20 +254,22 @@
     <!-- test for cardinality -->
     <xsl:if test="number(@min-occurs) gt 1">
       <xsl:variable name="min" select="(@min-occurs, 1)[1]"/>
+      <xsl:variable name="test" as="xs:string">exists(following-sibling::{$using-name}) or (count(. | preceding-sibling::{$using-name}) lt {$min})</xsl:variable>
       <XSLT:call-template name="notice">
         <XSLT:with-param name="cat">cardinality</XSLT:with-param>
-        <XSLT:with-param name="condition"
-          select="exists(following-sibling::{ $using-name }) or (count(. | preceding-sibling::{ $using-name }) lt { $min })"/>
-        <XSLT:with-param name="msg"><code>{ mx:use-name(.) }</code> appears too few times: { $min } minimum are required.</XSLT:with-param>
+        <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
+        <XSLT:with-param name="condition" select="{$test}"/>
+        <XSLT:with-param name="msg"><mx:gi>{ mx:use-name(.) }</mx:gi> appears too few times: { $min } minimum are required.</XSLT:with-param>
       </XSLT:call-template>
     </xsl:if>
     <xsl:if test="not(@max-occurs = 'unbounded')">
       <xsl:variable name="max" select="(@max-occurs ! number(), 1)[1]"/>
+      <xsl:variable name="test" as="xs:string">count(. | preceding-sibling::{$using-name}) gt {$max}</xsl:variable>
       <XSLT:call-template name="notice">
         <XSLT:with-param name="cat">cardinality</XSLT:with-param>
-        <XSLT:with-param name="condition"
-          select="count(. | preceding-sibling::{ $using-name }) gt { $max }"/>
-        <XSLT:with-param name="msg"><code>{ mx:use-name(.) }</code> appears too many times: { $max } maximum { if ($max eq 1) then 'is' else 'are' } permitted.</XSLT:with-param>
+        <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
+        <XSLT:with-param name="condition" select="{$test}"/>
+        <XSLT:with-param name="msg"><mx:gi>{ mx:use-name(.) }</mx:gi> appears too many times: { $max } maximum { if ($max eq 1) then 'is' else 'are' } permitted.</XSLT:with-param>
       </XSLT:call-template>
     </xsl:if>
     
@@ -287,13 +277,14 @@
     
     <xsl:if test="exists(parent::choice)">
         <xsl:variable name="alternatives" select="(parent::choice/child::* except .)"/>
+      <xsl:variable name="test" as="xs:string">exists(../({ ($alternatives ! mx:use-name(.)) => string-join(' | ') }))</xsl:variable>
       <XSLT:call-template name="notice">
-          <XSLT:with-param name="condition"
-            select="exists(../({ ($alternatives ! mx:use-name(.)) => string-join(' | ') }))"/>
+        <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
+        <XSLT:with-param name="condition" select="{$test}"/>
         <XSLT:with-param name="cat">choice</XSLT:with-param>
         <XSLT:with-param name="msg">
-            <code>{ mx:use-name(.) }</code>
-            <xsl:text>is not expected along with </xsl:text> 
+            <mx:gi>{ mx:use-name(.) }</mx:gi>
+            <xsl:text>is unexpected along with </xsl:text> 
             <xsl:call-template name="punctuate-or-code-sequence">
               <xsl:with-param name="items" select="$alternatives"/>
             </xsl:call-template>
@@ -314,13 +305,14 @@
         following-sibling::define-field | following-sibling::define-assembly | following-sibling::choice/child::*"/>
     <xsl:if test="exists($followers)" expand-text="true">
       <!--<XSLT:variable name="interlopers" select="{ ($followers ! mx:use-name(.)) ! ('preceding-sibling::' || .) => string-join(' | ') }"/>-->
+      <xsl:variable name="test" as="xs:string">exists( { ($followers ! mx:match-name(.)) ! ('preceding-sibling::' || .) => string-join(' | ') } )</xsl:variable>
       <XSLT:call-template name="notice">
         <XSLT:with-param name="cat">ordering</XSLT:with-param>
-        <XSLT:with-param name="condition"
-          select="exists( { ($followers ! mx:match-name(.)) ! ('preceding-sibling::' || .) => string-join(' | ') } )"/>
+        <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
+        <XSLT:with-param name="condition" select="{$test}"/>
         <XSLT:with-param name="msg">
-          <code>{ mx:use-name(.) }</code>
-          <xsl:text> is not expected to follow </xsl:text>
+          <mx:gi>{ mx:use-name(.) }</mx:gi>
+          <xsl:text> is unexpected following </xsl:text>
           <xsl:call-template name="punctuate-or-code-sequence">
             <xsl:with-param name="items" select="$followers"/>
           </xsl:call-template>
@@ -334,7 +326,7 @@
     <xsl:param name="items"/>
     <xsl:for-each select="$items" expand-text="true">
       <xsl:call-template name="punctuate-or-item"/>
-      <code>{ mx:match-name(.) }</code>
+      <mx:gi>{ mx:match-name(.) }</mx:gi>
     </xsl:for-each>
   </xsl:template>
   
@@ -354,10 +346,12 @@
       <!-- for each required element ... -->
       <xsl:for-each select="model/(* | choice/*)[@min-occurs ! (number() ge 1)][not(@in-xml='UNWRAPPED')]" expand-text="true">
         <xsl:variable name="requiring" select="mx:match-name(.)"/>
+        <xsl:variable name="test" as="xs:string">empty({$requiring})</xsl:variable>
         <XSLT:call-template name="notice">
           <XSLT:with-param name="cat">required contents</XSLT:with-param>
-          <XSLT:with-param name="condition" select="empty({ $requiring })"/>
-          <XSLT:with-param name="msg" expand-text="true"><code>{{ name() }}</code> requires <code>{ $requiring }</code>.</XSLT:with-param>
+          <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
+          <XSLT:with-param name="condition" select="{$test}"/>
+          <XSLT:with-param name="msg" expand-text="true"><mx:gi>{{ name() }}</mx:gi> requires <mx:gi>{ $requiring }</mx:gi>.</XSLT:with-param>
         </XSLT:call-template>
       </xsl:for-each>
       <xsl:if test="$has-unwrapped-markup-multiline">
@@ -444,10 +438,12 @@
     <!-- for each required attribute ... -->
     <xsl:for-each select="(flag | define-flag)[@required = 'yes']" expand-text="true">
       <xsl:variable name="requiring" select="mx:use-name(.)"/>
+      <xsl:variable name="test" as="xs:string">empty(@{$requiring})</xsl:variable>
       <XSLT:call-template name="notice">
         <XSLT:with-param name="cat">required flag</XSLT:with-param>
-        <XSLT:with-param name="condition" select="empty(@{ $requiring })"/>
-        <XSLT:with-param name="msg" expand-text="true"><code>{{ name() }}</code> requires <code>@{ $requiring }</code>.</XSLT:with-param>
+        <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
+        <XSLT:with-param name="condition" select="{$test}"/>
+        <XSLT:with-param name="msg" expand-text="true"><mx:gi>{{ name() }}</mx:gi> requires <mx:gi>@{ $requiring }</mx:gi>.</XSLT:with-param>
       </XSLT:call-template>
     </xsl:for-each>
   </xsl:template>
@@ -469,7 +465,7 @@
   
   <xsl:function name="mx:tag" as="element()" expand-text="true">
     <xsl:param name="n" as="xs:string"/>
-    <code>{ $n }</code>
+    <mx:gi>{ $n }</mx:gi>
   </xsl:function>
   
 <!-- contextualized match name resolves assembly field and flag

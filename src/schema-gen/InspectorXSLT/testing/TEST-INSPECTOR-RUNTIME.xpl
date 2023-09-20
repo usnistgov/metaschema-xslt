@@ -13,8 +13,9 @@
   
   <p:input port="METASCHEMA" primary="true"/>
   
-  <p:input port="instance" primary="false">
+  <p:input port="instance" primary="false" sequence="true">
     <p:document href="invalid/invalid1.xml"/>
+    <p:document href="invalid/invalid2.xml"/>
   </p:input>
   
   <p:input port="parameters" kind="parameter"/>
@@ -57,14 +58,14 @@
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Import (subpipeline) -->
   
-  <p:import href="../../METASCHEMA-INSPECTOR.xpl"/>
+  <p:import href="../../METASCHEMA-INSPECTOR-XSLT.xpl"/>
   
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Pipeline -->
   
   <p:identity name="metaschema-in"/>
   
-  <metaschema:METASCHEMA-INSPECTOR name="produce-inspector"/>
+  <metaschema:METASCHEMA-INSPECTOR-XSLT name="produce-inspector"/>
   
   <p:identity name="inspector"/>
   
