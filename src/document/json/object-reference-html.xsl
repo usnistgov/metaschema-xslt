@@ -12,7 +12,6 @@
    <xsl:param name="json-map-page"> json/outline</xsl:param>
    <xsl:param name="json-definitions-page">json/definitions</xsl:param>
 
-   <xsl:variable name="datatype-page" as="xs:string">/models/datatypes</xsl:variable>
    <xsl:variable name="meta-schema-reference-url" as="xs:string">https://pages.nist.gov/metaschema/specification/datatypes</xsl:variable>
 
    <xsl:template match="metadata/namespace"/>
