@@ -6,17 +6,13 @@
 
    <xsl:output indent="true"/>
    <!-- produces an HTML 'stub' to be inserted into Hugo -->
+   <xsl:import href="../../common/datatypes.xsl"/>
 
    <xsl:param name="json-reference-page">json/reference</xsl:param>
    <xsl:param name="xml-reference-page">xml/reference</xsl:param>
    <xsl:param name="json-map-page"> json/outline</xsl:param>
    <xsl:param name="json-definitions-page">json/definitions</xsl:param>
 
-<<<<<<< HEAD
-   <xsl:variable name="meta-schema-reference-url" as="xs:string">https://pages.nist.gov/metaschema/specification/datatypes</xsl:variable>
-
-=======
->>>>>>> f5fb3a6d2ee1813891e5c75dccd0c102f0543cb4
    <xsl:template match="metadata/namespace"/>
 
    <xsl:template name="remarks-group">

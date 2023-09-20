@@ -10,18 +10,13 @@
    xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0" exclude-result-prefixes="#all">-->
 
    <!-- produces an HTML 'stub' to be inserted into Hugo -->
+   <xsl:import href="../../common/datatypes.xsl"/>
 
    <xsl:param name="xml-reference-page">xml/reference</xsl:param>
    <xsl:param name="json-reference-page">json/reference</xsl:param>
    <xsl:param name="xml-map-page"> xml/outline</xsl:param>
    <xsl:param name="xml-definitions-page">xml/definitions</xsl:param>
-
-<<<<<<< HEAD
-   <xsl:variable name="meta-schema-reference-url" as="xs:string">https://pages.nist.gov/metaschema/specification/datatypes</xsl:variable>
-=======
-   <xsl:import href="../../common/datatypes.xsl"/>
->>>>>>> f5fb3a6d2ee1813891e5c75dccd0c102f0543cb4
-
+  
    <xsl:template match="metadata/json-base-uri"/>
 
    <xsl:template name="remarks-group">
