@@ -12,8 +12,11 @@
    <xsl:param name="json-map-page"> json/outline</xsl:param>
    <xsl:param name="json-definitions-page">json/definitions</xsl:param>
 
+<<<<<<< HEAD
    <xsl:variable name="meta-schema-reference-url" as="xs:string">https://pages.nist.gov/metaschema/specification/datatypes</xsl:variable>
 
+=======
+>>>>>>> f5fb3a6d2ee1813891e5c75dccd0c102f0543cb4
    <xsl:template match="metadata/namespace"/>
 
    <xsl:template name="remarks-group">
@@ -181,8 +184,9 @@
       </xsl:if>
    </xsl:template>
 
+   <xsl:import href="../../common/datatypes.xsl"/>
    <xsl:template mode="metaschema-type" match="*[exists(@as-type)]" expand-text="true">
-      <a href="{$meta-schema-reference-url}/#{(lower-case(@as-type))}">{ @as-type }</a>
+      <xsl:sequence select="m:datatype-create-link(@as-type)"/>
    </xsl:template>
 
    <xsl:template match="*" mode="report-context" expand-text="true">

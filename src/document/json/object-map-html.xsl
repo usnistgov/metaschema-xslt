@@ -18,8 +18,6 @@
    </xsl:variable>
    <xsl:variable name="reference-link" select="$path-to-common || $reference-page"/> 
    
-   <xsl:variable name="meta-schema-reference-url" as="xs:string">https://pages.nist.gov/metaschema/specification/datatypes</xsl:variable>
-   
    <xsl:template match="/" mode="make-page">
       <html lang="en">
          <head>
@@ -277,8 +275,11 @@ details:not([open]) .show-closed { display: inline }
       </div>
    </xsl:template>
    
+   <xsl:import href="../../common/datatypes.xsl"/>
    <xsl:template priority="2" mode="inline-link-to" match="m:string" expand-text="true">
-      <span class="OM-datatype"><a href="{$meta-schema-reference-url}/#{lower-case(@as-type)}">{ @as-type }</a></span>
+      <span class="OM-datatype">
+         <xsl:sequence select="m:datatype-create-link(@as-type)"/>
+      </span>
    </xsl:template>
    
    <xsl:template mode="contents" match="m:array | m:object | m:singleton-or-array | m:group-by-key">
