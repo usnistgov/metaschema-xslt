@@ -8,36 +8,9 @@
   
   <xsl:output indent="yes"/>
   
+  <!-- Maintaining the boilerplate out of line makes it easier to test and lint. -->
   <xsl:variable name="XSLT-template" as="document-node()"
     select="document('apply-validator.xsl')"/>
-  
-  <!--
-    still to do
-  
-    x choice
-    x order
-    x recursion e.g. part//part ?
- 
- group-as/@in-xml=WITH_WRAPPER
-   AFFECTS
-     x required element check w/in parent assembly
-     o order check 'test-occurrence' - move to parent
-       x off child
-       x on parent
-     x match pattern for inline reference
-     x match (grouping) parent in 'test' mode (to silence)
-     x (not) cardinality check
- 
-    TEST
-    o aliasing e.g. assessment-parts (context?) - expand matches to all occurrences
-      not only refs but parent's refs to one degree (parents only at top level)
-    o @in-xml=unwrapped (on markup-multine)
-    o @in-xml=with-wrapper (grouped)
-    o markup-line
-    o markup-multiline (element content) especially unwrapped
-      o examine for 'prose' element
-  
-  -->
   
   <xsl:namespace-alias stylesheet-prefix="XSLT" result-prefix="xsl"/>
   
@@ -51,7 +24,7 @@
         <xsl:with-param name="head">Templates copied from boilerplate</xsl:with-param>
       </xsl:call-template>
       
-      <xsl:copy-of select="$XSLT-template/*/*"/>
+      <xsl:copy-of select="$XSLT-template/*/(child::* | child::comment())"/>
 
       <xsl:call-template name="comment-xsl">
         <xsl:with-param name="head">Generated rules - first, any roots</xsl:with-param>
@@ -120,8 +93,9 @@
       </xsl:for-each-group>
 
 
-      <!-- Finally we have to generate these instead of keeping them in the static host file,
-      so they will match namespaces. -->
+      <!--
+        Can these be copied not generated?
+        ('Finally we have to generate these - instead of keeping them in the static host file - so they will match namespaces.') -->
       <XSLT:template match="ul | ol" mode="validate-markup-multiline">
         <XSLT:apply-templates select="li" mode="validate-markup-multiline"/>
         <XSLT:for-each select="* except li">
@@ -256,6 +230,7 @@
       <xsl:variable name="min" select="(@min-occurs, 1)[1]"/>
       <xsl:variable name="test" as="xs:string">exists(following-sibling::{$using-name}) or (count(. | preceding-sibling::{$using-name}) lt {$min})</xsl:variable>
       <XSLT:call-template name="notice">
+        <XSLT:with-param name="cf">gix.233</XSLT:with-param>
         <XSLT:with-param name="cat">cardinality</XSLT:with-param>
         <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
         <XSLT:with-param name="condition" select="{$test}"/>
@@ -266,6 +241,7 @@
       <xsl:variable name="max" select="(@max-occurs ! number(), 1)[1]"/>
       <xsl:variable name="test" as="xs:string">count(. | preceding-sibling::{$using-name}) gt {$max}</xsl:variable>
       <XSLT:call-template name="notice">
+        <XSLT:with-param name="cf">gix.244</XSLT:with-param>
         <XSLT:with-param name="cat">cardinality</XSLT:with-param>
         <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
         <XSLT:with-param name="condition" select="{$test}"/>
@@ -279,6 +255,7 @@
         <xsl:variable name="alternatives" select="(parent::choice/child::* except .)"/>
       <xsl:variable name="test" as="xs:string">exists(../({ ($alternatives ! mx:use-name(.)) => string-join(' | ') }))</xsl:variable>
       <XSLT:call-template name="notice">
+        <XSLT:with-param name="cf">gix.258</XSLT:with-param>
         <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
         <XSLT:with-param name="condition" select="{$test}"/>
         <XSLT:with-param name="cat">choice</XSLT:with-param>
@@ -307,6 +284,7 @@
       <!--<XSLT:variable name="interlopers" select="{ ($followers ! mx:use-name(.)) ! ('preceding-sibling::' || .) => string-join(' | ') }"/>-->
       <xsl:variable name="test" as="xs:string">exists( { ($followers ! mx:match-name(.)) ! ('preceding-sibling::' || .) => string-join(' | ') } )</xsl:variable>
       <XSLT:call-template name="notice">
+        <XSLT:with-param name="cf">gix.287</XSLT:with-param>
         <XSLT:with-param name="cat">ordering</XSLT:with-param>
         <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
         <XSLT:with-param name="condition" select="{$test}"/>
@@ -348,6 +326,7 @@
         <xsl:variable name="requiring" select="mx:match-name(.)"/>
         <xsl:variable name="test" as="xs:string">empty({$requiring})</xsl:variable>
         <XSLT:call-template name="notice">
+          <XSLT:with-param name="cf">gix.329</XSLT:with-param>
           <XSLT:with-param name="cat">required contents</XSLT:with-param>
           <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
           <XSLT:with-param name="condition" select="{$test}"/>
@@ -440,6 +419,7 @@
       <xsl:variable name="requiring" select="mx:use-name(.)"/>
       <xsl:variable name="test" as="xs:string">empty(@{$requiring})</xsl:variable>
       <XSLT:call-template name="notice">
+        <XSLT:with-param name="cf">gix.422</XSLT:with-param>
         <XSLT:with-param name="cat">required flag</XSLT:with-param>
         <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
         <XSLT:with-param name="condition" select="{$test}"/>

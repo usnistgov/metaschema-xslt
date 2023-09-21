@@ -20,7 +20,9 @@
     <xsl:param name="IN" select="/"/>
     
     <xsl:template match="/" name="xsl:initial-template">
-        <xsl:apply-templates select="$IN" mode="validate"/>            
+        <mx:validation src="{ base-uri(.) }"
+          <xsl:apply-templates select="$IN" mode="validate"/>
+        </mx:validation>            
     </xsl:template>
 
     <xsl:mode name="validate" on-no-match="shallow-copy"/>
@@ -37,7 +39,14 @@
             <xsl:apply-templates select="." mode="test"/>
             <xsl:apply-templates mode="validate"/>
         </xsl:copy>
-            
+    </xsl:template>
+
+    <!-- tossing these as preventive measure -->
+    <xsl:template mode="validate" match="processing-instruction()"/>
+    
+    <!-- as they may however be informative, comments are kept   -->
+    <xsl:template mode="validate" match="comment()">
+        <xsl:copy-of select="."/>
     </xsl:template>
     
     <xsl:template match="text()" mode="validate">
@@ -50,7 +59,8 @@
     <xsl:template match="*" mode="test">
         <!-- report if not recognized -->
         <xsl:call-template name="notice">
-            <xsl:with-param name="cat">unknown element</xsl:with-param>
+            <xsl:with-param name="cf">av.60</xsl:with-param>
+            <xsl:with-param name="cat">unmatched</xsl:with-param>
             <xsl:with-param name="msg" expand-text="true">Unrecognized element <mx:gi>{ name() }</mx:gi>.</xsl:with-param>
         </xsl:call-template>
     </xsl:template>
@@ -60,7 +70,8 @@
     <xsl:template match="text()" mode="test">
         <!-- report if not recognized -->
         <xsl:call-template name="notice">
-            <xsl:with-param name="cat">misplaced text</xsl:with-param>
+            <xsl:with-param name="cf">av.71</xsl:with-param>
+            <xsl:with-param name="cat">misplaced</xsl:with-param>
             <xsl:with-param name="msg" expand-text="true">Errant text content.</xsl:with-param>
         </xsl:call-template>
     </xsl:template>
@@ -70,7 +81,8 @@
     <!-- report if not recognized -->
     <xsl:template match="*" mode="validate-markup-multiline" name="notice-multiline">
         <xsl:call-template name="notice">
-            <xsl:with-param name="cat">unknown element</xsl:with-param>
+            <xsl:with-param name="cf">av.82</xsl:with-param>
+            <xsl:with-param name="cat">unmatched in markup-multiline</xsl:with-param>
             <xsl:with-param name="msg" expand-text="true">Unrecognized element <mx:gi>{ name() }</mx:gi> in multiline markup.</xsl:with-param>
         </xsl:call-template>
     </xsl:template>
@@ -112,7 +124,8 @@
     <xsl:template match="*" mode="validate-markup-line">
         <!-- report if not recognized -->
         <xsl:call-template name="notice">
-            <xsl:with-param name="cat">unknown element</xsl:with-param>
+            <xsl:with-param name="cf">av.124</xsl:with-param>
+            <xsl:with-param name="cat">unmatched in markup-line</xsl:with-param>
             <xsl:with-param name="msg" expand-text="true">Unrecognized element <mx:gi>{ name() }</mx:gi>.</xsl:with-param>
         </xsl:call-template>
     </xsl:template>
@@ -120,7 +133,8 @@
     <!-- ... and attributes ...  -->
     <xsl:template match="@*" mode="test validate-markup-line validate-markup-multiline">
         <xsl:call-template name="notice">
-            <xsl:with-param name="cat">unknown attribute</xsl:with-param>
+            <xsl:with-param name="cf">av.131</xsl:with-param>
+            <xsl:with-param name="cat">unmatched attribute</xsl:with-param>
             <xsl:with-param name="msg" expand-text="true">Unrecognized attribute <mx:gi>@{ name() }</mx:gi> on element <mx:gi>{ name(..) }</mx:gi> .</xsl:with-param>
         </xsl:call-template>
     </xsl:template>
@@ -128,6 +142,7 @@
     <xsl:template mode="test" match="@xsi:*" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
 
     <xsl:template name="notice">
+        <xsl:param name="cf" as="xs:string" select="document('') => base-uri() => replace('.*/','')"/>
         <xsl:param name="condition" as="xs:boolean" select="true()"/>
         <xsl:param name="testing" as="xs:string">true()</xsl:param>
         <xsl:param name="cat" as="xs:string">[category]</xsl:param>
@@ -136,7 +151,7 @@
             <xsl:variable name="xpath">
                 <xsl:apply-templates select="." mode="xpath"/>
             </xsl:variable>
-            <mx:report test="{ $testing }" cat="{$cat}" xpath="{ $xpath }">
+            <mx:report cf="{$cf}" test="{ $testing }" cat="{$cat}" xpath="{ $xpath }">
                 <xsl:sequence select="$msg"/>
             </mx:report>
         </xsl:if>

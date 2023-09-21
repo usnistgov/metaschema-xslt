@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../../../testing/xspec-assurance.sch"?>
+<x:description
+    xmlns:mx="http://csrc.nist.gov/ns/csd/metaschema-xslt"
+    xmlns="http://example.com/ns/computer"
+    xmlns:mv="http://csrc.nist.gov/ns/csd/metaschema-xslt"
+    xmlns:x="http://www.jenitennison.com/xslt/xspec"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    stylesheet="current/computer_inspector.xsl"
+    xslt-version="3.0">
+
+    <x:scenario label="External test files are valid and invalid as placed">
+        <x:scenario label="A valid file is valid - valid1">
+            <x:context href="valid/valid1.xml" select="/*" mode="validate"/>
+            <x:expect label="An empty reports report" test="empty($x:result//mx:report)"/>
+        </x:scenario>
+        <x:scenario label="A valid file is valid - valid2">
+            <x:context href="valid/valid2.xml" select="/*" mode="validate"/>
+            <x:expect label="An empty reports report" test="empty($x:result//mx:report)"/>
+        </x:scenario>
+        <x:scenario label="A valid file is valid - valid3">
+            <x:context href="valid/valid3.xml" select="/*" mode="validate"/>
+            <x:expect label="An empty reports report" test="empty($x:result//mx:report)"/>
+        </x:scenario>
+        
+        <x:scenario label="An invalid file is invalid - invalid1">
+            <x:context href="invalid/invalid1.xml" mode="validate"/>
+            <x:expect label="Some kind of report(s)" test="exists($x:result//mx:report)"/>            
+        </x:scenario>
+        <x:scenario label="An invalid file is invalid - invalid2">
+            <x:context href="invalid/invalid2.xml" mode="validate"/>
+            <x:expect label="Some kind of report(s)" test="exists($x:result//mx:report)"/>            
+        </x:scenario>
+        <x:scenario label="An invalid file is invalid - invalid3">
+            <x:context href="invalid/invalid3.xml" mode="validate"/>
+            <x:expect label="Some kind of report(s)" test="exists($x:result//mx:report)"/>            
+        </x:scenario>
+        <x:scenario label="An invalid file is invalid - invalid4">
+            <x:context href="invalid/invalid4.xml" mode="validate"/>
+            <x:expect label="Some kind of report(s)" test="exists($x:result//mx:report)"/>            
+        </x:scenario>
+        <x:scenario label="An invalid file is invalid - invalid5">
+            <x:context href="invalid/invalid5.xml" mode="validate"/>
+            <x:expect label="Some kind of report(s)" test="exists($x:result//mx:report)"/>            
+        </x:scenario>
+        <x:scenario label="An invalid file is invalid - invalid6">
+            <x:context href="invalid/invalid6.xml" mode="validate"/>
+            <x:expect label="Some kind of report(s)" test="exists($x:result//mx:report)"/>            
+        </x:scenario>
+        <x:scenario label="An invalid file is invalid - invalid7">
+            <x:context href="invalid/invalid7.xml" mode="validate"/>
+            <x:expect label="Some kind of report(s)" test="exists($x:result//mx:report)"/>            
+        </x:scenario>
+        <x:scenario label="An invalid file is invalid - invalid8">
+            <x:context href="invalid/invalid8.xml" mode="validate"/>
+            <x:expect label="Some kind of report(s)" test="exists($x:result//mx:report)"/>            
+        </x:scenario>
+        
+    </x:scenario>
+    
+</x:description>
