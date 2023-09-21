@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../../../testing/xspec-assurance.sch"?>
+<x:description xmlns:mx="http://csrc.nist.gov/ns/csd/metaschema-xslt"
+    xmlns="http://example.com/ns/computer" xmlns:mv="http://csrc.nist.gov/ns/csd/metaschema-xslt"
+    xmlns:x="http://www.jenitennison.com/xslt/xspec" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    stylesheet="current/computer_inspector.xsl" xslt-version="3.0">
+
+    <!-- This XSpec does two things:
+    
+    1. Smoke testing at top level - everything in place?
+    2. Demonstrating and documenting patterns we can follow including
+         inline and out of line examples
+         comparing results after post-processing with cleaner/normalizer (maintained in helper XSLT)
+    -->
+    <x:helper stylesheet="../mx-reporter.xsl"/>
+
+    <x:scenario label="Haphazard unknown inputs are intercepted and reported">
+        <x:scenario label="An unknown element">
+            <x:context mode="validate"><e/></x:context>
+            <x:expect label="The same, marked as unexpected">
+                <e>
+                    <mx:report cf="..." test="true()" cat="unmatched" xpath="/e">Unrecognized
+                        element <mx:gi>e</mx:gi>.</mx:report>
+                </e>
+            </x:expect>
+        </x:scenario>
+        <x:scenario label="An unknown attribute on a known element">
+            <x:context mode="validate"><computer id="c" nope="x"/></x:context>
+            <x:expect label="The same, marked as unexpected">
+                <computer id="c" nope="x">
+                    <mx:report cf="..." test="true()" cat="unmatched attribute"
+                        xpath="/computer/@nope">Unrecognized attribute <mx:gi>@nope</mx:gi> on
+                        element <mx:gi>computer</mx:gi> .</mx:report>
+                </computer>
+            </x:expect>
+        </x:scenario>
+
+    </x:scenario>
+
+    <x:scenario label="Comments copied and PIs dropped">
+        <x:scenario label="Comment">
+            <x:variable name="mv:a-comment"><!--comment--></x:variable>
+            <x:context select="$mv:a-comment" mode="validate"/>
+            <x:expect label="Copy" select="$mv:a-comment"/>
+        </x:scenario>
+        <x:scenario label="Processing instruction">
+            <x:context mode="validate"><?pi type="sample" href="file.css"?></x:context>
+            <x:expect label="Nothing" select="()"/>
+        </x:scenario>
+    </x:scenario>
+
+    <x:scenario label="Bare but valid document element copies through">
+        <x:scenario label="Computer root">
+            <x:context mode="validate">
+                <computer id="abc"/>
+            </x:context>
+
+            <x:expect label="root becomes root, keeping @id">
+                <computer id="abc"/>
+            </x:expect>
+        </x:scenario>
+    </x:scenario>
+
+
+    <!-- Pattern: apply the validation logic, then extract only its mx parts to compare -->
+    <x:scenario label="Testing cleanup post-process returns only messages, not a copy">
+        <x:scenario label="An error message for an unrecognized document">
+            <x:context mode="validate"><nil/></x:context>
+            <x:expect label="The same, marked as unexpected" test="mx:pull-reports($x:result)">
+                <mx:report cf="..." test="true()" cat="unmatched" xpath="/nil">Unrecognized element
+                        <mx:gi>nil</mx:gi>.</mx:report>
+            </x:expect>
+        </x:scenario>
+    </x:scenario>
+
+    <x:scenario label="Both inline and externally stored instances can be loaded and checked">
+        <x:scenario label="A valid file is valid">
+            <x:context href="valid/valid1.xml" select="/*" mode="validate"/>
+            <x:expect label="An empty reports report" test="empty($x:result//mx:report)"/>
+        </x:scenario>
+        <x:scenario label="Given as a literal, an invalid instance is invalid">
+            <x:context mode="validate">
+                <computer xmlns="http://example.com/ns/computer" id="id1">
+                    <motherboard>
+                        <vendor id="id3">
+                            <name>name0</name>
+                            <address>address0</address>
+                            <website>http://pages.nist.gov/metaschema</website>
+                        </vendor>
+                        <!-- 'type' and 'memory' are both missing -->
+                    </motherboard>
+                </computer>
+            </x:context>
+            <x:expect label="A validation containing (some kind of) report"
+                test="exists($x:result//mx:report)"/>
+        </x:scenario>
+        <x:scenario label="An invalid file on the file system is invalid">
+            <x:context href="invalid/invalid1.xml" mode="validate"/>
+            <x:expect label="A validation containing (some kind of) report"
+                test="exists($x:result//mx:report)"/>
+        </x:scenario>
+    </x:scenario>
+
+</x:description>
