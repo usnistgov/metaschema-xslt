@@ -4,9 +4,11 @@
    xpath-default-namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
    xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0" exclude-result-prefixes="#all">
 
+   <xsl:import href="../../common/datatypes.xsl"/>
+   <xsl:import href="../common/common-reference.xsl"/>
+
    <xsl:output indent="true"/>
    <!-- produces an HTML 'stub' to be inserted into Hugo -->
-   <xsl:import href="../../common/datatypes.xsl"/>
 
    <xsl:param name="json-reference-page">json/reference</xsl:param>
    <xsl:param name="xml-reference-page">xml/reference</xsl:param>
@@ -180,7 +182,6 @@
       </xsl:if>
    </xsl:template>
 
-   <xsl:import href="../../common/datatypes.xsl"/>
    <xsl:template mode="metaschema-type" match="*[exists(@as-type)]" expand-text="true">
       <xsl:sequence select="m:datatype-create-link(@as-type)"/>
    </xsl:template>
@@ -191,9 +192,6 @@
          <code class="path">{ . }</code>
       </xsl:for-each>
    </xsl:template>
-
-
-   <xsl:import href="../common/common-reference.xsl"/>
 
    <xsl:template name="crosslink-to-xml">
       <div class="crosslink">

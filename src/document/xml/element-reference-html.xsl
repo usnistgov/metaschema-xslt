@@ -4,13 +4,15 @@
    xpath-default-namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
    xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
    exclude-result-prefixes="#all">
+
+   <xsl:import href="../../common/datatypes.xsl"/>
+   
    <!--
    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml"
    xpath-default-namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
    xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0" exclude-result-prefixes="#all">-->
 
    <!-- produces an HTML 'stub' to be inserted into Hugo -->
-   <xsl:import href="../../common/datatypes.xsl"/>
 
    <xsl:param name="xml-reference-page">xml/reference</xsl:param>
    <xsl:param name="json-reference-page">json/reference</xsl:param>

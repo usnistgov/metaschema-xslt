@@ -5,6 +5,8 @@
    xpath-default-namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
    exclude-result-prefixes="#all">
 
+   <xsl:import href="../../common/datatypes.xsl"/>
+
    <!-- Purpose: XSLT 3.0 stylesheet for Metaschema display (HTML): XML version -->
    <!-- Input:   Metaschema -->
    <!-- Output:  HTML  -->
@@ -1103,8 +1105,6 @@
    <xsl:template match="assembly" mode="metaschema-type">
       <xsl:apply-templates select="key('assembly-definitions', @ref)" mode="#current"/>
    </xsl:template>
-
-   <xsl:import href="../../common/datatypes.xsl"/>
 
    <xsl:template mode="metaschema-type" match="flag | define-flag">
       <xsl:variable name="given-type"

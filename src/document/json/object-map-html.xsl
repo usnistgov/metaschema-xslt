@@ -5,6 +5,7 @@
    xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
    exclude-result-prefixes="#all">
 
+   <xsl:import href="../../common/datatypes.xsl"/>
 
    <xsl:output omit-xml-declaration="true" indent="yes"/>
 
@@ -275,7 +276,6 @@ details:not([open]) .show-closed { display: inline }
       </div>
    </xsl:template>
    
-   <xsl:import href="../../common/datatypes.xsl"/>
    <xsl:template priority="2" mode="inline-link-to" match="m:string" expand-text="true">
       <span class="OM-datatype">
          <xsl:sequence select="m:datatype-create-link(@as-type)"/>

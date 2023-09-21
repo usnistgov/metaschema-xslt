@@ -5,6 +5,8 @@
    xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
    exclude-result-prefixes="#all">
 
+   <xsl:import href="../../common/datatypes.xsl"/>
+
    <xsl:output indent="yes"/>
    <xsl:variable as="xs:string" name="model-label" select="string(/map/@prefix)"/>
 
@@ -88,7 +90,6 @@ div.OM-map p { margin: 0ex }
       <xsl:value-of select="(@gi,@name)[1]"/>
    </xsl:template> 
    
-   <xsl:import href="../../common/datatypes.xsl"/>
    <xsl:template priority="2" mode="linked-datatype" match="*" expand-text="true">
       <xsl:variable name="type" select="(@as-type,'string')[1]"/>
       <span class="OM-datatype">

@@ -6,6 +6,7 @@
     exclude-result-prefixes="#all">
 
     <xsl:import href="common-reference.xsl"/>
+    <xsl:import href="../../common/datatypes.xsl"/>
     
     <xsl:key name="assembly-definition-by-name" match="/METASCHEMA/define-assembly" use="@_key-name"/>
     <xsl:key name="field-definition-by-name" match="/METASCHEMA/define-field"       use="@_key-name"/>
@@ -237,7 +238,6 @@
     <!-- override this -->
     <xsl:template mode="metaschema-type" match="*" expand-text="true">{ local-name() }</xsl:template>
     
-    <xsl:import href="../../common/datatypes.xsl"/>
     <!-- expect overriding XSLT to provide metaschema type with appropriate link  -->
     <xsl:template mode="metaschema-type" match="*[exists(@as-type)]" expand-text="true">
         <xsl:sequence select="m:datatype-create-link(@as-type)"/>
