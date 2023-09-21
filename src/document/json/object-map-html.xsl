@@ -5,6 +5,7 @@
    xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
    exclude-result-prefixes="#all">
 
+   <xsl:import href="../../common/datatypes.xsl"/>
 
    <xsl:output omit-xml-declaration="true" indent="yes"/>
 
@@ -16,9 +17,7 @@
    <xsl:variable name="path-to-common">
       <xsl:for-each select="tokenize($outline-page,'/')">../</xsl:for-each>
    </xsl:variable>
-   <xsl:variable name="reference-link" select="$path-to-common || $reference-page"/>
-   
-   <xsl:variable name="datatype-page">/reference/datatypes</xsl:variable>
+   <xsl:variable name="reference-link" select="$path-to-common || $reference-page"/> 
    
    <xsl:template match="/" mode="make-page">
       <html lang="en">
@@ -217,8 +216,7 @@ details:not([open]) .show-closed { display: inline }
       <xsl:if test="empty(@_tree-json-id)">
          <xsl:message expand-text="true">not seeing json tree id for { name(.) }</xsl:message>
       </xsl:if>
-      <xsl:variable as="xs:string" name="url-stem" select="replace($reference-link, '.html', '/')" />
-      <a class="OM-name" href="{ $url-stem }#{  @_tree-json-id }">
+      <a class="OM-name" href="{ $reference-link }#{  @_tree-json-id }">
          <xsl:value-of select="(@key,@gi,@name)[1]"/>
       </a>
    </xsl:template>
@@ -279,7 +277,9 @@ details:not([open]) .show-closed { display: inline }
    </xsl:template>
    
    <xsl:template priority="2" mode="inline-link-to" match="m:string" expand-text="true">
-      <span class="OM-datatype"><a href="{$datatype-page}/#{lower-case(@as-type)}">{ @as-type }</a></span>
+      <span class="OM-datatype">
+         <xsl:sequence select="m:datatype-create-link(@as-type)"/>
+      </span>
    </xsl:template>
    
    <xsl:template mode="contents" match="m:array | m:object | m:singleton-or-array | m:group-by-key">

@@ -4,6 +4,9 @@
    xpath-default-namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
    xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
    exclude-result-prefixes="#all">
+
+   <xsl:import href="../../common/datatypes.xsl"/>
+   
    <!--
    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml"
    xpath-default-namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
@@ -15,9 +18,7 @@
    <xsl:param name="json-reference-page">json/reference</xsl:param>
    <xsl:param name="xml-map-page"> xml/outline</xsl:param>
    <xsl:param name="xml-definitions-page">xml/definitions</xsl:param>
-
-   <xsl:variable name="datatype-page" as="xs:string">/reference/datatypes</xsl:variable>
-
+  
    <xsl:template match="metadata/json-base-uri"/>
 
    <xsl:template name="remarks-group">
@@ -185,7 +186,7 @@
          <div class="body">
             <p>
                <xsl:text>This use of the </xsl:text>
-               <a href="{$datatype-page}/#markup-multiline">markup-multiline</a>
+               <xsl:value-of select="m:datatype-create-link('markup-multiline')"/>
                <xsl:text> type permits unwrapped block-level markup.</xsl:text>
             </p>
          </div>
@@ -225,7 +226,7 @@
    </xsl:template>
 
    <xsl:template mode="metaschema-type" match="*[exists(@as-type)]" expand-text="true">
-      <a href="{$datatype-page}/#{(lower-case(@as-type))}">{ @as-type }</a>
+      <xsl:sequence select="m:datatype-create-link(@as-type)"/>
    </xsl:template>
 
    <xsl:import href="../common/common-reference.xsl"/>
