@@ -4,7 +4,7 @@
                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                version="3.0"
                xpath-default-namespace="http://example.com/ns/computer"
-               exclude-result-prefixes="#all"><!-- Generated 2023-09-22T14:16:24.7297642-04:00 -->
+               exclude-result-prefixes="#all"><!-- Generated 2023-09-22T17:40:05.196894-04:00 -->
    <xsl:mode on-no-match="fail"/>
    <xsl:mode name="test" on-no-match="shallow-skip"/>
    <!-- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -->
@@ -228,7 +228,7 @@
          <xsl:with-param name="condition"
                          select="exists( preceding-sibling::type | preceding-sibling::cpu | preceding-sibling::ata-socket | preceding-sibling::memory | preceding-sibling::expansion-card )"/>
          <xsl:with-param name="msg">
-            <mx:gi>vendor</mx:gi> is unexpected following <mx:gi>type</mx:gi>, <mx:gi>cpu</mx:gi>, <mx:gi>ata-socket</mx:gi>, <mx:gi>memory</mx:gi>,  or <mx:gi>expansion-card</mx:gi>.</xsl:with-param>
+            <mx:gi>vendor</mx:gi> is unexpected following <mx:gi>type</mx:gi>, <mx:gi>cpu</mx:gi>, <mx:gi>ata-socket</mx:gi>, <mx:gi>memory</mx:gi>, or <mx:gi>expansion-card</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-vendor-assembly"/>
    </xsl:template>
@@ -249,7 +249,7 @@
          <xsl:with-param name="condition"
                          select="exists( preceding-sibling::product-name | preceding-sibling::architecture | preceding-sibling::speed )"/>
          <xsl:with-param name="msg">
-            <mx:gi>vendor</mx:gi> is unexpected following <mx:gi>product-name</mx:gi>, <mx:gi>architecture</mx:gi>,  or <mx:gi>speed</mx:gi>.</xsl:with-param>
+            <mx:gi>vendor</mx:gi> is unexpected following <mx:gi>product-name</mx:gi>, <mx:gi>architecture</mx:gi>, or <mx:gi>speed</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-vendor-assembly"/>
    </xsl:template>
@@ -346,7 +346,7 @@
          <xsl:with-param name="condition"
                          select="exists( preceding-sibling::ata-socket | preceding-sibling::memory | preceding-sibling::expansion-card )"/>
          <xsl:with-param name="msg">
-            <mx:gi>cpu</mx:gi> is unexpected following <mx:gi>ata-socket</mx:gi>, <mx:gi>memory</mx:gi>,  or <mx:gi>expansion-card</mx:gi>.</xsl:with-param>
+            <mx:gi>cpu</mx:gi> is unexpected following <mx:gi>ata-socket</mx:gi>, <mx:gi>memory</mx:gi>, or <mx:gi>expansion-card</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-computer_..._motherboard_..._cpu-assembly"/>
    </xsl:template>
@@ -565,7 +565,7 @@
          <xsl:with-param name="condition"
                          select="exists( preceding-sibling::cpu | preceding-sibling::ata-socket | preceding-sibling::memory | preceding-sibling::expansion-card )"/>
          <xsl:with-param name="msg">
-            <mx:gi>type</mx:gi> is unexpected following <mx:gi>cpu</mx:gi>, <mx:gi>ata-socket</mx:gi>, <mx:gi>memory</mx:gi>,  or <mx:gi>expansion-card</mx:gi>.</xsl:with-param>
+            <mx:gi>type</mx:gi> is unexpected following <mx:gi>cpu</mx:gi>, <mx:gi>ata-socket</mx:gi>, <mx:gi>memory</mx:gi>, or <mx:gi>expansion-card</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-computer_..._motherboard_..._type-field"/>
    </xsl:template>

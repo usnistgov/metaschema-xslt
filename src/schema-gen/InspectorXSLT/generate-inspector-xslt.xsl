@@ -441,9 +441,12 @@
   </xsl:function>
   
   <xsl:template name="punctuate-or-item">
+    <xsl:variable name="among-more-than-two" select="last() gt 2"/>
+    <xsl:variable name="comes-last" select="position() = last()"/>
     <xsl:if test="position() gt 1">
-      <xsl:if test="last() gt 2">, </xsl:if>
-      <xsl:if test="position() eq last()"> or </xsl:if>
+      <xsl:if test="$among-more-than-two">,</xsl:if>
+      <xsl:text> </xsl:text>
+      <xsl:if test="$comes-last">or </xsl:if>
     </xsl:if>
   </xsl:template>
   
