@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description
+    xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+    xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+    xmlns:mt="http://csrc.nist.gov/ns/oscal/metaschema/xspec/testing"
+    xmlns:sm="http://csrc.nist.gov/ns/oscal/metaschema/1.0/supermodel"
+    xmlns:x="http://www.jenitennison.com/xslt/xspec"
+    xmlns:XSLT="http://www.w3.org/1999/XSL/Transform"
+    stylesheet="../../json-to-xml/produce-json-converter.xsl"
+    xslt-version="3.0">
+
+    <!-- This XSpec file tests that certain code located in
+        produce-xml-converter.xsl either
+        a) Gets reached in a different manner from
+           produce-json-converter.xsl, such as by name instead of
+           by match or using a different mode, or
+        b) Does not get reached (i.e., is overridden) when
+           the top-level stylesheet is produce-json-converter.xsl.
+    -->
+
+    <x:variable name="source-namespace" select="'http://csrc.nist.gov/ns/oscal/1.0'"/>
+    <x:variable name="source-prefix" select="'oscal-profile'"/>
+
+    <x:helper stylesheet="test-helper-xml-to-json.xsl"/>
+
+    <!-- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
+    <!-- produce-json-converter.xsl reaches these templates by name
+        instead of by match -->
+    <x:scenario label="Tests for name=make-template template" pending="TODO">
+        <!-- TODO: Among other things, check for applying templates in mode=make-key-flag,
+            which is empty in XML converter but not empty in JSON converter. -->
+    </x:scenario>
+
+    <x:scenario label="Tests for name=make-full-context-match template" pending="TODO">
+    </x:scenario>
+    
+    <!-- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
+    <!-- produce-json-converter.xsl reaches these templates by
+        mode=make-json-pull instead of mode=make-xml-pull -->
+    <x:scenario label="Tests for match=* mode=make-json-pull template" pending="TODO">
+    </x:scenario>
+    
+    <x:scenario label="Tests for match=choice mode=make-json-pull template" pending="TODO">
+    </x:scenario>
+    
+    <x:scenario label="Tests for match=constraint mode=make-json-pull template" pending="TODO">
+    </x:scenario>
+
+    <!-- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
+    <!-- produce-json-converter.xsl overrides the templates in
+        produce-xml-converter.xsl -->
+    <x:scenario label="Tests for match=* mode=make-match template" pending="TODO">
+    </x:scenario>
+
+    <x:scenario label="Tests for match=* mode=make-pull template">
+        <!-- The purpose of make-pull mode is route to either make-xml-pull
+            or make-json-pull mode, depending on whether the top-level stylesheet
+            is produce-xml-converter.xsl or produce-json-converter.xsl.
+            Check that we reached the JSON stub template in the helper XSLT. -->
+        <x:context mode="make-pull">
+            <mt:any-element xmlns="">stub</mt:any-element>
+        </x:context>
+        <x:expect label="Reached make-json-pull mode for the context element">
+            <!--Reached make-json-pull mode-->
+        </x:expect>
+    </x:scenario>
+
+    <x:scenario label="Tests for match=field[empty(@gi)][@as-type='markup-multiline'] mode=make-template template" pending="TODO">
+    </x:scenario>
+
+    <x:scenario label="Tests for name=comment-template template">
+        <x:context>
+            <mt:any-element xmlns="">stub</mt:any-element>
+        </x:context>
+        <x:call template="comment-template"/>
+        <!-- TODO: When I do more with make-xml-match mode, decide if I want to stop using a stub -->
+        <x:expect label="XML comment with some text from make-xml-match mode (stubbed for testing)">
+            <!-- XML match="Reached make-xml-match mode for any-element" -->
+        </x:expect>
+    </x:scenario>
+
+    <x:scenario label="Tests for name=for-this-converter template" pending="TODO">
+    </x:scenario>
+</x:description>
