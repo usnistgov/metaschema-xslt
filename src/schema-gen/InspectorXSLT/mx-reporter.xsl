@@ -6,17 +6,16 @@
 
     <xsl:output indent="yes"/>
 
-    <xsl:mode on-no-match="shallow-skip"></xsl:mode>
+    <xsl:mode on-no-match="shallow-skip"/>
 
 <!-- Provides functions and processes for handling documents with mx elements
      interspersed. Filter them out but also count them-->
 
     <xsl:function name="mx:pull-reports" as="element()*">
-        <xsl:param name="w" as="node()*"/>
-        <xsl:apply-templates select="$w"/>
+        <xsl:param name="rr" as="node()*"/>
+        <xsl:apply-templates select="$rr"/>
     </xsl:function>
 
-    
     <xsl:template match="mx:*">
         <xsl:copy-of select="."/>
     </xsl:template>
