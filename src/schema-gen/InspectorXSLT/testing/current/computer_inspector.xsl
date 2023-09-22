@@ -4,9 +4,9 @@
                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                version="3.0"
                xpath-default-namespace="http://example.com/ns/computer"
-               exclude-result-prefixes="#all">
+               exclude-result-prefixes="#all"><!-- Generated 2023-09-22T14:16:24.7297642-04:00 -->
+   <xsl:mode on-no-match="fail"/>
    <xsl:mode name="test" on-no-match="shallow-skip"/>
-   <!-- Generated 2023-09-21T15:37:36.7380354-04:00 -->
    <!-- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -->
    <!-- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -->
    <!--    Templates copied from boilerplate-->
@@ -19,10 +19,9 @@
          <output:indent value="true"/>
       </output:serialization-parameters>
    </xsl:variable>
-   <xsl:param name="IN" select="/"/>
    <xsl:template match="/" name="xsl:initial-template">
-      <mx:validation src=" base-uri(.) ">
-         <xsl:apply-templates select="$IN" mode="validate"/>
+      <mx:validation src="{ base-uri(.) }">
+         <xsl:apply-templates mode="validate"/>
       </mx:validation>
    </xsl:template>
    <xsl:mode name="validate" on-no-match="shallow-copy"/>
@@ -130,11 +129,12 @@
                  as="xs:string"
                  select="document('') =&gt; base-uri() =&gt; replace('.*/','')"/>
       <xsl:param name="condition" as="xs:boolean" select="true()"/>
-      <xsl:param name="testing" as="xs:string">true()</xsl:param>
+      <xsl:param name="testing" as="xs:string">exists(.)</xsl:param>
+      <!-- hints at why something is reported -->
       <xsl:param name="cat" as="xs:string">[category]</xsl:param>
       <xsl:param name="msg">[info]</xsl:param>
       <xsl:if test="$condition">
-         <xsl:variable name="xpath">
+         <xsl:variable name="xpath"><!-- handmade paths avoid namespaces and other complications of path(.) -->
             <xsl:apply-templates select="." mode="xpath"/>
          </xsl:variable>
          <mx:report cf="{$cf}" test="{ $testing }" cat="{$cat}" xpath="{ $xpath }">

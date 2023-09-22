@@ -16,9 +16,13 @@
   
   <xsl:template match="/*">
     <XSLT:transform  version="3.0" xpath-default-namespace="{ /METASCHEMA/namespace }" exclude-result-prefixes="#all">
-      <XSLT:mode name="test" on-no-match="shallow-skip"/>
       
       <xsl:comment expand-text="true"> Generated { current-dateTime() } </xsl:comment>
+
+      <XSLT:mode on-no-match="fail"/>
+      
+      <XSLT:mode name="test" on-no-match="shallow-skip"/>
+      
       
       <xsl:call-template name="comment-xsl">
         <xsl:with-param name="head">Templates copied from boilerplate</xsl:with-param>

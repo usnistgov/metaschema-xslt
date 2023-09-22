@@ -17,11 +17,9 @@
         </output:serialization-parameters>
     </xsl:variable>
     
-    <xsl:param name="IN" select="/"/>
-    
     <xsl:template match="/" name="xsl:initial-template">
-        <mx:validation src="{ base-uri(.) }"
-          <xsl:apply-templates select="$IN" mode="validate"/>
+        <mx:validation src="{ base-uri(.) }">
+          <xsl:apply-templates mode="validate"/>
         </mx:validation>            
     </xsl:template>
 
@@ -144,11 +142,11 @@
     <xsl:template name="notice">
         <xsl:param name="cf" as="xs:string" select="document('') => base-uri() => replace('.*/','')"/>
         <xsl:param name="condition" as="xs:boolean" select="true()"/>
-        <xsl:param name="testing" as="xs:string">true()</xsl:param>
+        <xsl:param name="testing" as="xs:string">exists(.)</xsl:param><!-- hints at why something is reported -->
         <xsl:param name="cat" as="xs:string">[category]</xsl:param>
         <xsl:param name="msg">[info]</xsl:param>
         <xsl:if test="$condition">
-            <xsl:variable name="xpath">
+            <xsl:variable name="xpath"><!-- handmade paths avoid namespaces and other complications of path(.) -->
                 <xsl:apply-templates select="." mode="xpath"/>
             </xsl:variable>
             <mx:report cf="{$cf}" test="{ $testing }" cat="{$cat}" xpath="{ $xpath }">
