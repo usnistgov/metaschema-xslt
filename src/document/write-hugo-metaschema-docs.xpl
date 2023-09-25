@@ -37,15 +37,15 @@
       The base path that will be prepended to all relative links (e.g. '' or 'model-name/').
     </p:documentation>
   </p:option>
-  
-  <p:option name="json-outline-page" select="concat($page-base-path, replace($json-outline-filename, '.html', '/'))" />
-  <p:option name="json-reference-page" select="concat($page-base-path, replace($json-reference-filename, '.html', '/'))" />
-  <p:option name="json-index-page" select="concat($page-base-path, replace($json-index-filename, '.html', '/'))" />
-  <p:option name="json-definitions-page" select="concat($page-base-path, replace($json-definitions-filename, '.html', '/'))" />
-  <p:option name="xml-outline-page" select="concat($page-base-path, replace($xml-outline-filename, '.html', '/'))" />
-  <p:option name="xml-reference-page" select="concat($page-base-path, replace($xml-reference-filename, '.html', '/'))" />
-  <p:option name="xml-index-page" select="concat($page-base-path, replace($xml-index-filename, '.html', '/'))" />
-  <p:option name="xml-definitions-page" select="concat($page-base-path, replace($xml-definitions-filename, '.html', '/'))" />
+
+  <p:option name="json-outline-page" select="concat($page-base-path, replace($json-outline-filename, '.html', ''))" />
+  <p:option name="json-reference-page" select="concat($page-base-path, replace($json-reference-filename, '.html', ''))" />
+  <p:option name="json-index-page" select="concat($page-base-path, replace($json-index-filename, '.html', ''))" />
+  <p:option name="json-definitions-page" select="concat($page-base-path, replace($json-definitions-filename, '.html', ''))" />
+  <p:option name="xml-outline-page" select="concat($page-base-path, replace($xml-outline-filename, '.html', ''))" />
+  <p:option name="xml-reference-page" select="concat($page-base-path, replace($xml-reference-filename, '.html', ''))" />
+  <p:option name="xml-index-page" select="concat($page-base-path, replace($xml-index-filename, '.html', ''))" />
+  <p:option name="xml-definitions-page" select="concat($page-base-path, replace($xml-definitions-filename, '.html', ''))" />
 
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Import (subpipeline) -->
