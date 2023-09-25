@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../../../testing/xspec-assurance.sch"?>
+<x:description xmlns:mx="http://csrc.nist.gov/ns/csd/metaschema-xslt"
+    xmlns:mv="http://csrc.nist.gov/ns/csd/metaschema-xslt" xmlns="http://example.com/ns/computer"
+    xmlns:c="http://example.com/ns/computer" xmlns:x="http://www.jenitennison.com/xslt/xspec"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" stylesheet="current/computer_inspector.xsl"
+    xslt-version="3.0">
+
+<!--
+
+        
+   2. Every time 'notice' is called, except when covered already? or in a different xspec
+    -->
+    <x:scenario label="'gix.68' notices">
+        <!-- /descendant::XSLT:call-template[@name='notice'][1]       -->
+        <x:scenario label="For a known but incorrect element at the root (document level)">
+            <x:context mode="test" select="/c:motherboard">
+                <motherboard/>
+            </x:context>
+            <x:expect label="an error is reported">
+                <mx:report cf="gix.68" test="exists(.)"
+                    cat="context" xpath="/motherboard">
+                    <mx:gi>motherboard</mx:gi> is not permitted here.</mx:report>
+            </x:expect>
+        </x:scenario>
+        <x:scenario label="For an element with a known name, but out of place">
+            <x:context mode="test" select="/c:computer/c:computer">
+                <computer id="0000">
+                    <computer/>
+                </computer>
+            </x:context>
+            <x:expect label="an error is reported">
+                <mx:report cf="gix.68" test="exists(.)"
+                    cat="context" xpath="/computer/computer">
+                    <mx:gi>computer</mx:gi> is not permitted here.</mx:report>
+            </x:expect>
+        </x:scenario>
+</x:scenario>
+    
+    <x:scenario label="'gix.76' notices">
+        <!-- TODO: add an optional flag to an element in the metaschema
+        test its appearance somewhere besides its proper parent(s) -->
+        <!-- /descendant::XSLT:call-template[@name='notice'][2]       -->
+    </x:scenario>
+    
+    <x:scenario label="'gix.95' notices" pending="next">
+        <!-- TODO: wire up datatype checking -->
+        <!-- /descendant::XSLT:call-template[@name='notice'][3]       -->
+    </x:scenario>
+    
+    <x:scenario label="'gix.242' notices" pending="next">
+        <!-- /descendant::XSLT:call-template[@name='notice'][4]       -->
+        <!-- TODO: extend metaschema
+               wire up something required at least twice and test that
+               (test for required once as well but it'll be a different template)
+        -->
+    </x:scenario>
+    
+    <x:scenario label="'gix.253' notices">
+        <!-- /descendant::XSLT:call-template[@name='notice'][5]       -->
+        <x:scenario label="For an element with a known name, but out of place">
+            <x:context mode="test" select="/c:computer/c:motherboard[2]">
+                <computer id="0000">
+                    <motherboard/>
+                    <motherboard>
+                        <type/>
+                        <memory/><!-- nb missing contents are not detected by matching 'motherboard' in mode 'test' -->
+                    </motherboard>
+                </computer>
+            </x:context>
+            <x:expect label="an error is reported">
+                <mx:report cf="gix.253" test="count(. | preceding-sibling::motherboard) gt 1"
+                    cat="cardinality" xpath="/computer/motherboard[2]">
+                    <mx:gi>motherboard</mx:gi> appears too many times: 1 maximum is permitted.</mx:report>
+            </x:expect>
+        </x:scenario>
+    </x:scenario>
+    
+    <x:scenario label="'gix.267' notices" pending="next">
+        <!-- TODO: implement sth with 'choice'       -->
+        <!-- /descendant::XSLT:call-template[@name='notice'][6]       -->
+    </x:scenario>
+    
+    <x:scenario label="'gix.296' notices" pending="next">
+        <!-- ordering - test an element appearing out of place -->
+        <!-- /descendant::XSLT:call-template[@name='notice'][7]       -->
+    </x:scenario>
+    
+    <x:scenario label="'gix.337' notices" pending="next">
+        <!-- requiring - reporting when required elements are missing -->
+        <!-- cover when we have model/choice/* as well (exclusive requirements)       -->
+        <!-- /descendant::XSLT:call-template[@name='notice'][8]       -->
+    </x:scenario>
+    
+    <x:scenario label="'gix.430' notices">
+        <x:scenario label="For an attribute required but missing">
+            <x:context mode="test" select="/c:computer">
+                <computer/>
+            </x:context>
+            <x:expect label="an error is reported">
+                <mx:report cf="gix.431" test="empty(@id)" cat="required flag"
+                    xpath="/computer">
+                    <mx:gi>computer</mx:gi> requires <mx:gi>@id</mx:gi>.</mx:report>
+            </x:expect>
+        </x:scenario>
+        <!-- /descendant::XSLT:call-template[@name='notice'][9]       -->
+    </x:scenario>
+    
+    
+    <!-- return list of descendants like this: /descendant::XSLT:call-template[@name='notice']/(position() || ': ' || XSLT:with-param[@name='cf']) => string-join('&#xA;')
+    -->
+    <x:scenario label="'av.60' notices">
+        <x:scenario label="For an unknown element at the root (document level)">
+            <x:context mode="test" select="/c:motherboid">
+                <motherboid/>
+            </x:context>
+            <x:expect label="an error is reported">
+                <mx:report cf="av.60"
+                    test="exists(.)"
+                    cat="unmatched"
+                    xpath="/motherboid">Unrecognized element <mx:gi>motherboid</mx:gi>.</mx:report>
+            </x:expect>
+        </x:scenario>
+        
+    </x:scenario>   
+
+    <x:scenario label="'av.131' notices">
+        <x:scenario label="For an unknown attribute">
+            <x:context mode="test" select="/c:computer">
+                <computer id="0000" networkID="hal"/>
+            </x:context>
+            <x:expect label="an error is reported">
+                <mx:report cf="av.131" test="exists(.)"  cat="unmatched attribute"
+                    xpath="/computer/@networkID">Unrecognized attribute <mx:gi>@networkID</mx:gi> on element <mx:gi>computer</mx:gi> .</mx:report>
+            </x:expect>
+        </x:scenario>
+        <!-- /descendant::XSLT:call-template[@name='notice'][2]       -->
+    </x:scenario>
+    
+    <x:scenario label="SANDBOX">
+        <!-- /descendant::XSLT:call-template[@name='notice'][2]       -->
+    </x:scenario>
+    
+    
+
+    <!-- XXX next up: tracking down and testing each of the template types generated for or copied into inspector XSLT
+           including model//choice/* use cases
+           maybe make an invalid/pathological.xml to maintain out of line and select from for mode 'test' -->
+    <!-- XXX then: wiring in and testing datatypes following XSD generator -->
+    <!-- XXX then: implement message processing (initial template -it calls to wrap logic) to deliver HTML, Markdown, tables or lists
+                     also deliver raw MX; results as annotation (a decorated copy of input), 
+                   mode - verbose, no-warnings, summary-only, silent-if-valid  -->
+    <!-- XXX then: implementing the constraints checking!  -->
+
+</x:description>

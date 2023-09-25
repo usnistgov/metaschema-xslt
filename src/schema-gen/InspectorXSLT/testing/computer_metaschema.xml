@@ -90,6 +90,7 @@
                             </define-field>
                         </model>
                     </define-assembly>
+                    <assembly ref="cooling"/>
                     <define-assembly name="expansion-card" min-occurs="0" max-occurs="unbounded">
                         <formal-name>Motherboard Expansion Card</formal-name>
                         <description>The model number of an expansion card connected to the motherboard of a computer.</description>
@@ -105,6 +106,27 @@
                     </define-assembly>
                 </model>
             </define-assembly>
+        </model>
+    </define-assembly>
+    
+    <define-assembly name="cooling">
+        <formal-name>Cooling</formal-name>
+        <description>How the computer cools itself.</description>
+        <model>
+            <choice><!-- modeled as a choice here: multiple fans, or water. -->
+                <define-assembly name="fan" min-occurs="2" max-occurs="12">
+                    <formal-name>Fan</formal-name>
+                    <description>A fan header for a single fan; at least two fans are required for adequate cooling.</description>
+                </define-assembly>
+                <define-assembly name="water" min-occurs="1" max-occurs="1">
+                    <define-flag name="illuminated" as="boolean">
+                        <formal-name>Whether illuminated</formal-name>
+                        <description>The water system is illuminated for a stunning visual effect (or not).</description>
+                    </define-flag>
+                    <formal-name>Water</formal-name>
+                    <description>A cooling system using water for thermal conduction, transmission and dissipation.</description>                    
+                </define-assembly>
+            </choice>
         </model>
     </define-assembly>
 </METASCHEMA>

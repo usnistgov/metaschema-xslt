@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<computer xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns="http://example.com/ns/computer"
+ id="id1">
+    <motherboard>
+        <vendor id="id3">
+            <name>name0</name>
+            <address>address0</address>
+            <website>http://pages.nist.gov/metaschema</website>
+        </vendor>
+        <type>type0</type>
+        <memory>
+            <vendor id="id11">
+                <name>name4</name>
+                <address>address4</address>
+                <website>http://pages.nist.gov/metaschema</website>
+            </vendor>
+            <product-name>product-name3</product-name>
+            <byte-size>50</byte-size>
+        </memory>
+    </motherboard>
+    <motherboard>
+        <vendor id="id12">
+            <name>name6</name>
+            <address>address0</address>
+            <website>http://pages.nist.gov/metaschema</website>
+        </vendor>
+        <type>type0</type>
+        <memory>
+            <vendor id="id13">
+                <name>name8</name>
+                <address>address4</address>
+                <website>http://pages.nist.gov/metaschema</website>
+            </vendor>
+            <product-name>product-name3</product-name>
+            <byte-size>50</byte-size>
+        </memory>
+    </motherboard>
+</computer>
