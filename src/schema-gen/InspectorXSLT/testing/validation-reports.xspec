@@ -30,12 +30,11 @@
                 </computer>
             </x:context>
             <x:expect label="an error is reported">
-                <mx:report cf="gix.68" test="exists(.)"
-                    cat="context" xpath="/computer/computer">
+                <mx:report cf="gix.68" test="exists(.)" cat="context" xpath="/computer/computer">
                     <mx:gi>computer</mx:gi> is not permitted here.</mx:report>
             </x:expect>
         </x:scenario>
-</x:scenario>
+    </x:scenario>
     
     <x:scenario label="'gix.76' notices">
         <!-- /descendant::XSLT:call-template[@name='notice'][2]       -->
@@ -109,7 +108,7 @@
         
     </x:scenario>
     
-    <x:scenario label="'gix.337' notices" pending="next">
+    <x:scenario label="'gix.337' notices">
         <!-- /descendant::XSLT:call-template[@name='notice'][8]       -->
         <!-- TODO: add some more here -->
         <x:context mode="test" select="/c:computer/c:motherboard/c:cooling">
