@@ -14,8 +14,7 @@
   <p:input port="METASCHEMA" primary="true"/>
   
   <p:input port="instance" primary="false" sequence="true">
-    <p:document href="invalid/invalid1.xml"/>
-    <p:document href="invalid/invalid2.xml"/>
+    <p:document href="invalid/invalid10.xml"/>
   </p:input>
   
   <p:input port="parameters" kind="parameter"/>
@@ -50,9 +49,14 @@
     <p:pipe        port="result"     step="inspector"/>
   </p:output>
   
-  <p:serialization port="OUT_validation-results" indent="true"/>
-  <p:output        port="OUT_validation-results" primary="false">
+  <p:serialization port="OUT_0_validation-results" indent="true"/>
+  <p:output        port="OUT_0_validation-results" primary="false">
     <p:pipe        port="result"     step="inspect-input-instant"/>
+  </p:output>
+  
+  <p:serialization port="OUT_2_html-report" indent="true"/>
+  <p:output        port="OUT_2_html-report" primary="false">
+    <p:pipe        port="result"     step="report-mx"/>
   </p:output>
   
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
@@ -77,6 +81,18 @@
     </p:input>
     <p:input port="stylesheet">
       <p:pipe port="result" step="inspector"/>
+    </p:input>
+  </p:xslt>
+  
+  <p:xslt name="grab-mx">
+    <p:input port="stylesheet">
+      <p:document href="../mx-grabber.xsl"/>
+    </p:input>
+  </p:xslt>
+  
+  <p:xslt name="report-mx">
+    <p:input port="stylesheet">
+      <p:document href="../mx-reporter.xsl"/>
     </p:input>
   </p:xslt>
   
