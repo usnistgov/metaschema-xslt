@@ -243,6 +243,10 @@
                         </xs:sequence>
                      </xs:complexType>
                   </xs:element>
+                  <xs:element name="cooling"
+                              type="computer-cooling-ASSEMBLY"
+                              minOccurs="0"
+                              maxOccurs="1"/>
                   <xs:element name="expansion-card" minOccurs="0" maxOccurs="unbounded">
                      <xs:complexType>
                         <xs:annotation>
@@ -292,6 +296,54 @@
                <b>Computer Identifier</b>: An identifier for classifying a unique make and model of computer.</xs:documentation>
          </xs:annotation>
       </xs:attribute>
+   </xs:complexType>
+   <xs:complexType name="computer-cooling-ASSEMBLY">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Cooling</m:formal-name>
+            <m:description>How the computer cools itself.</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Cooling</b>: How the computer cools itself.</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:choice>
+            <xs:element name="fan" minOccurs="2" maxOccurs="12">
+               <xs:complexType>
+                  <xs:annotation>
+                     <xs:appinfo>
+                        <m:formal-name>Fan</m:formal-name>
+                        <m:description>A fan header for a single fan; at least two fans are required for adequate cooling.</m:description>
+                     </xs:appinfo>
+                     <xs:documentation>
+                        <b>Fan</b>: A fan header for a single fan; at least two fans are required for adequate cooling.</xs:documentation>
+                  </xs:annotation>
+               </xs:complexType>
+            </xs:element>
+            <xs:element name="water" minOccurs="1" maxOccurs="1">
+               <xs:complexType>
+                  <xs:annotation>
+                     <xs:appinfo>
+                        <m:formal-name>Water</m:formal-name>
+                        <m:description>A cooling system using water for thermal conduction, transmission and dissipation.</m:description>
+                     </xs:appinfo>
+                     <xs:documentation>
+                        <b>Water</b>: A cooling system using water for thermal conduction, transmission and dissipation.</xs:documentation>
+                  </xs:annotation>
+                  <xs:attribute name="illuminated" type="StringDatatype">
+                     <xs:annotation>
+                        <xs:appinfo>
+                           <m:formal-name>Whether illuminated</m:formal-name>
+                           <m:description>The water system is illuminated for a stunning visual effect (or not).</m:description>
+                        </xs:appinfo>
+                        <xs:documentation>
+                           <b>Whether illuminated</b>: The water system is illuminated for a stunning visual effect (or not).</xs:documentation>
+                     </xs:annotation>
+                  </xs:attribute>
+               </xs:complexType>
+            </xs:element>
+         </xs:choice>
+      </xs:sequence>
    </xs:complexType>
    <xs:simpleType name="PositiveIntegerDatatype">
       <xs:annotation>

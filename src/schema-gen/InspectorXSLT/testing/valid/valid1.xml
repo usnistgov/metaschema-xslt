@@ -41,9 +41,12 @@
                 <address>address4</address>
                 <website>http://pages.nist.gov/metaschema</website>
             </vendor>
-            <product-name>product-name3</product-name>
+            <product-name>product-name4</product-name>
             <byte-size>50</byte-size>
         </memory>
+        <cooling>
+            <water illuminated="true"/>
+        </cooling>
         <expansion-card>
             <vendor id="id13">
                 <name>name5</name>

@@ -238,7 +238,8 @@
     <!-- test for cardinality -->
     <xsl:if test="number(@min-occurs) gt 1">
       <xsl:variable name="min" select="(@min-occurs, 1)[1]"/>
-      <xsl:variable name="test" as="xs:string">exists(following-sibling::{$using-name}) or (count(. | preceding-sibling::{$using-name}) lt {$min})</xsl:variable>
+      <xsl:variable name="test" as="xs:string">empty(following-sibling::{$using-name}) and (count(. | preceding-sibling::{$using-name}) lt {$min})</xsl:variable>
+      <!--empty(following-sibling::fan) and (count(. | preceding-sibling::fan) lt 2)-->
       <XSLT:call-template name="notice">
         <XSLT:with-param name="cf">gix.242</XSLT:with-param>
         <XSLT:with-param name="cat">cardinality</XSLT:with-param>
@@ -330,8 +331,30 @@
       <!--<XSLT:param tunnel="true" name="matching" as="xs:string">{ (use-name,root-name,@name)[1] }</XSLT:param>-->
       <xsl:call-template name="require-attributes"/>
       <!-- for each required element ... -->
-      <xsl:for-each select="model/(* | choice/*)[@min-occurs ! (number() ge 1)][not(@in-xml='UNWRAPPED')]" expand-text="true">
+      <!--<xsl:for-each select="model/(* | choice/*)[@min-occurs ! (number() ge 1)][not(@in-xml='UNWRAPPED')]" expand-text="true">
+        <!-\- XXX extend $requiring here to produce choices for choice -\->
         <xsl:variable name="requiring" select="mx:match-name(.)"/>
+        <xsl:variable name="test" as="xs:string">empty({$requiring})</xsl:variable>
+        <XSLT:call-template name="notice">
+          <XSLT:with-param name="cf">gix.337</XSLT:with-param>
+          <XSLT:with-param name="cat">required contents</XSLT:with-param>
+          <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
+          <XSLT:with-param name="condition" select="{$test}"/>
+          <XSLT:with-param name="msg" expand-text="true"><mx:gi>{{ name() }}</mx:gi> requires <mx:gi>{ $requiring }</mx:gi>.</XSLT:with-param>
+        </XSLT:call-template>
+      </xsl:for-each>-->
+      <xsl:for-each select="model/*[@min-occurs ! (number() ge 1)][not(@in-xml='UNWRAPPED')] | model/choice[empty( *[@min-occurs ! (number() eq 0)] | *[@in-xml='UNWRAPPED'] )]" expand-text="true">
+        <!-- XXX extend $requiring here to produce choices for choice -->
+        <xsl:variable name="requiring">
+          <xsl:choose>
+            <xsl:when test="self::choice">
+              <xsl:sequence  select="*[@min-occurs ! (number() ge 1)][not(@in-xml='UNWRAPPED')]/mx:match-name(.) => string-join('|')"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:sequence  select="mx:match-name(.)"/>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:variable>
         <xsl:variable name="test" as="xs:string">empty({$requiring})</xsl:variable>
         <XSLT:call-template name="notice">
           <XSLT:with-param name="cf">gix.337</XSLT:with-param>

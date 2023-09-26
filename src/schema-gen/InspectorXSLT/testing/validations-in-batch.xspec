@@ -60,6 +60,10 @@
             <x:context href="invalid/invalid9.xml" mode="validate"/>
             <x:expect label="appears not to be valid" test="$x:result => $mx:makes-reports()"/>
         </x:scenario>
+        <x:scenario label="invalid10.xml">
+            <x:context href="invalid/invalid10.xml" mode="validate"/>
+            <x:expect label="appears not to be valid" test="$x:result => $mx:makes-reports()"/>
+        </x:scenario>
     </x:scenario>
 
     <x:scenario label="No reports are made for any files given as valid">
@@ -73,6 +77,10 @@
         </x:scenario>
         <x:scenario label="valid3.xml">
             <x:context href="valid/valid3.xml" select="/*" mode="validate"/>
+            <x:expect label="appears to be valid" test="$x:result => $mx:makes-reports() => not()"/>
+        </x:scenario>
+        <x:scenario label="valid4.xml">
+            <x:context href="valid/valid4.xml" select="/*" mode="validate"/>
             <x:expect label="appears to be valid" test="$x:result => $mx:makes-reports() => not()"/>
         </x:scenario>
     </x:scenario>

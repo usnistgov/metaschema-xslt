@@ -4,7 +4,7 @@
                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                version="3.0"
                xpath-default-namespace="http://example.com/ns/computer"
-               exclude-result-prefixes="#all"><!-- Generated 2023-09-25T17:16:16.7268117-04:00 -->
+               exclude-result-prefixes="#all"><!-- Generated 2023-09-26T16:37:48.3469269-04:00 -->
    <xsl:mode on-no-match="fail"/>
    <xsl:mode name="test" on-no-match="shallow-skip"/>
    <!-- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -->
@@ -125,9 +125,7 @@
                  mode="test"
                  match="@xsi:*"/>
    <xsl:template name="notice">
-      <xsl:param name="cf"
-                 as="xs:string"
-                 select="document('') =&gt; base-uri() =&gt; replace('.*/','')"/>
+      <xsl:param name="cf" as="xs:string" select="AV.143"/>
       <xsl:param name="condition" as="xs:boolean" select="true()"/>
       <xsl:param name="testing" as="xs:string">exists(.)</xsl:param>
       <!-- hints at why something is reported -->
@@ -224,11 +222,11 @@
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.296</xsl:with-param>
          <xsl:with-param name="cat">ordering</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists( preceding-sibling::type | preceding-sibling::cpu | preceding-sibling::ata-socket | preceding-sibling::memory | preceding-sibling::expansion-card )</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">exists( preceding-sibling::type | preceding-sibling::cpu | preceding-sibling::ata-socket | preceding-sibling::memory | preceding-sibling::cooling | preceding-sibling::expansion-card )</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists( preceding-sibling::type | preceding-sibling::cpu | preceding-sibling::ata-socket | preceding-sibling::memory | preceding-sibling::expansion-card )"/>
+                         select="exists( preceding-sibling::type | preceding-sibling::cpu | preceding-sibling::ata-socket | preceding-sibling::memory | preceding-sibling::cooling | preceding-sibling::expansion-card )"/>
          <xsl:with-param name="msg">
-            <mx:gi>vendor</mx:gi> is unexpected following <mx:gi>type</mx:gi>, <mx:gi>cpu</mx:gi>, <mx:gi>ata-socket</mx:gi>, <mx:gi>memory</mx:gi>, or <mx:gi>expansion-card</mx:gi>.</xsl:with-param>
+            <mx:gi>vendor</mx:gi> is unexpected following <mx:gi>type</mx:gi>, <mx:gi>cpu</mx:gi>, <mx:gi>ata-socket</mx:gi>, <mx:gi>memory</mx:gi>, <mx:gi>cooling</mx:gi>, or <mx:gi>expansion-card</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-vendor-assembly"/>
    </xsl:template>
@@ -295,6 +293,26 @@
       </xsl:call-template>
       <xsl:call-template name="require-for-vendor-assembly"/>
    </xsl:template>
+   <xsl:template priority="5" match="computer/motherboard/cooling" mode="test">
+      <xsl:apply-templates select="@*" mode="test"/>
+      <xsl:call-template name="notice">
+         <xsl:with-param name="cf">gix.253</xsl:with-param>
+         <xsl:with-param name="cat">cardinality</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::cooling) gt 1</xsl:with-param>
+         <xsl:with-param name="condition" select="count(. | preceding-sibling::cooling) gt 1"/>
+         <xsl:with-param name="msg">
+            <mx:gi>cooling</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
+      </xsl:call-template>
+      <xsl:call-template name="notice">
+         <xsl:with-param name="cf">gix.296</xsl:with-param>
+         <xsl:with-param name="cat">ordering</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">exists( preceding-sibling::expansion-card )</xsl:with-param>
+         <xsl:with-param name="condition" select="exists( preceding-sibling::expansion-card )"/>
+         <xsl:with-param name="msg">
+            <mx:gi>cooling</mx:gi> is unexpected following <mx:gi>expansion-card</mx:gi>.</xsl:with-param>
+      </xsl:call-template>
+      <xsl:call-template name="require-for-cooling-assembly"/>
+   </xsl:template>
    <xsl:template priority="5" match="motherboard/expansion-card/vendor" mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
       <xsl:call-template name="notice">
@@ -342,11 +360,11 @@
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.296</xsl:with-param>
          <xsl:with-param name="cat">ordering</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists( preceding-sibling::ata-socket | preceding-sibling::memory | preceding-sibling::expansion-card )</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">exists( preceding-sibling::ata-socket | preceding-sibling::memory | preceding-sibling::cooling | preceding-sibling::expansion-card )</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists( preceding-sibling::ata-socket | preceding-sibling::memory | preceding-sibling::expansion-card )"/>
+                         select="exists( preceding-sibling::ata-socket | preceding-sibling::memory | preceding-sibling::cooling | preceding-sibling::expansion-card )"/>
          <xsl:with-param name="msg">
-            <mx:gi>cpu</mx:gi> is unexpected following <mx:gi>ata-socket</mx:gi>, <mx:gi>memory</mx:gi>, or <mx:gi>expansion-card</mx:gi>.</xsl:with-param>
+            <mx:gi>cpu</mx:gi> is unexpected following <mx:gi>ata-socket</mx:gi>, <mx:gi>memory</mx:gi>, <mx:gi>cooling</mx:gi>, or <mx:gi>expansion-card</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-computer_..._motherboard_..._cpu-assembly"/>
    </xsl:template>
@@ -363,11 +381,11 @@
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.296</xsl:with-param>
          <xsl:with-param name="cat">ordering</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists( preceding-sibling::memory | preceding-sibling::expansion-card )</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">exists( preceding-sibling::memory | preceding-sibling::cooling | preceding-sibling::expansion-card )</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists( preceding-sibling::memory | preceding-sibling::expansion-card )"/>
+                         select="exists( preceding-sibling::memory | preceding-sibling::cooling | preceding-sibling::expansion-card )"/>
          <xsl:with-param name="msg">
-            <mx:gi>ata-socket</mx:gi> is unexpected following <mx:gi>memory</mx:gi> or <mx:gi>expansion-card</mx:gi>.</xsl:with-param>
+            <mx:gi>ata-socket</mx:gi> is unexpected following <mx:gi>memory</mx:gi>, <mx:gi>cooling</mx:gi>, or <mx:gi>expansion-card</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-computer_..._motherboard_..._ata-socket-assembly"/>
    </xsl:template>
@@ -376,10 +394,11 @@
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.296</xsl:with-param>
          <xsl:with-param name="cat">ordering</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists( preceding-sibling::expansion-card )</xsl:with-param>
-         <xsl:with-param name="condition" select="exists( preceding-sibling::expansion-card )"/>
+         <xsl:with-param name="testing" as="xs:string">exists( preceding-sibling::cooling | preceding-sibling::expansion-card )</xsl:with-param>
+         <xsl:with-param name="condition"
+                         select="exists( preceding-sibling::cooling | preceding-sibling::expansion-card )"/>
          <xsl:with-param name="msg">
-            <mx:gi>memory</mx:gi> is unexpected following <mx:gi>expansion-card</mx:gi>.</xsl:with-param>
+            <mx:gi>memory</mx:gi> is unexpected following <mx:gi>cooling</mx:gi> or <mx:gi>expansion-card</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-computer_..._motherboard_..._memory-assembly"/>
    </xsl:template>
@@ -388,6 +407,63 @@
                  mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
       <xsl:call-template name="require-for-computer_..._motherboard_..._expansion-card-assembly"/>
+   </xsl:template>
+   <xsl:template priority="5" match="motherboard/cooling/fan" mode="test">
+      <xsl:apply-templates select="@*" mode="test"/>
+      <xsl:call-template name="notice">
+         <xsl:with-param name="cf">gix.242</xsl:with-param>
+         <xsl:with-param name="cat">cardinality</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">empty(following-sibling::fan) and (count(. | preceding-sibling::fan) lt 2)</xsl:with-param>
+         <xsl:with-param name="condition"
+                         select="empty(following-sibling::fan) and (count(. | preceding-sibling::fan) lt 2)"/>
+         <xsl:with-param name="msg">
+            <mx:gi>fan</mx:gi> appears too few times: 2 minimum are required.</xsl:with-param>
+      </xsl:call-template>
+      <xsl:call-template name="notice">
+         <xsl:with-param name="cf">gix.253</xsl:with-param>
+         <xsl:with-param name="cat">cardinality</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::fan) gt 12</xsl:with-param>
+         <xsl:with-param name="condition" select="count(. | preceding-sibling::fan) gt 12"/>
+         <xsl:with-param name="msg">
+            <mx:gi>fan</mx:gi> appears too many times: 12 maximum are permitted.</xsl:with-param>
+      </xsl:call-template>
+      <xsl:call-template name="notice">
+         <xsl:with-param name="cf">gix.267</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">exists(../(water))</xsl:with-param>
+         <xsl:with-param name="condition" select="exists(../(water))"/>
+         <xsl:with-param name="cat">choice</xsl:with-param>
+         <xsl:with-param name="msg">
+            <mx:gi>fan</mx:gi>is unexpected along with <mx:gi>water</mx:gi>.</xsl:with-param>
+      </xsl:call-template>
+      <xsl:call-template name="notice">
+         <xsl:with-param name="cf">gix.296</xsl:with-param>
+         <xsl:with-param name="cat">ordering</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">exists( preceding-sibling::water )</xsl:with-param>
+         <xsl:with-param name="condition" select="exists( preceding-sibling::water )"/>
+         <xsl:with-param name="msg">
+            <mx:gi>fan</mx:gi> is unexpected following <mx:gi>water</mx:gi>.</xsl:with-param>
+      </xsl:call-template>
+      <xsl:call-template name="require-for-cooling_..._fan-assembly"/>
+   </xsl:template>
+   <xsl:template priority="5" match="motherboard/cooling/water" mode="test">
+      <xsl:apply-templates select="@*" mode="test"/>
+      <xsl:call-template name="notice">
+         <xsl:with-param name="cf">gix.253</xsl:with-param>
+         <xsl:with-param name="cat">cardinality</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::water) gt 1</xsl:with-param>
+         <xsl:with-param name="condition" select="count(. | preceding-sibling::water) gt 1"/>
+         <xsl:with-param name="msg">
+            <mx:gi>water</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
+      </xsl:call-template>
+      <xsl:call-template name="notice">
+         <xsl:with-param name="cf">gix.267</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">exists(../(fan))</xsl:with-param>
+         <xsl:with-param name="condition" select="exists(../(fan))"/>
+         <xsl:with-param name="cat">choice</xsl:with-param>
+         <xsl:with-param name="msg">
+            <mx:gi>water</mx:gi>is unexpected along with <mx:gi>fan</mx:gi>.</xsl:with-param>
+      </xsl:call-template>
+      <xsl:call-template name="require-for-cooling_..._water-assembly"/>
    </xsl:template>
    <xsl:template match="motherboard/cpu/product-name/text()" mode="test"/>
    <xsl:template priority="5" match="motherboard/cpu/product-name" mode="test">
@@ -561,11 +637,11 @@
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.296</xsl:with-param>
          <xsl:with-param name="cat">ordering</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists( preceding-sibling::cpu | preceding-sibling::ata-socket | preceding-sibling::memory | preceding-sibling::expansion-card )</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">exists( preceding-sibling::cpu | preceding-sibling::ata-socket | preceding-sibling::memory | preceding-sibling::cooling | preceding-sibling::expansion-card )</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists( preceding-sibling::cpu | preceding-sibling::ata-socket | preceding-sibling::memory | preceding-sibling::expansion-card )"/>
+                         select="exists( preceding-sibling::cpu | preceding-sibling::ata-socket | preceding-sibling::memory | preceding-sibling::cooling | preceding-sibling::expansion-card )"/>
          <xsl:with-param name="msg">
-            <mx:gi>type</mx:gi> is unexpected following <mx:gi>cpu</mx:gi>, <mx:gi>ata-socket</mx:gi>, <mx:gi>memory</mx:gi>, or <mx:gi>expansion-card</mx:gi>.</xsl:with-param>
+            <mx:gi>type</mx:gi> is unexpected following <mx:gi>cpu</mx:gi>, <mx:gi>ata-socket</mx:gi>, <mx:gi>memory</mx:gi>, <mx:gi>cooling</mx:gi>, or <mx:gi>expansion-card</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-computer_..._motherboard_..._type-field"/>
    </xsl:template>
@@ -650,12 +726,15 @@
    <xsl:template match="/computer/@id" mode="test">
       <xsl:call-template name="require-for-computer_..._id-flag"/>
    </xsl:template>
+   <xsl:template match="cooling/water/@illuminated" mode="test">
+      <xsl:call-template name="require-for-cooling_..._water_..._illuminated-flag"/>
+   </xsl:template>
    <!-- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -->
    <!-- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -->
    <!--     Fallbacks for occurrences of known elements and attributes, except out of context -->
    <!-- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -->
    <xsl:template mode="test"
-                 match="name | address | website | computer | motherboard | vendor | type | cpu | product-name | architecture | speed | ata-socket | memory | byte-size | expansion-card">
+                 match="name | address | website | computer | motherboard | vendor | type | cpu | product-name | architecture | speed | ata-socket | memory | byte-size | cooling | expansion-card | fan | water">
       <xsl:call-template name="notice">
          <xsl:with-param name="cf" as="xs:string">gix.68</xsl:with-param>
          <xsl:with-param name="cat">context</xsl:with-param>
@@ -663,7 +742,7 @@
             <mx:gi>{ name() }</mx:gi> is not permitted here.</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
-   <xsl:template mode="test" match="@id">
+   <xsl:template mode="test" match="@id | @illuminated">
       <xsl:call-template name="notice">
          <xsl:with-param name="cf" as="xs:string">gix.76</xsl:with-param>
          <xsl:with-param name="cat">context</xsl:with-param>
@@ -677,7 +756,7 @@
    <!-- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -->
    <xsl:template name="require-for-vendor-assembly">
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.431</xsl:with-param>
+         <xsl:with-param name="cf">gix.430</xsl:with-param>
          <xsl:with-param name="cat">required flag</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">empty(@id)</xsl:with-param>
          <xsl:with-param name="condition" select="empty(@id)"/>
@@ -718,7 +797,7 @@
    <xsl:template name="require-for-product-name-field"/>
    <xsl:template name="require-for-computer-assembly">
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.431</xsl:with-param>
+         <xsl:with-param name="cf">gix.430</xsl:with-param>
          <xsl:with-param name="cat">required flag</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">empty(@id)</xsl:with-param>
          <xsl:with-param name="condition" select="empty(@id)"/>
@@ -833,6 +912,19 @@
       </xsl:call-template>
    </xsl:template>
    <xsl:template name="require-for-computer_..._motherboard_..._expansion-card_..._type-field"/>
+   <xsl:template name="require-for-cooling-assembly">
+      <xsl:call-template name="notice">
+         <xsl:with-param name="cf">gix.337</xsl:with-param>
+         <xsl:with-param name="cat">required contents</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">empty(fan|water)</xsl:with-param>
+         <xsl:with-param name="condition" select="empty(fan|water)"/>
+         <xsl:with-param name="msg" expand-text="true">
+            <mx:gi>{ name() }</mx:gi> requires <mx:gi>fan|water</mx:gi>.</xsl:with-param>
+      </xsl:call-template>
+   </xsl:template>
+   <xsl:template name="require-for-cooling_..._fan-assembly"/>
+   <xsl:template name="require-for-cooling_..._water-assembly"/>
+   <xsl:template name="require-for-cooling_..._water_..._illuminated-flag"/>
    <!-- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -->
    <!-- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -->
    <!--     Datatypes - a named template for each occurring -->

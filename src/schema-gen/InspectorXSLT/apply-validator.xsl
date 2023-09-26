@@ -140,7 +140,7 @@
     <xsl:template mode="test" match="@xsi:*" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
 
     <xsl:template name="notice">
-        <xsl:param name="cf" as="xs:string" select="document('') => base-uri() => replace('.*/','')"/>
+        <xsl:param name="cf" as="xs:string" select="AV.143"/>
         <xsl:param name="condition" as="xs:boolean" select="true()"/>
         <xsl:param name="testing" as="xs:string">exists(.)</xsl:param><!-- hints at why something is reported -->
         <xsl:param name="cat" as="xs:string">[category]</xsl:param>
