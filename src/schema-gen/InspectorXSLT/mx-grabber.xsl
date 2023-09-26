@@ -2,13 +2,14 @@
 <xsl:stylesheet version="3.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:mx="http://csrc.nist.gov/ns/csd/metaschema-xslt"
-    exclude-result-prefixes="#all"
-     expand-text="true">
+    exclude-result-prefixes="#all" >
 
     <xsl:output indent="yes"/>
 
     <!-- fails except on /mx:validation documents -->
-    <xsl:mode on-no-match="text-only-copy"/>
+    <xsl:mode on-no-match="shallow-skip"/>
+    
+    <xsl:mode name="grab-mx" on-no-match="shallow-skip"/>
     
     <!-- Provides functions and processes for handling documents with mx elements
      interspersed. Filter them out but also count them-->
@@ -18,27 +19,15 @@
         <xsl:apply-templates mode="grab-mx" select="$rr"/>
     </xsl:function>
 
+    <xsl:template match="mx:*" mode="grab-mx">
+        <xsl:copy-of select="."/>
+    </xsl:template>
 
     <xsl:template match="/mx:validation">
-        <html>
-            <xsl:apply-templates/>
-        </html>
-    </xsl:template>
-    
-    <xsl:template match="mx:report">
-        <div class="report { @cat }">
-            <p class="test">{ @test }</p>
-            <p class="xpath">{ @xpath }</p>
-            <p>
-                <xsl:apply-templates/>
-            </p>
-        </div>
-    </xsl:template>
-
-    <xsl:template match="mx:gi">
-        <b>
-            <xsl:apply-templates/>
-        </b>
+        <xsl:copy>
+            <xsl:copy-of select="@*"/>
+            <xsl:apply-templates mode="grab-mx"/>
+        </xsl:copy>
     </xsl:template>
     
 </xsl:stylesheet>
