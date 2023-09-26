@@ -38,9 +38,17 @@
 </x:scenario>
     
     <x:scenario label="'gix.76' notices">
-        <!-- TODO: add an optional flag to an element in the metaschema
-        test its appearance somewhere besides its proper parent(s) -->
         <!-- /descendant::XSLT:call-template[@name='notice'][2]       -->
+        <x:scenario label="For an attribute with a known name, but out of place">
+            <x:context mode="test" select="/c:computer">
+                <computer illuminated="true" id="0000"/>
+            </x:context>
+            <x:expect label="an error is reported">
+                <mx:report cf="gix.76" test="exists(.)" cat="context"
+                    xpath="/computer/@illuminated">
+                    <mx:gi>@illuminated</mx:gi> is not permitted here.</mx:report>
+            </x:expect>
+        </x:scenario>
     </x:scenario>
     
     <x:scenario label="'gix.95' notices" pending="next">
