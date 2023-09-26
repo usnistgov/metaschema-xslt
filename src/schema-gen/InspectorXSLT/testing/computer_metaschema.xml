@@ -90,7 +90,7 @@
                             </define-field>
                         </model>
                     </define-assembly>
-                    <assembly ref="cooling"/>
+                    <assembly ref="cooling" min-occurs="0"/>
                     <define-assembly name="expansion-card" min-occurs="0" max-occurs="unbounded">
                         <formal-name>Motherboard Expansion Card</formal-name>
                         <description>The model number of an expansion card connected to the motherboard of a computer.</description>

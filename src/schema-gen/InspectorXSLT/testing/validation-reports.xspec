@@ -58,7 +58,7 @@
     
     <x:scenario label="'gix.253' notices">
         <!-- /descendant::XSLT:call-template[@name='notice'][5]       -->
-        <x:scenario label="For an element with a known name, but out of place">
+        <x:scenario label="For an element appearing too many times">
             <x:context mode="test" select="/c:computer/c:motherboard[2]">
                 <computer id="0000">
                     <motherboard/>
@@ -81,15 +81,41 @@
         <!-- /descendant::XSLT:call-template[@name='notice'][6]       -->
     </x:scenario>
     
-    <x:scenario label="'gix.296' notices" pending="next">
-        <!-- ordering - test an element appearing out of place -->
+    <x:scenario label="'gix.296' notices">
         <!-- /descendant::XSLT:call-template[@name='notice'][7]       -->
+        <x:scenario label="An element appearing after an optional successor">
+            <x:context mode="test" select="/c:computer/c:motherboard/c:type">
+                <computer id="0000">
+                    <motherboard>
+                        <cooling/>
+                        <type/>
+                    </motherboard>
+                </computer>
+            </x:context>
+            <x:expect label="an error is reported">
+                <mx:report cf="gix.296" test="exists( preceding-sibling::cpu | preceding-sibling::ata-socket | preceding-sibling::memory | preceding-sibling::cooling | preceding-sibling::expansion-card )"
+                    cat="ordering" xpath="/computer/motherboard/type">
+                    <mx:gi>type</mx:gi> is unexpected following <mx:gi>cpu</mx:gi>, <mx:gi>ata-socket</mx:gi>, <mx:gi>memory</mx:gi>, <mx:gi>cooling</mx:gi>, or <mx:gi>expansion-card</mx:gi>.</mx:report>
+            </x:expect>
+        </x:scenario>
+        
     </x:scenario>
     
     <x:scenario label="'gix.337' notices" pending="next">
-        <!-- requiring - reporting when required elements are missing -->
-        <!-- cover when we have model/choice/* as well (exclusive requirements)       -->
         <!-- /descendant::XSLT:call-template[@name='notice'][8]       -->
+        <!-- TODO: add some more here -->
+        <x:context mode="test" select="/c:computer/c:motherboard/c:cooling">
+            <computer id="0000">
+                <motherboard>
+                    <cooling/><!-- contains choice of (required) 'fan' or 'water' -->
+                </motherboard>
+            </computer>
+        </x:context>
+        <x:expect label="an error is reported">
+            <mx:report  cf="gix.337" test="empty(fan|water)" cat="required contents"
+                xpath="/computer/motherboard/cooling">
+                <mx:gi>cooling</mx:gi> requires <mx:gi>fan|water</mx:gi>.</mx:report>
+        </x:expect>
     </x:scenario>
     
     <x:scenario label="'gix.430' notices">
@@ -98,7 +124,7 @@
                 <computer/>
             </x:context>
             <x:expect label="an error is reported">
-                <mx:report cf="gix.431" test="empty(@id)" cat="required flag"
+                <mx:report cf="gix.430" test="empty(@id)" cat="required flag"
                     xpath="/computer">
                     <mx:gi>computer</mx:gi> requires <mx:gi>@id</mx:gi>.</mx:report>
             </x:expect>
@@ -138,6 +164,7 @@
     </x:scenario>
     
     <x:scenario label="SANDBOX">
+        
         <!-- /descendant::XSLT:call-template[@name='notice'][2]       -->
     </x:scenario>
     
