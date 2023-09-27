@@ -14,7 +14,7 @@
   <p:input port="METASCHEMA" primary="true"/>
   
   <p:input port="instance" primary="false" sequence="true">
-    <p:document href="invalid/invalid10.xml"/>
+    <p:document href="invalid/invalid1.xml"/>
   </p:input>
   
   <p:input port="parameters" kind="parameter"/>
@@ -52,6 +52,11 @@
   <p:serialization port="OUT_0_validation-results" indent="true"/>
   <p:output        port="OUT_0_validation-results" primary="false">
     <p:pipe        port="result"     step="inspect-input-instant"/>
+  </p:output>
+  
+  <p:serialization port="OUT_1_reports-only" indent="true"/>
+  <p:output        port="OUT_1_reports-only" primary="false">
+    <p:pipe        port="result"     step="grab-mx"/>
   </p:output>
   
   <p:serialization port="OUT_2_html-report" indent="true"/>
