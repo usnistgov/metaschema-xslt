@@ -26,6 +26,8 @@
     <xsl:template match="/mx:validation">
         <xsl:copy>
             <xsl:copy-of select="@*"/>
+            <xsl:attribute name="elements" select="count(descendant::* except .//mx:*/descendant-or-self::*)"/>
+            <xsl:attribute name="attributes" select="count(descendant::*/@* except .//mx:*/descendant-or-self::*/@*)"/>
             <xsl:apply-templates mode="grab-mx"/>
         </xsl:copy>
     </xsl:template>
