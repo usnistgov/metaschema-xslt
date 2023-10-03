@@ -3,32 +3,77 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:mx="http://csrc.nist.gov/ns/csd/metaschema-xslt"
     exclude-result-prefixes="#all"
+    xmlns="http://www.w3.org/1999/xhtml"
     >
 
-    <xsl:output indent="yes"/>
+    <xsl:output indent="no" encoding="us-ascii"/>
 
     <!-- treat elements in other namespaces as interlopers? -->
     <!--<xsl:variable name="allow-foreign" select="true()"/>-->
     
-    <xsl:variable name="indented-serialization" as="element()">
+    <!--<xsl:variable name="indented-serialization" as="element()">
         <output:serialization-parameters
             xmlns:output="http://www.w3.org/2010/xslt-xquery-serialization">
             <output:indent value="true"/>
         </output:serialization-parameters>
-    </xsl:variable>
+    </xsl:variable>-->
     
+    <!-- returns annotated copy of input tree   -->
     <xsl:template match="/" name="xsl:initial-template">
         <mx:validation src="{ base-uri(.) }">
-          <xsl:apply-templates mode="validate"/>
+            <xsl:apply-templates mode="validate"/>
         </mx:validation>            
     </xsl:template>
+    
+    <xsl:template match="/" mode="mx-reports mx">
+        <xsl:call-template name="mx-reports"/>
+    </xsl:template>
+    
+    <!-- returns mx reports only, with a summary - can be parameterized to filter -->
+    <xsl:template name="mx-reports">
+        <xsl:variable name="mx-validation">
+            <xsl:call-template name="xsl:initial-template"/>
+        </xsl:variable>
+        <xsl:apply-templates mode="grab-mx" select="$mx-validation/*"/>   
+    </xsl:template>
+    
+    <xsl:template name="mx">
+        <xsl:call-template name="mx-reports"/>
+    </xsl:template>
 
+    <xsl:template match="/" mode="html">
+        <xsl:call-template name="html"/>
+    </xsl:template>
+    
+    <xsl:template name="html">
+        <xsl:variable name="mx-reports"><!-- reports has a summary along with any reports -->
+            <xsl:call-template name="mx-reports"/>
+        </xsl:variable>
+        <xsl:apply-templates mode="mx-to-html" select="$mx-reports/*"/>
+    </xsl:template>
+    
+    <xsl:template match="/" mode="markdown md">
+        <xsl:call-template name="markdown"/>
+    </xsl:template>
+    
+    <xsl:template name="markdown">
+        <xsl:variable name="html-report">
+            <xsl:call-template name="html"/>
+        </xsl:variable>
+        <xsl:apply-templates mode="html-to-md" select="$html-report/*"/>
+    </xsl:template>
+    
+    <xsl:template name="md">
+        <xsl:call-template name="markdown"/>
+    </xsl:template>
+    
     <xsl:mode name="validate" on-no-match="shallow-copy"/>
     
     <xsl:mode name="value-only" on-no-match="text-only-copy"/>
     
     <xsl:mode name="validate-markup-line" on-no-match="text-only-copy"/>
     <xsl:mode name="validate-markup-multiline" on-no-match="shallow-skip"/>
+   
     
     <xsl:template match="*" mode="validate">
         <xsl:copy>
@@ -203,7 +248,16 @@
         <xsl:variable name="qname" select="node-name($for)"/>
         <xsl:sequence select="count($for | $for/preceding-sibling::*[node-name() = $qname])"/>
     </xsl:function>
-   
+    
+    <xsl:function name="mx:pluralize" as="xs:string" expand-text="true">
+        <xsl:param name="for" as="xs:double"/>
+        <xsl:param name="as" as="xs:string"/>
+        <xsl:choose>
+            <xsl:when test="$for eq 1">{ $as }</xsl:when>
+            <xsl:otherwise>{ $as }s</xsl:otherwise>
+        </xsl:choose>
+    </xsl:function>
+    
     <xsl:template name="check-markup-line-datatype">
         <xsl:apply-templates mode="validate-markup-line"/>
     </xsl:template>
@@ -218,4 +272,121 @@
         <xsl:param name="nominal-type" as="item()?"/>
         <xsl:sequence select="true()"/>
     </xsl:function>
+    
+    <!-- Mode grab-mx filters mx from its 'host' XML -->
+    
+    <xsl:mode name="grab-mx" on-no-match="shallow-skip"/>
+    
+    <!--copied from mx-grabber.xsl -->
+    
+    <xsl:template match="mx:*" mode="grab-mx">
+        <xsl:copy-of select="."/>
+    </xsl:template>
+    
+    <xsl:template match="/mx:validation" priority="101" mode="grab-mx">
+        <xsl:copy>
+            <xsl:copy-of select="@*"/>
+            <xsl:attribute name="elements" select="count(descendant::* except .//mx:*/descendant-or-self::*)"/>
+            <xsl:attribute name="attributes" select="count(descendant::*/@* except .//mx:*/descendant-or-self::*/@*)"/>
+            <xsl:attribute name="reports" select="count(.//mx:report)"/>
+            <xsl:apply-templates mode="grab-mx"/>
+        </xsl:copy>
+    </xsl:template>
+    
+    <xsl:mode name="mx-to-html" on-no-match="text-only-copy"/>
+    
+    <xsl:template match="/mx:validation" mode="mx-to-html" expand-text="true">
+        <html>
+            <head/>
+            <body>
+                <h1>Validation report - <a href="{ @src }">{ replace(@src,'.*/','') }</a></h1>
+                <p>{ @elements} { mx:pluralize(@elements/number(),'element') } and { @attributes } {  mx:pluralize(@attributes/number(),'attribute') } found in the document.</p>
+                <xsl:apply-templates select="." mode="summary"/>
+                <xsl:apply-templates mode="#current"/>
+            </body>
+        </html>
+    </xsl:template>
+    
+    
+    <xsl:template match="mx:validation" mode="summary" expand-text="true">
+        <div class="summary">
+            <p>{ count(.//mx:report) } reports</p>
+            <p>{ (1 to count(.//mx:report)) ! '&#x1F4A5;' }</p>
+        </div>
+    </xsl:template>
+    
+    <xsl:template match="mx:validation[empty(descendant::mx:report)]" mode="summary">
+        <div class="summary valid">
+            <p>Good news - nothing to report - the instance is valid. &#x1F680;</p>
+        </div>
+    </xsl:template>
+    
+    <xsl:template match="mx:report" mode="mx-to-html" expand-text="true">
+        <div class="report { @cat }">
+            <h3 class="xpath">{ @xpath }</h3>
+            <p class="test">{ @test }</p>
+            <p>
+                <xsl:apply-templates mode="#current"/>
+            </p>
+        </div>
+    </xsl:template>
+    
+    <xsl:template match="mx:gi" mode="mx-to-html" priority="1">
+        <b>
+            <xsl:apply-templates mode="#current"/>
+        </b>
+    </xsl:template>
+    
+    <xsl:template match="mx:report/mx:*" mode="mx-to-html">
+        <i>
+            <xsl:apply-templates mode="#current"/>
+        </i>
+    </xsl:template>
+    
+    <xsl:mode name="html-to-md" on-no-match="text-only-copy"/>
+    
+    <xsl:variable name="lf" as="xs:string"  expand-text="true">{ codepoints-to-string(10) }</xsl:variable>
+    <xsl:variable name="lf2" as="xs:string" expand-text="true">{ $lf }{ $lf }</xsl:variable>
+    
+    <xsl:template mode="html-to-md" match="body" expand-text="true" xpath-default-namespace="http://www.w3.org/1999/xhtml">
+        <!--<xsl:text>{ $lf }</xsl:text>-->
+        <xsl:apply-templates mode="#current"/>
+    </xsl:template>
+    
+    <xsl:template mode="html-to-md" match="div" expand-text="true" xpath-default-namespace="http://www.w3.org/1999/xhtml">
+        <xsl:text>{ $lf2 }---</xsl:text>
+        <xsl:apply-templates mode="#current"/>
+    </xsl:template>
+    
+    <xsl:template mode="html-to-md" match="h1" expand-text="true" xpath-default-namespace="http://www.w3.org/1999/xhtml">
+        <xsl:text>{ $lf2 }# </xsl:text>
+        <xsl:apply-templates mode="#current"/>
+    </xsl:template>
+    
+    <xsl:template mode="html-to-md" match="h2" expand-text="true" xpath-default-namespace="http://www.w3.org/1999/xhtml">
+        <xsl:text>{ $lf2 }## </xsl:text>
+        <xsl:apply-templates mode="#current"/>
+    </xsl:template>
+    
+    <xsl:template mode="html-to-md" match="h3" expand-text="true" xpath-default-namespace="http://www.w3.org/1999/xhtml">
+        <xsl:text>{ $lf2 }### </xsl:text>
+        <xsl:apply-templates mode="#current"/>
+    </xsl:template>
+    
+    <xsl:template mode="html-to-md" match="p" expand-text="true" xpath-default-namespace="http://www.w3.org/1999/xhtml">
+        <xsl:text>{ $lf2 }</xsl:text>
+        <xsl:apply-templates mode="#current"/>
+    </xsl:template>
+    
+    <xsl:template mode="html-to-md" match="b" priority="2" xpath-default-namespace="http://www.w3.org/1999/xhtml">
+        <xsl:text>**</xsl:text>
+        <xsl:apply-templates mode="#current"/>
+        <xsl:text>**</xsl:text>
+    </xsl:template>
+    <xsl:template mode="html-to-md" match="i | p/*" xpath-default-namespace="http://www.w3.org/1999/xhtml">
+        <xsl:text>*</xsl:text>
+        <xsl:apply-templates mode="#current"/>
+        <xsl:text>*</xsl:text>
+    </xsl:template>
+    
 </xsl:stylesheet>

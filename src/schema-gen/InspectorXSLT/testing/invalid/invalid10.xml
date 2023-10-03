@@ -19,7 +19,7 @@
             <product-name>product-name3</product-name>
             <byte-size>50</byte-size>
         </memory>
-        <cooling><!-- fourteen fans is too many -->
+        <cooling><!-- fourteen fans is too many --><water/>
             <fan/><fan/><fan/><fan/><fan/><fan/><fan/>
             <fan/><fan/><fan/><fan/><fan/><fan/><fan/>
         </cooling>

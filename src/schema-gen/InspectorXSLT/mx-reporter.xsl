@@ -48,8 +48,8 @@
     
     <xsl:template match="mx:report">
         <div class="report { @cat }">
+            <h3 class="xpath">{ @xpath }</h3>
             <p class="test">{ @test }</p>
-            <p class="xpath">{ @xpath }</p>
             <p>
                 <xsl:apply-templates/>
             </p>

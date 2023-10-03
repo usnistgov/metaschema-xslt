@@ -4,6 +4,7 @@
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:mx="http://csrc.nist.gov/ns/csd/metaschema-xslt"
   xpath-default-namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+  xmlns="http://www.w3.org/1999/xhtml"
   version="3.0">
   
   <!-- For extra integrity run Schematron inspector-generator-checkup.sch on this XSLT. -->
@@ -66,7 +67,7 @@
       <xsl:variable name="known-elements"   select="(/*/*/root-name/parent::define-assembly | //model//define-assembly | //model//define-field | //assembly | //field)[not(@in-xml='UNWRAPPED')]/mx:use-name(.) => distinct-values()" />
       <XSLT:template mode="test" match="{ $known-elements => string-join(' | ') }">
         <XSLT:call-template name="notice">
-          <XSLT:with-param name="cf" as="xs:string">gix.68</XSLT:with-param>
+          <XSLT:with-param name="cf" as="xs:string">gix.69</XSLT:with-param>
           <XSLT:with-param name="cat">context</XSLT:with-param>
           <XSLT:with-param name="msg" expand-text="true"><mx:gi>{ name() }</mx:gi> is not permitted here.</XSLT:with-param>
         </XSLT:call-template>
@@ -74,7 +75,7 @@
       <xsl:variable name="known-attributes" select="((//flag | //define-assembly/define-flag | define-field/define-flag)/mx:use-name(.) => distinct-values()) ! ('@' || .)" />
       <XSLT:template mode="test" match="{ $known-attributes => string-join(' | ') }">
         <XSLT:call-template name="notice">
-          <XSLT:with-param name="cf" as="xs:string">gix.76</XSLT:with-param>
+          <XSLT:with-param name="cf" as="xs:string">gix.77</XSLT:with-param>
           <XSLT:with-param name="cat">context</XSLT:with-param>
           <XSLT:with-param name="msg" expand-text="true"><mx:gi>@{ name() }</mx:gi> is not permitted here.</XSLT:with-param>
         </XSLT:call-template>
@@ -93,7 +94,7 @@
           <!--<XSLT:param tunnel="true" name="matching" as="xs:string" required="true"/>-->
           <xsl:variable name="test" as="xs:string">not( mx:datatype-validate(.,'{current-grouping-key()}') )</xsl:variable>
           <XSLT:call-template name="notice">
-            <XSLT:with-param name="cf" as="xs:string">gix.95</XSLT:with-param>
+            <XSLT:with-param name="cf" as="xs:string">gix.96</XSLT:with-param>
             <XSLT:with-param name="cat">datatype</XSLT:with-param>
             <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
             <XSLT:with-param name="condition" select="{$test}"/>
@@ -234,14 +235,14 @@
   </xsl:template>
   
   <xsl:template name="test-occurrence" expand-text="true">
-    <xsl:param name="using-name"/>
+    <xsl:param name="using-name" required="true"/>
     <!-- test for cardinality -->
     <xsl:if test="number(@min-occurs) gt 1">
       <xsl:variable name="min" select="(@min-occurs, 1)[1]"/>
       <xsl:variable name="test" as="xs:string">empty(following-sibling::{$using-name}) and (count(. | preceding-sibling::{$using-name}) lt {$min})</xsl:variable>
       <!--empty(following-sibling::fan) and (count(. | preceding-sibling::fan) lt 2)-->
       <XSLT:call-template name="notice">
-        <XSLT:with-param name="cf">gix.242</XSLT:with-param>
+        <XSLT:with-param name="cf">gix.244</XSLT:with-param>
         <XSLT:with-param name="cat">cardinality</XSLT:with-param>
         <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
         <XSLT:with-param name="condition" select="{$test}"/>
@@ -252,7 +253,7 @@
       <xsl:variable name="max" select="(@max-occurs ! number(), 1)[1]"/>
       <xsl:variable name="test" as="xs:string">count(. | preceding-sibling::{$using-name}) gt {$max}</xsl:variable>
       <XSLT:call-template name="notice">
-        <XSLT:with-param name="cf">gix.253</XSLT:with-param>
+        <XSLT:with-param name="cf">gix.255</XSLT:with-param>
         <XSLT:with-param name="cat">cardinality</XSLT:with-param>
         <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
         <XSLT:with-param name="condition" select="{$test}"/>
@@ -260,11 +261,9 @@
       </XSLT:call-template>
     </xsl:if>
     
-    <!-- TBD: test for order (check preceding sibling types) keeping in mind 'choice' perturbations etc. -->
-    
-    <xsl:if test="exists(parent::choice)">
-        <xsl:variable name="alternatives" select="(parent::choice/child::* except .)"/>
-      <xsl:variable name="test" as="xs:string">exists(../({ ($alternatives ! mx:use-name(.)) => string-join(' | ') }))</xsl:variable>
+    <xsl:if test="exists(parent::choice)"><!-- opting to be a little noisy - reporting for all exclusive choices given -->
+      <xsl:variable name="alternatives" select="(parent::choice/child::* except .)"/>
+      <xsl:variable name="test" as="xs:string">empty(preceding-sibling::{$using-name}) and exists(../({ ($alternatives ! mx:use-name(.)) => string-join(' | ') }))</xsl:variable>
       <XSLT:call-template name="notice">
         <XSLT:with-param name="cf">gix.267</XSLT:with-param>
         <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
@@ -272,7 +271,7 @@
         <XSLT:with-param name="cat">choice</XSLT:with-param>
         <XSLT:with-param name="msg">
             <mx:gi>{ mx:use-name(.) }</mx:gi>
-            <xsl:text>is unexpected along with </xsl:text> 
+            <xsl:text> is unexpected along with </xsl:text> 
             <xsl:call-template name="punctuate-or-code-sequence">
               <xsl:with-param name="items" select="$alternatives"/>
             </xsl:call-template>
@@ -286,16 +285,15 @@
     </xsl:if>
   </xsl:template>
   
-  <xsl:template name="test-order">
-    
+  <xsl:template name="test-order">    
     <xsl:variable name="followers"
-      select="following-sibling::field | following-sibling::assembly |
-        following-sibling::define-field | following-sibling::define-assembly | following-sibling::choice/child::*"/>
+      select="(following-sibling::field | following-sibling::assembly |
+        following-sibling::define-field | following-sibling::define-assembly | following-sibling::choice/child::*) except (parent::choice/*)"/>
     <xsl:if test="exists($followers)" expand-text="true">
       <!--<XSLT:variable name="interlopers" select="{ ($followers ! mx:use-name(.)) ! ('preceding-sibling::' || .) => string-join(' | ') }"/>-->
       <xsl:variable name="test" as="xs:string">exists( { ($followers ! mx:match-name(.)) ! ('preceding-sibling::' || .) => string-join(' | ') } )</xsl:variable>
       <XSLT:call-template name="notice">
-        <XSLT:with-param name="cf">gix.296</XSLT:with-param>
+        <XSLT:with-param name="cf">gix.295</XSLT:with-param>
         <XSLT:with-param name="cat">ordering</XSLT:with-param>
         <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
         <XSLT:with-param name="condition" select="{$test}"/>
@@ -357,7 +355,7 @@
         </xsl:variable>
         <xsl:variable name="test" as="xs:string">empty({$requiring})</xsl:variable>
         <XSLT:call-template name="notice">
-          <XSLT:with-param name="cf">gix.337</XSLT:with-param>
+          <XSLT:with-param name="cf">gix.357</XSLT:with-param>
           <XSLT:with-param name="cat">required contents</XSLT:with-param>
           <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
           <XSLT:with-param name="condition" select="{$test}"/>
@@ -450,7 +448,7 @@
       <xsl:variable name="requiring" select="mx:use-name(.)"/>
       <xsl:variable name="test" as="xs:string">empty(@{$requiring})</xsl:variable>
       <XSLT:call-template name="notice">
-        <XSLT:with-param name="cf">gix.430</XSLT:with-param>
+        <XSLT:with-param name="cf">gix.450</XSLT:with-param>
         <XSLT:with-param name="cat">required flag</XSLT:with-param>
         <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
         <XSLT:with-param name="condition" select="{$test}"/>

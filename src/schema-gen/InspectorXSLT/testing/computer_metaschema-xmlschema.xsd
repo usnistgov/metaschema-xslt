@@ -325,19 +325,19 @@
                   <xs:annotation>
                      <xs:appinfo>
                         <m:formal-name>Water</m:formal-name>
-                        <m:description>A cooling system using water for thermal conduction, transmission and dissipation.</m:description>
+                        <m:description>A cooling system using water for thermal regulation.</m:description>
                      </xs:appinfo>
                      <xs:documentation>
-                        <b>Water</b>: A cooling system using water for thermal conduction, transmission and dissipation.</xs:documentation>
+                        <b>Water</b>: A cooling system using water for thermal regulation.</xs:documentation>
                   </xs:annotation>
                   <xs:attribute name="illuminated" type="StringDatatype">
                      <xs:annotation>
                         <xs:appinfo>
                            <m:formal-name>Whether illuminated</m:formal-name>
-                           <m:description>The water system is illuminated for a stunning visual effect (or not).</m:description>
+                           <m:description>The water system is illuminated for visual effect.</m:description>
                         </xs:appinfo>
                         <xs:documentation>
-                           <b>Whether illuminated</b>: The water system is illuminated for a stunning visual effect (or not).</xs:documentation>
+                           <b>Whether illuminated</b>: The water system is illuminated for visual effect.</xs:documentation>
                      </xs:annotation>
                   </xs:attribute>
                </xs:complexType>
