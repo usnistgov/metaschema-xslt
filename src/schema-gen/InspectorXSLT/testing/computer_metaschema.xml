@@ -119,12 +119,12 @@
                     <description>A fan header for a single fan; at least two fans are required for adequate cooling.</description>
                 </define-assembly>
                 <define-assembly name="water" min-occurs="1" max-occurs="1">
-                    <define-flag name="illuminated" as="boolean">
+                    <formal-name>Water</formal-name>
+                    <description>A cooling system using water for thermal regulation.</description>                    
+                    <define-flag name="illuminated" as-type="boolean">
                         <formal-name>Whether illuminated</formal-name>
                         <description>The water system is illuminated for visual effect.</description>
                     </define-flag>
-                    <formal-name>Water</formal-name>
-                    <description>A cooling system using water for thermal regulation.</description>                    
                 </define-assembly>
             </choice>
         </model>

@@ -11,15 +11,14 @@
         
    2. Every time 'notice' is called, except when covered already? or in a different xspec
     -->
-    <x:scenario label="'gix.69' notices">
+    <x:scenario label="'EOOP element-out-of-place' notices">
         <!-- /descendant::XSLT:call-template[@name='notice'][1]       -->
         <x:scenario label="For a known but incorrect element at the root (document level)">
             <x:context mode="test" select="/c:motherboard">
                 <motherboard/>
             </x:context>
             <x:expect label="an error is reported">
-                <mx:report cf="gix.69" test="exists(.)"
-                    cat="context" xpath="/motherboard">
+                <mx:report cf="..." test="exists(.)" xpath="/motherboard" class="EOOP element-out-of-place">
                     <mx:gi>motherboard</mx:gi> is not permitted here.</mx:report>
             </x:expect>
         </x:scenario>
@@ -30,21 +29,21 @@
                 </computer>
             </x:context>
             <x:expect label="an error is reported">
-                <mx:report cf="gix.69" test="exists(.)" cat="context" xpath="/computer/computer">
+                <mx:report cf="..." test="exists(.)" xpath="/computer/computer" class="EOOP element-out-of-place">
                     <mx:gi>computer</mx:gi> is not permitted here.</mx:report>
             </x:expect>
         </x:scenario>
     </x:scenario>
     
-    <x:scenario label="'gix.77' notices">
+    <x:scenario label="'AOOP attribute-out-of-place' notices">
         <!-- /descendant::XSLT:call-template[@name='notice'][2]       -->
         <x:scenario label="For an attribute with a known name, but out of place">
             <x:context mode="test" select="/c:computer">
                 <computer illuminated="true" id="0000"/>
             </x:context>
             <x:expect label="an error is reported">
-                <mx:report cf="gix.77" test="exists(.)" cat="context"
-                    xpath="/computer/@illuminated">
+                <mx:report cf="..." test="exists(.)"
+                    xpath="/computer/@illuminated" class="AOOP attribute-out-of-place">
                     <mx:gi>@illuminated</mx:gi> is not permitted here.</mx:report>
             </x:expect>
         </x:scenario>
@@ -55,7 +54,7 @@
         <!-- /descendant::XSLT:call-template[@name='notice'][3]       -->
     </x:scenario>
     
-    <x:scenario label="'gix.244' notices">
+    <x:scenario label="'EATI element-appears-too-infrequently' notices">
         <!-- /descendant::XSLT:call-template[@name='notice'][4]       -->
         <x:context mode="test" select="/c:computer/c:motherboard/c:cooling/c:fan">
             <computer id="0000">
@@ -67,15 +66,14 @@
             </computer>
         </x:context>
         <x:expect label="an error is reported">
-            <mx:report cf="gix.244"
+            <mx:report cf="..."
                 test="empty(following-sibling::fan) and (count(. | preceding-sibling::fan) lt 2)"
-                cat="cardinality"
-                xpath="/computer/motherboard/cooling/fan">
+                xpath="/computer/motherboard/cooling/fan" class="EATI element-appears-too-infrequently">
                 <mx:gi>fan</mx:gi> appears too few times: 2 minimum are required.</mx:report>
         </x:expect>
     </x:scenario>
     
-    <x:scenario label="'gix.253' notices">
+    <x:scenario label="'EATO element-appears-too-often' notices">
         <!-- /descendant::XSLT:call-template[@name='notice'][5]       -->
         <x:scenario label="For an element appearing too many times">
             <x:context mode="test" select="/c:computer/c:motherboard[2]">
@@ -88,14 +86,13 @@
                 </computer>
             </x:context>
             <x:expect label="an error is reported">
-                <mx:report cf="gix.255" test="count(. | preceding-sibling::motherboard) gt 1"
-                    cat="cardinality" xpath="/computer/motherboard[2]">
+                <mx:report cf="..." test="count(. | preceding-sibling::motherboard) gt 1" xpath="/computer/motherboard[2]" class="EATO element-appears-too-often">
                     <mx:gi>motherboard</mx:gi> appears too many times: 1 maximum is permitted.</mx:report>
             </x:expect>
         </x:scenario>
     </x:scenario>
     
-    <x:scenario label="'gix.267' notices">
+    <x:scenario label="'VEXC violates-exclusive-choice' notices">
         <!-- TODO: implement sth with 'choice'       -->
         <!-- /descendant::XSLT:call-template[@name='notice'][6]       -->
         <x:context mode="test" select="/c:computer/c:motherboard/c:cooling/c:fan[1]">
@@ -110,13 +107,12 @@
             </computer>
         </x:context>
         <x:expect label="an error is reported">
-            <mx:report cf="gix.267" test="empty(preceding-sibling::fan) and exists(../(water))"
-                cat="choice" xpath="/computer/motherboard/cooling/fan[1]">
+            <mx:report cf="..." test="empty(preceding-sibling::fan) and exists(../(water))" xpath="/computer/motherboard/cooling/fan[1]" class="VEXC violates-exclusive-choice">
                 <mx:gi>fan</mx:gi> is unexpected along with <mx:gi>water</mx:gi>.</mx:report>
         </x:expect>
     </x:scenario>
     
-    <x:scenario label="'gix.295' notices">
+    <x:scenario label="'EOOO element-out-of-order' notices">
         <!-- /descendant::XSLT:call-template[@name='notice'][7]       -->
         <x:scenario label="An element appearing after an optional successor">
             <x:context mode="test" select="/c:computer/c:motherboard/c:type">
@@ -128,15 +124,14 @@
                 </computer>
             </x:context>
             <x:expect label="an error is reported">
-                <mx:report cf="gix.295" test="exists( preceding-sibling::cpu | preceding-sibling::ata-socket | preceding-sibling::memory | preceding-sibling::cooling | preceding-sibling::expansion-card )"
-                    cat="ordering" xpath="/computer/motherboard/type">
+                <mx:report cf="..." test="exists( preceding-sibling::cpu | preceding-sibling::ata-socket | preceding-sibling::memory | preceding-sibling::cooling | preceding-sibling::expansion-card )" xpath="/computer/motherboard/type" class="EOOO element-out-of-order">
                     <mx:gi>type</mx:gi> is unexpected following <mx:gi>cpu</mx:gi>, <mx:gi>ata-socket</mx:gi>, <mx:gi>memory</mx:gi>, <mx:gi>cooling</mx:gi>, or <mx:gi>expansion-card</mx:gi>.</mx:report>
             </x:expect>
         </x:scenario>
         
     </x:scenario>
     
-    <x:scenario label="'gix.357' notices">
+    <x:scenario label="'MRQC missing-required-contents' notices">
         <!-- /descendant::XSLT:call-template[@name='notice'][8]       -->
         <!-- TODO: add some more here -->
         <x:context mode="test" select="/c:computer/c:motherboard/c:cooling">
@@ -147,20 +142,20 @@
             </computer>
         </x:context>
         <x:expect label="an error is reported">
-            <mx:report  cf="gix.357" test="empty(fan|water)" cat="required contents"
-                xpath="/computer/motherboard/cooling">
+            <mx:report  cf="..." test="empty(fan|water)"
+                xpath="/computer/motherboard/cooling" class="MRQC missing-required-contents">
                 <mx:gi>cooling</mx:gi> requires <mx:gi>fan|water</mx:gi>.</mx:report>
         </x:expect>
     </x:scenario>
     
-    <x:scenario label="'gix.450' notices">
+    <x:scenario label="'MRQA missing-required-attribute' notices">
         <x:scenario label="For an attribute required but missing">
             <x:context mode="test" select="/c:computer">
                 <computer/>
             </x:context>
             <x:expect label="an error is reported">
-                <mx:report cf="gix.450" test="empty(@id)" cat="required flag"
-                    xpath="/computer">
+                <mx:report cf="..." test="empty(@id)"
+                    xpath="/computer" class="MRQA missing-required-attribute">
                     <mx:gi>computer</mx:gi> requires <mx:gi>@id</mx:gi>.</mx:report>
             </x:expect>
         </x:scenario>
@@ -170,29 +165,28 @@
     
     <!-- return list of descendants like this: /descendant::XSLT:call-template[@name='notice']/(position() || ': ' || XSLT:with-param[@name='cf']) => string-join('&#xA;')
     -->
-    <x:scenario label="'av.60' notices">
+    <x:scenario label="'UE unmatched-element' notices">
         <x:scenario label="For an unknown element at the root (document level)">
             <x:context mode="test" select="/c:motherboid">
                 <motherboid/>
             </x:context>
             <x:expect label="an error is reported">
-                <mx:report cf="av.60"
+                <mx:report cf="..."
                     test="exists(.)"
-                    cat="unmatched"
-                    xpath="/motherboid">Unrecognized element <mx:gi>motherboid</mx:gi>.</mx:report>
+                    xpath="/motherboid" class="_UE unmatched-element">Unrecognized element <mx:gi>motherboid</mx:gi>.</mx:report>
             </x:expect>
         </x:scenario>
         
     </x:scenario>   
 
-    <x:scenario label="'av.131' notices">
+    <x:scenario label="'UA unmatched-attribute' notices">
         <x:scenario label="For an unknown attribute">
             <x:context mode="test" select="/c:computer">
                 <computer id="0000" networkID="hal"/>
             </x:context>
             <x:expect label="an error is reported">
-                <mx:report cf="av.131" test="exists(.)"  cat="unmatched attribute"
-                    xpath="/computer/@networkID">Unrecognized attribute <mx:gi>@networkID</mx:gi> on element <mx:gi>computer</mx:gi> .</mx:report>
+                <mx:report cf="..." test="exists(.)"
+                    xpath="/computer/@networkID" class="_UA unmatched-attribute">Unrecognized attribute <mx:gi>@networkID</mx:gi> on element <mx:gi>computer</mx:gi>.</mx:report>
             </x:expect>
         </x:scenario>
         <!-- /descendant::XSLT:call-template[@name='notice'][2]       -->
@@ -211,6 +205,7 @@
     -->
 
 
+    <!-- XXX next: Test datatypes, markup-line and markup-multiline (refer to XSD to scope) -->
     <!-- XXX next: Saxon CL invocation for testing xs: castable as operations - or use try/catch? -->
     
     <!-- XXX next: wiring in and testing datatypes following XSD generator -->

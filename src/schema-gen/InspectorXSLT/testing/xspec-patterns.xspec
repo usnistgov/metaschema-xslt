@@ -64,8 +64,8 @@
             <x:context mode="validate"><e/></x:context>
             <x:expect label="is marked as unexpected">
                 <e>
-                    <mx:report test="exists(.)" cat="unmatched" xpath="/e"
-                        cf="...">Unrecognized element <mx:gi>e</mx:gi>.</mx:report>
+                    <mx:report cf="..." test="exists(.)" cat="UE unmatched-element"
+                        xpath="/e">Unrecognized element <mx:gi>e</mx:gi>.</mx:report>                    
                 </e>
             </x:expect>
         </x:scenario>
@@ -73,8 +73,8 @@
             <x:context mode="validate"><computer id="c" nope="x"/></x:context>
             <x:expect label="is also marked as unexpected">
                 <computer id="c" nope="x">
-                    <mx:report test="exists(.)" cat="unmatched attribute" xpath="/computer/@nope" 
-                        cf="...">Unrecognized attribute <mx:gi>@nope</mx:gi> on element <mx:gi>computer</mx:gi> .</mx:report>
+                    <mx:report cf="..." test="exists(.)" cat="UA unmatched-attribute"
+                        xpath="/computer/@nope">Unrecognized attribute <mx:gi>@nope</mx:gi> on element <mx:gi>computer</mx:gi>.</mx:report>
                 </computer>
             </x:expect>
         </x:scenario>
@@ -98,8 +98,8 @@
         <x:scenario label="For an unknown element">
             <x:context mode="validate"><nil/></x:context>
             <x:expect label="we see a single error report marking it as unexpected" test="mx:pull-reports($x:result)">
-                <mx:report test="exists(.)" cat="unmatched" xpath="/nil"
-                    cf="...">Unrecognized element <mx:gi>nil</mx:gi>.</mx:report>
+                <mx:report cf="..." test="exists(.)" cat="UE unmatched-element"
+                    xpath="/nil">Unrecognized element <mx:gi>nil</mx:gi>.</mx:report>
             </x:expect>
         </x:scenario>
     </x:scenario>

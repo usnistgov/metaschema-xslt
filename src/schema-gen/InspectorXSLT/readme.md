@@ -3,8 +3,7 @@
 'Emmex Eye' or just "Emmex" ('MX').
 
 A standalone XSLT can be produced by applying a stylesheet to a metaschema. Using the composition pipeline, it can apply to a top-level module of a modular metaschema.
-
-The testing directory shows such an XSLT, which can be applied to an instance or set of instances (documents) to be tested against the rules defined by the Metaschema. This includes all rules regarding:
+The [testing/current](testing/current) directory shows such an XSLT, which can be applied to an instance or set of instances (documents) to be tested against the rules defined by the Metaschema. This includes all rules regarding:
 
 * Structures and content models
   * Occurrences and cardinalities of attributes and elements
@@ -14,20 +13,42 @@ The testing directory shows such an XSLT, which can be applied to an instance or
 * Constraints defined in the metaschema including compound/contingent, co-occurrence and key-based (referentiality) constraints
 
 That is, it combines the effective functionality of XML schema and Schematron (XPath-based) validation.
+## Feature set (for demo)
 
-## Principles
+- [x] Emit reports to STDOUT
+- [ ] Compact mode? summary-only
+- [ ] Run in batch, write reports to file(s)
+- [x] Validate structures - names and cardinalities
+- [ ] Validate lexical rules over datatypes
+- [ ] Validate constraints
+- [x] Write reports to file (HTML, Markdown)
+- [x] Emit copy of source annotated with validation messages
+- [ ] Run in browser / SaxonJS
+
+
+## Design goals and principles
 
 The tool should be both easy to use and verifiably correct.
 
-No need to quit after first error; take advantage of 'pull' process (random access to tree).
+No need to quit after first error; take advantage of the 'pull' process (random access to tree) to give a complete picture.
 
-The aims of the reporting are clarity/ease of use; to be unambiguous; to be traceable.
+The aims of the reporting are clarity/ease of use; to be unambiguous; to be traceable. To be terse and economical is a secondary goal.
 
 Reporting can be parsimonious - no need to be exhaustive.
 
-At the same time, errors anywhere are of interest (see 'no need to quit'). Some formal redundancy is okay as long as it is not too noisy.
+At the same time, errors anywhere are of interest (see 'no need to quit'). Some amount of redundancy is okay if not too noisy.
 
-## Interfaces
+## Interfaces - how to use
+
+The tool is designed to be used standalone in an XSLT 3.0-capable processing environment, or to be embedded. For testing, we use a command-line XSLT engine such as Saxon (v10 or later). The following assumes that Saxon is set up to run from a command `saxon`.
+
+In the testing directory are example scripts that run Saxon inside Maven to (a) produce an Inspector XSLT from a metaschema, then subsequently (b) apply this XSLT to an XML document to report issues detected in it, to delivering this report in HTML or Markdown format:
+
+- `testing/mvn-refresh-computer-inspector.sh` refreshes "computer metaschema" example XSLT
+- `testing/mvn-inspect-computer-md.sh` applies this XSLT to a 'computer' XML document returning Markdown
+- `testing/mvn-inspect-computer-html.sh` applies this XSLT to a 'computer' XML document returning HTML
+
+These scripts demonstrate one way to invoke Saxon but there are many others suited to different operational contexts and systems, including other deployments of Saxon (Saxon-C or SaxonJS, just to name two). 
 
 ### To use generated XSLT
 
@@ -37,56 +58,69 @@ Having produced the XSLT `computer-inspector.xsl` for inspecting `computer` XML 
 saxon -xslt:computer-inspector.xsl -s:invalid10.xml
 ```
 
-brings back a copy of the input annotated with MX (XML) results to STDOUT.
+Bring back a copy of the input annotated with MX (XML) results to STDOUT.
 
 ```bash
 saxon -it:mx -xslt:computer-inspector.xsl -s:invalid10.xml
 ```
 
-brings the messages only. `-it:mx-report` does the same.
-
+Bring the messages only. `-it:mx-report` does the same. `-it` designates an initial template. For convenience the Inspector XSLT also supports `-im` (designating an initial mode) with the same values and effects. If both are given the processor uses `-it`.
 
 ```bash
 saxon -it:mx -xslt:computer-inspector.xsl -s:invalid10.xml -o:results.xml
 ```
 
-writes MX (XML) results (only) to file `results.xml`.
+Write MX (XML) results (only) to file `results.xml`:
 
 
 ```bash
 saxon -it:html -xslt:computer-inspector.xsl -s:invalid10.xml -o:results.html
 ```
 
-writes HTML results to file `results.html`. Use `!method:html !html-version:5.0` to get HTML 5 output instead of XML. (Or `!method:xhtml` if preferred.) Use `!indent:true` if you don't want a code brick.
+Write HTML results to file `results.html`. Use `!method:html !html-version:5.0` to get HTML 5 output instead of XML. (Or `!method:xhtml` if preferred.) Use `!indent:true` if you don't want a code brick.
 
 Note that HTML and Markdown results presuppose the MX filtering step.
+
+To write Markdown results to STDOUT. (Note lack of `-o` argument.) This is the same as `-it:markdown`:
 
 ```bash
 saxon -it:md -xslt:computer-inspector.xsl -s:invalid10.xml
 ```
 
-writes Markdown results to STDOUT. This is the same as `-it:markdown`.
-
 Use `!method=text` to clear unwanted XML cruft when writing Markdown.
 
-There is no plain text option apart from Markdown, as of yet.
- 
-TBD: wrapper logic for all this under `make` or Maven?
+To run over files in `invalid` and produce result (files) in a new folder, `v-invalid`:
+
+
+```bash
+saxon -xslt:computer-inspector.xsl -s:invalid -o:v-invalid
+```
+
+### To do: further work on scripting
+
+Instrument to run from the CL:
 
 ```
 inspectorXSLT data.xml results.html
 inspectorXSLT data.xml results.md
+inspectorXSLT data.xml results.xml
 
 inspectorXSLT -md data.xml (writes results to STDOUT)
+inspectorXSLT -mx data.xml (writes results to STDOUT)
 inspectorXSLT -html data.xml (writes results to STDOUT)
 ```
 
+Also - batch process folders or globbed files?
 
 ### To generate the XSLT
 
-Use the XProc pipeline. It assembles the XSLT dynamically, combining templates produced from a metaschema source with static boilerplate and infrastructure. This XSLT can be applied directly or written out for distribution.
+Best/easiest to use the XProc pipeline or the XSLT that emulates this pipeline.
 
-TBD: a script to generate a standalone XSLT, using Maven, wrapping the XML Calabash call.
+- ../METASCHEMA-INSPECTOR-XSLT.xpl
+- ../nist-metaschema-MAKE-INSPECTOR-XSLT.xsl
+
+In this sequence of transformations the target (result) XSLT is assembled dynamically, by combining templates produced from a metaschema source with static boilerplate and infrastructure. This XSLT can be applied directly (for testing) or written out for distribution.
+An example script that generates such an XSLT is given as [testing/mvn-refresh-computer-inspector.sh](testing/mvn-refresh-computer-inspector.sh).
 
 ## Plans
 
