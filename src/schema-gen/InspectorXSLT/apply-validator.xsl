@@ -335,6 +335,12 @@
         </b>
     </xsl:template>
     
+    <xsl:template match="mx:tt" mode="mx-to-html" priority="1">
+        <code>
+            <xsl:apply-templates mode="#current"/>
+        </code>
+    </xsl:template>
+    
     <xsl:template match="mx:report/mx:*" mode="mx-to-html">
         <i>
             <xsl:apply-templates mode="#current"/>
@@ -385,6 +391,11 @@
         <xsl:text>*</xsl:text>
         <xsl:apply-templates mode="#current"/>
         <xsl:text>*</xsl:text>
+    </xsl:template>
+    <xsl:template mode="html-to-md" match="p/code" priority="2" xpath-default-namespace="http://www.w3.org/1999/xhtml">
+        <xsl:text>`</xsl:text>
+        <xsl:apply-templates mode="#current"/>
+        <xsl:text>`</xsl:text>
     </xsl:template>
     
 </xsl:stylesheet>

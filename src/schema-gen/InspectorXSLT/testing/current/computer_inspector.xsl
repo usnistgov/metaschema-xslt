@@ -5,7 +5,7 @@
                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                version="3.0"
                xpath-default-namespace="http://example.com/ns/computer"
-               exclude-result-prefixes="#all"><!-- Generated 2023-10-05T12:40:18.2928957-04:00 -->
+               exclude-result-prefixes="#all"><!-- Generated 2023-10-05T13:32:22.1663369-04:00 -->
    <xsl:mode on-no-match="fail"/>
    <xsl:mode name="test" on-no-match="shallow-skip"/>
    <!-- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -->
@@ -297,6 +297,11 @@
          <xsl:apply-templates mode="#current"/>
       </b>
    </xsl:template>
+   <xsl:template match="mx:tt" mode="mx-to-html" priority="1">
+      <code>
+         <xsl:apply-templates mode="#current"/>
+      </code>
+   </xsl:template>
    <xsl:template match="mx:report/mx:*" mode="mx-to-html">
       <i>
          <xsl:apply-templates mode="#current"/>
@@ -361,6 +366,14 @@
       <xsl:text>*</xsl:text>
       <xsl:apply-templates mode="#current"/>
       <xsl:text>*</xsl:text>
+   </xsl:template>
+   <xsl:template mode="html-to-md"
+                 match="p/code"
+                 priority="2"
+                 xpath-default-namespace="http://www.w3.org/1999/xhtml">
+      <xsl:text>`</xsl:text>
+      <xsl:apply-templates mode="#current"/>
+      <xsl:text>`</xsl:text>
    </xsl:template>
    <!-- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -->
    <!-- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -->
@@ -1098,71 +1111,46 @@
       <xsl:call-template name="notice">
          <xsl:with-param name="cf" as="xs:string">gix.99</xsl:with-param>
          <xsl:with-param name="class">VDSX violates-datatype-syntax</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">not( mx:conforms-to-datatype_string(.) )</xsl:with-param>
-         <xsl:with-param name="condition" select="not( mx:conforms-to-datatype_string(.) )"/>
+         <xsl:with-param name="testing" as="xs:string">string(.) castable as xs:string and matches(.,'^\S(.*\S)?$')</xsl:with-param>
+         <xsl:with-param name="condition"
+                         select="not(string(.) castable as xs:string and matches(.,'^\S(.*\S)?$'))"/>
          <xsl:with-param name="msg" expand-text="true">
-            <mx:gi>{ name() }</mx:gi> does not conform to <em>string</em> datatype.</xsl:with-param>
+            <mx:gi>{ name() }</mx:gi> does not conform to <mx:tt>string</mx:tt> datatype.</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
-   <xsl:function name="mx:conforms-to-datatype_string" as="xs:boolean">
-      <xsl:param name="v" as="item()"/>
-      <xsl:variable name="extra" as="xs:boolean">
-         <xsl:sequence select="matches($v,'^\S(.*\S)?$')"/>
-      </xsl:variable>
-      <xsl:sequence select="(string($v) castable as xs:string) and $extra"/>
-   </xsl:function>
    <xsl:template name="check-uri-datatype">
       <xsl:call-template name="notice">
          <xsl:with-param name="cf" as="xs:string">gix.99</xsl:with-param>
          <xsl:with-param name="class">VDSX violates-datatype-syntax</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">not( mx:conforms-to-datatype_uri(.) )</xsl:with-param>
-         <xsl:with-param name="condition" select="not( mx:conforms-to-datatype_uri(.) )"/>
+         <xsl:with-param name="testing" as="xs:string">string(.) castable as xs:anyURI and matches(.,'^[a-zA-Z][a-zA-Z0-9+\-.]+:.*\S$')</xsl:with-param>
+         <xsl:with-param name="condition"
+                         select="not(string(.) castable as xs:anyURI and matches(.,'^[a-zA-Z][a-zA-Z0-9+\-.]+:.*\S$'))"/>
          <xsl:with-param name="msg" expand-text="true">
-            <mx:gi>{ name() }</mx:gi> does not conform to <em>uri</em> datatype.</xsl:with-param>
+            <mx:gi>{ name() }</mx:gi> does not conform to <mx:tt>uri</mx:tt> datatype.</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
-   <xsl:function name="mx:conforms-to-datatype_uri" as="xs:boolean">
-      <xsl:param name="v" as="item()"/>
-      <xsl:variable name="extra" as="xs:boolean">
-         <xsl:sequence select="matches($v,'^[a-zA-Z][a-zA-Z0-9+\-.]+:.*\S$')"/>
-      </xsl:variable>
-      <xsl:sequence select="(string($v) castable as xs:anyURI) and $extra"/>
-   </xsl:function>
    <xsl:template name="check-positive-integer-datatype">
       <xsl:call-template name="notice">
          <xsl:with-param name="cf" as="xs:string">gix.99</xsl:with-param>
          <xsl:with-param name="class">VDSX violates-datatype-syntax</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">not( mx:conforms-to-datatype_positive-integer(.) )</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">string(.) castable as xs:positiveInteger and matches(.,'^\S(.*\S)?$')</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="not( mx:conforms-to-datatype_positive-integer(.) )"/>
+                         select="not(string(.) castable as xs:positiveInteger and matches(.,'^\S(.*\S)?$'))"/>
          <xsl:with-param name="msg" expand-text="true">
-            <mx:gi>{ name() }</mx:gi> does not conform to <em>positive-integer</em> datatype.</xsl:with-param>
+            <mx:gi>{ name() }</mx:gi> does not conform to <mx:tt>positive-integer</mx:tt> datatype.</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
-   <xsl:function name="mx:conforms-to-datatype_positive-integer" as="xs:boolean">
-      <xsl:param name="v" as="item()"/>
-      <xsl:variable name="extra" as="xs:boolean">
-         <xsl:sequence select="matches($v,'^\S(.*\S)?$')"/>
-      </xsl:variable>
-      <xsl:sequence select="(string($v) castable as xs:positiveInteger) and $extra"/>
-   </xsl:function>
    <xsl:template name="check-boolean-datatype">
       <xsl:call-template name="notice">
          <xsl:with-param name="cf" as="xs:string">gix.99</xsl:with-param>
          <xsl:with-param name="class">VDSX violates-datatype-syntax</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">not( mx:conforms-to-datatype_boolean(.) )</xsl:with-param>
-         <xsl:with-param name="condition" select="not( mx:conforms-to-datatype_boolean(.) )"/>
+         <xsl:with-param name="testing" as="xs:string">string(.) castable as xs:boolean and matches(.,'^true|1|false|0$')</xsl:with-param>
+         <xsl:with-param name="condition"
+                         select="not(string(.) castable as xs:boolean and matches(.,'^true|1|false|0$'))"/>
          <xsl:with-param name="msg" expand-text="true">
-            <mx:gi>{ name() }</mx:gi> does not conform to <em>boolean</em> datatype.</xsl:with-param>
+            <mx:gi>{ name() }</mx:gi> does not conform to <mx:tt>boolean</mx:tt> datatype.</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
-   <xsl:function name="mx:conforms-to-datatype_boolean" as="xs:boolean">
-      <xsl:param name="v" as="item()"/>
-      <xsl:variable name="extra" as="xs:boolean">
-         <xsl:sequence select="matches($v,'^true|1|false|0$')"/>
-      </xsl:variable>
-      <xsl:sequence select="(string($v) castable as xs:boolean) and $extra"/>
-   </xsl:function>
    <xsl:template match="ul | ol" mode="validate-markup-multiline">
       <xsl:apply-templates select="li" mode="validate-markup-multiline"/>
       <xsl:for-each select="* except li">
