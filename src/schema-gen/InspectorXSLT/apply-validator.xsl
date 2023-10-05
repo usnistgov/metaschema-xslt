@@ -102,8 +102,8 @@
     <xsl:template match="*" mode="test">
         <!-- report if not recognized -->
         <xsl:call-template name="notice">
-            <xsl:with-param name="cf">av.60</xsl:with-param>
-            <xsl:with-param name="cat">unmatched</xsl:with-param>
+            <xsl:with-param name="cf">av.105</xsl:with-param>
+            <xsl:with-param name="class">_UE unmatched-element</xsl:with-param>
             <xsl:with-param name="msg" expand-text="true">Unrecognized element <mx:gi>{ name() }</mx:gi>.</xsl:with-param>
         </xsl:call-template>
     </xsl:template>
@@ -113,19 +113,17 @@
     <xsl:template match="text()" mode="test">
         <!-- report if not recognized -->
         <xsl:call-template name="notice">
-            <xsl:with-param name="cf">av.71</xsl:with-param>
-            <xsl:with-param name="cat">misplaced</xsl:with-param>
+            <xsl:with-param name="cf">av.116</xsl:with-param>
+            <xsl:with-param name="class">_UT unexpected-text</xsl:with-param>
             <xsl:with-param name="msg" expand-text="true">Errant text content.</xsl:with-param>
         </xsl:call-template>
     </xsl:template>
     
-    
-    
     <!-- report if not recognized -->
     <xsl:template match="*" mode="validate-markup-multiline" name="notice-multiline">
         <xsl:call-template name="notice">
-            <xsl:with-param name="cf">av.82</xsl:with-param>
-            <xsl:with-param name="cat">unmatched in markup-multiline</xsl:with-param>
+            <xsl:with-param name="cf">av.125</xsl:with-param>
+            <xsl:with-param name="class">_UMM unmatched-markup-multiline</xsl:with-param>
             <xsl:with-param name="msg" expand-text="true">Unrecognized element <mx:gi>{ name() }</mx:gi> in multiline markup.</xsl:with-param>
         </xsl:call-template>
     </xsl:template>
@@ -167,8 +165,8 @@
     <xsl:template match="*" mode="validate-markup-line">
         <!-- report if not recognized -->
         <xsl:call-template name="notice">
-            <xsl:with-param name="cf">av.124</xsl:with-param>
-            <xsl:with-param name="cat">unmatched in markup-line</xsl:with-param>
+            <xsl:with-param name="cf">av.168</xsl:with-param>
+            <xsl:with-param name="class">_UM unmatched-markup</xsl:with-param>
             <xsl:with-param name="msg" expand-text="true">Unrecognized element <mx:gi>{ name() }</mx:gi>.</xsl:with-param>
         </xsl:call-template>
     </xsl:template>
@@ -176,25 +174,25 @@
     <!-- ... and attributes ...  -->
     <xsl:template match="@*" mode="test validate-markup-line validate-markup-multiline">
         <xsl:call-template name="notice">
-            <xsl:with-param name="cf">av.131</xsl:with-param>
-            <xsl:with-param name="cat">unmatched attribute</xsl:with-param>
-            <xsl:with-param name="msg" expand-text="true">Unrecognized attribute <mx:gi>@{ name() }</mx:gi> on element <mx:gi>{ name(..) }</mx:gi> .</xsl:with-param>
+            <xsl:with-param name="cf">av.179</xsl:with-param>
+            <xsl:with-param name="class">_UA unmatched-attribute</xsl:with-param>
+            <xsl:with-param name="msg" expand-text="true">Unrecognized attribute <mx:gi>@{ name() }</mx:gi> on element <mx:gi>{ name(..) }</mx:gi>.</xsl:with-param>
         </xsl:call-template>
     </xsl:template>
     
     <xsl:template mode="test" match="@xsi:*" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
 
     <xsl:template name="notice">
-        <xsl:param name="cf" as="xs:string" select="AV.143"/>
+        <xsl:param name="cf" as="xs:string" select="AV.186"/><!-- default expecting override -->
         <xsl:param name="condition" as="xs:boolean" select="true()"/>
         <xsl:param name="testing" as="xs:string">exists(.)</xsl:param><!-- hints at why something is reported -->
-        <xsl:param name="cat" as="xs:string">[category]</xsl:param>
+        <xsl:param name="class" as="xs:string">__U uncategorized</xsl:param>
         <xsl:param name="msg">[info]</xsl:param>
         <xsl:if test="$condition">
             <xsl:variable name="xpath"><!-- handmade paths avoid namespaces and other complications of path(.) -->
                 <xsl:apply-templates select="." mode="xpath"/>
             </xsl:variable>
-            <mx:report cf="{$cf}" test="{ $testing }" cat="{$cat}" xpath="{ $xpath }">
+            <mx:report cf="{$cf}" test="{ $testing }" class="{$class}" xpath="{ $xpath }">
                 <xsl:sequence select="$msg"/>
             </mx:report>
         </xsl:if>
@@ -311,18 +309,18 @@
     <xsl:template match="mx:validation" mode="summary" expand-text="true">
         <div class="summary">
             <p>{ count(.//mx:report) } reports</p>
-            <p>{ (1 to count(.//mx:report)) ! '&#x1F4A5;' }</p>
+            <!--<p>{ (1 to count(.//mx:report)) ! '&#x1F4A5;' }</p>-->
         </div>
     </xsl:template>
     
     <xsl:template match="mx:validation[empty(descendant::mx:report)]" mode="summary">
         <div class="summary valid">
-            <p>Good news - nothing to report - the instance is valid. &#x1F680;</p>
+            <p>Good news - nothing to report - the instance is valid.<!--&#x1F680;--></p>
         </div>
     </xsl:template>
     
     <xsl:template match="mx:report" mode="mx-to-html" expand-text="true">
-        <div class="report { @cat }">
+        <div class="report { @class }">
             <h3 class="xpath">{ @xpath }</h3>
             <p class="test">{ @test }</p>
             <p>
@@ -346,11 +344,11 @@
     <xsl:mode name="html-to-md" on-no-match="text-only-copy"/>
     
     <xsl:variable name="lf" as="xs:string"  expand-text="true">{ codepoints-to-string(10) }</xsl:variable>
-    <xsl:variable name="lf2" as="xs:string" expand-text="true">{ $lf }{ $lf }</xsl:variable>
+    <xsl:variable name="lf2" as="xs:string" expand-text="true">{$lf || $lf}</xsl:variable>
     
     <xsl:template mode="html-to-md" match="body" expand-text="true" xpath-default-namespace="http://www.w3.org/1999/xhtml">
-        <!--<xsl:text>{ $lf }</xsl:text>-->
         <xsl:apply-templates mode="#current"/>
+        <xsl:text>{ $lf }</xsl:text>
     </xsl:template>
     
     <xsl:template mode="html-to-md" match="div" expand-text="true" xpath-default-namespace="http://www.w3.org/1999/xhtml">

@@ -330,7 +330,7 @@
                      <xs:documentation>
                         <b>Water</b>: A cooling system using water for thermal regulation.</xs:documentation>
                   </xs:annotation>
-                  <xs:attribute name="illuminated" type="StringDatatype">
+                  <xs:attribute name="illuminated" type="BooleanDatatype">
                      <xs:annotation>
                         <xs:appinfo>
                            <m:formal-name>Whether illuminated</m:formal-name>
@@ -345,6 +345,14 @@
          </xs:choice>
       </xs:sequence>
    </xs:complexType>
+   <xs:simpleType name="BooleanDatatype">
+      <xs:annotation>
+         <xs:documentation>A binary value that is either: true (or 1) or false (or 0).</xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:boolean">
+         <xs:pattern value="true|1|false|0"/>
+      </xs:restriction>
+   </xs:simpleType>
    <xs:simpleType name="PositiveIntegerDatatype">
       <xs:annotation>
          <xs:documentation>An integer value that is greater than 0.</xs:documentation>
