@@ -49,9 +49,23 @@
         </x:scenario>
     </x:scenario>
     
-    <x:scenario label="'gix.95' notices" pending="next">
+    <x:scenario label="'gix.95' notices">
         <!-- TODO: wire up datatype checking -->
         <!-- /descendant::XSLT:call-template[@name='notice'][3]       -->
+        <x:context mode="test" select="/c:computer/c:motherboard/c:cooling/c:water/@illuminated">
+            <computer id="0000">
+                <motherboard>
+                    <cooling>
+                        <water illuminated="truE"/>
+                    </cooling>
+                </motherboard>
+            </computer>
+        </x:context>
+        <x:expect label="an error is reported">
+            <mx:report cf="gix.99" test="string(.) castable as xs:boolean and matches(.,'^true|1|false|0$')" class="VDSX violates-datatype-syntax"
+                xpath="/computer/motherboard/cooling/water/@illuminated">
+                <mx:gi>illuminated</mx:gi> does not conform to <mx:tt>boolean</mx:tt> datatype.</mx:report>
+        </x:expect>
     </x:scenario>
     
     <x:scenario label="'EATI element-appears-too-infrequently' notices">

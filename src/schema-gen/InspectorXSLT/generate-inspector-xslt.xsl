@@ -93,45 +93,23 @@
       <xsl:variable name="used-types" select="('string', //@as-type[not(.= ('markup-line','markup-multiline') )]/string(.)) => distinct-values()"/>
       <xsl:iterate select="$used-types" expand-text="true">
         <xsl:variable name="this-type" select="."/>
-        <XSLT:template name="check-{ . }-datatype">
-          <xsl:variable name="test" as="xs:string" expand-text="true">not( mx:conforms-to-datatype_{$this-type}(.) )</xsl:variable>
-          <XSLT:call-template name="notice">
-            <XSLT:with-param name="cf" as="xs:string">gix.99</XSLT:with-param>
-            <XSLT:with-param name="class">VDSX violates-datatype-syntax</XSLT:with-param>
-            <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
-            <XSLT:with-param name="condition" select="{$test}"/>
-            <XSLT:with-param name="msg" expand-text="true"><mx:gi>{{ name() }}</mx:gi> does not conform to <em>{ $this-type }</em> datatype.</XSLT:with-param>
-          </XSLT:call-template>
-        </XSLT:template>
-        
         <xsl:variable name="simpleType-name" select="$type-map[@as-type=$this-type]/string(.)"/>
-        <!-- Acquiring the xs:simpleType and converting it into a template       -->
-        <xsl:apply-templates select="key('simpleType-by-name',$simpleType-name,$type-definitions)" mode="datatype-validation-template">
-          <xsl:with-param name="as-type-name" select="$this-type"/>
-        </xsl:apply-templates>
-        
-      </xsl:iterate>
-      <!--<xsl:for-each-group select="//@as-type[not(.= ('markup-line','markup-multiline') )]/.." group-by="string(@as-type)" expand-text="true">
-        <XSLT:template name="check-{ current-grouping-key() }-datatype">
-          <!-\-<XSLT:param tunnel="true" name="matching" as="xs:string" required="true"/>-\->
-          <xsl:variable name="test" as="xs:string">not( mx:conforms-to-datatype_{ current-grouping-key() }(.) )</xsl:variable>
+        <XSLT:template name="check-{ . }-datatype">
+          <xsl:variable name="test" as="xs:string?" expand-text="true">
+            <xsl:apply-templates select="key('simpleType-by-name',$simpleType-name,$type-definitions)" mode="datatype-test">
+              <xsl:with-param name="as-type-name" select="$this-type"/>
+            </xsl:apply-templates>  
+          </xsl:variable>
           <XSLT:call-template name="notice">
-            <XSLT:with-param name="cf" as="xs:string">gix.96</XSLT:with-param>
+            <XSLT:with-param name="cf" as="xs:string">gix.104</XSLT:with-param>
             <XSLT:with-param name="class">VDSX violates-datatype-syntax</XSLT:with-param>
             <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
-            <XSLT:with-param name="condition" select="{$test}"/>
-            <XSLT:with-param name="msg" expand-text="true"><mx:gi>{{ name() }}</mx:gi> does not conform to <em>{ current-grouping-key() }</em> datatype.</XSLT:with-param>
+            <XSLT:with-param name="condition" select="not({$test})"/>
+            <XSLT:with-param name="msg" expand-text="true"><mx:gi>{{ name() }}</mx:gi> does not conform to <mx:tt>{ $this-type }</mx:tt> datatype.</XSLT:with-param>
           </XSLT:call-template>
         </XSLT:template>
-        
-        <xsl:variable name="simpleType-name" select="$type-map[@as-type=current-grouping-key()]/string(.)"/>
-        <!-\- Acquiring the xs:simpleType and converting it into a template       -\->
-        <xsl:apply-templates select="key('simpleType-by-name',$simpleType-name,$type-definitions)" mode="datatype-validation-template">
-          <xsl:with-param name="as-type-name" select="current-grouping-key()"/>
-        </xsl:apply-templates>
-      </xsl:for-each-group>-->
-
-
+      </xsl:iterate>
+      
       <!--
         These are generated instead of copied so that matching on LREs works with the target namespace Can these be copied not generated?
         ('Finally we have to generate these - instead of keeping them in the static host file - so they will match namespaces.') -->
@@ -272,7 +250,7 @@
       <xsl:variable name="test" as="xs:string">empty(following-sibling::{$using-name}) and (count(. | preceding-sibling::{$using-name}) lt {$min})</xsl:variable>
       <!--empty(following-sibling::fan) and (count(. | preceding-sibling::fan) lt 2)-->
       <XSLT:call-template name="notice">
-        <XSLT:with-param name="cf">gix.275</XSLT:with-param>
+        <XSLT:with-param name="cf">gix.253</XSLT:with-param>
         <XSLT:with-param name="class">EATI element-appears-too-infrequently</XSLT:with-param>
         <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
         <XSLT:with-param name="condition" select="{$test}"/>
@@ -283,7 +261,7 @@
       <xsl:variable name="max" select="(@max-occurs ! number(), 1)[1]"/>
       <xsl:variable name="test" as="xs:string">count(. | preceding-sibling::{$using-name}) gt {$max}</xsl:variable>
       <XSLT:call-template name="notice">
-        <XSLT:with-param name="cf">gix.286</XSLT:with-param>
+        <XSLT:with-param name="cf">gix.264</XSLT:with-param>
         <XSLT:with-param name="class">EATO element-appears-too-often</XSLT:with-param>
         <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
         <XSLT:with-param name="condition" select="{$test}"/>
@@ -295,7 +273,7 @@
       <xsl:variable name="alternatives" select="(parent::choice/child::* except .)"/>
       <xsl:variable name="test" as="xs:string">empty(preceding-sibling::{$using-name}) and exists(../({ ($alternatives ! mx:use-name(.)) => string-join(' | ') }))</xsl:variable>
       <XSLT:call-template name="notice">
-        <XSLT:with-param name="cf">gix.298</XSLT:with-param>
+        <XSLT:with-param name="cf">gix.276</XSLT:with-param>
         <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
         <XSLT:with-param name="condition" select="{$test}"/>
         <XSLT:with-param name="class">VEXC violates-exclusive-choice</XSLT:with-param>
@@ -323,7 +301,7 @@
       <!--<XSLT:variable name="interlopers" select="{ ($followers ! mx:use-name(.)) ! ('preceding-sibling::' || .) => string-join(' | ') }"/>-->
       <xsl:variable name="test" as="xs:string">exists( { ($followers ! mx:match-name(.)) ! ('preceding-sibling::' || .) => string-join(' | ') } )</xsl:variable>
       <XSLT:call-template name="notice">
-        <XSLT:with-param name="cf">gix.326</XSLT:with-param>
+        <XSLT:with-param name="cf">gix.304</XSLT:with-param>
         <XSLT:with-param name="class">EOOO element-out-of-order</XSLT:with-param>
         <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
         <XSLT:with-param name="condition" select="{$test}"/>
@@ -385,7 +363,7 @@
         </xsl:variable>
         <xsl:variable name="test" as="xs:string">empty({$requiring})</xsl:variable>
         <XSLT:call-template name="notice">
-          <XSLT:with-param name="cf">gix.388</XSLT:with-param>
+          <XSLT:with-param name="cf">gix.366</XSLT:with-param>
           <XSLT:with-param name="class">MRQC missing-required-contents</XSLT:with-param>
           <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
           <XSLT:with-param name="condition" select="{$test}"/>
@@ -478,7 +456,7 @@
       <xsl:variable name="requiring" select="mx:use-name(.)"/>
       <xsl:variable name="test" as="xs:string">empty(@{$requiring})</xsl:variable>
       <XSLT:call-template name="notice">
-        <XSLT:with-param name="cf">gix.481</XSLT:with-param>
+        <XSLT:with-param name="cf">gix.459</XSLT:with-param>
         <XSLT:with-param name="class">MRQA missing-required-attribute</XSLT:with-param>
         <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
         <XSLT:with-param name="condition" select="{$test}"/>
@@ -533,43 +511,33 @@
   
   <xsl:variable name="type-definitions" select="document($atomictype-modules)"/>
   
-  <xsl:template match="xs:simpleType" mode="datatype-validation-template">
+  
+  
+  <xsl:mode name="datatype-test" on-no-match="shallow-skip"/>
+  
+  <xsl:template match="*" mode="datatype-test" as="xs:string?"/>
+  
+  <xsl:template match="xs:simpleType" mode="datatype-test" as="xs:string?">
     <xsl:param name="as-type-name" as="xs:string" required="true"/>
-    <XSLT:function name="mx:conforms-to-datatype_{ $as-type-name }" as="xs:boolean">
-      <XSLT:param name="v" as="item()"/>
-      <XSLT:sequence select="string($v) castable as xs:{(xs:restriction/@base,@name)[1]}"/>
-    </XSLT:function>
+    <xsl:text expand-text="true">string(.) castable as {(xs:restriction/@base,@name)[1]}</xsl:text>
   </xsl:template>
   
-  <xsl:template match="xs:simpleType[xs:restriction]" mode="datatype-validation-template">
+  <xsl:template match="xs:simpleType[xs:restriction]" mode="datatype-test" as="xs:string?">
     <xsl:param name="as-type-name" as="xs:string" required="true"/>
-    <XSLT:function name="mx:conforms-to-datatype_{ $as-type-name }" as="xs:boolean">
-      <XSLT:param name="v" as="item()"/>
-      <xsl:variable name="extra">
-        <xsl:apply-templates mode="#current"/>
-      </xsl:variable>
-      <XSLT:variable name="extra" as="xs:boolean">
-        <xsl:sequence select="$extra"/>  
-        <xsl:if test="empty($extra)">
-          <xsl:attribute name="select">true()</xsl:attribute>
-        </xsl:if>
-      </XSLT:variable>
-      
-      <XSLT:sequence select="(string($v) castable as {xs:restriction/@base}) and $extra"/>
-    </XSLT:function>
+    <xsl:variable name="extra">
+      <xsl:apply-templates mode="#current"/>
+    </xsl:variable>
+    <xsl:text expand-text="true">string(.) castable as {(xs:restriction/@base,@name)[1]}{ $extra[normalize-space(.)] ! (' and ' || .)}</xsl:text>
   </xsl:template>
   
-  <xsl:template match="*" mode="datatype-validation-template"/>
   
-  <xsl:template match="xs:restriction" mode="datatype-validation-template">
+  <xsl:template match="xs:restriction" mode="datatype-test" as="xs:string?">
     <xsl:apply-templates mode="#current"/>
   </xsl:template>
   
-  <xsl:template match="xs:pattern" mode="datatype-validation-template">
-    <XSLT:sequence select="matches($v,'^{@value}$')"/>
+  <xsl:template match="xs:pattern" mode="datatype-test" as="xs:string?">
+    <xsl:text expand-text="true">matches(.,'^{@value}$')</xsl:text>
   </xsl:template>
-  
-  
   
   <xsl:function name="mx:or" as="item()*">
     <xsl:param name="items" as="item()*"/>
