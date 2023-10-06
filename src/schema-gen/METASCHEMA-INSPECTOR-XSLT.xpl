@@ -24,7 +24,7 @@
     <p:pipe        port="result"     step="composed"/>
   </p:output>
   
-  <p:serialization port="OUT_inspector-xslt" indent="true" method="xml" omit-xml-declaration="false"/>
+  <p:serialization port="OUT_inspector-xslt" indent="true" method="xml" encoding="us-ascii" omit-xml-declaration="false"/>
   <p:output        port="OUT_inspector-xslt" primary="true">
     <p:pipe        port="result" step="produce-validator"/>
   </p:output>
