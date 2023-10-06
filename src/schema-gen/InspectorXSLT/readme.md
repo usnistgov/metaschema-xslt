@@ -19,12 +19,12 @@ That is, it combines the effective functionality of XML schema and Schematron (X
 - [ ] Compact mode? summary-only
 - [ ] Run in batch, write reports to file(s)
 - [x] Validate structures - names and cardinalities
-- [ ] Validate lexical rules over datatypes
+- [x] Validate lexical rules over datatypes
+  - [ ] more testing 
 - [ ] Validate constraints
 - [x] Write reports to file (HTML, Markdown)
 - [x] Emit copy of source annotated with validation messages
 - [ ] Run in browser / SaxonJS
-
 
 ## Design goals and principles
 
@@ -86,8 +86,6 @@ To write Markdown results to STDOUT. (Note lack of `-o` argument.) This is the s
 ```bash
 saxon -it:md -xslt:computer-inspector.xsl -s:invalid10.xml
 ```
-
-Use `!method=text` to clear unwanted XML cruft when writing Markdown.
 
 To run over files in `invalid` and produce result (files) in a new folder, `v-invalid`:
 

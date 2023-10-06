@@ -103,7 +103,7 @@
           <XSLT:call-template name="notice">
             <XSLT:with-param name="cf" as="xs:string">gix.104</XSLT:with-param>
             <XSLT:with-param name="class">VDSX violates-datatype-syntax</XSLT:with-param>
-            <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
+            <XSLT:with-param name="testing" as="xs:string">not( {$test} )</XSLT:with-param>
             <XSLT:with-param name="condition" select="not({$test})"/>
             <XSLT:with-param name="msg" expand-text="true"><mx:gi>{{ name() }}</mx:gi> does not conform to <mx:tt>{ $this-type }</mx:tt> datatype.</XSLT:with-param>
           </XSLT:call-template>
@@ -612,17 +612,16 @@
   
   <xsl:template name="comment-xsl">
     <xsl:param name="head"/>
-    <xsl:comment> -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- </xsl:comment>
-    <xsl:comment> -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#- -#-</xsl:comment>
+    <xsl:comment> .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     . </xsl:comment>
     <xsl:for-each select="$head">
       <xsl:comment>
         <xsl:text>    </xsl:text>
         <xsl:value-of select="."/>
+        <xsl:text>    </xsl:text>
       </xsl:comment>
-      <xsl:comment> -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- -~- </xsl:comment>
-      
       <xsl:text>&#xA;</xsl:text>
     </xsl:for-each>
+    <xsl:comment> .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     . </xsl:comment>
   </xsl:template>
   
 </xsl:stylesheet>

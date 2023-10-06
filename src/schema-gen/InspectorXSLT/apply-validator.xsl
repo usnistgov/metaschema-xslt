@@ -3,21 +3,10 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:mx="http://csrc.nist.gov/ns/csd/metaschema-xslt"
     exclude-result-prefixes="#all"
-    xmlns="http://www.w3.org/1999/xhtml"
-    >
+    xmlns="http://www.w3.org/1999/xhtml">
 
-    <xsl:output indent="no" encoding="us-ascii"/>
+    <xsl:output indent="false" encoding="us-ascii" omit-xml-declaration="true"/>
 
-    <!-- treat elements in other namespaces as interlopers? -->
-    <!--<xsl:variable name="allow-foreign" select="true()"/>-->
-    
-    <!--<xsl:variable name="indented-serialization" as="element()">
-        <output:serialization-parameters
-            xmlns:output="http://www.w3.org/2010/xslt-xquery-serialization">
-            <output:indent value="true"/>
-        </output:serialization-parameters>
-    </xsl:variable>-->
-    
     <!-- returns annotated copy of input tree   -->
     <xsl:template match="/" name="xsl:initial-template">
         <mx:validation src="{ base-uri(.) }">
@@ -102,7 +91,7 @@
     <xsl:template match="*" mode="test">
         <!-- report if not recognized -->
         <xsl:call-template name="notice">
-            <xsl:with-param name="cf">av.105</xsl:with-param>
+            <xsl:with-param name="cf">av.94</xsl:with-param>
             <xsl:with-param name="class">_UE unmatched-element</xsl:with-param>
             <xsl:with-param name="msg" expand-text="true">Unrecognized element <mx:gi>{ name() }</mx:gi>.</xsl:with-param>
         </xsl:call-template>
@@ -113,7 +102,7 @@
     <xsl:template match="text()" mode="test">
         <!-- report if not recognized -->
         <xsl:call-template name="notice">
-            <xsl:with-param name="cf">av.116</xsl:with-param>
+            <xsl:with-param name="cf">av.105</xsl:with-param>
             <xsl:with-param name="class">_UT unexpected-text</xsl:with-param>
             <xsl:with-param name="msg" expand-text="true">Errant text content.</xsl:with-param>
         </xsl:call-template>
@@ -122,7 +111,7 @@
     <!-- report if not recognized -->
     <xsl:template match="*" mode="validate-markup-multiline" name="notice-multiline">
         <xsl:call-template name="notice">
-            <xsl:with-param name="cf">av.125</xsl:with-param>
+            <xsl:with-param name="cf">av.114</xsl:with-param>
             <xsl:with-param name="class">_UMM unmatched-markup-multiline</xsl:with-param>
             <xsl:with-param name="msg" expand-text="true">Unrecognized element <mx:gi>{ name() }</mx:gi> in multiline markup.</xsl:with-param>
         </xsl:call-template>
@@ -165,7 +154,7 @@
     <xsl:template match="*" mode="validate-markup-line">
         <!-- report if not recognized -->
         <xsl:call-template name="notice">
-            <xsl:with-param name="cf">av.168</xsl:with-param>
+            <xsl:with-param name="cf">av.157</xsl:with-param>
             <xsl:with-param name="class">_UM unmatched-markup</xsl:with-param>
             <xsl:with-param name="msg" expand-text="true">Unrecognized element <mx:gi>{ name() }</mx:gi>.</xsl:with-param>
         </xsl:call-template>
@@ -174,7 +163,7 @@
     <!-- ... and attributes ...  -->
     <xsl:template match="@*" mode="test validate-markup-line validate-markup-multiline">
         <xsl:call-template name="notice">
-            <xsl:with-param name="cf">av.179</xsl:with-param>
+            <xsl:with-param name="cf">av.166</xsl:with-param>
             <xsl:with-param name="class">_UA unmatched-attribute</xsl:with-param>
             <xsl:with-param name="msg" expand-text="true">Unrecognized attribute <mx:gi>@{ name() }</mx:gi> on element <mx:gi>{ name(..) }</mx:gi>.</xsl:with-param>
         </xsl:call-template>
@@ -305,17 +294,16 @@
         </html>
     </xsl:template>
     
-    
     <xsl:template match="mx:validation" mode="summary" expand-text="true">
         <div class="summary">
-            <p>{ count(.//mx:report) } reports</p>
-            <!--<p>{ (1 to count(.//mx:report)) ! '&#x1F4A5;' }</p>-->
+            <p>{ count(.//mx:report) } { mx:pluralize(count(.//mx:report),'report') }.</p>
+            <p>{ (1 to count(.//mx:report)) ! '&#x1F4A5;' }</p>
         </div>
     </xsl:template>
     
     <xsl:template match="mx:validation[empty(descendant::mx:report)]" mode="summary">
         <div class="summary valid">
-            <p>Good news - nothing to report - the instance is valid.<!--&#x1F680;--></p>
+            <p>Good news - nothing to report - the instance is valid. &#x1F680;</p>
         </div>
     </xsl:template>
     
@@ -397,5 +385,4 @@
         <xsl:apply-templates mode="#current"/>
         <xsl:text>`</xsl:text>
     </xsl:template>
-    
 </xsl:stylesheet>
