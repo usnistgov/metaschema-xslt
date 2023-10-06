@@ -6,13 +6,20 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema" stylesheet="current/computer_inspector.xsl"
     xslt-version="3.0">
 
-<!--
-
-        
-   2. Every time 'notice' is called, except when covered already? or in a different xspec
+    <!-- COME BACK TO / HELP WANTED
+    Test cardinality, order and 'choice' more systematically and comprehensively
+    Unit tests for post-processing modes - MX, HTML and Markdown production?
     -->
+    
+    <!-- XXX next: Test datatypes, markup-line and markup-multiline (refer to XSD to scope) -->
+    
+    <!-- more modes? - concise, grouped, summary-only, silent-if-valid?  -->
+    <!-- XXX then: implementing the constraints checking!  -->
+    
+   <!-- to assess coverage wrt current/computer_inspector.xsl:
+          /descendant::XSLT:call-template[@name='notice']   -->
+   
     <x:scenario label="'EOOP element-out-of-place' notices">
-        <!-- /descendant::XSLT:call-template[@name='notice'][1]       -->
         <x:scenario label="For a known but incorrect element at the root (document level)">
             <x:context mode="test" select="/c:motherboard">
                 <motherboard/>
@@ -36,7 +43,6 @@
     </x:scenario>
     
     <x:scenario label="'AOOP attribute-out-of-place' notices">
-        <!-- /descendant::XSLT:call-template[@name='notice'][2]       -->
         <x:scenario label="For an attribute with a known name, but out of place">
             <x:context mode="test" select="/c:computer">
                 <computer illuminated="true" id="0000"/>
@@ -49,9 +55,7 @@
         </x:scenario>
     </x:scenario>
     
-    <x:scenario label="'gix.95' notices">
-        <!-- TODO: wire up datatype checking -->
-        <!-- /descendant::XSLT:call-template[@name='notice'][3]       -->
+    <x:scenario label="'VDSX violates-datatype-syntax' notices">
         <x:context mode="test" select="/c:computer/c:motherboard/c:cooling/c:water/@illuminated">
             <computer id="0000">
                 <motherboard>
@@ -62,14 +66,13 @@
             </computer>
         </x:context>
         <x:expect label="an error is reported">
-            <mx:report cf="gix.99" test="string(.) castable as xs:boolean and matches(.,'^true|1|false|0$')" class="VDSX violates-datatype-syntax"
+            <mx:report cf="gix.104" test="not( string(.) castable as xs:boolean and matches(.,'^true|1|false|0$') )" class="VDSX violates-datatype-syntax"
                 xpath="/computer/motherboard/cooling/water/@illuminated">
                 <mx:gi>illuminated</mx:gi> does not conform to <mx:tt>boolean</mx:tt> datatype.</mx:report>
         </x:expect>
     </x:scenario>
     
     <x:scenario label="'EATI element-appears-too-infrequently' notices">
-        <!-- /descendant::XSLT:call-template[@name='notice'][4]       -->
         <x:context mode="test" select="/c:computer/c:motherboard/c:cooling/c:fan">
             <computer id="0000">
                 <motherboard>
@@ -88,7 +91,6 @@
     </x:scenario>
     
     <x:scenario label="'EATO element-appears-too-often' notices">
-        <!-- /descendant::XSLT:call-template[@name='notice'][5]       -->
         <x:scenario label="For an element appearing too many times">
             <x:context mode="test" select="/c:computer/c:motherboard[2]">
                 <computer id="0000">
@@ -211,21 +213,4 @@
         <!-- /descendant::XSLT:call-template[@name='notice'][2]       -->
     </x:scenario>
     
-<!-- COME BACK TO / HELP WANTED
-    Test cardinality, order and 'choice' more systematically and comprehensively
-    
-    Unit tests for post-processing modes - MX, HTML and Markdown production?
-    
-    -->
-
-
-    <!-- XXX next: Test datatypes, markup-line and markup-multiline (refer to XSD to scope) -->
-    <!-- XXX next: Saxon CL invocation for testing xs: castable as operations - or use try/catch? -->
-    
-    <!-- XXX next: wiring in and testing datatypes following XSD generator -->
-    <!-- XXX then: implement message processing (initial template -it calls to wrap logic) to deliver HTML, Markdown, tables or lists
-                     also deliver raw MX; results as annotation (a decorated copy of input), 
-                   mode - verbose, no-warnings, summary-only, silent-if-valid  -->
-    <!-- XXX then: implementing the constraints checking!  -->
-
 </x:description>

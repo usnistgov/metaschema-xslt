@@ -5,15 +5,28 @@
     xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
     xmlns:x="http://www.jenitennison.com/xslt/xspec"
     xmlns:XSLT="http://www.w3.org/1999/XSL/Transform"
-    stylesheet="../generate-inspector.xsl" run-as="import"
+    stylesheet="../generate-inspector-xslt.xsl" run-as="import"
     xslt-version="3.0">
 
     <!-- Using run-as='import' for now -->
     
+    <!-- This XSpec is for validating the production of an Inspector XSLT from a (composed) metaschema. -->
+    
+    <!-- Unlike other XSpecs in this directory, the *functionality* of the produced Inspector XSLT is not tested. -->
+    
+<!-- This XSpec can be used not only to test and validate
+        the transformation 'compiling' a metaschema into a set of tests
+        codify how those tests are represented
+        (especially constraints testing!)
+        codify useful rules regarding XSLT completeness, organization, docs / QA checks
+
+   -->
     <!--<x:variable name="source-namespace" select="'http://csrc.nist.gov/ns/oscal/1.0'"/>
     <x:variable name="source-prefix" select="'oscal-profile'"/>-->
 
-    <x:scenario label="Top-level transformation setup">
+   <!-- .     .     .     .     .     .     .     .     .     .     .     .     .     .     . -->
+   
+   <x:scenario label="Top-level transformation setup">
         <x:scenario label="Basic inline">
             <x:context>
                 <METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
