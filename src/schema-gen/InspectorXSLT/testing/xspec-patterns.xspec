@@ -93,7 +93,7 @@ Modes to test:
       <x:scenario label="A valid instance in 'validate' mode">
          <x:context mode="validate" href="valid/valid1.xml"/>
          <!-- https://github.com/xspec/xspec/wiki/Writing-Scenarios#describing-an-xsboolean-xpath-expression -->
-         <x:expect label="comes through as a copy of itself" test="deep-equal($x:result,$valid-file)"/>
+         <x:expect label="comes through as a (clean) copy of itself" test="deep-equal($x:result,$valid-file)"/>
       </x:scenario>
    </x:scenario>
 

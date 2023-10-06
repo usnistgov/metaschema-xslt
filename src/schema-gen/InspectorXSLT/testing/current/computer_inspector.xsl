@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <xsl:transform xmlns="http://www.w3.org/1999/xhtml"
                xmlns:mx="http://csrc.nist.gov/ns/csd/metaschema-xslt"
                xmlns:xs="http://www.w3.org/2001/XMLSchema"
                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                version="3.0"
                xpath-default-namespace="http://example.com/ns/computer"
-               exclude-result-prefixes="#all"><!-- Generated 2023-10-06T17:14:56.5295944-04:00 -->
+               exclude-result-prefixes="#all"><!-- Generated 2023-10-06T18:13:11.7614831-04:00 -->
    <xsl:mode on-no-match="fail"/>
    <xsl:mode name="test" on-no-match="shallow-skip"/>
    <!-- .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     . -->
@@ -265,7 +265,7 @@
    <xsl:template match="/mx:validation" mode="mx-to-html" expand-text="true">
       <xsl:variable name="reported-valid" select="@reports = 0"/>
       <xsl:variable name="validating-filename" select="replace(@src,'.*/','')"/>
-      <xsl:variable name="checked" select="if ($reported-valid) then '✔' else '✘'"/>
+      <xsl:variable name="checked" select="if ($reported-valid) then '&#x2714;' else '&#x2718;'"/>
       <html>
          <head>
             <title>{ $validating-filename } - { $checked } - { mx:metaschema/@shortname } validation</title>
@@ -297,12 +297,12 @@ details p { margin: 0.2em 0em }
    <xsl:template match="mx:validation" mode="summary" expand-text="true">
       <div class="summary">
          <p>{ count(.//mx:report) } { mx:pluralize(count(.//mx:report),'issue') } reported.</p>
-         <p>{ (1 to count(.//mx:report)) ! '💥' }</p>
+         <p>{ (1 to count(.//mx:report)) ! '&#x1f4a5;' }</p>
       </div>
    </xsl:template>
    <xsl:template match="mx:validation[empty(descendant::mx:report)]" mode="summary">
       <div class="summary valid">
-         <p>Good news - nothing to report - the instance is valid. 🚀</p>
+         <p>Good news - nothing to report - the instance is valid. &#x1f680;</p>
       </div>
    </xsl:template>
    <xsl:template match="mx:metaschema" mode="mx-to-html" expand-text="true">
@@ -1152,7 +1152,7 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="check-boolean-datatype"/>
    </xsl:template>
    <!-- .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     . -->
-   <!--     Datatypes - plumbing, followed by a named template for each occurring     -->
+   <!--     Datatypes - a named template for each occurring     -->
    <!-- .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     . -->
    <xsl:template name="check-string-datatype">
       <xsl:call-template name="notice">

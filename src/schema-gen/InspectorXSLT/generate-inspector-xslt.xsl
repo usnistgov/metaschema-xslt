@@ -9,7 +9,7 @@
   
   <!-- For extra integrity run Schematron inspector-generator-checkup.sch on this XSLT. -->
   
-  <xsl:output indent="yes"/>
+  <xsl:output indent="yes" encoding="us-ascii"/><!-- pushing out upper ASCII using entity notation -->
   
   <!-- Maintaining the boilerplate out of line makes it easier to test and lint. -->
   <xsl:variable name="XSLT-template" as="document-node()"
@@ -93,7 +93,7 @@
       <xsl:apply-templates select="//define-assembly | //define-field | //define-flag" mode="require-for"/>
       
       <xsl:call-template name="comment-xsl">
-        <xsl:with-param name="head"> Datatypes - plumbing, followed by a named template for each occurring </xsl:with-param>
+        <xsl:with-param name="head"> Datatypes - a named template for each occurring </xsl:with-param>
       </xsl:call-template>
       
       <xsl:variable name="used-types" select="('string', //@as-type[not(.= ('markup-line','markup-multiline') )]/string(.)) => distinct-values()"/>
