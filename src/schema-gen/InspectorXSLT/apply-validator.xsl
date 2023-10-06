@@ -6,14 +6,24 @@
     xmlns="http://www.w3.org/1999/xhtml">
 
     <xsl:output indent="false" encoding="us-ascii" omit-xml-declaration="true"/>
+   
+   
+<!-- parameter $mode' affects the output:
+     mode=silent-when-valid suppresses all results when no errors are reported
+     mode=concise brings back a single line of Markdown reporting valid/invalid status (it has no effect on HTML)
+   
+   more elaborate reports with support for sorting, warning levels etc. are tbd -->
 
+   <xsl:param name="mode" as="xs:string">verbose</xsl:param>
+   
     <!-- returns annotated copy of input tree   -->
     <xsl:template match="/" name="xsl:initial-template">
         <mx:validation src="{ base-uri(.) }">
-            <xsl:apply-templates mode="validate"/>
+           <xsl:apply-templates select="." mode="metaschema-metadata"/>
+           <xsl:apply-templates mode="validate"/>
         </mx:validation>            
     </xsl:template>
-    
+
     <xsl:template match="/" mode="mx-reports mx">
         <xsl:call-template name="mx-reports"/>
     </xsl:template>
@@ -63,7 +73,6 @@
     <xsl:mode name="validate-markup-line" on-no-match="text-only-copy"/>
     <xsl:mode name="validate-markup-multiline" on-no-match="shallow-skip"/>
    
-    
     <xsl:template match="*" mode="validate">
         <xsl:copy>
             <xsl:namespace name="mx">http://csrc.nist.gov/ns/csd/metaschema-xslt</xsl:namespace>
@@ -91,7 +100,7 @@
     <xsl:template match="*" mode="test">
         <!-- report if not recognized -->
         <xsl:call-template name="notice">
-            <xsl:with-param name="cf">av.94</xsl:with-param>
+            <xsl:with-param name="cf">av.103</xsl:with-param>
             <xsl:with-param name="class">_UE unmatched-element</xsl:with-param>
             <xsl:with-param name="msg" expand-text="true">Unrecognized element <mx:gi>{ name() }</mx:gi>.</xsl:with-param>
         </xsl:call-template>
@@ -102,7 +111,7 @@
     <xsl:template match="text()" mode="test">
         <!-- report if not recognized -->
         <xsl:call-template name="notice">
-            <xsl:with-param name="cf">av.105</xsl:with-param>
+            <xsl:with-param name="cf">av.114</xsl:with-param>
             <xsl:with-param name="class">_UT unexpected-text</xsl:with-param>
             <xsl:with-param name="msg" expand-text="true">Errant text content.</xsl:with-param>
         </xsl:call-template>
@@ -111,7 +120,7 @@
     <!-- report if not recognized -->
     <xsl:template match="*" mode="validate-markup-multiline" name="notice-multiline">
         <xsl:call-template name="notice">
-            <xsl:with-param name="cf">av.114</xsl:with-param>
+            <xsl:with-param name="cf">av.123</xsl:with-param>
             <xsl:with-param name="class">_UMM unmatched-markup-multiline</xsl:with-param>
             <xsl:with-param name="msg" expand-text="true">Unrecognized element <mx:gi>{ name() }</mx:gi> in multiline markup.</xsl:with-param>
         </xsl:call-template>
@@ -154,7 +163,7 @@
     <xsl:template match="*" mode="validate-markup-line">
         <!-- report if not recognized -->
         <xsl:call-template name="notice">
-            <xsl:with-param name="cf">av.157</xsl:with-param>
+            <xsl:with-param name="cf">av.166</xsl:with-param>
             <xsl:with-param name="class">_UM unmatched-markup</xsl:with-param>
             <xsl:with-param name="msg" expand-text="true">Unrecognized element <mx:gi>{ name() }</mx:gi>.</xsl:with-param>
         </xsl:call-template>
@@ -163,7 +172,7 @@
     <!-- ... and attributes ...  -->
     <xsl:template match="@*" mode="test validate-markup-line validate-markup-multiline">
         <xsl:call-template name="notice">
-            <xsl:with-param name="cf">av.166</xsl:with-param>
+            <xsl:with-param name="cf">av.175</xsl:with-param>
             <xsl:with-param name="class">_UA unmatched-attribute</xsl:with-param>
             <xsl:with-param name="msg" expand-text="true">Unrecognized attribute <mx:gi>@{ name() }</mx:gi> on element <mx:gi>{ name(..) }</mx:gi>.</xsl:with-param>
         </xsl:call-template>
@@ -269,7 +278,10 @@
     <xsl:template match="mx:*" mode="grab-mx">
         <xsl:copy-of select="."/>
     </xsl:template>
-    
+
+   <!--silences empty validation reports -->
+   <xsl:template match="/mx:validation[$mode='silent-when-valid'][empty(descendant::mx:report)]" priority="102" mode="grab-mx"/>
+   
     <xsl:template match="/mx:validation" priority="101" mode="grab-mx">
         <xsl:copy>
             <xsl:copy-of select="@*"/>
@@ -281,22 +293,43 @@
     </xsl:template>
     
     <xsl:mode name="mx-to-html" on-no-match="text-only-copy"/>
-    
+
     <xsl:template match="/mx:validation" mode="mx-to-html" expand-text="true">
+       <xsl:variable name="reported-valid" select="@reports = 0"/>
+       <xsl:variable name="validating-filename" select="replace(@src,'.*/','')"/>
+       <xsl:variable name="checked" select="if ($reported-valid) then '&#x2714;' else '&#x2718;'"/>
         <html>
-            <head/>
-            <body>
-                <h1>Validation report - <a href="{ @src }">{ replace(@src,'.*/','') }</a></h1>
-                <p>{ @elements} { mx:pluralize(@elements/number(),'element') } and { @attributes } {  mx:pluralize(@attributes/number(),'attribute') } found in the document.</p>
-                <xsl:apply-templates select="." mode="summary"/>
-                <xsl:apply-templates mode="#current"/>
-            </body>
+           <head>
+              <title>{ $validating-filename } - { $checked } - { mx:metaschema/@shortname } validation</title>
+           <xsl:call-template name="html-css"/>
+           </head>
+         <body>
+            <h1>{ $checked } Validating <a href="{ @src }">{ $validating-filename }</a> - { mx:metaschema } - found { 'IN'[not($reported-valid)] }VALID</h1>
+            <xsl:apply-templates mode="#current" select="mx:metaschema"/>
+            <p><code>{ $validating-filename }</code> contains { @elements} { mx:pluralize(@elements/number(),'element') } and { @attributes } {
+               mx:pluralize(@attributes/number(),'attribute') }.</p>
+            <xsl:apply-templates select="." mode="summary"/>
+            <main>
+              <xsl:apply-templates mode="#current" select="child::* except mx:metaschema"/>
+            </main>
+         </body>
         </html>
     </xsl:template>
+   
+   <xsl:template name="html-css" xml:space="preserve" expand-text="false">
+<style type="text/css">
+main { max-width: fit-content }
+details { margin-top: 0.5em; padding: 0.5em; outline: thin solid black }
+summary { margin: 0em }
+details p { margin: 0.2em 0em }   
+.xpath    { font-family: monospace }
+.exc { font-size: 85%; padding: 0.2em; background-color: cornsilk; font-family: sans-serif }
+</style>
+   </xsl:template>
     
     <xsl:template match="mx:validation" mode="summary" expand-text="true">
         <div class="summary">
-            <p>{ count(.//mx:report) } { mx:pluralize(count(.//mx:report),'report') }.</p>
+            <p>{ count(.//mx:report) } { mx:pluralize(count(.//mx:report),'issue') } reported.</p>
             <p>{ (1 to count(.//mx:report)) ! '&#x1F4A5;' }</p>
         </div>
     </xsl:template>
@@ -307,16 +340,21 @@
         </div>
     </xsl:template>
     
-    <xsl:template match="mx:report" mode="mx-to-html" expand-text="true">
-        <div class="report { @class }">
-            <h3 class="xpath">{ @xpath }</h3>
-            <p class="test">{ @test }</p>
-            <p>
-                <xsl:apply-templates mode="#current"/>
-            </p>
-        </div>
-    </xsl:template>
-    
+   <xsl:template match="mx:metaschema" mode="mx-to-html" expand-text="true">
+      <p class="metadata">Checking against rules derived from <b>{ . }</b> metaschema (namespace <code>{ @namespace }</code>)</p>
+   </xsl:template>
+   
+   <xsl:template match="mx:report" mode="mx-to-html" expand-text="true">
+      <details class="report { @class }">
+         <summary>
+            <xsl:apply-templates mode="#current"/>
+         </summary>
+         <p class="xpath">{ @xpath }</p>
+         <p class="exc">[{ @class }]</p>
+         <p class="test">test: <code>{ @test }</code></p>
+      </details>
+   </xsl:template>
+   
     <xsl:template match="mx:gi" mode="mx-to-html" priority="1">
         <b>
             <xsl:apply-templates mode="#current"/>
@@ -340,27 +378,42 @@
     <xsl:variable name="lf" as="xs:string"  expand-text="true">{ codepoints-to-string(10) }</xsl:variable>
     <xsl:variable name="lf2" as="xs:string" expand-text="true">{$lf || $lf}</xsl:variable>
     
-    <xsl:template mode="html-to-md" match="body" expand-text="true" xpath-default-namespace="http://www.w3.org/1999/xhtml">
-        <xsl:apply-templates mode="#current"/>
-        <xsl:text>{ $lf }</xsl:text>
-    </xsl:template>
-    
-    <xsl:template mode="html-to-md" match="div" expand-text="true" xpath-default-namespace="http://www.w3.org/1999/xhtml">
+   <xsl:template mode="html-to-md" match="html" xpath-default-namespace="http://www.w3.org/1999/xhtml">
+      <xsl:apply-templates mode="#current" select="body"/>
+   </xsl:template>
+   
+   <xsl:template mode="html-to-md" match="style" xpath-default-namespace="http://www.w3.org/1999/xhtml"/>
+   
+   <xsl:template mode="html-to-md" match="body[$mode='concise']" expand-text="true" xpath-default-namespace="http://www.w3.org/1999/xhtml">
+      <xsl:apply-templates mode="#current" select="h1"/>
+   </xsl:template>
+   
+   <xsl:template mode="html-to-md" match="body" expand-text="true" xpath-default-namespace="http://www.w3.org/1999/xhtml">
+      <xsl:apply-templates mode="#current"/>
+      <xsl:text>{ $lf }</xsl:text>
+   </xsl:template>
+   
+   <xsl:template mode="html-to-md" match="div | details" expand-text="true" xpath-default-namespace="http://www.w3.org/1999/xhtml">
         <xsl:text>{ $lf2 }---</xsl:text>
         <xsl:apply-templates mode="#current"/>
     </xsl:template>
     
-    <xsl:template mode="html-to-md" match="h1" expand-text="true" xpath-default-namespace="http://www.w3.org/1999/xhtml">
-        <xsl:text>{ $lf2 }# </xsl:text>
-        <xsl:apply-templates mode="#current"/>
-    </xsl:template>
-    
-    <xsl:template mode="html-to-md" match="h2" expand-text="true" xpath-default-namespace="http://www.w3.org/1999/xhtml">
+   <xsl:template mode="html-to-md" match="body/*[1]/self::h1" expand-text="true" xpath-default-namespace="http://www.w3.org/1999/xhtml">
+      <xsl:text># </xsl:text>
+      <xsl:apply-templates mode="#current"/>
+   </xsl:template>
+   
+   <xsl:template mode="html-to-md" match="h1" expand-text="true" xpath-default-namespace="http://www.w3.org/1999/xhtml">
+      <xsl:text>{ $lf2 }# </xsl:text>
+      <xsl:apply-templates mode="#current"/>
+   </xsl:template>
+   
+   <xsl:template mode="html-to-md" match="h2" expand-text="true" xpath-default-namespace="http://www.w3.org/1999/xhtml">
         <xsl:text>{ $lf2 }## </xsl:text>
         <xsl:apply-templates mode="#current"/>
     </xsl:template>
     
-    <xsl:template mode="html-to-md" match="h3" expand-text="true" xpath-default-namespace="http://www.w3.org/1999/xhtml">
+    <xsl:template mode="html-to-md" match="h3 | details/summary" expand-text="true" xpath-default-namespace="http://www.w3.org/1999/xhtml">
         <xsl:text>{ $lf2 }### </xsl:text>
         <xsl:apply-templates mode="#current"/>
     </xsl:template>

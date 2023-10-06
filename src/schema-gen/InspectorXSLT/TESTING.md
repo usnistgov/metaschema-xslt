@@ -39,15 +39,15 @@ This suite uses an extension of AJ Stein's 'computer metaschema' model for testi
 
 The Inspector XSLT feature set can be tested by generating XSLT and schemas and creating instances (e.g. `valid` and `invalid` instances) from this metaschema, which exercise its feature set.
 
-### Refresh the XSD
+### Refresh the 'computer model' XSD
 
 Use a script such as [../mvn-xsd-schema-xsl.sh](../mvn-xsd-schema-xsl.sh) or the XSLT [../nist-metaschema-MAKE-XSD.xsl](../nist-metaschema-MAKE-XSD.xsl) to produce an XSD file for the [testing/computer_metaschema.xml](testing/computer_metaschema.xml).
 
-This XSD should validate the same set of rules as the Inspector (excluding Metaschema query constraints) and can be used to cross check functionality.
+This XSD should validate the same set of rules as the Inspector (excluding Metaschema query constraints) and can be used to cross check functionality. Note that this XSD is also dynamically generated and might itself have bugs or issues. Irrespective of this question, the requirements are that both processes (schema validation and Inspector-XSLT validation) are effectively congruent, compatible and "the same" inasmuch as they detect all the same problems in data.
 
 A copy of the current-best schema is also here, to be refreshed as necessary): [testing/current/computer_metaschema-xmlschema.xsd](testing/current/computer_metaschema-xmlschema.xsd)
 
-### Refresh the Computer Inspector XSLT
+### Refresh the 'computer model' Inspector XSLT
 
 Before testing the Computer Inspector XSLT, the copy kept for testing must be refreshed.
 
@@ -56,7 +56,7 @@ First, build `current/computer_inspector.xsl` from `computer_metaschema.xml` usi
   - Use ../METASCHEMA-INSPECTOR-XSLT.xpl runtime or script to provide metaschema composition before applying the stylesheet  
   - The top-level ../nist-metaschema-MAKE-INSPECTOR-XSLT.xsl applies the same XSLT pipeline
 
-## 'Computer Inspector' Functionality
+## Computer Inspector functionality
 
 ### Standalone document-level tests
 
@@ -73,6 +73,8 @@ The XSpec file [testing/validations-in-batch.xspec](testing/validations-in-batch
 [An XSD schema ](testing/computer_metaschema-xmlschema.xsd) can be used to confirm validity or failure to validate for sets of examples, as given. Any other metaschema-based validator, or a metaschema-derived validation that supports XML, can also be used, such as a validator produced using [metaschema-java](https://github.com/usnistgov/metaschema-java).
 
 ### Templates and functions
+
+Question: *How do I know a specific report is being produced correctly by Inspector XSLT for a given error condition in 'computer XML' data?*
 
 Individual templates and defined functions can also be targeted and tested in XSpec.
 

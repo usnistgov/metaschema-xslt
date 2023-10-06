@@ -16,8 +16,13 @@ That is, it combines the effective functionality of XML schema and Schematron (X
 ## Feature set (for demo)
 
 - [x] Emit reports to STDOUT
-- [ ] Compact mode? summary-only
-- [ ] Run in batch, write reports to file(s)
+- [x] Write reports to file system (lower ASCII, escaped HTML for emoji)
+- [x] Emit reports in native (MX) format, HTML or Markdown
+- [x] Compact mode returns a one-line answer
+- [x] Silent-if-valid mode returns validations only for files found invalid
+- [x] Run in batch, write reports to file(s)
+  - [x] Using Saxon feature
+  - [ ] Using XProc 
 - [x] Validate structures - names and cardinalities
 - [x] Validate lexical rules over datatypes
   - [ ] more testing 
@@ -40,9 +45,9 @@ At the same time, errors anywhere are of interest (see 'no need to quit'). Some 
 
 ## Interfaces - how to use
 
-The tool is designed to be used standalone in an XSLT 3.0-capable processing environment, or to be embedded. For testing, we use a command-line XSLT engine such as Saxon (v10 or later). The following assumes that Saxon is set up to run from a command `saxon`.
+The tool is designed to be used standalone in an XSLT 3.0-capable processing environment, or to be embedded. For testing, we use a command-line XSLT engine such as Saxon (v10 or later).
 
-In the testing directory are example scripts that run Saxon inside Maven to (a) produce an Inspector XSLT from a metaschema, then subsequently (b) apply this XSLT to an XML document to report issues detected in it, to delivering this report in HTML or Markdown format:
+For convenience, in the testing directory are example scripts that run Saxon inside Maven to (a) produce an Inspector XSLT from a metaschema, then subsequently (b) apply this XSLT to an XML document to report issues detected in it, to delivering this report in HTML or Markdown format:
 
 - `testing/mvn-refresh-computer-inspector.sh` refreshes "computer metaschema" example XSLT
 - `testing/mvn-inspect-computer-md.sh` applies this XSLT to a 'computer' XML document returning Markdown
@@ -50,45 +55,65 @@ In the testing directory are example scripts that run Saxon inside Maven to (a) 
 
 These scripts demonstrate one way to invoke Saxon but there are many others suited to different operational contexts and systems, including other deployments of Saxon (Saxon-C or SaxonJS, just to name two). 
 
-### To use generated XSLT
+The scripts also pass through arguments provided them to the receiving application, so that the flags and switches described below will also work, unless a script sets the same configuration itself.
 
-Having produced the XSLT `computer-inspector.xsl` for inspecting `computer` XML documents: to validate a file `invalid10.xml` ...
+### To use generated XSLT directly
+
+If a script is not well-suited or easily adaptable, or for testing/experiment, Saxon can also be used directly. The following assumes that Saxon is set up to run from a command `saxon`. Arguments and command-line flags support functionalities beyond what is scripted, but can frequently be used *in combination* with the scripts. 
+ 
+Having produced the XSLT `computer-inspector.xsl` for inspecting `computer` XML documents: **to validate a file** `invalid10.xml` ...
 
 ```bash
 saxon -xslt:computer-inspector.xsl -s:invalid10.xml
 ```
 
-Bring back a copy of the input annotated with MX (XML) results to STDOUT.
+**Bring back a copy of the input annotated** with MX (XML) results to STDOUT.
 
 ```bash
 saxon -it:mx -xslt:computer-inspector.xsl -s:invalid10.xml
 ```
 
-Bring the messages only. `-it:mx-report` does the same. `-it` designates an initial template. For convenience the Inspector XSLT also supports `-im` (designating an initial mode) with the same values and effects. If both are given the processor uses `-it`.
+**Bring the messages only.** `-it:mx-report` does the same. `-it` designates an initial template. For convenience the Inspector XSLT also supports `-im` (designating an initial mode) with the same values and effects. If both are given the processor uses `-it`.
 
 ```bash
 saxon -it:mx -xslt:computer-inspector.xsl -s:invalid10.xml -o:results.xml
 ```
 
-Write MX (XML) results (only) to file `results.xml`:
+**Write MX (XML) results (only) to a file** `results.xml`:
 
 
 ```bash
 saxon -it:html -xslt:computer-inspector.xsl -s:invalid10.xml -o:results.html
 ```
 
-Write HTML results to file `results.html`. Use `!method:html !html-version:5.0` to get HTML 5 output instead of XML. (Or `!method:xhtml` if preferred.) Use `!indent:true` if you don't want a code brick.
+This can be useful to capture MX reports for further processing.
+
+**Write HTML results to a file** `results.html`. Use `!method:html !html-version:5.0` to get HTML 5 output instead of XML. (Or `!method:xhtml` if preferred.) Use `!indent:true` if you don't want a code brick.
 
 Note that HTML and Markdown results presuppose the MX filtering step.
 
-To write Markdown results to STDOUT. (Note lack of `-o` argument.) This is the same as `-it:markdown`:
+To **write Markdown results to STDOUT**. (Note lack of `-o` argument.) This is the same as `-it:markdown`:
 
 ```bash
 saxon -it:md -xslt:computer-inspector.xsl -s:invalid10.xml
 ```
 
-To run over files in `invalid` and produce result (files) in a new folder, `v-invalid`:
+To write **Markdown results to STDOUT except emit *one line only***. This uses the `mode` parameter.:
 
+```bash
+saxon -it:md -xslt:computer-inspector.xsl -s:invalid10.xml mode=concise
+```
+
+And to **silence results entirely when a file is found to be valid**:
+
+```bash
+saxon -it:md -xslt:computer-inspector.xsl -s:invalid10.xml mode=silent-when-valid
+```
+
+(This also works with `-it:html` for HTML reports.)
+
+
+To **run over a set of files** in `invalid` and produce result (files) in a new folder, `v-invalid`:
 
 ```bash
 saxon -xslt:computer-inspector.xsl -s:invalid -o:v-invalid
