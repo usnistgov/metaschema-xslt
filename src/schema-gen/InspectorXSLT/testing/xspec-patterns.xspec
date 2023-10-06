@@ -64,8 +64,11 @@ Modes to test:
          <x:context select="/">
             <computer id="abc"/>
          </x:context>
-         <x:expect label="comes through as a copy with a 'validation' wrapper">
+         <x:expect label="comes through as a copy with a 'validation' wrapper with metadata">
             <mx:validation src="...">
+               <mx:metaschema version="0.0.5"
+                  shortname="computer"
+                  namespace="http://example.com/ns/computer">Computer Model</mx:metaschema>
                <computer id="abc"/>
             </mx:validation>
          </x:expect>
@@ -85,7 +88,7 @@ Modes to test:
       <x:scenario label="A valid file instance in no mode">
          <x:context href="valid/valid1.xml"/>
          <x:expect label="brings its copy with its validation"
-            test="deep-equal($x:result/self::mx:validation/child::*,$valid-file/child::*)"/>
+            test="deep-equal($x:result/self::mx:validation/(child::* except mx:*),$valid-file/child::*)"/>
       </x:scenario>
       <x:scenario label="A valid instance in 'validate' mode">
          <x:context mode="validate" href="valid/valid1.xml"/>

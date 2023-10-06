@@ -33,6 +33,12 @@
       
       <xsl:copy-of select="$XSLT-template/*/(child::* | child::comment())"/>
 
+         <XSLT:template mode="metaschema-metadata" match="*">
+            <mx:metaschema version="{/*/schema-version}" shortname="{/*/short-name}" namespace="{/*/namespace}">
+               <xsl:text expand-text="true">{ /*/schema-name }</xsl:text>
+            </mx:metaschema>
+         </XSLT:template>
+       
       <xsl:call-template name="comment-xsl">
         <xsl:with-param name="head">Generated rules - first, any roots</xsl:with-param>
       </xsl:call-template>
@@ -67,7 +73,7 @@
       <xsl:variable name="known-elements"   select="(/*/*/root-name/parent::define-assembly | //model//define-assembly | //model//define-field | //assembly | //field)[not(@in-xml='UNWRAPPED')]/mx:use-name(.) => distinct-values()" />
       <XSLT:template mode="test" match="{ $known-elements => string-join(' | ') }">
         <XSLT:call-template name="notice">
-          <XSLT:with-param name="cf" as="xs:string">gix.70</XSLT:with-param>
+          <XSLT:with-param name="cf" as="xs:string">gix.76</XSLT:with-param>
           <XSLT:with-param name="class">EOOP element-out-of-place</XSLT:with-param>
           <XSLT:with-param name="msg" expand-text="true"><mx:gi>{ name() }</mx:gi> is not permitted here.</XSLT:with-param>
         </XSLT:call-template>
@@ -75,7 +81,7 @@
       <xsl:variable name="known-attributes" select="((//flag | //define-assembly/define-flag | define-field/define-flag)/mx:use-name(.) => distinct-values()) ! ('@' || .)" />
       <XSLT:template mode="test" match="{ $known-attributes => string-join(' | ') }">
         <XSLT:call-template name="notice">
-          <XSLT:with-param name="cf" as="xs:string">gix.78</XSLT:with-param>
+          <XSLT:with-param name="cf" as="xs:string">gix.84</XSLT:with-param>
           <XSLT:with-param name="class">AOOP attribute-out-of-place</XSLT:with-param>
           <XSLT:with-param name="msg" expand-text="true"><mx:gi>@{ name() }</mx:gi> is not permitted here.</XSLT:with-param>
         </XSLT:call-template>
@@ -101,7 +107,7 @@
             </xsl:apply-templates>  
           </xsl:variable>
           <XSLT:call-template name="notice">
-            <XSLT:with-param name="cf" as="xs:string">gix.104</XSLT:with-param>
+            <XSLT:with-param name="cf" as="xs:string">gix.110</XSLT:with-param>
             <XSLT:with-param name="class">VDSX violates-datatype-syntax</XSLT:with-param>
             <XSLT:with-param name="testing" as="xs:string">not( {$test} )</XSLT:with-param>
             <XSLT:with-param name="condition" select="not({$test})"/>
@@ -250,7 +256,7 @@
       <xsl:variable name="test" as="xs:string">empty(following-sibling::{$using-name}) and (count(. | preceding-sibling::{$using-name}) lt {$min})</xsl:variable>
       <!--empty(following-sibling::fan) and (count(. | preceding-sibling::fan) lt 2)-->
       <XSLT:call-template name="notice">
-        <XSLT:with-param name="cf">gix.253</XSLT:with-param>
+        <XSLT:with-param name="cf">gix.259</XSLT:with-param>
         <XSLT:with-param name="class">EATI element-appears-too-infrequently</XSLT:with-param>
         <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
         <XSLT:with-param name="condition" select="{$test}"/>
@@ -261,7 +267,7 @@
       <xsl:variable name="max" select="(@max-occurs ! number(), 1)[1]"/>
       <xsl:variable name="test" as="xs:string">count(. | preceding-sibling::{$using-name}) gt {$max}</xsl:variable>
       <XSLT:call-template name="notice">
-        <XSLT:with-param name="cf">gix.264</XSLT:with-param>
+        <XSLT:with-param name="cf">gix.270</XSLT:with-param>
         <XSLT:with-param name="class">EATO element-appears-too-often</XSLT:with-param>
         <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
         <XSLT:with-param name="condition" select="{$test}"/>
@@ -273,7 +279,7 @@
       <xsl:variable name="alternatives" select="(parent::choice/child::* except .)"/>
       <xsl:variable name="test" as="xs:string">empty(preceding-sibling::{$using-name}) and exists(../({ ($alternatives ! mx:use-name(.)) => string-join(' | ') }))</xsl:variable>
       <XSLT:call-template name="notice">
-        <XSLT:with-param name="cf">gix.276</XSLT:with-param>
+        <XSLT:with-param name="cf">gix.282</XSLT:with-param>
         <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
         <XSLT:with-param name="condition" select="{$test}"/>
         <XSLT:with-param name="class">VEXC violates-exclusive-choice</XSLT:with-param>
@@ -301,7 +307,7 @@
       <!--<XSLT:variable name="interlopers" select="{ ($followers ! mx:use-name(.)) ! ('preceding-sibling::' || .) => string-join(' | ') }"/>-->
       <xsl:variable name="test" as="xs:string">exists( { ($followers ! mx:match-name(.)) ! ('preceding-sibling::' || .) => string-join(' | ') } )</xsl:variable>
       <XSLT:call-template name="notice">
-        <XSLT:with-param name="cf">gix.304</XSLT:with-param>
+        <XSLT:with-param name="cf">gix.310</XSLT:with-param>
         <XSLT:with-param name="class">EOOO element-out-of-order</XSLT:with-param>
         <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
         <XSLT:with-param name="condition" select="{$test}"/>
@@ -363,7 +369,7 @@
         </xsl:variable>
         <xsl:variable name="test" as="xs:string">empty({$requiring})</xsl:variable>
         <XSLT:call-template name="notice">
-          <XSLT:with-param name="cf">gix.366</XSLT:with-param>
+          <XSLT:with-param name="cf">gix.372</XSLT:with-param>
           <XSLT:with-param name="class">MRQC missing-required-contents</XSLT:with-param>
           <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
           <XSLT:with-param name="condition" select="{$test}"/>
@@ -456,7 +462,7 @@
       <xsl:variable name="requiring" select="mx:use-name(.)"/>
       <xsl:variable name="test" as="xs:string">empty(@{$requiring})</xsl:variable>
       <XSLT:call-template name="notice">
-        <XSLT:with-param name="cf">gix.459</XSLT:with-param>
+        <XSLT:with-param name="cf">gix.465</XSLT:with-param>
         <XSLT:with-param name="class">MRQA missing-required-attribute</XSLT:with-param>
         <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
         <XSLT:with-param name="condition" select="{$test}"/>

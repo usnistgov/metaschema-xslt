@@ -5,16 +5,23 @@
                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                version="3.0"
                xpath-default-namespace="http://example.com/ns/computer"
-               exclude-result-prefixes="#all"><!-- Generated 2023-10-06T12:01:44.5792622-04:00 -->
+               exclude-result-prefixes="#all"><!-- Generated 2023-10-06T17:14:56.5295944-04:00 -->
    <xsl:mode on-no-match="fail"/>
    <xsl:mode name="test" on-no-match="shallow-skip"/>
    <!-- .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     . -->
    <!--    Templates copied from boilerplate    -->
    <!-- .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     . -->
    <xsl:output indent="false" encoding="us-ascii" omit-xml-declaration="true"/>
+   <!-- parameter $mode' affects the output:
+     mode=silent-when-valid suppresses all results when no errors are reported
+     mode=concise brings back a single line of Markdown reporting valid/invalid status (it has no effect on HTML)
+   
+   more elaborate reports with support for sorting, warning levels etc. are tbd -->
+   <xsl:param name="mode" as="xs:string">verbose</xsl:param>
    <!-- returns annotated copy of input tree   -->
    <xsl:template match="/" name="xsl:initial-template">
       <mx:validation src="{ base-uri(.) }">
+         <xsl:apply-templates select="." mode="metaschema-metadata"/>
          <xsl:apply-templates mode="validate"/>
       </mx:validation>
    </xsl:template>
@@ -79,7 +86,7 @@
    <xsl:template match="*" mode="test">
         <!-- report if not recognized -->
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">av.95</xsl:with-param>
+         <xsl:with-param name="cf">av.103</xsl:with-param>
          <xsl:with-param name="class">_UE unmatched-element</xsl:with-param>
          <xsl:with-param name="msg" expand-text="true">Unrecognized element <mx:gi>{ name() }</mx:gi>.</xsl:with-param>
       </xsl:call-template>
@@ -88,7 +95,7 @@
    <xsl:template match="text()" mode="test">
         <!-- report if not recognized -->
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">av.106</xsl:with-param>
+         <xsl:with-param name="cf">av.114</xsl:with-param>
          <xsl:with-param name="class">_UT unexpected-text</xsl:with-param>
          <xsl:with-param name="msg" expand-text="true">Errant text content.</xsl:with-param>
       </xsl:call-template>
@@ -96,7 +103,7 @@
    <!-- report if not recognized -->
    <xsl:template match="*" mode="validate-markup-multiline" name="notice-multiline">
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">av.115</xsl:with-param>
+         <xsl:with-param name="cf">av.123</xsl:with-param>
          <xsl:with-param name="class">_UMM unmatched-markup-multiline</xsl:with-param>
          <xsl:with-param name="msg" expand-text="true">Unrecognized element <mx:gi>{ name() }</mx:gi> in multiline markup.</xsl:with-param>
       </xsl:call-template>
@@ -136,7 +143,7 @@
    <xsl:template match="*" mode="validate-markup-line">
         <!-- report if not recognized -->
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">av.158</xsl:with-param>
+         <xsl:with-param name="cf">av.166</xsl:with-param>
          <xsl:with-param name="class">_UM unmatched-markup</xsl:with-param>
          <xsl:with-param name="msg" expand-text="true">Unrecognized element <mx:gi>{ name() }</mx:gi>.</xsl:with-param>
       </xsl:call-template>
@@ -144,7 +151,7 @@
    <!-- ... and attributes ...  -->
    <xsl:template match="@*" mode="test validate-markup-line validate-markup-multiline">
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">av.167</xsl:with-param>
+         <xsl:with-param name="cf">av.175</xsl:with-param>
          <xsl:with-param name="class">_UA unmatched-attribute</xsl:with-param>
          <xsl:with-param name="msg" expand-text="true">Unrecognized attribute <mx:gi>@{ name() }</mx:gi> on element <mx:gi>{ name(..) }</mx:gi>.</xsl:with-param>
       </xsl:call-template>
@@ -239,6 +246,10 @@
    <xsl:template match="mx:*" mode="grab-mx">
       <xsl:copy-of select="."/>
    </xsl:template>
+   <!--silences empty validation reports -->
+   <xsl:template match="/mx:validation[$mode='silent-when-valid'][empty(descendant::mx:report)]"
+                 priority="102"
+                 mode="grab-mx"/>
    <xsl:template match="/mx:validation" priority="101" mode="grab-mx">
       <xsl:copy>
          <xsl:copy-of select="@*"/>
@@ -252,20 +263,40 @@
    </xsl:template>
    <xsl:mode name="mx-to-html" on-no-match="text-only-copy"/>
    <xsl:template match="/mx:validation" mode="mx-to-html" expand-text="true">
+      <xsl:variable name="reported-valid" select="@reports = 0"/>
+      <xsl:variable name="validating-filename" select="replace(@src,'.*/','')"/>
+      <xsl:variable name="checked" select="if ($reported-valid) then '✔' else '✘'"/>
       <html>
-         <head/>
+         <head>
+            <title>{ $validating-filename } - { $checked } - { mx:metaschema/@shortname } validation</title>
+            <xsl:call-template name="html-css"/>
+         </head>
          <body>
-            <h1>Validation report - <a href="{ @src }">{ replace(@src,'.*/','') }</a>
-            </h1>
-            <p>{ @elements} { mx:pluralize(@elements/number(),'element') } and { @attributes } {  mx:pluralize(@attributes/number(),'attribute') } found in the document.</p>
+            <h1>{ $checked } Validating <a href="{ @src }">{ $validating-filename }</a> - { mx:metaschema } - found { 'IN'[not($reported-valid)] }VALID</h1>
+            <xsl:apply-templates mode="#current" select="mx:metaschema"/>
+            <p>
+               <code>{ $validating-filename }</code> contains { @elements} { mx:pluralize(@elements/number(),'element') } and { @attributes } {
+               mx:pluralize(@attributes/number(),'attribute') }.</p>
             <xsl:apply-templates select="." mode="summary"/>
-            <xsl:apply-templates mode="#current"/>
+            <main>
+               <xsl:apply-templates mode="#current" select="child::* except mx:metaschema"/>
+            </main>
          </body>
       </html>
    </xsl:template>
+   <xsl:template name="html-css" xml:space="preserve" expand-text="false">
+<style type="text/css">
+main { max-width: fit-content }
+details { margin-top: 0.5em; padding: 0.5em; outline: thin solid black }
+summary { margin: 0em }
+details p { margin: 0.2em 0em }   
+.xpath    { font-family: monospace }
+.exc { font-size: 85%; padding: 0.2em; background-color: cornsilk; font-family: sans-serif }
+</style>
+   </xsl:template>
    <xsl:template match="mx:validation" mode="summary" expand-text="true">
       <div class="summary">
-         <p>{ count(.//mx:report) } { mx:pluralize(count(.//mx:report),'report') }.</p>
+         <p>{ count(.//mx:report) } { mx:pluralize(count(.//mx:report),'issue') } reported.</p>
          <p>{ (1 to count(.//mx:report)) ! '💥' }</p>
       </div>
    </xsl:template>
@@ -274,14 +305,19 @@
          <p>Good news - nothing to report - the instance is valid. 🚀</p>
       </div>
    </xsl:template>
+   <xsl:template match="mx:metaschema" mode="mx-to-html" expand-text="true">
+      <p class="metadata">Checking against rules derived from <b>{ . }</b> metaschema (namespace <code>{ @namespace }</code>)</p>
+   </xsl:template>
    <xsl:template match="mx:report" mode="mx-to-html" expand-text="true">
-      <div class="report { @class }">
-         <h3 class="xpath">{ @xpath }</h3>
-         <p class="test">{ @test }</p>
-         <p>
+      <details class="report { @class }">
+         <summary>
             <xsl:apply-templates mode="#current"/>
+         </summary>
+         <p class="xpath">{ @xpath }</p>
+         <p class="exc">[{ @class }]</p>
+         <p class="test">test: <code>{ @test }</code>
          </p>
-      </div>
+      </details>
    </xsl:template>
    <xsl:template match="mx:gi" mode="mx-to-html" priority="1">
       <b>
@@ -302,6 +338,20 @@
    <xsl:variable name="lf" as="xs:string" expand-text="true">{ codepoints-to-string(10) }</xsl:variable>
    <xsl:variable name="lf2" as="xs:string" expand-text="true">{$lf || $lf}</xsl:variable>
    <xsl:template mode="html-to-md"
+                 match="html"
+                 xpath-default-namespace="http://www.w3.org/1999/xhtml">
+      <xsl:apply-templates mode="#current" select="body"/>
+   </xsl:template>
+   <xsl:template mode="html-to-md"
+                 match="style"
+                 xpath-default-namespace="http://www.w3.org/1999/xhtml"/>
+   <xsl:template mode="html-to-md"
+                 match="body[$mode='concise']"
+                 expand-text="true"
+                 xpath-default-namespace="http://www.w3.org/1999/xhtml">
+      <xsl:apply-templates mode="#current" select="h1"/>
+   </xsl:template>
+   <xsl:template mode="html-to-md"
                  match="body"
                  expand-text="true"
                  xpath-default-namespace="http://www.w3.org/1999/xhtml">
@@ -309,10 +359,17 @@
       <xsl:text>{ $lf }</xsl:text>
    </xsl:template>
    <xsl:template mode="html-to-md"
-                 match="div"
+                 match="div | details"
                  expand-text="true"
                  xpath-default-namespace="http://www.w3.org/1999/xhtml">
       <xsl:text>{ $lf2 }---</xsl:text>
+      <xsl:apply-templates mode="#current"/>
+   </xsl:template>
+   <xsl:template mode="html-to-md"
+                 match="body/*[1]/self::h1"
+                 expand-text="true"
+                 xpath-default-namespace="http://www.w3.org/1999/xhtml">
+      <xsl:text># </xsl:text>
       <xsl:apply-templates mode="#current"/>
    </xsl:template>
    <xsl:template mode="html-to-md"
@@ -330,7 +387,7 @@
       <xsl:apply-templates mode="#current"/>
    </xsl:template>
    <xsl:template mode="html-to-md"
-                 match="h3"
+                 match="h3 | details/summary"
                  expand-text="true"
                  xpath-default-namespace="http://www.w3.org/1999/xhtml">
       <xsl:text>{ $lf2 }### </xsl:text>
@@ -366,6 +423,11 @@
       <xsl:apply-templates mode="#current"/>
       <xsl:text>`</xsl:text>
    </xsl:template>
+   <xsl:template mode="metaschema-metadata" match="*">
+      <mx:metaschema version="0.0.5"
+                     shortname="computer"
+                     namespace="http://example.com/ns/computer">Computer Model</mx:metaschema>
+   </xsl:template>
    <!-- .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     . -->
    <!--    Generated rules - first, any roots    -->
    <!-- .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     . -->
@@ -382,7 +444,7 @@
    <xsl:template priority="5" match="computer/motherboard/vendor" mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.264</xsl:with-param>
+         <xsl:with-param name="cf">gix.270</xsl:with-param>
          <xsl:with-param name="class">EATO element-appears-too-often</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::vendor) gt 1</xsl:with-param>
          <xsl:with-param name="condition" select="count(. | preceding-sibling::vendor) gt 1"/>
@@ -390,7 +452,7 @@
             <mx:gi>vendor</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.304</xsl:with-param>
+         <xsl:with-param name="cf">gix.310</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">exists( preceding-sibling::type | preceding-sibling::cpu | preceding-sibling::ata-socket | preceding-sibling::memory | preceding-sibling::cooling | preceding-sibling::expansion-card )</xsl:with-param>
          <xsl:with-param name="condition"
@@ -403,7 +465,7 @@
    <xsl:template priority="5" match="motherboard/cpu/vendor" mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.264</xsl:with-param>
+         <xsl:with-param name="cf">gix.270</xsl:with-param>
          <xsl:with-param name="class">EATO element-appears-too-often</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::vendor) gt 1</xsl:with-param>
          <xsl:with-param name="condition" select="count(. | preceding-sibling::vendor) gt 1"/>
@@ -411,7 +473,7 @@
             <mx:gi>vendor</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.304</xsl:with-param>
+         <xsl:with-param name="cf">gix.310</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">exists( preceding-sibling::product-name | preceding-sibling::architecture | preceding-sibling::speed )</xsl:with-param>
          <xsl:with-param name="condition"
@@ -424,7 +486,7 @@
    <xsl:template priority="5" match="motherboard/ata-socket/vendor" mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.264</xsl:with-param>
+         <xsl:with-param name="cf">gix.270</xsl:with-param>
          <xsl:with-param name="class">EATO element-appears-too-often</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::vendor) gt 1</xsl:with-param>
          <xsl:with-param name="condition" select="count(. | preceding-sibling::vendor) gt 1"/>
@@ -432,7 +494,7 @@
             <mx:gi>vendor</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.304</xsl:with-param>
+         <xsl:with-param name="cf">gix.310</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">exists( preceding-sibling::product-name | preceding-sibling::type )</xsl:with-param>
          <xsl:with-param name="condition"
@@ -445,7 +507,7 @@
    <xsl:template priority="5" match="motherboard/memory/vendor" mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.264</xsl:with-param>
+         <xsl:with-param name="cf">gix.270</xsl:with-param>
          <xsl:with-param name="class">EATO element-appears-too-often</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::vendor) gt 1</xsl:with-param>
          <xsl:with-param name="condition" select="count(. | preceding-sibling::vendor) gt 1"/>
@@ -453,7 +515,7 @@
             <mx:gi>vendor</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.304</xsl:with-param>
+         <xsl:with-param name="cf">gix.310</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">exists( preceding-sibling::product-name | preceding-sibling::byte-size )</xsl:with-param>
          <xsl:with-param name="condition"
@@ -466,7 +528,7 @@
    <xsl:template priority="5" match="computer/motherboard/cooling" mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.264</xsl:with-param>
+         <xsl:with-param name="cf">gix.270</xsl:with-param>
          <xsl:with-param name="class">EATO element-appears-too-often</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::cooling) gt 1</xsl:with-param>
          <xsl:with-param name="condition" select="count(. | preceding-sibling::cooling) gt 1"/>
@@ -474,7 +536,7 @@
             <mx:gi>cooling</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.304</xsl:with-param>
+         <xsl:with-param name="cf">gix.310</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">exists( preceding-sibling::expansion-card )</xsl:with-param>
          <xsl:with-param name="condition" select="exists( preceding-sibling::expansion-card )"/>
@@ -486,7 +548,7 @@
    <xsl:template priority="5" match="motherboard/expansion-card/vendor" mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.264</xsl:with-param>
+         <xsl:with-param name="cf">gix.270</xsl:with-param>
          <xsl:with-param name="class">EATO element-appears-too-often</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::vendor) gt 1</xsl:with-param>
          <xsl:with-param name="condition" select="count(. | preceding-sibling::vendor) gt 1"/>
@@ -494,7 +556,7 @@
             <mx:gi>vendor</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.304</xsl:with-param>
+         <xsl:with-param name="cf">gix.310</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">exists( preceding-sibling::product-name | preceding-sibling::type )</xsl:with-param>
          <xsl:with-param name="condition"
@@ -507,7 +569,7 @@
    <xsl:template priority="5" match="/computer/motherboard" mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.264</xsl:with-param>
+         <xsl:with-param name="cf">gix.270</xsl:with-param>
          <xsl:with-param name="class">EATO element-appears-too-often</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::motherboard) gt 1</xsl:with-param>
          <xsl:with-param name="condition"
@@ -520,7 +582,7 @@
    <xsl:template priority="5" match="computer/motherboard/cpu" mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.264</xsl:with-param>
+         <xsl:with-param name="cf">gix.270</xsl:with-param>
          <xsl:with-param name="class">EATO element-appears-too-often</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::cpu) gt 1</xsl:with-param>
          <xsl:with-param name="condition" select="count(. | preceding-sibling::cpu) gt 1"/>
@@ -528,7 +590,7 @@
             <mx:gi>cpu</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.304</xsl:with-param>
+         <xsl:with-param name="cf">gix.310</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">exists( preceding-sibling::ata-socket | preceding-sibling::memory | preceding-sibling::cooling | preceding-sibling::expansion-card )</xsl:with-param>
          <xsl:with-param name="condition"
@@ -541,7 +603,7 @@
    <xsl:template priority="5" match="computer/motherboard/ata-socket" mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.264</xsl:with-param>
+         <xsl:with-param name="cf">gix.270</xsl:with-param>
          <xsl:with-param name="class">EATO element-appears-too-often</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::ata-socket) gt 1</xsl:with-param>
          <xsl:with-param name="condition" select="count(. | preceding-sibling::ata-socket) gt 1"/>
@@ -549,7 +611,7 @@
             <mx:gi>ata-socket</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.304</xsl:with-param>
+         <xsl:with-param name="cf">gix.310</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">exists( preceding-sibling::memory | preceding-sibling::cooling | preceding-sibling::expansion-card )</xsl:with-param>
          <xsl:with-param name="condition"
@@ -562,7 +624,7 @@
    <xsl:template priority="5" match="computer/motherboard/memory" mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.304</xsl:with-param>
+         <xsl:with-param name="cf">gix.310</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">exists( preceding-sibling::cooling | preceding-sibling::expansion-card )</xsl:with-param>
          <xsl:with-param name="condition"
@@ -581,7 +643,7 @@
    <xsl:template priority="5" match="motherboard/cooling/fan" mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.253</xsl:with-param>
+         <xsl:with-param name="cf">gix.259</xsl:with-param>
          <xsl:with-param name="class">EATI element-appears-too-infrequently</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">empty(following-sibling::fan) and (count(. | preceding-sibling::fan) lt 2)</xsl:with-param>
          <xsl:with-param name="condition"
@@ -590,7 +652,7 @@
             <mx:gi>fan</mx:gi> appears too few times: 2 minimum are required.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.264</xsl:with-param>
+         <xsl:with-param name="cf">gix.270</xsl:with-param>
          <xsl:with-param name="class">EATO element-appears-too-often</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::fan) gt 12</xsl:with-param>
          <xsl:with-param name="condition" select="count(. | preceding-sibling::fan) gt 12"/>
@@ -598,7 +660,7 @@
             <mx:gi>fan</mx:gi> appears too many times: 12 maximum are permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.276</xsl:with-param>
+         <xsl:with-param name="cf">gix.282</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">empty(preceding-sibling::fan) and exists(../(water))</xsl:with-param>
          <xsl:with-param name="condition"
                          select="empty(preceding-sibling::fan) and exists(../(water))"/>
@@ -611,7 +673,7 @@
    <xsl:template priority="5" match="motherboard/cooling/water" mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.264</xsl:with-param>
+         <xsl:with-param name="cf">gix.270</xsl:with-param>
          <xsl:with-param name="class">EATO element-appears-too-often</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::water) gt 1</xsl:with-param>
          <xsl:with-param name="condition" select="count(. | preceding-sibling::water) gt 1"/>
@@ -619,7 +681,7 @@
             <mx:gi>water</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.276</xsl:with-param>
+         <xsl:with-param name="cf">gix.282</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">empty(preceding-sibling::water) and exists(../(fan))</xsl:with-param>
          <xsl:with-param name="condition"
                          select="empty(preceding-sibling::water) and exists(../(fan))"/>
@@ -633,7 +695,7 @@
    <xsl:template priority="5" match="motherboard/cpu/product-name" mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.264</xsl:with-param>
+         <xsl:with-param name="cf">gix.270</xsl:with-param>
          <xsl:with-param name="class">EATO element-appears-too-often</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::product-name) gt 1</xsl:with-param>
          <xsl:with-param name="condition"
@@ -642,7 +704,7 @@
             <mx:gi>product-name</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.304</xsl:with-param>
+         <xsl:with-param name="cf">gix.310</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">exists( preceding-sibling::architecture | preceding-sibling::speed )</xsl:with-param>
          <xsl:with-param name="condition"
@@ -658,7 +720,7 @@
                  mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.264</xsl:with-param>
+         <xsl:with-param name="cf">gix.270</xsl:with-param>
          <xsl:with-param name="class">EATO element-appears-too-often</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::product-name) gt 1</xsl:with-param>
          <xsl:with-param name="condition"
@@ -667,7 +729,7 @@
             <mx:gi>product-name</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.304</xsl:with-param>
+         <xsl:with-param name="cf">gix.310</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">exists( preceding-sibling::type )</xsl:with-param>
          <xsl:with-param name="condition" select="exists( preceding-sibling::type )"/>
@@ -680,7 +742,7 @@
    <xsl:template priority="5" match="motherboard/memory/product-name" mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.264</xsl:with-param>
+         <xsl:with-param name="cf">gix.270</xsl:with-param>
          <xsl:with-param name="class">EATO element-appears-too-often</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::product-name) gt 1</xsl:with-param>
          <xsl:with-param name="condition"
@@ -689,7 +751,7 @@
             <mx:gi>product-name</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.304</xsl:with-param>
+         <xsl:with-param name="cf">gix.310</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">exists( preceding-sibling::byte-size )</xsl:with-param>
          <xsl:with-param name="condition" select="exists( preceding-sibling::byte-size )"/>
@@ -704,7 +766,7 @@
                  mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.264</xsl:with-param>
+         <xsl:with-param name="cf">gix.270</xsl:with-param>
          <xsl:with-param name="class">EATO element-appears-too-often</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::product-name) gt 1</xsl:with-param>
          <xsl:with-param name="condition"
@@ -713,7 +775,7 @@
             <mx:gi>product-name</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.304</xsl:with-param>
+         <xsl:with-param name="cf">gix.310</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">exists( preceding-sibling::type )</xsl:with-param>
          <xsl:with-param name="condition" select="exists( preceding-sibling::type )"/>
@@ -729,7 +791,7 @@
                  mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.264</xsl:with-param>
+         <xsl:with-param name="cf">gix.270</xsl:with-param>
          <xsl:with-param name="class">EATO element-appears-too-often</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::name) gt 1</xsl:with-param>
          <xsl:with-param name="condition" select="count(. | preceding-sibling::name) gt 1"/>
@@ -737,7 +799,7 @@
             <mx:gi>name</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.304</xsl:with-param>
+         <xsl:with-param name="cf">gix.310</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">exists( preceding-sibling::address | preceding-sibling::website )</xsl:with-param>
          <xsl:with-param name="condition"
@@ -754,7 +816,7 @@
                  mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.264</xsl:with-param>
+         <xsl:with-param name="cf">gix.270</xsl:with-param>
          <xsl:with-param name="class">EATO element-appears-too-often</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::address) gt 1</xsl:with-param>
          <xsl:with-param name="condition" select="count(. | preceding-sibling::address) gt 1"/>
@@ -762,7 +824,7 @@
             <mx:gi>address</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.304</xsl:with-param>
+         <xsl:with-param name="cf">gix.310</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">exists( preceding-sibling::website )</xsl:with-param>
          <xsl:with-param name="condition" select="exists( preceding-sibling::website )"/>
@@ -778,7 +840,7 @@
                  mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.264</xsl:with-param>
+         <xsl:with-param name="cf">gix.270</xsl:with-param>
          <xsl:with-param name="class">EATO element-appears-too-often</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::website) gt 1</xsl:with-param>
          <xsl:with-param name="condition" select="count(. | preceding-sibling::website) gt 1"/>
@@ -791,7 +853,7 @@
    <xsl:template priority="5" match="computer/motherboard/type" mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.264</xsl:with-param>
+         <xsl:with-param name="cf">gix.270</xsl:with-param>
          <xsl:with-param name="class">EATO element-appears-too-often</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::type) gt 1</xsl:with-param>
          <xsl:with-param name="condition" select="count(. | preceding-sibling::type) gt 1"/>
@@ -799,7 +861,7 @@
             <mx:gi>type</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.304</xsl:with-param>
+         <xsl:with-param name="cf">gix.310</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">exists( preceding-sibling::cpu | preceding-sibling::ata-socket | preceding-sibling::memory | preceding-sibling::cooling | preceding-sibling::expansion-card )</xsl:with-param>
          <xsl:with-param name="condition"
@@ -813,7 +875,7 @@
    <xsl:template priority="5" match="motherboard/cpu/architecture" mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.264</xsl:with-param>
+         <xsl:with-param name="cf">gix.270</xsl:with-param>
          <xsl:with-param name="class">EATO element-appears-too-often</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::architecture) gt 1</xsl:with-param>
          <xsl:with-param name="condition"
@@ -822,7 +884,7 @@
             <mx:gi>architecture</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.304</xsl:with-param>
+         <xsl:with-param name="cf">gix.310</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">exists( preceding-sibling::speed )</xsl:with-param>
          <xsl:with-param name="condition" select="exists( preceding-sibling::speed )"/>
@@ -835,7 +897,7 @@
    <xsl:template priority="5" match="motherboard/cpu/speed" mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.264</xsl:with-param>
+         <xsl:with-param name="cf">gix.270</xsl:with-param>
          <xsl:with-param name="class">EATO element-appears-too-often</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::speed) gt 1</xsl:with-param>
          <xsl:with-param name="condition" select="count(. | preceding-sibling::speed) gt 1"/>
@@ -848,7 +910,7 @@
    <xsl:template priority="5" match="motherboard/ata-socket/type" mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.264</xsl:with-param>
+         <xsl:with-param name="cf">gix.270</xsl:with-param>
          <xsl:with-param name="class">EATO element-appears-too-often</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::type) gt 1</xsl:with-param>
          <xsl:with-param name="condition" select="count(. | preceding-sibling::type) gt 1"/>
@@ -861,7 +923,7 @@
    <xsl:template priority="5" match="motherboard/memory/byte-size" mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.264</xsl:with-param>
+         <xsl:with-param name="cf">gix.270</xsl:with-param>
          <xsl:with-param name="class">EATO element-appears-too-often</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::byte-size) gt 1</xsl:with-param>
          <xsl:with-param name="condition" select="count(. | preceding-sibling::byte-size) gt 1"/>
@@ -874,7 +936,7 @@
    <xsl:template priority="5" match="motherboard/expansion-card/type" mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.264</xsl:with-param>
+         <xsl:with-param name="cf">gix.270</xsl:with-param>
          <xsl:with-param name="class">EATO element-appears-too-often</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::type) gt 1</xsl:with-param>
          <xsl:with-param name="condition" select="count(. | preceding-sibling::type) gt 1"/>
@@ -899,7 +961,7 @@
    <xsl:template mode="test"
                  match="name | address | website | computer | motherboard | vendor | type | cpu | product-name | architecture | speed | ata-socket | memory | byte-size | cooling | expansion-card | fan | water">
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf" as="xs:string">gix.70</xsl:with-param>
+         <xsl:with-param name="cf" as="xs:string">gix.76</xsl:with-param>
          <xsl:with-param name="class">EOOP element-out-of-place</xsl:with-param>
          <xsl:with-param name="msg" expand-text="true">
             <mx:gi>{ name() }</mx:gi> is not permitted here.</xsl:with-param>
@@ -907,7 +969,7 @@
    </xsl:template>
    <xsl:template mode="test" match="@id | @illuminated">
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf" as="xs:string">gix.78</xsl:with-param>
+         <xsl:with-param name="cf" as="xs:string">gix.84</xsl:with-param>
          <xsl:with-param name="class">AOOP attribute-out-of-place</xsl:with-param>
          <xsl:with-param name="msg" expand-text="true">
             <mx:gi>@{ name() }</mx:gi> is not permitted here.</xsl:with-param>
@@ -918,7 +980,7 @@
    <!-- .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     . -->
    <xsl:template name="require-for-vendor-assembly">
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.459</xsl:with-param>
+         <xsl:with-param name="cf">gix.465</xsl:with-param>
          <xsl:with-param name="class">MRQA missing-required-attribute</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">empty(@id)</xsl:with-param>
          <xsl:with-param name="condition" select="empty(@id)"/>
@@ -926,7 +988,7 @@
             <mx:gi>{ name() }</mx:gi> requires <mx:gi>@id</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.366</xsl:with-param>
+         <xsl:with-param name="cf">gix.372</xsl:with-param>
          <xsl:with-param name="class">MRQC missing-required-contents</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">empty(name)</xsl:with-param>
          <xsl:with-param name="condition" select="empty(name)"/>
@@ -934,7 +996,7 @@
             <mx:gi>{ name() }</mx:gi> requires <mx:gi>name</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.366</xsl:with-param>
+         <xsl:with-param name="cf">gix.372</xsl:with-param>
          <xsl:with-param name="class">MRQC missing-required-contents</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">empty(address)</xsl:with-param>
          <xsl:with-param name="condition" select="empty(address)"/>
@@ -942,7 +1004,7 @@
             <mx:gi>{ name() }</mx:gi> requires <mx:gi>address</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.366</xsl:with-param>
+         <xsl:with-param name="cf">gix.372</xsl:with-param>
          <xsl:with-param name="class">MRQC missing-required-contents</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">empty(website)</xsl:with-param>
          <xsl:with-param name="condition" select="empty(website)"/>
@@ -959,7 +1021,7 @@
    <xsl:template name="require-for-product-name-field"/>
    <xsl:template name="require-for-computer-assembly">
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.459</xsl:with-param>
+         <xsl:with-param name="cf">gix.465</xsl:with-param>
          <xsl:with-param name="class">MRQA missing-required-attribute</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">empty(@id)</xsl:with-param>
          <xsl:with-param name="condition" select="empty(@id)"/>
@@ -970,7 +1032,7 @@
    <xsl:template name="require-for-computer_..._id-flag"/>
    <xsl:template name="require-for-computer_..._motherboard-assembly">
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.366</xsl:with-param>
+         <xsl:with-param name="cf">gix.372</xsl:with-param>
          <xsl:with-param name="class">MRQC missing-required-contents</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">empty(type)</xsl:with-param>
          <xsl:with-param name="condition" select="empty(type)"/>
@@ -978,7 +1040,7 @@
             <mx:gi>{ name() }</mx:gi> requires <mx:gi>type</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.366</xsl:with-param>
+         <xsl:with-param name="cf">gix.372</xsl:with-param>
          <xsl:with-param name="class">MRQC missing-required-contents</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">empty(memory)</xsl:with-param>
          <xsl:with-param name="condition" select="empty(memory)"/>
@@ -989,7 +1051,7 @@
    <xsl:template name="require-for-computer_..._motherboard_..._type-field"/>
    <xsl:template name="require-for-computer_..._motherboard_..._cpu-assembly">
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.366</xsl:with-param>
+         <xsl:with-param name="cf">gix.372</xsl:with-param>
          <xsl:with-param name="class">MRQC missing-required-contents</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">empty(product-name)</xsl:with-param>
          <xsl:with-param name="condition" select="empty(product-name)"/>
@@ -997,7 +1059,7 @@
             <mx:gi>{ name() }</mx:gi> requires <mx:gi>product-name</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.366</xsl:with-param>
+         <xsl:with-param name="cf">gix.372</xsl:with-param>
          <xsl:with-param name="class">MRQC missing-required-contents</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">empty(architecture)</xsl:with-param>
          <xsl:with-param name="condition" select="empty(architecture)"/>
@@ -1005,7 +1067,7 @@
             <mx:gi>{ name() }</mx:gi> requires <mx:gi>architecture</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.366</xsl:with-param>
+         <xsl:with-param name="cf">gix.372</xsl:with-param>
          <xsl:with-param name="class">MRQC missing-required-contents</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">empty(speed)</xsl:with-param>
          <xsl:with-param name="condition" select="empty(speed)"/>
@@ -1017,7 +1079,7 @@
    <xsl:template name="require-for-computer_..._motherboard_..._cpu_..._speed-field"/>
    <xsl:template name="require-for-computer_..._motherboard_..._ata-socket-assembly">
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.366</xsl:with-param>
+         <xsl:with-param name="cf">gix.372</xsl:with-param>
          <xsl:with-param name="class">MRQC missing-required-contents</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">empty(product-name)</xsl:with-param>
          <xsl:with-param name="condition" select="empty(product-name)"/>
@@ -1025,7 +1087,7 @@
             <mx:gi>{ name() }</mx:gi> requires <mx:gi>product-name</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.366</xsl:with-param>
+         <xsl:with-param name="cf">gix.372</xsl:with-param>
          <xsl:with-param name="class">MRQC missing-required-contents</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">empty(type)</xsl:with-param>
          <xsl:with-param name="condition" select="empty(type)"/>
@@ -1036,7 +1098,7 @@
    <xsl:template name="require-for-computer_..._motherboard_..._ata-socket_..._type-field"/>
    <xsl:template name="require-for-computer_..._motherboard_..._memory-assembly">
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.366</xsl:with-param>
+         <xsl:with-param name="cf">gix.372</xsl:with-param>
          <xsl:with-param name="class">MRQC missing-required-contents</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">empty(product-name)</xsl:with-param>
          <xsl:with-param name="condition" select="empty(product-name)"/>
@@ -1044,7 +1106,7 @@
             <mx:gi>{ name() }</mx:gi> requires <mx:gi>product-name</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.366</xsl:with-param>
+         <xsl:with-param name="cf">gix.372</xsl:with-param>
          <xsl:with-param name="class">MRQC missing-required-contents</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">empty(byte-size)</xsl:with-param>
          <xsl:with-param name="condition" select="empty(byte-size)"/>
@@ -1057,7 +1119,7 @@
    </xsl:template>
    <xsl:template name="require-for-computer_..._motherboard_..._expansion-card-assembly">
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.366</xsl:with-param>
+         <xsl:with-param name="cf">gix.372</xsl:with-param>
          <xsl:with-param name="class">MRQC missing-required-contents</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">empty(product-name)</xsl:with-param>
          <xsl:with-param name="condition" select="empty(product-name)"/>
@@ -1065,7 +1127,7 @@
             <mx:gi>{ name() }</mx:gi> requires <mx:gi>product-name</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.366</xsl:with-param>
+         <xsl:with-param name="cf">gix.372</xsl:with-param>
          <xsl:with-param name="class">MRQC missing-required-contents</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">empty(type)</xsl:with-param>
          <xsl:with-param name="condition" select="empty(type)"/>
@@ -1076,7 +1138,7 @@
    <xsl:template name="require-for-computer_..._motherboard_..._expansion-card_..._type-field"/>
    <xsl:template name="require-for-cooling-assembly">
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.366</xsl:with-param>
+         <xsl:with-param name="cf">gix.372</xsl:with-param>
          <xsl:with-param name="class">MRQC missing-required-contents</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">empty(fan|water)</xsl:with-param>
          <xsl:with-param name="condition" select="empty(fan|water)"/>
@@ -1094,7 +1156,7 @@
    <!-- .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     . -->
    <xsl:template name="check-string-datatype">
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf" as="xs:string">gix.104</xsl:with-param>
+         <xsl:with-param name="cf" as="xs:string">gix.110</xsl:with-param>
          <xsl:with-param name="class">VDSX violates-datatype-syntax</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">not( string(.) castable as xs:string and matches(.,'^\S(.*\S)?$') )</xsl:with-param>
          <xsl:with-param name="condition"
@@ -1105,7 +1167,7 @@
    </xsl:template>
    <xsl:template name="check-uri-datatype">
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf" as="xs:string">gix.104</xsl:with-param>
+         <xsl:with-param name="cf" as="xs:string">gix.110</xsl:with-param>
          <xsl:with-param name="class">VDSX violates-datatype-syntax</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">not( string(.) castable as xs:anyURI and matches(.,'^[a-zA-Z][a-zA-Z0-9+\-.]+:.*\S$') )</xsl:with-param>
          <xsl:with-param name="condition"
@@ -1116,7 +1178,7 @@
    </xsl:template>
    <xsl:template name="check-positive-integer-datatype">
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf" as="xs:string">gix.104</xsl:with-param>
+         <xsl:with-param name="cf" as="xs:string">gix.110</xsl:with-param>
          <xsl:with-param name="class">VDSX violates-datatype-syntax</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">not( string(.) castable as xs:positiveInteger and matches(.,'^\S(.*\S)?$') )</xsl:with-param>
          <xsl:with-param name="condition"
@@ -1127,7 +1189,7 @@
    </xsl:template>
    <xsl:template name="check-boolean-datatype">
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf" as="xs:string">gix.104</xsl:with-param>
+         <xsl:with-param name="cf" as="xs:string">gix.110</xsl:with-param>
          <xsl:with-param name="class">VDSX violates-datatype-syntax</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">not( string(.) castable as xs:boolean and matches(.,'^true|1|false|0$') )</xsl:with-param>
          <xsl:with-param name="condition"
