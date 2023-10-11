@@ -48,6 +48,14 @@
                     <define-field name="type" as-type="string" min-occurs="1" max-occurs="1">
                         <formal-name>Motherboard Type</formal-name>
                         <description>The type motherboard layout, <code>at</code>, <code>atx</code>, <code>mini-itx</code> or an alternative.</description>
+                       <constraint>
+                          <allowed-values target=".">
+                             <enum value="at">AT</enum>
+                             <enum value="atx">ATX</enum>
+                             <enum value="mini-itx">Mini-ITX</enum>
+                             <enum value="custom">Custom</enum>
+                          </allowed-values>
+                       </constraint>
                     </define-field>
                     <define-assembly name="cpu">
                         <formal-name>Motherboard Central Processing Unit (CPU)</formal-name>
@@ -62,8 +70,12 @@
                             <define-field name="speed" as-type="string" min-occurs="1" max-occurs="1">
                                 <formal-name>CPU Speed</formal-name>
                                 <description>The clock speed of the CPU in megahertz or gigahertz.</description>
+                               <constraint>
+                                  <matches target="." regex="\d+(\.\d+)?(M|G)Hz"/>
+                               </constraint>
                             </define-field>
                         </model>
+                       
                     </define-assembly>
                     <define-assembly name="ata-socket">
                         <formal-name>Motherboard Advanced Technology Attachment (ATA) Socket</formal-name>
@@ -89,6 +101,9 @@
                                 <description>Size of the memory module in binary, not SI base-10 units, meaning a kilobyte is 1024 bytes, not 1000 bytes.</description>
                             </define-field>
                         </model>
+                       <constraint>
+                          <expect target="." test="not(@byte-size != ../@byte-size"><!-- All memory must all have the same byte-size--></expect>
+                       </constraint>
                     </define-assembly>
                     <assembly ref="cooling" min-occurs="0"/>
                     <define-assembly name="expansion-card" min-occurs="0" max-occurs="unbounded">

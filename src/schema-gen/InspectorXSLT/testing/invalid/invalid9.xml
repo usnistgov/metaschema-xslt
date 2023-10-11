@@ -9,7 +9,7 @@
             <address>address0</address>
             <website>http://pages.nist.gov/metaschema</website>
         </vendor>
-        <type>type0</type>
+        <type>custom</type>
         <memory>
             <vendor id="id11">
                 <name>name4</name>

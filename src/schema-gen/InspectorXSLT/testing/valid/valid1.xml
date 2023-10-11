@@ -6,7 +6,7 @@
             <address>address0</address>
             <website>http://pages.nist.gov/metaschema</website>
         </vendor>
-        <type>type0</type>
+        <type>at</type>
         <cpu>
             <vendor id="id5">
                 <name>name1</name>
@@ -15,7 +15,7 @@
             </vendor>
             <product-name>product-name0</product-name>
             <architecture>architecture0</architecture>
-            <speed>speed0</speed>
+            <speed>4.5GHz</speed>
         </cpu>
         <ata-socket>
             <vendor id="id7">

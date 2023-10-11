@@ -3,13 +3,14 @@
  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xmlns="http://example.com/ns/computerX"
  id="id1">
+   <!-- Document would be valid were it not for someone else's namespace -->
     <motherboard>
         <vendor id="id3">
             <name>name0</name>
             <address>address0</address>
             <website>http://pages.nist.gov/metaschema</website>
         </vendor>
-        <type>type0</type>
+        <type>atx</type>
         <cpu>
             <vendor id="id5">
                 <name>name1</name>
@@ -18,7 +19,7 @@
             </vendor>
             <product-name>product-name0</product-name>
             <architecture>architecture0</architecture>
-            <speed>speed0</speed>
+            <speed>5GHz</speed>
         </cpu>
         <ata-socket>
             <vendor id="id7">
