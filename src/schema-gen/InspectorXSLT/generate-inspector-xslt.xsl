@@ -33,16 +33,15 @@
       
       <xsl:copy-of select="$XSLT-template/*/(child::* | child::comment())"/>
 
-         <XSLT:template mode="metaschema-metadata" match="*">
-            <mx:metaschema version="{/*/schema-version}" shortname="{/*/short-name}" namespace="{/*/namespace}">
-               <xsl:text expand-text="true">{ /*/schema-name }</xsl:text>
-            </mx:metaschema>
-         </XSLT:template>
+      <XSLT:template mode="metaschema-metadata" match="*">
+         <mx:metaschema version="{/*/schema-version}" shortname="{/*/short-name}" namespace="{/*/namespace}">
+            <xsl:text expand-text="true">{ /*/schema-name }</xsl:text>
+         </mx:metaschema>
+      </XSLT:template>
        
       <xsl:call-template name="comment-xsl">
         <xsl:with-param name="head">Generated rules - first, any roots</xsl:with-param>
       </xsl:call-template>
-      
       
       <xsl:call-template name="comment-xsl">
         <xsl:with-param name="head"> Root </xsl:with-param>
@@ -96,7 +95,7 @@
         <xsl:with-param name="head"> Datatypes - a named template for each occurring </xsl:with-param>
       </xsl:call-template>
       
-      <xsl:variable name="used-types" select="('string', //@as-type[not(.= ('markup-line','markup-multiline') )]/string(.)) => distinct-values()"/>
+       <xsl:variable name="used-types" select="('string', //@as-type/string(.), //constraint/matches/@datatype/string(.) )[not(.= ('markup-line','markup-multiline') )] => distinct-values()"/>
       <xsl:iterate select="$used-types" expand-text="true">
         <xsl:variable name="this-type" select="."/>
         <xsl:variable name="simpleType-name" select="$type-map[@as-type=$this-type]/string(.)"/>
@@ -379,6 +378,7 @@
       <xsl:if test="$has-unwrapped-markup-multiline">
         <XSLT:apply-templates mode="validate-markup-multiline"/>
       </xsl:if>
+       <xsl:apply-templates select="." mode="produce-constraint-tests"/>
     </XSLT:template>
     <xsl:if test="$has-unwrapped-markup-multiline">
       <xsl:variable name="matches" select="mx:contextualized-matches(.)" as="xs:string+"/>
@@ -436,6 +436,7 @@
       <xsl:for-each select="@as-type[. != 'string']">
         <XSLT:call-template name="check-{ . }-datatype"/>
       </xsl:for-each>
+       <xsl:apply-templates select="." mode="produce-constraint-tests"/>
     </XSLT:template>
   </xsl:template>
   
@@ -453,6 +454,7 @@
       <xsl:for-each select="@as-type[. != 'string']">
         <XSLT:call-template name="check-{ . }-datatype"/>
       </xsl:for-each>
+       <xsl:apply-templates select="." mode="produce-constraint-tests"/>
     </XSLT:template>
   </xsl:template>
   
@@ -545,12 +547,71 @@
     <xsl:text expand-text="true">matches(.,'^{@value}$')</xsl:text>
   </xsl:template>
   
-  <xsl:function name="mx:or" as="item()*">
+  
+  <xsl:mode name="produce-constraint-tests" on-no-match="shallow-copy" on-multiple-match="fail"/>
+   <!--
+   this mode is called to produce constraint tests in two contexts -
+     o for constraints with target="." or no target, a test is produced on the named template for that object definition
+     o for constraints with designated targets, a separate template is produced to match the targeted nodes in a separate mode to be called from mode='test' on each node through traversal-->
+   
+   <xsl:template match="define-assembly | define-field | define-flag" mode="produce-constraint-tests">
+      <xsl:apply-templates select="constraint" mode="#current"/>
+   </xsl:template>
+      
+  <xsl:template match="*" mode="produce-constraint-tests">
+     <xsl:message expand-text="true">matching { name() } for constraint testing</xsl:message>
+     <xsl:apply-templates mode="#current"/>
+  </xsl:template>
+   
+   <xsl:template match="constraint" mode="produce-constraint-tests">
+      <!-- build out constraint types allowed-values matches expect index-has-key-->
+      <xsl:apply-templates select="allowed-values[not(@target != '.')] | matches[not(@target != '.')] " mode="produce-constraint-tests"/> 
+   </xsl:template>
+  
+   <xsl:template match="allowed-values" mode="produce-constraint-tests">
+      <xsl:param name="values" select="enum/@value"/>
+      <xsl:variable name="value-sequence" select="($values ! ('''' || . || '''')) => string-join(', ')"/>
+      <xsl:variable name="test" as="xs:string" expand-text="true">. = ( {$value-sequence} )</xsl:variable><!-- test is not type-safe -->
+      <xsl:variable name="allowing-others" select="@allow-other='yes'"/>      
+      <XSLT:call-template name="notice">
+         <XSLT:with-param name="cf">gix.572</XSLT:with-param>
+         <XSLT:with-param name="class">AVCV value-not-allowed</XSLT:with-param>
+         <XSLT:with-param name="testing" as="xs:string">not( {$test} )</XSLT:with-param>
+         <XSLT:with-param name="condition" select="not({$test})"/>
+         <XSLT:with-param name="msg" expand-text="true"><mx:code>{ string(.) }</mx:code> does not appear among permitted (enumerated) values for <mx:gi>{ name() }</mx:gi>: <mx:code>(<xsl:value-of select="$values => string-join('|')"/>)</mx:code>.</XSLT:with-param>
+         <XSLT:with-param name="level" select="'{ (@level,'warning'[$allowing-others],'error')[1] }'"/>
+      </XSLT:call-template>
+   </xsl:template>
+  
+   <xsl:template match="matches" mode="produce-constraint-tests">    
+      <xsl:apply-templates mode="#current" select="@regex | @datatype"/>
+   </xsl:template>
+   
+   <xsl:template match="matches/@datatype" mode="produce-constraint-tests">
+      <XSLT:call-template name="check-{ . }-datatype"/>
+   </xsl:template>
+   
+   <xsl:template match="matches/@regex" mode="produce-constraint-tests">
+      <xsl:variable name="test" expand-text="true">matches(., '^{.}$')</xsl:variable>
+      <XSLT:call-template name="notice">
+         <XSLT:with-param name="cf">gix.572</XSLT:with-param>
+         <XSLT:with-param name="class">MRCV regex-match-fail</XSLT:with-param>
+         <XSLT:with-param name="testing" as="xs:string">not( {$test} )</XSLT:with-param>
+         <XSLT:with-param name="condition" select="not({$test})"/>
+         <XSLT:with-param name="msg" expand-text="true"><mx:code>{ string(.) }</mx:code> does not match the regular expression defined for this <mx:gi>{ name() }</mx:gi>: <mx:code>(<xsl:value-of select="."/>)</mx:code>.</XSLT:with-param>
+      </XSLT:call-template>
+   </xsl:template>
+   
+   <!--name="check-{ . }-datatype"-->
+   
+  <xsl:function name="mx:or" as="xs:string">
     <xsl:param name="items" as="item()*"/>
-    <xsl:for-each select="$items">
-      <xsl:call-template name="punctuate-or-item"/>
-      <xsl:sequence select="."/>
-    </xsl:for-each>
+     <xsl:value-of>
+        <xsl:iterate select="$items">
+           <xsl:call-template name="punctuate-or-item"/>
+           <xsl:sequence select="."/>
+        </xsl:iterate>
+     </xsl:value-of>
   </xsl:function>
   
   <xsl:template name="punctuate-or-item">

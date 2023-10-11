@@ -30,8 +30,7 @@ Modes to test:
    <!-- Just testing XPath in this processor -->
    <x:scenario label="'castable as' operation works on a few edge cases">
       <x:scenario label="For April 0">
-         <x:call function="true"/>
-         <!-- no-op call -->
+         <x:call function="true"/><!-- required to call something -->         
          <!-- ... with a test independent of context ... -->
          <x:expect label="0th day is not castable" test="not($mx:makes-a-date('2023-04-00'))"/>
       </x:scenario>

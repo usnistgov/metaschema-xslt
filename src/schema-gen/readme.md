@@ -25,6 +25,7 @@ Schema generation from NIST Metaschema source data is currently supported by XSL
 Currently, all these assume a single top-level metaschema as input, with its modules called via `import`.
 
 Routines that provide the same services over sets or batches of metaschemas, for efficiency, are to be developed.
+
 ### Produce an XSD using `make`
 
 XXX tbd XXX
@@ -56,7 +57,7 @@ The same pattern works for any schema supported, with any of the following XSLT 
 - XSD (XML Schema Definition Language) - `nist-metaschema-MAKE-XSD.xsl`
 - JSON Schema v7 as JSON - `nist-metaschema-MAKE-JSON-SCHEMA.xsl`
 - JSON Schema v7 as XML (for debugging) - `nist-metaschema-MAKE-JSON-SCHEMA-as-xml.xsl`
-- Metatron - experimental implementation of Metaschema Constraints - `nist-metaschema-MAKE-XML-METATRON.xsl`
+- InspectorXSLT - schema validation emulator with experimental implementation of Metaschema Constraints - `nist-metaschema-MAKE-INSPECTOR-XSLT.xsl`
 
 One of these stylesheets, when run on a top-level metaschema module, will deliver the appropriate output as directed by the `-o` flag or by a consuming application.
 
@@ -88,3 +89,13 @@ This pipeline is used by the `mvn-schemas-xpl.sh` script.
 It can also be run independently to help in debugging.
 
 For metaschema composition, this pipeline uses the subpipeline `../compose/metaschema-compose.xpl`.
+
+### Acquiring Saxon sources
+
+```
+curl -s -o SaxonHE12-3J.zip https://www.saxonica.com/download/SaxonHE12-3J.zip
+```
+
+```
+curl -s -o SaxonHE12-2J.zip https://www.saxonica.com/download/SaxonHE12-2J.zip
+```

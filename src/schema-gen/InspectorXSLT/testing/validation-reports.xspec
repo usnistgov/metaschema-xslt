@@ -7,12 +7,41 @@
     xslt-version="3.0">
 
     <!-- COME BACK TO / HELP WANTED
+    See STRESS TESTING below
     Test cardinality, order and 'choice' more systematically and comprehensively
     Unit tests for post-processing modes - MX, HTML and Markdown production?
     -->
     
     <!-- XXX next: Test datatypes, markup-line and markup-multiline (refer to XSD to scope) -->
     
+    <!-- XXX implement 'target' xpath that tests only indicated nodes (eval())? -->
+    <!-- XXX 'show-only' permits filtering error codes w/ regex? -->
+    <!-- XXX mode=noisy writes messages out ... add'l to writing files ... -->
+   
+    <!-- keep-quiet='details', 'when-valid' 'warnings'; particular warnings by constraint ID  -->
+  
+   <!--
+     
+  STRESS TESTING -
+    markup-line and markup-multiline fields
+    edge cases with @in-xml 'unwrapped' etc.
+    survey Metaschema and OSCAL for interesting cases
+  -->
+  
+<!--
+
+modes of operation
+  want outputs for invalid files only
+  want summary lines only (i.e. drop details) P
+  want extra noise (for when writing to files)
+  presentational options
+    HTML, MD, concise (compressed, no extra new lines, one line per report)
+  suppress warnings
+  suppress errors/warnings by code or ID
+  
+   -->
+   
+    <!-- TEST apply-validator.xsl as a 'null schema' validator -->
     <!-- more modes? - concise, grouped, summary-only, silent-if-valid?  -->
     <!-- XXX then: implementing the constraints checking!  -->
     

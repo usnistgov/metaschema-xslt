@@ -5,7 +5,7 @@
         <cpu>
             <product-name>product-name0</product-name>
             <architecture>architecture0</architecture>
-            <speed>speed0</speed>
+            <speed>-5GHz</speed>
         </cpu>
         <ata-socket>
             <product-name>product-name1</product-name>

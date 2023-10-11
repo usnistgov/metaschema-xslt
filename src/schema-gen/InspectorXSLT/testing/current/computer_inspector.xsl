@@ -5,7 +5,7 @@
                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                version="3.0"
                xpath-default-namespace="http://example.com/ns/computer"
-               exclude-result-prefixes="#all"><!-- Generated 2023-10-06T18:13:11.7614831-04:00 -->
+               exclude-result-prefixes="#all"><!-- Generated 2023-10-11T17:55:47.3516379-04:00 -->
    <xsl:mode on-no-match="fail"/>
    <xsl:mode name="test" on-no-match="shallow-skip"/>
    <!-- .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     . -->
@@ -167,6 +167,7 @@
       <!-- hints at why something is reported -->
       <xsl:param name="class" as="xs:string">__U uncategorized</xsl:param>
       <xsl:param name="msg">[info]</xsl:param>
+      <xsl:param name="level" as="xs:string">error</xsl:param>
       <xsl:if test="$condition">
          <xsl:variable name="xpath"><!-- handmade paths avoid namespaces and other complications of path(.) -->
             <xsl:apply-templates select="." mode="xpath"/>
@@ -175,8 +176,19 @@
                     test="{ $testing }"
                     class="{$class}"
                     xpath="{ $xpath }">
+            <xsl:if test="not($level = 'error')">
+               <xsl:attribute name="level" select="$level"/>
+            </xsl:if>
             <xsl:sequence select="$msg"/>
          </mx:report>
+      </xsl:if>
+   </xsl:template>
+   <xsl:template name="announce-aside">
+      <xsl:param name="msg">[info]</xsl:param>
+      <xsl:if test="$mode='noisy'">
+         <xsl:message>
+            <xsl:sequence select="$msg"/>
+         </xsl:message>
       </xsl:if>
    </xsl:template>
    <xsl:template mode="xpath" match="*">
@@ -226,6 +238,7 @@
       <xsl:choose>
          <xsl:when test="$for eq 1">{ $as }</xsl:when>
          <xsl:otherwise>{ $as }s</xsl:otherwise>
+         <!-- we could dive into templates if we hit a special case -->
       </xsl:choose>
    </xsl:function>
    <xsl:template name="check-markup-line-datatype">
@@ -248,8 +261,25 @@
    </xsl:template>
    <!--silences empty validation reports -->
    <xsl:template match="/mx:validation[$mode='silent-when-valid'][empty(descendant::mx:report)]"
-                 priority="102"
+                 priority="104"
                  mode="grab-mx"/>
+   <xsl:template match="/mx:validation[$mode='noisy'][empty(descendant::mx:report)]"
+                 priority="103"
+                 mode="grab-mx">
+      <xsl:call-template name="announce-aside" expand-text="true">
+         <xsl:with-param name="msg">File { replace(@src,'.*/','') } is reported VALID, no issues ... </xsl:with-param>
+      </xsl:call-template>
+      <xsl:next-match/>
+   </xsl:template>
+   <xsl:template match="/mx:validation[$mode='noisy'][exists(descendant::mx:report)]"
+                 priority="102"
+                 mode="grab-mx">
+      <xsl:variable name="report-count" select="count(.//mx:report)"/>
+      <xsl:call-template name="announce-aside" expand-text="true">
+         <xsl:with-param name="msg">File { replace(@src,'.*/','') } has { $report-count } { mx:pluralize($report-count,'issue') } reported ... </xsl:with-param>
+      </xsl:call-template>
+      <xsl:next-match/>
+   </xsl:template>
    <xsl:template match="/mx:validation" priority="101" mode="grab-mx">
       <xsl:copy>
          <xsl:copy-of select="@*"/>
@@ -324,7 +354,7 @@ details p { margin: 0.2em 0em }
          <xsl:apply-templates mode="#current"/>
       </b>
    </xsl:template>
-   <xsl:template match="mx:tt" mode="mx-to-html" priority="1">
+   <xsl:template match="mx:code | mx:tt" mode="mx-to-html" priority="1">
       <code>
          <xsl:apply-templates mode="#current"/>
       </code>
@@ -416,7 +446,7 @@ details p { margin: 0.2em 0em }
       <xsl:text>*</xsl:text>
    </xsl:template>
    <xsl:template mode="html-to-md"
-                 match="p/code"
+                 match="code"
                  priority="2"
                  xpath-default-namespace="http://www.w3.org/1999/xhtml">
       <xsl:text>`</xsl:text>
@@ -1048,7 +1078,18 @@ details p { margin: 0.2em 0em }
             <mx:gi>{ name() }</mx:gi> requires <mx:gi>memory</mx:gi>.</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
-   <xsl:template name="require-for-computer_..._motherboard_..._type-field"/>
+   <xsl:template name="require-for-computer_..._motherboard_..._type-field">
+      <xsl:call-template name="notice">
+         <xsl:with-param name="cf">gix.572</xsl:with-param>
+         <xsl:with-param name="class">AVCV value-not-allowed</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">not( {$test} )</xsl:with-param>
+         <xsl:with-param name="condition"
+                         select="not(. = ( 'at', 'atx', 'mini-itx', 'custom' ))"/>
+         <xsl:with-param name="msg" expand-text="true">
+            <mx:code>{ string(.) }</mx:code> does not appear among permitted (enumerated) values for <mx:gi>{ name() }</mx:gi>: <mx:code>(at|atx|mini-itx|custom)</mx:code>.</xsl:with-param>
+         <xsl:with-param name="level" select="'error'"/>
+      </xsl:call-template>
+   </xsl:template>
    <xsl:template name="require-for-computer_..._motherboard_..._cpu-assembly">
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.372</xsl:with-param>
@@ -1076,7 +1117,16 @@ details p { margin: 0.2em 0em }
       </xsl:call-template>
    </xsl:template>
    <xsl:template name="require-for-computer_..._motherboard_..._cpu_..._architecture-field"/>
-   <xsl:template name="require-for-computer_..._motherboard_..._cpu_..._speed-field"/>
+   <xsl:template name="require-for-computer_..._motherboard_..._cpu_..._speed-field">
+      <xsl:call-template name="notice">
+         <xsl:with-param name="cf">gix.572</xsl:with-param>
+         <xsl:with-param name="class">MRCV regex-match-fail</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">not( {$test} )</xsl:with-param>
+         <xsl:with-param name="condition" select="not(matches(., '^\d+(\.\d+)?(M|G)Hz$'))"/>
+         <xsl:with-param name="msg" expand-text="true">
+            <mx:code>{ string(.) }</mx:code> does not match the regular expression defined for this <mx:gi>{ name() }</mx:gi>: <mx:code>(\d+(\.\d+)?(M|G)Hz)</mx:code>.</xsl:with-param>
+      </xsl:call-template>
+   </xsl:template>
    <xsl:template name="require-for-computer_..._motherboard_..._ata-socket-assembly">
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.372</xsl:with-param>

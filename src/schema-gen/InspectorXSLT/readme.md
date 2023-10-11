@@ -25,6 +25,7 @@ That is, it combines the effective functionality of XML schema and Schematron (X
 - [x] Run in batch, write reports to file(s)
   - [x] Using Saxon feature
   - [ ] Using XProc 
+  - [ ] make post-process XSLT digesting a sequence of MX results
 - [x] Validate structures - names and cardinalities
 - [x] Validate lexical rules over datatypes
   - [ ] more testing 
@@ -32,6 +33,7 @@ That is, it combines the effective functionality of XML schema and Schematron (X
 - [x] Write reports to file (HTML, Markdown)
 - [x] Emit copy of source annotated with validation messages
 - [ ] Run in browser / SaxonJS
+- [ ] Implement/document Python runtime w/ Saxon?
 
 ## Design goals and principles
 
@@ -39,7 +41,7 @@ The tool should be both easy to use and verifiably correct.
 
 ("Easy to use" being relative, possibly the goal is "easy to make easy to use", with one or two easy-to-use ways to use it.)
 
-No need to quit after first error; take advantage of the 'pull' process (random access to tree) to give a complete picture of a document's state vis-a-vis validation requirement).
+No need to quit after first error; take advantage of the 'pull' process (random access to tree) to give a complete picture of a document's state vis-a-vis validation requirements.
 
 The aims of the reporting are clarity/ease of use; to be unambiguous; to be traceable. To be concise and economical is a secondary goal.
 
@@ -64,12 +66,16 @@ The scripts also pass through arguments provided them to the receiving applicati
 ### To use generated XSLT directly
 
 If a script is not well-suited or easily adaptable, or for testing/experiment, Saxon can also be used directly. The following assumes that Saxon is set up to run from a command `saxon`. Arguments and command-line flags support functionalities beyond what is scripted, but can frequently be used *in combination* with the scripts. 
- 
+
+---
+
 Having produced the XSLT `computer-inspector.xsl` for inspecting `computer` XML documents: **to validate a file** `invalid10.xml` ...
 
 ```bash
 saxon -xslt:computer-inspector.xsl -s:invalid10.xml
 ```
+
+---
 
 **Bring back a copy of the input annotated** with MX (XML) results to STDOUT.
 
@@ -77,14 +83,17 @@ saxon -xslt:computer-inspector.xsl -s:invalid10.xml
 saxon -it:mx -xslt:computer-inspector.xsl -s:invalid10.xml
 ```
 
+---
+
 **Bring the messages only.** `-it:mx-report` does the same. `-it` designates an initial template. For convenience the Inspector XSLT also supports `-im` (designating an initial mode) with the same values and effects. If both are given the processor uses `-it`.
 
 ```bash
 saxon -it:mx -xslt:computer-inspector.xsl -s:invalid10.xml -o:results.xml
 ```
 
-**Write MX (XML) results (only) to a file** `results.xml`:
+---
 
+**Write MX (XML) results (only) to a file** `results.xml`:
 
 ```bash
 saxon -it:html -xslt:computer-inspector.xsl -s:invalid10.xml -o:results.html
@@ -92,9 +101,13 @@ saxon -it:html -xslt:computer-inspector.xsl -s:invalid10.xml -o:results.html
 
 This can be useful to capture MX reports for further processing.
 
+---
+
 **Write HTML results to a file** `results.html`. Use `!method:html !html-version:5.0` to get HTML 5 output instead of XML. (Or `!method:xhtml` if preferred.) Use `!indent:true` if you don't want a code brick.
 
 Note that HTML and Markdown results presuppose the MX filtering step.
+
+---
 
 To **write Markdown results to STDOUT**. (Note lack of `-o` argument.) This is the same as `-it:markdown`:
 
@@ -102,11 +115,15 @@ To **write Markdown results to STDOUT**. (Note lack of `-o` argument.) This is t
 saxon -it:md -xslt:computer-inspector.xsl -s:invalid10.xml
 ```
 
+---
+
 To write **Markdown results to STDOUT except emit *one line only***. This uses the `mode` parameter.:
 
 ```bash
 saxon -it:md -xslt:computer-inspector.xsl -s:invalid10.xml mode=concise
 ```
+
+---
 
 And to **silence results entirely when a file is found to be valid**:
 
@@ -116,12 +133,37 @@ saxon -it:md -xslt:computer-inspector.xsl -s:invalid10.xml mode=silent-when-vali
 
 (This also works with `-it:html` for HTML reports.)
 
+---
 
-To **run over a set of files** in `invalid` and produce result (files) in a new folder, `v-invalid`:
+To **run over a set of files** in a folder named `invalid` and produce result (files) in a new folder, `v-invalid`:
 
 ```bash
 saxon -xslt:computer-inspector.xsl -s:invalid -o:v-invalid
 ```
+
+Note - results are written for all files, valid and invalid, irrespective of findings. So even when `mode=silent-if-valid`, empty files is produced for a valid instances. Empty files can be removed (in Linux) with (or the equivalent).
+
+```
+find . -type f -empty -print -delete
+```
+
+where `.` indicates the folder (such as the current directory).
+
+---
+
+To **report as files are found to be valid or invalid** to STDOUT, irrespective of other settings.
+
+Use `mode=noisy` if you wish to see progress in the console even when directing results to file outputs. It will announce findings of both valid and invalid files, one line per file; so it is similar to `mode=concise` except it supplements instead of replaces the production of complete reports - so progress can be monitored as well as results can be written out. This mode cannot be used with `silent-if-valid` or `concise`.
+
+This feature is designed to be used when validating in batch and writing results to files. When validating a single file or not producing static results, consider using `mode=concise` instead (for example, to produce and see Markdown in the console).
+
+```bash
+saxon -it:html -xslt:computer-inspector.xsl -s:invalid10.xml -o:invalid10-report.html mode=noisy
+```
+
+---
+
+There is much else that can be done to produce **batched and grouped reports** including analytical summaries, etc., by aggregating and post-processing MX, HTML or Markdown outputs. 
 
 ### To do: further work on scripting
 

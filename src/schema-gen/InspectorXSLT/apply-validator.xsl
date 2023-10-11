@@ -180,23 +180,36 @@
     
     <xsl:template mode="test" match="@xsi:*" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
 
-    <xsl:template name="notice">
-        <xsl:param name="cf" as="xs:string" select="AV.186"/><!-- default expecting override -->
-        <xsl:param name="condition" as="xs:boolean" select="true()"/>
-        <xsl:param name="testing" as="xs:string">exists(.)</xsl:param><!-- hints at why something is reported -->
-        <xsl:param name="class" as="xs:string">__U uncategorized</xsl:param>
-        <xsl:param name="msg">[info]</xsl:param>
-        <xsl:if test="$condition">
-            <xsl:variable name="xpath"><!-- handmade paths avoid namespaces and other complications of path(.) -->
-                <xsl:apply-templates select="." mode="xpath"/>
-            </xsl:variable>
-            <mx:report cf="{$cf}" test="{ $testing }" class="{$class}" xpath="{ $xpath }">
-                <xsl:sequence select="$msg"/>
-            </mx:report>
-        </xsl:if>
-    </xsl:template>
-    
-    <xsl:template mode="xpath" match="*">
+   <xsl:template name="notice">
+      <xsl:param name="cf" as="xs:string" select="AV.186"/><!-- default expecting override -->
+      <xsl:param name="condition" as="xs:boolean" select="true()"/>
+      <xsl:param name="testing" as="xs:string">exists(.)</xsl:param><!-- hints at why something is reported -->
+      <xsl:param name="class" as="xs:string">__U uncategorized</xsl:param>
+      <xsl:param name="msg">[info]</xsl:param>
+      <xsl:param name="level" as="xs:string">error</xsl:param>
+      <xsl:if test="$condition">
+         <xsl:variable name="xpath"><!-- handmade paths avoid namespaces and other complications of path(.) -->
+            <xsl:apply-templates select="." mode="xpath"/>
+         </xsl:variable>
+         <mx:report cf="{$cf}" test="{ $testing }" class="{$class}" xpath="{ $xpath }">
+            <xsl:if test="not($level = 'error')">
+               <xsl:attribute name="level" select="$level"/>
+            </xsl:if>
+            <xsl:sequence select="$msg"/>
+         </mx:report>
+      </xsl:if>
+   </xsl:template>
+   
+   <xsl:template name="announce-aside">
+      <xsl:param name="msg">[info]</xsl:param>
+      <xsl:if test="$mode='noisy'">
+         <xsl:message>
+            <xsl:sequence select="$msg"/>
+         </xsl:message>
+      </xsl:if>
+   </xsl:template>
+   
+   <xsl:template mode="xpath" match="*">
         <xsl:apply-templates select="parent::*" mode="#current"/>
         <xsl:text expand-text="true">/{ name() }</xsl:text>
     </xsl:template>
@@ -250,10 +263,10 @@
         <xsl:param name="as" as="xs:string"/>
         <xsl:choose>
             <xsl:when test="$for eq 1">{ $as }</xsl:when>
-            <xsl:otherwise>{ $as }s</xsl:otherwise>
+            <xsl:otherwise>{ $as }s</xsl:otherwise><!-- we could dive into templates if we hit a special case -->
         </xsl:choose>
     </xsl:function>
-    
+   
     <xsl:template name="check-markup-line-datatype">
         <xsl:apply-templates mode="validate-markup-line"/>
     </xsl:template>
@@ -280,10 +293,25 @@
     </xsl:template>
 
    <!--silences empty validation reports -->
-   <xsl:template match="/mx:validation[$mode='silent-when-valid'][empty(descendant::mx:report)]" priority="102" mode="grab-mx"/>
+   <xsl:template match="/mx:validation[$mode='silent-when-valid'][empty(descendant::mx:report)]" priority="104" mode="grab-mx"/>
    
-    <xsl:template match="/mx:validation" priority="101" mode="grab-mx">
-        <xsl:copy>
+   <xsl:template match="/mx:validation[$mode='noisy'][empty(descendant::mx:report)]" priority="103" mode="grab-mx">
+      <xsl:call-template name="announce-aside" expand-text="true">
+         <xsl:with-param name="msg">File { replace(@src,'.*/','') } is reported VALID, no issues ... </xsl:with-param>
+      </xsl:call-template>
+      <xsl:next-match/>
+   </xsl:template>
+   
+   <xsl:template match="/mx:validation[$mode='noisy'][exists(descendant::mx:report)]" priority="102" mode="grab-mx">
+      <xsl:variable name="report-count" select="count(.//mx:report)"/>
+      <xsl:call-template name="announce-aside" expand-text="true">
+         <xsl:with-param name="msg">File { replace(@src,'.*/','') } has { $report-count } { mx:pluralize($report-count,'issue') } reported ... </xsl:with-param>
+      </xsl:call-template>
+      <xsl:next-match/>
+    </xsl:template>
+   
+   <xsl:template match="/mx:validation" priority="101" mode="grab-mx">
+      <xsl:copy>
             <xsl:copy-of select="@*"/>
             <xsl:attribute name="elements" select="count(descendant::* except .//mx:*/descendant-or-self::*)"/>
             <xsl:attribute name="attributes" select="count(descendant::*/@* except .//mx:*/descendant-or-self::*/@*)"/>
@@ -361,7 +389,7 @@ details p { margin: 0.2em 0em }
         </b>
     </xsl:template>
     
-    <xsl:template match="mx:tt" mode="mx-to-html" priority="1">
+    <xsl:template match="mx:code | mx:tt" mode="mx-to-html" priority="1">
         <code>
             <xsl:apply-templates mode="#current"/>
         </code>
@@ -433,7 +461,7 @@ details p { margin: 0.2em 0em }
         <xsl:apply-templates mode="#current"/>
         <xsl:text>*</xsl:text>
     </xsl:template>
-    <xsl:template mode="html-to-md" match="p/code" priority="2" xpath-default-namespace="http://www.w3.org/1999/xhtml">
+    <xsl:template mode="html-to-md" match="code" priority="2" xpath-default-namespace="http://www.w3.org/1999/xhtml">
         <xsl:text>`</xsl:text>
         <xsl:apply-templates mode="#current"/>
         <xsl:text>`</xsl:text>

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <computer xmlns="http://example.com/ns/computer" id="id1">
     <motherboard>
-        <type>type0</type>
+        <type>atx</type>
         <cpu>
             <product-name>product-name0</product-name>
             <architecture>architecture0</architecture>
-            <speed>speed0</speed>
+            <speed>5GHz</speed>
         </cpu>
         <ata-socket>
             <product-name>product-name1</product-name>
