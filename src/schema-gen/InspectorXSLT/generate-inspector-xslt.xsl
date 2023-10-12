@@ -110,7 +110,7 @@
             <XSLT:with-param name="class">VDSX violates-datatype-syntax</XSLT:with-param>
             <XSLT:with-param name="testing" as="xs:string">not( {$test} )</XSLT:with-param>
             <XSLT:with-param name="condition" select="not({$test})"/>
-            <XSLT:with-param name="msg" expand-text="true"><mx:gi>{{ name() }}</mx:gi> does not conform to <mx:tt>{ $this-type }</mx:tt> datatype.</XSLT:with-param>
+            <XSLT:with-param name="msg" expand-text="true"><mx:gi>{{ name(.) }}</mx:gi> <mx:code>{{ string(.) }}</mx:code> does not conform to <mx:code>{ $this-type }</mx:code> datatype.</XSLT:with-param>
           </XSLT:call-template>
         </XSLT:template>
       </xsl:iterate>
@@ -568,7 +568,7 @@
       <xsl:apply-templates select="allowed-values[not(@target != '.')] | matches[not(@target != '.')] " mode="produce-constraint-tests"/> 
    </xsl:template>
   
-   <xsl:template match="allowed-values" mode="produce-constraint-tests">
+   <xsl:template match="allowed-values" mode="produce-constraint-tests" expand-text="true">
       <xsl:param name="values" select="enum/@value"/>
       <xsl:variable name="value-sequence" select="($values ! ('''' || . || '''')) => string-join(', ')"/>
       <xsl:variable name="test" as="xs:string" expand-text="true">. = ( {$value-sequence} )</xsl:variable><!-- test is not type-safe -->
@@ -578,7 +578,7 @@
          <XSLT:with-param name="class">AVCV value-not-allowed</XSLT:with-param>
          <XSLT:with-param name="testing" as="xs:string">not( {$test} )</XSLT:with-param>
          <XSLT:with-param name="condition" select="not({$test})"/>
-         <XSLT:with-param name="msg" expand-text="true"><mx:code>{ string(.) }</mx:code> does not appear among permitted (enumerated) values for <mx:gi>{ name() }</mx:gi>: <mx:code>(<xsl:value-of select="$values => string-join('|')"/>)</mx:code>.</XSLT:with-param>
+         <XSLT:with-param name="msg" expand-text="true"><mx:code>{{ string(.) }}</mx:code> does not appear among permitted (enumerated) values for <mx:gi>{{ name() }}</mx:gi>: <mx:code>(<xsl:value-of select="$values => string-join('|')"/>)</mx:code>.</XSLT:with-param>
          <XSLT:with-param name="level" select="'{ (@level,'warning'[$allowing-others],'error')[1] }'"/>
       </XSLT:call-template>
    </xsl:template>

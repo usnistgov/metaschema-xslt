@@ -31,14 +31,17 @@
 <!--
 
 modes of operation
-  want outputs for invalid files only
-  want summary lines only (i.e. drop details) P
-  want extra noise (for when writing to files)
+  want outputs for invalid files only? use mode=silent-if-valid
+  want summary lines only (i.e. drop details) mode=concise
+  want extra noise (for when writing to files) mode=noisy
+  o want compressed markdown? (mode=compress)
   presentational options
     HTML, MD, concise (compressed, no extra new lines, one line per report)
-  suppress warnings
-  suppress errors/warnings by code or ID
-  
+  suppress=warnings
+  suppress="warning WARNING INFO AAAA BBBB xpath=/a/b/c xpath=/a/d/e"
+
+CSS to enhance for error levels
+
    -->
    
     <!-- TEST apply-validator.xsl as a 'null schema' validator -->
@@ -97,7 +100,7 @@ modes of operation
         <x:expect label="an error is reported">
             <mx:report cf="..." test="not( string(.) castable as xs:boolean and matches(.,'^true|1|false|0$') )" class="VDSX violates-datatype-syntax"
                 xpath="/computer/motherboard/cooling/water/@illuminated">
-                <mx:gi>illuminated</mx:gi> does not conform to <mx:tt>boolean</mx:tt> datatype.</mx:report>
+               <mx:gi>illuminated</mx:gi> <mx:code>truE</mx:code> does not conform to <mx:code>boolean</mx:code> datatype.</mx:report>
         </x:expect>
     </x:scenario>
     
@@ -157,25 +160,80 @@ modes of operation
         </x:expect>
     </x:scenario>
     
-    <x:scenario label="'EOOO element-out-of-order' notices">
-        <!-- /descendant::XSLT:call-template[@name='notice'][7]       -->
-        <x:scenario label="An element appearing after an optional successor">
-            <x:context mode="test" select="/c:computer/c:motherboard/c:type">
-                <computer id="0000">
-                    <motherboard>
-                        <cooling/>
-                        <type/>
-                    </motherboard>
-                </computer>
-            </x:context>
-            <x:expect label="an error is reported">
-                <mx:report cf="..." test="exists( preceding-sibling::cpu | preceding-sibling::ata-socket | preceding-sibling::memory | preceding-sibling::cooling | preceding-sibling::expansion-card )" xpath="/computer/motherboard/type" class="EOOO element-out-of-order">
-                    <mx:gi>type</mx:gi> is unexpected following <mx:gi>cpu</mx:gi>, <mx:gi>ata-socket</mx:gi>, <mx:gi>memory</mx:gi>, <mx:gi>cooling</mx:gi>, or <mx:gi>expansion-card</mx:gi>.</mx:report>
-            </x:expect>
-        </x:scenario>
-        
-    </x:scenario>
-    
+   <x:scenario label="'EOOO element-out-of-order' notices">
+      <!-- /descendant::XSLT:call-template[@name='notice'][7]       -->
+      <x:scenario label="An element appearing after an optional successor">
+         <x:context mode="test" select="/c:computer/c:motherboard/c:type">
+            <computer id="0000">
+               <motherboard>
+                  <cooling/>
+                  <type>custom</type>
+               </motherboard>
+            </computer>
+         </x:context>
+         <x:expect label="an error is reported">
+            <mx:report cf="..." test="exists( preceding-sibling::cpu | preceding-sibling::ata-socket | preceding-sibling::memory | preceding-sibling::cooling | preceding-sibling::expansion-card )" xpath="/computer/motherboard/type" class="EOOO element-out-of-order">
+               <mx:gi>type</mx:gi> is unexpected following <mx:gi>cpu</mx:gi>, <mx:gi>ata-socket</mx:gi>, <mx:gi>memory</mx:gi>, <mx:gi>cooling</mx:gi>, or <mx:gi>expansion-card</mx:gi>.</mx:report>
+         </x:expect>
+      </x:scenario>
+      
+   </x:scenario>
+   
+   <x:scenario label="'AVCV value-not-allowed' notices">
+      <!-- /descendant::XSLT:call-template[@name='notice'][7]       -->
+      <x:scenario label="A field with a value out of compliance with its enumeration - literally wrong">
+         <x:context mode="test" select="/c:computer/c:motherboard/c:type">
+            <computer id="0000">
+               <motherboard>
+                  <type>special</type>
+               </motherboard>
+            </computer>
+         </x:context>
+         <x:expect label="an error is reported">
+            <mx:report cf="gix.572" test="not( . = ( 'at', 'atx', 'mini-itx', 'custom' ) )" class="AVCV value-not-allowed"
+               xpath="/computer/motherboard/type"><mx:code>special</mx:code> does not appear among permitted (enumerated) values for <mx:gi>type</mx:gi>: <mx:code>(at|atx|mini-itx|custom)</mx:code>.</mx:report>
+         </x:expect>
+      </x:scenario>
+      <x:scenario label="A field with a value out of compliance with its enumeration - wrong CASE, so literally wrong">
+         <x:context mode="test" select="/c:computer/c:motherboard/c:type">
+            <computer id="0000">
+               <motherboard>
+                  <type>CUSTOM</type>
+               </motherboard>
+            </computer>
+         </x:context>
+         <x:expect label="an error is reported">
+            <mx:report cf="gix.572" test="not( . = ( 'at', 'atx', 'mini-itx', 'custom' ) )" class="AVCV value-not-allowed"
+               xpath="/computer/motherboard/type"><mx:code>CUSTOM</mx:code> does not appear among permitted (enumerated) values for <mx:gi>type</mx:gi>: <mx:code>(at|atx|mini-itx|custom)</mx:code>.</mx:report>
+         </x:expect>
+      </x:scenario>
+      <x:scenario label="A field with a value out of compliance with its enumeration - extra whitespace">
+         <x:context mode="test" select="/c:computer/c:motherboard/c:type">
+            <computer id="0000">
+               <motherboard>
+                  <type>   custom   </type>
+               </motherboard>
+            </computer>
+         </x:context>
+         <x:expect label="an error is reported">
+            <mx:report cf="gix.572" test="not( . = ( 'at', 'atx', 'mini-itx', 'custom' ) )" class="AVCV value-not-allowed"
+               xpath="/computer/motherboard/type"><mx:code>   custom   </mx:code> does not appear among permitted (enumerated) values for <mx:gi>type</mx:gi>: <mx:code>(at|atx|mini-itx|custom)</mx:code>.</mx:report>
+         </x:expect>
+      </x:scenario>
+      <x:scenario label="A field with a value in compliance with its enumeration">
+         <x:context mode="test" select="/c:computer/c:motherboard/c:type">
+            <computer id="0000">
+               <motherboard>
+                  <type>custom</type>
+               </motherboard>
+            </computer>
+         </x:context>
+         <x:expect label="throws no error" select="()"/>
+      </x:scenario>
+   </x:scenario>
+   
+   <!-- testing target="." constraints allowed-values, matches/@regex, matches/@datatype -->
+   
     <x:scenario label="'MRQC missing-required-contents' notices">
         <!-- /descendant::XSLT:call-template[@name='notice'][8]       -->
         <!-- TODO: add some more here -->

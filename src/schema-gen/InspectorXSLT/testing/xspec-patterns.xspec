@@ -42,7 +42,7 @@ Modes to test:
          <x:call function="true"/>
          <x:expect label="31st is not castable" test="not($mx:makes-a-date('2023-04-31'))"/>
       </x:scenario>
-      <x:scenario label="Friday 13?">
+      <x:scenario label="13 13?">
          <x:call function="true"/>
          <x:expect label="13th month is not castable" test="not($mx:makes-a-date('2023-13-13'))"/>
       </x:scenario>
