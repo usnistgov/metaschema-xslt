@@ -5,7 +5,7 @@
                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                version="3.0"
                xpath-default-namespace="http://example.com/ns/computer"
-               exclude-result-prefixes="#all"><!-- Generated 2023-10-11T17:55:47.3516379-04:00 -->
+               exclude-result-prefixes="#all"><!-- Generated 2023-10-12T14:10:57.1777709-04:00 -->
    <xsl:mode on-no-match="fail"/>
    <xsl:mode name="test" on-no-match="shallow-skip"/>
    <!-- .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     . -->
@@ -355,7 +355,7 @@ details p { margin: 0.2em 0em }
       </b>
    </xsl:template>
    <xsl:template match="mx:code | mx:tt" mode="mx-to-html" priority="1">
-      <code>
+      <code style="white-space:pre-wrap">
          <xsl:apply-templates mode="#current"/>
       </code>
    </xsl:template>
@@ -1082,7 +1082,7 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.572</xsl:with-param>
          <xsl:with-param name="class">AVCV value-not-allowed</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">not( {$test} )</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">not( . = ( 'at', 'atx', 'mini-itx', 'custom' ) )</xsl:with-param>
          <xsl:with-param name="condition"
                          select="not(. = ( 'at', 'atx', 'mini-itx', 'custom' ))"/>
          <xsl:with-param name="msg" expand-text="true">
@@ -1212,7 +1212,8 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="condition"
                          select="not(string(.) castable as xs:string and matches(.,'^\S(.*\S)?$'))"/>
          <xsl:with-param name="msg" expand-text="true">
-            <mx:gi>{ name() }</mx:gi> does not conform to <mx:tt>string</mx:tt> datatype.</xsl:with-param>
+            <mx:gi>{ name(.) }</mx:gi>
+            <mx:code>{ string(.) }</mx:code> does not conform to <mx:code>string</mx:code> datatype.</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
    <xsl:template name="check-uri-datatype">
@@ -1223,7 +1224,8 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="condition"
                          select="not(string(.) castable as xs:anyURI and matches(.,'^[a-zA-Z][a-zA-Z0-9+\-.]+:.*\S$'))"/>
          <xsl:with-param name="msg" expand-text="true">
-            <mx:gi>{ name() }</mx:gi> does not conform to <mx:tt>uri</mx:tt> datatype.</xsl:with-param>
+            <mx:gi>{ name(.) }</mx:gi>
+            <mx:code>{ string(.) }</mx:code> does not conform to <mx:code>uri</mx:code> datatype.</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
    <xsl:template name="check-positive-integer-datatype">
@@ -1234,7 +1236,8 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="condition"
                          select="not(string(.) castable as xs:positiveInteger and matches(.,'^\S(.*\S)?$'))"/>
          <xsl:with-param name="msg" expand-text="true">
-            <mx:gi>{ name() }</mx:gi> does not conform to <mx:tt>positive-integer</mx:tt> datatype.</xsl:with-param>
+            <mx:gi>{ name(.) }</mx:gi>
+            <mx:code>{ string(.) }</mx:code> does not conform to <mx:code>positive-integer</mx:code> datatype.</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
    <xsl:template name="check-boolean-datatype">
@@ -1245,7 +1248,8 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="condition"
                          select="not(string(.) castable as xs:boolean and matches(.,'^true|1|false|0$'))"/>
          <xsl:with-param name="msg" expand-text="true">
-            <mx:gi>{ name() }</mx:gi> does not conform to <mx:tt>boolean</mx:tt> datatype.</xsl:with-param>
+            <mx:gi>{ name(.) }</mx:gi>
+            <mx:code>{ string(.) }</mx:code> does not conform to <mx:code>boolean</mx:code> datatype.</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
    <xsl:template match="ul | ol" mode="validate-markup-multiline">

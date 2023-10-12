@@ -390,7 +390,7 @@ details p { margin: 0.2em 0em }
     </xsl:template>
     
     <xsl:template match="mx:code | mx:tt" mode="mx-to-html" priority="1">
-        <code>
+       <code style="white-space:pre-wrap">
             <xsl:apply-templates mode="#current"/>
         </code>
     </xsl:template>
