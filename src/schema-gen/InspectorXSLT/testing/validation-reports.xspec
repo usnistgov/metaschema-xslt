@@ -98,7 +98,7 @@ CSS to enhance for error levels
             </computer>
         </x:context>
         <x:expect label="an error is reported">
-            <mx:report cf="..." test="not( string(.) castable as xs:boolean and matches(.,'^true|1|false|0$') )" class="VDSX violates-datatype-syntax"
+            <mx:report cf="..." test="not(string(.) castable as xs:boolean and matches(.,'^true|1|false|0$'))" class="VDSX violates-datatype-syntax"
                 xpath="/computer/motherboard/cooling/water/@illuminated">
                <mx:gi>illuminated</mx:gi> <mx:code>truE</mx:code> does not conform to <mx:code>boolean</mx:code> datatype.</mx:report>
         </x:expect>
@@ -172,7 +172,7 @@ CSS to enhance for error levels
             </computer>
          </x:context>
          <x:expect label="an error is reported">
-            <mx:report cf="..." test="exists( preceding-sibling::cpu | preceding-sibling::ata-socket | preceding-sibling::memory | preceding-sibling::cooling | preceding-sibling::expansion-card )" xpath="/computer/motherboard/type" class="EOOO element-out-of-order">
+            <mx:report cf="..." test="exists(preceding-sibling::cpu | preceding-sibling::ata-socket | preceding-sibling::memory | preceding-sibling::cooling | preceding-sibling::expansion-card)" xpath="/computer/motherboard/type" class="EOOO element-out-of-order">
                <mx:gi>type</mx:gi> is unexpected following <mx:gi>cpu</mx:gi>, <mx:gi>ata-socket</mx:gi>, <mx:gi>memory</mx:gi>, <mx:gi>cooling</mx:gi>, or <mx:gi>expansion-card</mx:gi>.</mx:report>
          </x:expect>
       </x:scenario>
@@ -190,8 +190,21 @@ CSS to enhance for error levels
             </computer>
          </x:context>
          <x:expect label="an error is reported">
-            <mx:report cf="gix.572" test="not( . = ( 'at', 'atx', 'mini-itx', 'custom' ) )" class="AVCV value-not-allowed"
+            <mx:report cf="gix.572" test="not(.=('at','atx','mini-itx','custom'))" class="AVCV value-not-allowed"
                xpath="/computer/motherboard/type"><mx:code>special</mx:code> does not appear among permitted (enumerated) values for <mx:gi>type</mx:gi>: <mx:code>(at|atx|mini-itx|custom)</mx:code>.</mx:report>
+         </x:expect>
+      </x:scenario>
+      <x:scenario label="An empty field whose value must be enumerated">
+         <x:context mode="test" select="/c:computer/c:motherboard/c:type">
+            <computer id="0000">
+               <motherboard>
+                  <type/>
+               </motherboard>
+            </computer>
+         </x:context>
+         <x:expect label="an error is reported, showing the empty string as '(empty)'">
+            <mx:report cf="gix.572" test="not(.=('at','atx','mini-itx','custom'))" class="AVCV value-not-allowed"
+               xpath="/computer/motherboard/type"><mx:code/> (empty) does not appear among permitted (enumerated) values for <mx:gi>type</mx:gi>: <mx:code>(at|atx|mini-itx|custom)</mx:code>.</mx:report>
          </x:expect>
       </x:scenario>
       <x:scenario label="A field with a value out of compliance with its enumeration - wrong CASE, so literally wrong">
@@ -203,7 +216,7 @@ CSS to enhance for error levels
             </computer>
          </x:context>
          <x:expect label="an error is reported">
-            <mx:report cf="gix.572" test="not( . = ( 'at', 'atx', 'mini-itx', 'custom' ) )" class="AVCV value-not-allowed"
+            <mx:report cf="gix.572" test="not(.=('at','atx','mini-itx','custom'))" class="AVCV value-not-allowed"
                xpath="/computer/motherboard/type"><mx:code>CUSTOM</mx:code> does not appear among permitted (enumerated) values for <mx:gi>type</mx:gi>: <mx:code>(at|atx|mini-itx|custom)</mx:code>.</mx:report>
          </x:expect>
       </x:scenario>
@@ -216,7 +229,7 @@ CSS to enhance for error levels
             </computer>
          </x:context>
          <x:expect label="an error is reported">
-            <mx:report cf="gix.572" test="not( . = ( 'at', 'atx', 'mini-itx', 'custom' ) )" class="AVCV value-not-allowed"
+            <mx:report cf="gix.572" test="not(.=('at','atx','mini-itx','custom'))" class="AVCV value-not-allowed"
                xpath="/computer/motherboard/type"><mx:code>   custom   </mx:code> does not appear among permitted (enumerated) values for <mx:gi>type</mx:gi>: <mx:code>(at|atx|mini-itx|custom)</mx:code>.</mx:report>
          </x:expect>
       </x:scenario>

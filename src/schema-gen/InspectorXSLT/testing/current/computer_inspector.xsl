@@ -5,7 +5,7 @@
                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                version="3.0"
                xpath-default-namespace="http://example.com/ns/computer"
-               exclude-result-prefixes="#all"><!-- Generated 2023-10-12T14:10:57.1777709-04:00 -->
+               exclude-result-prefixes="#all"><!-- Generated 2023-10-13T14:33:12.876058-04:00 -->
    <xsl:mode on-no-match="fail"/>
    <xsl:mode name="test" on-no-match="shallow-skip"/>
    <!-- .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     . -->
@@ -484,9 +484,9 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.310</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists( preceding-sibling::type | preceding-sibling::cpu | preceding-sibling::ata-socket | preceding-sibling::memory | preceding-sibling::cooling | preceding-sibling::expansion-card )</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::type | preceding-sibling::cpu | preceding-sibling::ata-socket | preceding-sibling::memory | preceding-sibling::cooling | preceding-sibling::expansion-card)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists( preceding-sibling::type | preceding-sibling::cpu | preceding-sibling::ata-socket | preceding-sibling::memory | preceding-sibling::cooling | preceding-sibling::expansion-card )"/>
+                         select="exists(preceding-sibling::type | preceding-sibling::cpu | preceding-sibling::ata-socket | preceding-sibling::memory | preceding-sibling::cooling | preceding-sibling::expansion-card)"/>
          <xsl:with-param name="msg">
             <mx:gi>vendor</mx:gi> is unexpected following <mx:gi>type</mx:gi>, <mx:gi>cpu</mx:gi>, <mx:gi>ata-socket</mx:gi>, <mx:gi>memory</mx:gi>, <mx:gi>cooling</mx:gi>, or <mx:gi>expansion-card</mx:gi>.</xsl:with-param>
       </xsl:call-template>
@@ -505,9 +505,9 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.310</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists( preceding-sibling::product-name | preceding-sibling::architecture | preceding-sibling::speed )</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::product-name | preceding-sibling::architecture | preceding-sibling::speed)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists( preceding-sibling::product-name | preceding-sibling::architecture | preceding-sibling::speed )"/>
+                         select="exists(preceding-sibling::product-name | preceding-sibling::architecture | preceding-sibling::speed)"/>
          <xsl:with-param name="msg">
             <mx:gi>vendor</mx:gi> is unexpected following <mx:gi>product-name</mx:gi>, <mx:gi>architecture</mx:gi>, or <mx:gi>speed</mx:gi>.</xsl:with-param>
       </xsl:call-template>
@@ -526,9 +526,9 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.310</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists( preceding-sibling::product-name | preceding-sibling::type )</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::product-name | preceding-sibling::type)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists( preceding-sibling::product-name | preceding-sibling::type )"/>
+                         select="exists(preceding-sibling::product-name | preceding-sibling::type)"/>
          <xsl:with-param name="msg">
             <mx:gi>vendor</mx:gi> is unexpected following <mx:gi>product-name</mx:gi> or <mx:gi>type</mx:gi>.</xsl:with-param>
       </xsl:call-template>
@@ -547,9 +547,9 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.310</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists( preceding-sibling::product-name | preceding-sibling::byte-size )</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::product-name | preceding-sibling::byte-size)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists( preceding-sibling::product-name | preceding-sibling::byte-size )"/>
+                         select="exists(preceding-sibling::product-name | preceding-sibling::byte-size)"/>
          <xsl:with-param name="msg">
             <mx:gi>vendor</mx:gi> is unexpected following <mx:gi>product-name</mx:gi> or <mx:gi>byte-size</mx:gi>.</xsl:with-param>
       </xsl:call-template>
@@ -568,8 +568,8 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.310</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists( preceding-sibling::expansion-card )</xsl:with-param>
-         <xsl:with-param name="condition" select="exists( preceding-sibling::expansion-card )"/>
+         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::expansion-card)</xsl:with-param>
+         <xsl:with-param name="condition" select="exists(preceding-sibling::expansion-card)"/>
          <xsl:with-param name="msg">
             <mx:gi>cooling</mx:gi> is unexpected following <mx:gi>expansion-card</mx:gi>.</xsl:with-param>
       </xsl:call-template>
@@ -588,9 +588,9 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.310</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists( preceding-sibling::product-name | preceding-sibling::type )</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::product-name | preceding-sibling::type)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists( preceding-sibling::product-name | preceding-sibling::type )"/>
+                         select="exists(preceding-sibling::product-name | preceding-sibling::type)"/>
          <xsl:with-param name="msg">
             <mx:gi>vendor</mx:gi> is unexpected following <mx:gi>product-name</mx:gi> or <mx:gi>type</mx:gi>.</xsl:with-param>
       </xsl:call-template>
@@ -622,9 +622,9 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.310</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists( preceding-sibling::ata-socket | preceding-sibling::memory | preceding-sibling::cooling | preceding-sibling::expansion-card )</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::ata-socket | preceding-sibling::memory | preceding-sibling::cooling | preceding-sibling::expansion-card)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists( preceding-sibling::ata-socket | preceding-sibling::memory | preceding-sibling::cooling | preceding-sibling::expansion-card )"/>
+                         select="exists(preceding-sibling::ata-socket | preceding-sibling::memory | preceding-sibling::cooling | preceding-sibling::expansion-card)"/>
          <xsl:with-param name="msg">
             <mx:gi>cpu</mx:gi> is unexpected following <mx:gi>ata-socket</mx:gi>, <mx:gi>memory</mx:gi>, <mx:gi>cooling</mx:gi>, or <mx:gi>expansion-card</mx:gi>.</xsl:with-param>
       </xsl:call-template>
@@ -643,9 +643,9 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.310</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists( preceding-sibling::memory | preceding-sibling::cooling | preceding-sibling::expansion-card )</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::memory | preceding-sibling::cooling | preceding-sibling::expansion-card)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists( preceding-sibling::memory | preceding-sibling::cooling | preceding-sibling::expansion-card )"/>
+                         select="exists(preceding-sibling::memory | preceding-sibling::cooling | preceding-sibling::expansion-card)"/>
          <xsl:with-param name="msg">
             <mx:gi>ata-socket</mx:gi> is unexpected following <mx:gi>memory</mx:gi>, <mx:gi>cooling</mx:gi>, or <mx:gi>expansion-card</mx:gi>.</xsl:with-param>
       </xsl:call-template>
@@ -656,9 +656,9 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.310</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists( preceding-sibling::cooling | preceding-sibling::expansion-card )</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::cooling | preceding-sibling::expansion-card)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists( preceding-sibling::cooling | preceding-sibling::expansion-card )"/>
+                         select="exists(preceding-sibling::cooling | preceding-sibling::expansion-card)"/>
          <xsl:with-param name="msg">
             <mx:gi>memory</mx:gi> is unexpected following <mx:gi>cooling</mx:gi> or <mx:gi>expansion-card</mx:gi>.</xsl:with-param>
       </xsl:call-template>
@@ -736,9 +736,9 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.310</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists( preceding-sibling::architecture | preceding-sibling::speed )</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::architecture | preceding-sibling::speed)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists( preceding-sibling::architecture | preceding-sibling::speed )"/>
+                         select="exists(preceding-sibling::architecture | preceding-sibling::speed)"/>
          <xsl:with-param name="msg">
             <mx:gi>product-name</mx:gi> is unexpected following <mx:gi>architecture</mx:gi> or <mx:gi>speed</mx:gi>.</xsl:with-param>
       </xsl:call-template>
@@ -761,8 +761,8 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.310</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists( preceding-sibling::type )</xsl:with-param>
-         <xsl:with-param name="condition" select="exists( preceding-sibling::type )"/>
+         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::type)</xsl:with-param>
+         <xsl:with-param name="condition" select="exists(preceding-sibling::type)"/>
          <xsl:with-param name="msg">
             <mx:gi>product-name</mx:gi> is unexpected following <mx:gi>type</mx:gi>.</xsl:with-param>
       </xsl:call-template>
@@ -783,8 +783,8 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.310</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists( preceding-sibling::byte-size )</xsl:with-param>
-         <xsl:with-param name="condition" select="exists( preceding-sibling::byte-size )"/>
+         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::byte-size)</xsl:with-param>
+         <xsl:with-param name="condition" select="exists(preceding-sibling::byte-size)"/>
          <xsl:with-param name="msg">
             <mx:gi>product-name</mx:gi> is unexpected following <mx:gi>byte-size</mx:gi>.</xsl:with-param>
       </xsl:call-template>
@@ -807,8 +807,8 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.310</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists( preceding-sibling::type )</xsl:with-param>
-         <xsl:with-param name="condition" select="exists( preceding-sibling::type )"/>
+         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::type)</xsl:with-param>
+         <xsl:with-param name="condition" select="exists(preceding-sibling::type)"/>
          <xsl:with-param name="msg">
             <mx:gi>product-name</mx:gi> is unexpected following <mx:gi>type</mx:gi>.</xsl:with-param>
       </xsl:call-template>
@@ -831,9 +831,9 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.310</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists( preceding-sibling::address | preceding-sibling::website )</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::address | preceding-sibling::website)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists( preceding-sibling::address | preceding-sibling::website )"/>
+                         select="exists(preceding-sibling::address | preceding-sibling::website)"/>
          <xsl:with-param name="msg">
             <mx:gi>name</mx:gi> is unexpected following <mx:gi>address</mx:gi> or <mx:gi>website</mx:gi>.</xsl:with-param>
       </xsl:call-template>
@@ -856,8 +856,8 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.310</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists( preceding-sibling::website )</xsl:with-param>
-         <xsl:with-param name="condition" select="exists( preceding-sibling::website )"/>
+         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::website)</xsl:with-param>
+         <xsl:with-param name="condition" select="exists(preceding-sibling::website)"/>
          <xsl:with-param name="msg">
             <mx:gi>address</mx:gi> is unexpected following <mx:gi>website</mx:gi>.</xsl:with-param>
       </xsl:call-template>
@@ -893,9 +893,9 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.310</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists( preceding-sibling::cpu | preceding-sibling::ata-socket | preceding-sibling::memory | preceding-sibling::cooling | preceding-sibling::expansion-card )</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::cpu | preceding-sibling::ata-socket | preceding-sibling::memory | preceding-sibling::cooling | preceding-sibling::expansion-card)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists( preceding-sibling::cpu | preceding-sibling::ata-socket | preceding-sibling::memory | preceding-sibling::cooling | preceding-sibling::expansion-card )"/>
+                         select="exists(preceding-sibling::cpu | preceding-sibling::ata-socket | preceding-sibling::memory | preceding-sibling::cooling | preceding-sibling::expansion-card)"/>
          <xsl:with-param name="msg">
             <mx:gi>type</mx:gi> is unexpected following <mx:gi>cpu</mx:gi>, <mx:gi>ata-socket</mx:gi>, <mx:gi>memory</mx:gi>, <mx:gi>cooling</mx:gi>, or <mx:gi>expansion-card</mx:gi>.</xsl:with-param>
       </xsl:call-template>
@@ -916,8 +916,8 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.310</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists( preceding-sibling::speed )</xsl:with-param>
-         <xsl:with-param name="condition" select="exists( preceding-sibling::speed )"/>
+         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::speed)</xsl:with-param>
+         <xsl:with-param name="condition" select="exists(preceding-sibling::speed)"/>
          <xsl:with-param name="msg">
             <mx:gi>architecture</mx:gi> is unexpected following <mx:gi>speed</mx:gi>.</xsl:with-param>
       </xsl:call-template>
@@ -1082,11 +1082,10 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.572</xsl:with-param>
          <xsl:with-param name="class">AVCV value-not-allowed</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">not( . = ( 'at', 'atx', 'mini-itx', 'custom' ) )</xsl:with-param>
-         <xsl:with-param name="condition"
-                         select="not(. = ( 'at', 'atx', 'mini-itx', 'custom' ))"/>
+         <xsl:with-param name="testing" as="xs:string">not(.=('at','atx','mini-itx','custom'))</xsl:with-param>
+         <xsl:with-param name="condition" select="not(.=('at','atx','mini-itx','custom'))"/>
          <xsl:with-param name="msg" expand-text="true">
-            <mx:code>{ string(.) }</mx:code> does not appear among permitted (enumerated) values for <mx:gi>{ name() }</mx:gi>: <mx:code>(at|atx|mini-itx|custom)</mx:code>.</xsl:with-param>
+            <mx:code>{ string(.) }</mx:code>{ .[not(string(.))] ! ' (empty)' } does not appear among permitted (enumerated) values for <mx:gi>{ name() }</mx:gi>: <mx:code>(at|atx|mini-itx|custom)</mx:code>.</xsl:with-param>
          <xsl:with-param name="level" select="'error'"/>
       </xsl:call-template>
    </xsl:template>
@@ -1124,7 +1123,7 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="testing" as="xs:string">not( {$test} )</xsl:with-param>
          <xsl:with-param name="condition" select="not(matches(., '^\d+(\.\d+)?(M|G)Hz$'))"/>
          <xsl:with-param name="msg" expand-text="true">
-            <mx:code>{ string(.) }</mx:code> does not match the regular expression defined for this <mx:gi>{ name() }</mx:gi>: <mx:code>(\d+(\.\d+)?(M|G)Hz)</mx:code>.</xsl:with-param>
+            <mx:code>{ string(.) }</mx:code> { string(.)[not(.)] ! ' [empty]' } does not match the regular expression defined for this <mx:gi>{ name() }</mx:gi>: <mx:code>(\d+(\.\d+)?(M|G)Hz)</mx:code>.</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
    <xsl:template name="require-for-computer_..._motherboard_..._ata-socket-assembly">
@@ -1208,7 +1207,7 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf" as="xs:string">gix.110</xsl:with-param>
          <xsl:with-param name="class">VDSX violates-datatype-syntax</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">not( string(.) castable as xs:string and matches(.,'^\S(.*\S)?$') )</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">not(string(.) castable as xs:string and matches(.,'^\S(.*\S)?$'))</xsl:with-param>
          <xsl:with-param name="condition"
                          select="not(string(.) castable as xs:string and matches(.,'^\S(.*\S)?$'))"/>
          <xsl:with-param name="msg" expand-text="true">
@@ -1220,7 +1219,7 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf" as="xs:string">gix.110</xsl:with-param>
          <xsl:with-param name="class">VDSX violates-datatype-syntax</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">not( string(.) castable as xs:anyURI and matches(.,'^[a-zA-Z][a-zA-Z0-9+\-.]+:.*\S$') )</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">not(string(.) castable as xs:anyURI and matches(.,'^[a-zA-Z][a-zA-Z0-9+\-.]+:.*\S$'))</xsl:with-param>
          <xsl:with-param name="condition"
                          select="not(string(.) castable as xs:anyURI and matches(.,'^[a-zA-Z][a-zA-Z0-9+\-.]+:.*\S$'))"/>
          <xsl:with-param name="msg" expand-text="true">
@@ -1232,7 +1231,7 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf" as="xs:string">gix.110</xsl:with-param>
          <xsl:with-param name="class">VDSX violates-datatype-syntax</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">not( string(.) castable as xs:positiveInteger and matches(.,'^\S(.*\S)?$') )</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">not(string(.) castable as xs:positiveInteger and matches(.,'^\S(.*\S)?$'))</xsl:with-param>
          <xsl:with-param name="condition"
                          select="not(string(.) castable as xs:positiveInteger and matches(.,'^\S(.*\S)?$'))"/>
          <xsl:with-param name="msg" expand-text="true">
@@ -1244,7 +1243,7 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf" as="xs:string">gix.110</xsl:with-param>
          <xsl:with-param name="class">VDSX violates-datatype-syntax</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">not( string(.) castable as xs:boolean and matches(.,'^true|1|false|0$') )</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">not(string(.) castable as xs:boolean and matches(.,'^true|1|false|0$'))</xsl:with-param>
          <xsl:with-param name="condition"
                          select="not(string(.) castable as xs:boolean and matches(.,'^true|1|false|0$'))"/>
          <xsl:with-param name="msg" expand-text="true">

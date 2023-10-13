@@ -67,6 +67,46 @@ The scripts also pass through arguments provided them to the receiving applicati
 
 If a script is not well-suited or easily adaptable, or for testing/experiment, Saxon can also be used directly. The following assumes that Saxon is set up to run from a command `saxon`. Arguments and command-line flags support functionalities beyond what is scripted, but can frequently be used *in combination* with the scripts. 
 
+#### Summary
+
+Command line flags and options for using the InspectorXSLT with Saxon - note use of `:` and `=` and an ordering requirement, that all parameters (`param=`) be placed after all flags (`-flag:`), but the order of parameters or flags does not matter.
+
+- `-s` indicates the source file or directory - if a directory, `-o` is also required
+- `-o` indicates where to write a report file; if omitted the report comes back to STDOUT
+- `-it:markdown`, `-it:md`, `-im:markdown` and `-im:md` all produce Markdown
+- `-it:html` and `-im:html` produce HTML
+- `-it:mx` produces a report in MX format (suitable for further processing)
+- Leaving out `-it` or `-im`, expect a copy of the document with its MX reports embedded close to the validation errors they report
+- `-it` is short for `-initial-template` while `-im` is short for `-initial-mode`
+- If both `-it` and `-im` are given, expect `-it` to win
+- Parameter `mode` affects the results:
+  - `mode=concise` writes only one-line summaries - most useful for Markdown output
+  - `mode=silent-when-valid` suppresses reports from valid instances\*
+  - `mode=noisy` provides extra progress reports to STDOUT - useful for tracing when writing outputs to files
+
+\* The setting `mode=silent-when-valid` is most useful when the results come to the console, not a file. Unfortunately, since Saxon directed with `-o` is obliged to write some kind of file output, 0-byte file entities are still produced even for "empty" outputs created when reports of validity are suppressed. These files can be removed with `$ find dir -type f -empty -print -delete` (Linux CL) or equivalent, where `dir` is the directory (path).
+
+#### Tweaking result file names
+
+Saxon supports the excellent feature of processing an entire directory of inputs at a time, with the limitation that result files (validation reports) are named after the source files from which they are produced.
+
+Especially when Markdown or HTML results are written in batch with names matching the names of XML inputs, it can be useful to follow a directory-level operation with a global renaming of `.xml` to `-report.html` (or `-report.md` etc.). The many ways to do this include (in Linux systems with `awk` installed) piping a file listing into `awk`, writing a sequence of `mv` instructions and passing this to `sh` for execution:
+
+```
+find dir -name "*.xml" | awk -v mvCmd='mv "%s" "%s"\n' \
+    '{ old = $0;
+       sub(/[.]xml$/,"-report.html");
+       printf mvCmd,old,$0;
+     }' | sh
+```
+
+(Remove the final `| sh` to debug.)
+
+Remember `dir` here is the path to the directory where the misnamed files can be found.
+
+Of course this is also not the only way to batch this process for efficiency over many inputs in one run.
+
+#### Scenarios
 ---
 
 Having produced the XSLT `computer-inspector.xsl` for inspecting `computer` XML documents: **to validate a file** `invalid10.xml` ...
