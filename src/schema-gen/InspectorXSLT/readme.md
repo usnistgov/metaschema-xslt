@@ -33,7 +33,7 @@ That is, it combines the effective functionality of XML schema and Schematron (X
 - [x] Write reports to file (HTML, Markdown)
 - [x] Emit copy of source annotated with validation messages
 - [ ] Run in browser / SaxonJS
-- [ ] Implement/document Python runtime w/ Saxon?
+- [ ] other ideas below
 
 ## Design goals and principles
 
@@ -105,10 +105,15 @@ Especially when Markdown or HTML results are produced in batch with names matchi
 
 Of course this also not the only way to automate the validation and reporting processes for efficiency over many inputs in one run.
 
-#### Scenarios
+#### Scenarios calling Saxon
 ---
 
 Having produced the XSLT `computer-inspector.xsl` for inspecting `computer` XML documents: **to validate a file** `invalid10.xml` ...
+
+
+---
+
+**Bring back a copy of the input annotated** with MX (XML) results to STDOUT.
 
 ```bash
 saxon -xslt:computer-inspector.xsl -s:invalid10.xml
@@ -116,7 +121,8 @@ saxon -xslt:computer-inspector.xsl -s:invalid10.xml
 
 ---
 
-**Bring back a copy of the input annotated** with MX (XML) results to STDOUT.
+**Bring the messages only.** `-it:mx-report` does the same. `-it` designates an initial template. For convenience the Inspector XSLT also supports `-im` (designating an initial mode) with the same values and effects. If both are given the processor uses `-it`.
+
 
 ```bash
 saxon -it:mx -xslt:computer-inspector.xsl -s:invalid10.xml
@@ -124,18 +130,11 @@ saxon -it:mx -xslt:computer-inspector.xsl -s:invalid10.xml
 
 ---
 
-**Bring the messages only.** `-it:mx-report` does the same. `-it` designates an initial template. For convenience the Inspector XSLT also supports `-im` (designating an initial mode) with the same values and effects. If both are given the processor uses `-it`.
+**Write MX (XML) results (only) to a file** `results.xml`:
+
 
 ```bash
 saxon -it:mx -xslt:computer-inspector.xsl -s:invalid10.xml -o:results.xml
-```
-
----
-
-**Write MX (XML) results (only) to a file** `results.xml`:
-
-```bash
-saxon -it:html -xslt:computer-inspector.xsl -s:invalid10.xml -o:results.html
 ```
 
 This can be useful to capture MX reports for further processing.
@@ -144,7 +143,13 @@ This can be useful to capture MX reports for further processing.
 
 **Write HTML results to a file** `results.html`. Use `!method:html !html-version:5.0` to get HTML 5 output instead of XML. (Or `!method:xhtml` if preferred.) Use `!indent:true` if you don't want a code brick.
 
-Note that HTML and Markdown results presuppose the MX filtering step.
+
+```bash
+saxon -it:html -xslt:computer-inspector.xsl -s:invalid10.xml -o:results.html
+```
+
+
+Note that HTML and Markdown results presuppose the MX filtering step - they do not present a copy of the document being validated.
 
 ---
 
@@ -200,7 +205,7 @@ There is much else that can be done to produce **batched and grouped reports** i
 
 ### To do: further work on scripting
 
-Instrument to run from the CL:
+Instrument to run from the CL, inferring the mode from the result filename and hard wiring the `computer-inspector.xsl` stylesheet:
 
 ```
 computerInspectorXSLT data.xml results.html
@@ -213,54 +218,52 @@ computerInspectorXSLT -html data.xml (writes results to STDOUT)
 computerInspectorXSLT -md data.xml mode=concise
 ```
 
-Also - batch process folders or globbed files?
+This all ought to be doable in `make`, no?
 
-Note that *these scripts as well* might be generated from Metaschema source as they are mostly boilerplate. 
+Alternatively, note that *these scripts as well* might be generated from Metaschema source as they are mostly boilerplate. So to the extent they can be produced on the basis of  `/METASCHEMA/short-name` etc. we should consider doing that.
 
 ### To generate the XSLT
 
-Best/easiest to use the XProc pipeline or the XSLT that emulates this pipeline.
+A fresh and complete Inspector XSLT for any metaschema (any valid and workable instance of [Metaschema](https://pages.nist.gov/metaschema/)) can be produced using an XProc pipeline or an XSLT that emulates this pipeline.
 
 - ../METASCHEMA-INSPECTOR-XSLT.xpl
 - ../nist-metaschema-MAKE-INSPECTOR-XSLT.xsl
 
-In this sequence of transformations the target (result) XSLT is assembled dynamically, by combining templates produced from a metaschema source with static boilerplate and infrastructure. This XSLT can be applied directly (for testing) or written out for distribution.
+In this sequence of transformations the target (result) XSLT is assembled dynamically, by combining templates produced from a metaschema source with static boilerplate and infrastructure.
 
-An example script that generates such an XSLT is given as [testing/mvn-refresh-computer-inspector.sh](testing/refresh-computer-inspector.sh).
+An example script calling the XSLT pipeline (thus requiring only Saxon, not XML Calabash) is given as [testing/mvn-refresh-computer-inspector.sh](testing/refresh-computer-inspector.sh).
 
 ## Plans
 
-XProc 1.0 (and 3.0) pipeline to generate standalone XSLT.
+### Functional enhancements
 
-This XSLT when applied to an instance produces errors and warnings.
-
-### Under Java/Maven
-
-This XSLT can be scripted and run from the command line
-  - delivering HTML results
-  - or Markdown
+- Filters to sort, sift?
+- HTML aggregation layer? over collections
+- CSS customization (CSS-based filtering?)
+- or all this could be done dynamically (CSX)
 
 ### Under NodeJS
 
 It could also be compiled into SEF for SaxonJS and delivered as a NodeJS command line application or library
 
-### In the browser
+### In the browser - CSX (client-side XSLT)
 
 Another SEF with interface and SVRL rendering templates could provide this functionality under SaxonJS in the browser.
+
+See https://pages.nist.gov/oscal-tools/demos/csx/validator/ for prior work/PoC.
+
+### XProc / XML Calabash
+
+For batching and post-processing validations using an XSLT, the sky is the limit.
+
+### Python runtime?
+
+How hard can it be?
+
+### OSCAL application
+
+Should go into oscal-xslt repository
 
 ### XSLT 1.0?
 
 We know that we can't do everything under XSLT 1.0 (such as regular expressions for lexical type checking) but we might be able to provide a significant subset, as a "sine qua non" first-cut validator.
-
-## Punchlist
-
-- [x] stand up apply-validator to run a 'null validation' in no-mode
-- [x] inject as boilerplate into input doc for XSLT generator
-  - [ ] any more static code to consolidate in boilerplate?
-- [ ] provide and test datatype validation
-- [ ] deliver as XSLT with optional post-processes applied
-  - embedded report (annotated tree)
-  - report only - summary/detail HTML
-  - report only - summary/detail Markdown
-  - offer the same, only XProc?
-- [ ] constraints!
