@@ -5,7 +5,7 @@
                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                version="3.0"
                xpath-default-namespace="http://example.com/ns/computer"
-               exclude-result-prefixes="#all"><!-- Generated 2023-10-13T14:33:12.876058-04:00 -->
+               exclude-result-prefixes="#all"><!-- Generated 2023-10-16T12:48:43.3591877-04:00 -->
    <xsl:mode on-no-match="fail"/>
    <xsl:mode name="test" on-no-match="shallow-skip"/>
    <!-- .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     . -->
@@ -63,6 +63,7 @@
    <xsl:mode name="value-only" on-no-match="text-only-copy"/>
    <xsl:mode name="validate-markup-line" on-no-match="text-only-copy"/>
    <xsl:mode name="validate-markup-multiline" on-no-match="shallow-skip"/>
+   <xsl:template match="* | @*" priority="1" mode="constraint-cascade"/>
    <xsl:template match="*" mode="validate">
       <xsl:copy>
          <xsl:namespace name="mx">http://csrc.nist.gov/ns/csd/metaschema-xslt</xsl:namespace>
@@ -491,6 +492,7 @@ details p { margin: 0.2em 0em }
             <mx:gi>vendor</mx:gi> is unexpected following <mx:gi>type</mx:gi>, <mx:gi>cpu</mx:gi>, <mx:gi>ata-socket</mx:gi>, <mx:gi>memory</mx:gi>, <mx:gi>cooling</mx:gi>, or <mx:gi>expansion-card</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-vendor-assembly"/>
+      <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
    <xsl:template priority="5" match="motherboard/cpu/vendor" mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
@@ -512,6 +514,7 @@ details p { margin: 0.2em 0em }
             <mx:gi>vendor</mx:gi> is unexpected following <mx:gi>product-name</mx:gi>, <mx:gi>architecture</mx:gi>, or <mx:gi>speed</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-vendor-assembly"/>
+      <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
    <xsl:template priority="5" match="motherboard/ata-socket/vendor" mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
@@ -533,6 +536,7 @@ details p { margin: 0.2em 0em }
             <mx:gi>vendor</mx:gi> is unexpected following <mx:gi>product-name</mx:gi> or <mx:gi>type</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-vendor-assembly"/>
+      <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
    <xsl:template priority="5" match="motherboard/memory/vendor" mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
@@ -554,6 +558,7 @@ details p { margin: 0.2em 0em }
             <mx:gi>vendor</mx:gi> is unexpected following <mx:gi>product-name</mx:gi> or <mx:gi>byte-size</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-vendor-assembly"/>
+      <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
    <xsl:template priority="5" match="computer/motherboard/cooling" mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
@@ -574,6 +579,7 @@ details p { margin: 0.2em 0em }
             <mx:gi>cooling</mx:gi> is unexpected following <mx:gi>expansion-card</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-cooling-assembly"/>
+      <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
    <xsl:template priority="5" match="motherboard/expansion-card/vendor" mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
@@ -595,6 +601,7 @@ details p { margin: 0.2em 0em }
             <mx:gi>vendor</mx:gi> is unexpected following <mx:gi>product-name</mx:gi> or <mx:gi>type</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-vendor-assembly"/>
+      <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
    <xsl:template priority="5" match="/computer/motherboard" mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
@@ -608,6 +615,7 @@ details p { margin: 0.2em 0em }
             <mx:gi>motherboard</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-computer_..._motherboard-assembly"/>
+      <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
    <xsl:template priority="5" match="computer/motherboard/cpu" mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
@@ -629,6 +637,7 @@ details p { margin: 0.2em 0em }
             <mx:gi>cpu</mx:gi> is unexpected following <mx:gi>ata-socket</mx:gi>, <mx:gi>memory</mx:gi>, <mx:gi>cooling</mx:gi>, or <mx:gi>expansion-card</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-computer_..._motherboard_..._cpu-assembly"/>
+      <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
    <xsl:template priority="5" match="computer/motherboard/ata-socket" mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
@@ -650,6 +659,51 @@ details p { margin: 0.2em 0em }
             <mx:gi>ata-socket</mx:gi> is unexpected following <mx:gi>memory</mx:gi>, <mx:gi>cooling</mx:gi>, or <mx:gi>expansion-card</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-computer_..._motherboard_..._ata-socket-assembly"/>
+      <xsl:apply-templates mode="constraint-cascade" select="."/>
+   </xsl:template>
+   <xsl:template priority="104"
+                 mode="constraint-cascade"
+                 match="computer/motherboard/ata-socket/(child::product-name)">
+      <xsl:call-template name="notice">
+         <xsl:with-param name="cf">gix.572</xsl:with-param>
+         <xsl:with-param name="class">AVCV value-not-allowed</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">not(.=('Socketeer I','Socketeer II','LampSocket socket','MiniSock Deux','SprocketSocket','[Unlisted Socket Product]'))</xsl:with-param>
+         <xsl:with-param name="condition"
+                         select="not(.=('Socketeer I','Socketeer II','LampSocket socket','MiniSock Deux','SprocketSocket','[Unlisted Socket Product]'))"/>
+         <xsl:with-param name="msg" expand-text="true">
+            <mx:code>{ string(.) }</mx:code>{ .[not(string(.))] ! ' (empty)' } does not appear among permitted (enumerated) values for <mx:gi>{ name() }</mx:gi>: <mx:code>(Socketeer I|Socketeer II|LampSocket socket|MiniSock Deux|SprocketSocket|[Unlisted Socket Product])</mx:code>.</xsl:with-param>
+         <xsl:with-param name="level" select="'error'"/>
+      </xsl:call-template>
+      <xsl:next-match/>
+   </xsl:template>
+   <xsl:template priority="103"
+                 mode="constraint-cascade"
+                 match="computer/motherboard/ata-socket/(child::vendor/child::name)">
+      <xsl:call-template name="notice">
+         <xsl:with-param name="cf">gix.572</xsl:with-param>
+         <xsl:with-param name="class">AVCV value-not-allowed</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">not(.=('Socketeer','LampSocket','MiniSock','SprocketSocket','[Unlisted Socket Vendor]'))</xsl:with-param>
+         <xsl:with-param name="condition"
+                         select="not(.=('Socketeer','LampSocket','MiniSock','SprocketSocket','[Unlisted Socket Vendor]'))"/>
+         <xsl:with-param name="msg" expand-text="true">
+            <mx:code>{ string(.) }</mx:code>{ .[not(string(.))] ! ' (empty)' } does not appear among permitted (enumerated) values for <mx:gi>{ name() }</mx:gi>: <mx:code>(Socketeer|LampSocket|MiniSock|SprocketSocket|[Unlisted Socket Vendor])</mx:code>.</xsl:with-param>
+         <xsl:with-param name="level" select="'error'"/>
+      </xsl:call-template>
+      <xsl:next-match/>
+   </xsl:template>
+   <xsl:template priority="102"
+                 mode="constraint-cascade"
+                 match="computer/motherboard/ata-socket/(self::*[vendor/name='Socketeer']/product-name)">
+      <xsl:call-template name="notice">
+         <xsl:with-param name="cf">gix.572</xsl:with-param>
+         <xsl:with-param name="class">AVCV value-not-allowed</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">not(.=('Socketeer I','Socketeer II'))</xsl:with-param>
+         <xsl:with-param name="condition" select="not(.=('Socketeer I','Socketeer II'))"/>
+         <xsl:with-param name="msg" expand-text="true">
+            <mx:code>{ string(.) }</mx:code>{ .[not(string(.))] ! ' (empty)' } does not appear among permitted (enumerated) values for <mx:gi>{ name() }</mx:gi>: <mx:code>(Socketeer I|Socketeer II)</mx:code>.</xsl:with-param>
+         <xsl:with-param name="level" select="'error'"/>
+      </xsl:call-template>
+      <xsl:next-match/>
    </xsl:template>
    <xsl:template priority="5" match="computer/motherboard/memory" mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
@@ -663,12 +717,14 @@ details p { margin: 0.2em 0em }
             <mx:gi>memory</mx:gi> is unexpected following <mx:gi>cooling</mx:gi> or <mx:gi>expansion-card</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-computer_..._motherboard_..._memory-assembly"/>
+      <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
    <xsl:template priority="5"
                  match="computer/motherboard/expansion-card"
                  mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
       <xsl:call-template name="require-for-computer_..._motherboard_..._expansion-card-assembly"/>
+      <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
    <xsl:template priority="5" match="motherboard/cooling/fan" mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
@@ -699,6 +755,7 @@ details p { margin: 0.2em 0em }
             <mx:gi>fan</mx:gi> is unexpected along with <mx:gi>water</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-cooling_..._fan-assembly"/>
+      <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
    <xsl:template priority="5" match="motherboard/cooling/water" mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
@@ -720,6 +777,7 @@ details p { margin: 0.2em 0em }
             <mx:gi>water</mx:gi> is unexpected along with <mx:gi>fan</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-cooling_..._water-assembly"/>
+      <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
    <xsl:template match="motherboard/cpu/product-name/text()" mode="test"/>
    <xsl:template priority="5" match="motherboard/cpu/product-name" mode="test">
@@ -743,6 +801,7 @@ details p { margin: 0.2em 0em }
             <mx:gi>product-name</mx:gi> is unexpected following <mx:gi>architecture</mx:gi> or <mx:gi>speed</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-product-name-field"/>
+      <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
    <xsl:template match="motherboard/ata-socket/product-name/text()" mode="test"/>
    <xsl:template priority="5"
@@ -767,6 +826,7 @@ details p { margin: 0.2em 0em }
             <mx:gi>product-name</mx:gi> is unexpected following <mx:gi>type</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-product-name-field"/>
+      <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
    <xsl:template match="motherboard/memory/product-name/text()" mode="test"/>
    <xsl:template priority="5" match="motherboard/memory/product-name" mode="test">
@@ -789,6 +849,7 @@ details p { margin: 0.2em 0em }
             <mx:gi>product-name</mx:gi> is unexpected following <mx:gi>byte-size</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-product-name-field"/>
+      <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
    <xsl:template match="motherboard/expansion-card/product-name/text()" mode="test"/>
    <xsl:template priority="5"
@@ -813,6 +874,7 @@ details p { margin: 0.2em 0em }
             <mx:gi>product-name</mx:gi> is unexpected following <mx:gi>type</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-product-name-field"/>
+      <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
    <xsl:template match="motherboard/vendor/name/text() | cpu/vendor/name/text() | ata-socket/vendor/name/text() | memory/vendor/name/text() | expansion-card/vendor/name/text()"
                  mode="test"/>
@@ -838,6 +900,7 @@ details p { margin: 0.2em 0em }
             <mx:gi>name</mx:gi> is unexpected following <mx:gi>address</mx:gi> or <mx:gi>website</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-vendor_..._name-field"/>
+      <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
    <xsl:template match="motherboard/vendor/address/text() | cpu/vendor/address/text() | ata-socket/vendor/address/text() | memory/vendor/address/text() | expansion-card/vendor/address/text()"
                  mode="test"/>
@@ -862,6 +925,7 @@ details p { margin: 0.2em 0em }
             <mx:gi>address</mx:gi> is unexpected following <mx:gi>website</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-vendor_..._address-field"/>
+      <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
    <xsl:template match="motherboard/vendor/website/text() | cpu/vendor/website/text() | ata-socket/vendor/website/text() | memory/vendor/website/text() | expansion-card/vendor/website/text()"
                  mode="test"/>
@@ -878,6 +942,7 @@ details p { margin: 0.2em 0em }
             <mx:gi>website</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-vendor_..._website-field"/>
+      <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
    <xsl:template match="computer/motherboard/type/text()" mode="test"/>
    <xsl:template priority="5" match="computer/motherboard/type" mode="test">
@@ -900,6 +965,21 @@ details p { margin: 0.2em 0em }
             <mx:gi>type</mx:gi> is unexpected following <mx:gi>cpu</mx:gi>, <mx:gi>ata-socket</mx:gi>, <mx:gi>memory</mx:gi>, <mx:gi>cooling</mx:gi>, or <mx:gi>expansion-card</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-computer_..._motherboard_..._type-field"/>
+      <xsl:apply-templates mode="constraint-cascade" select="."/>
+   </xsl:template>
+   <xsl:template priority="106"
+                 mode="constraint-cascade"
+                 match="computer/motherboard/type">
+      <xsl:call-template name="notice">
+         <xsl:with-param name="cf">gix.572</xsl:with-param>
+         <xsl:with-param name="class">AVCV value-not-allowed</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">not(.=('at','atx','mini-itx','custom'))</xsl:with-param>
+         <xsl:with-param name="condition" select="not(.=('at','atx','mini-itx','custom'))"/>
+         <xsl:with-param name="msg" expand-text="true">
+            <mx:code>{ string(.) }</mx:code>{ .[not(string(.))] ! ' (empty)' } does not appear among permitted (enumerated) values for <mx:gi>{ name() }</mx:gi>: <mx:code>(at|atx|mini-itx|custom)</mx:code>.</xsl:with-param>
+         <xsl:with-param name="level" select="'error'"/>
+      </xsl:call-template>
+      <xsl:next-match/>
    </xsl:template>
    <xsl:template match="motherboard/cpu/architecture/text()" mode="test"/>
    <xsl:template priority="5" match="motherboard/cpu/architecture" mode="test">
@@ -922,6 +1002,7 @@ details p { margin: 0.2em 0em }
             <mx:gi>architecture</mx:gi> is unexpected following <mx:gi>speed</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-computer_..._motherboard_..._cpu_..._architecture-field"/>
+      <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
    <xsl:template match="motherboard/cpu/speed/text()" mode="test"/>
    <xsl:template priority="5" match="motherboard/cpu/speed" mode="test">
@@ -935,6 +1016,20 @@ details p { margin: 0.2em 0em }
             <mx:gi>speed</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-computer_..._motherboard_..._cpu_..._speed-field"/>
+      <xsl:apply-templates mode="constraint-cascade" select="."/>
+   </xsl:template>
+   <xsl:template priority="105"
+                 mode="constraint-cascade"
+                 match="motherboard/cpu/speed">
+      <xsl:call-template name="notice">
+         <xsl:with-param name="cf">gix.572</xsl:with-param>
+         <xsl:with-param name="class">MRCV regex-match-fail</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">not( {$test} )</xsl:with-param>
+         <xsl:with-param name="condition" select="not(matches(., '^\d+(\.\d+)?(M|G)Hz$'))"/>
+         <xsl:with-param name="msg" expand-text="true">
+            <mx:code>{ string(.) }</mx:code> { string(.)[not(.)] ! ' [empty]' } does not match the regular expression defined for this <mx:gi>{ name() }</mx:gi>: <mx:code>(\d+(\.\d+)?(M|G)Hz)</mx:code>.</xsl:with-param>
+      </xsl:call-template>
+      <xsl:next-match/>
    </xsl:template>
    <xsl:template match="motherboard/ata-socket/type/text()" mode="test"/>
    <xsl:template priority="5" match="motherboard/ata-socket/type" mode="test">
@@ -948,6 +1043,7 @@ details p { margin: 0.2em 0em }
             <mx:gi>type</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-computer_..._motherboard_..._ata-socket_..._type-field"/>
+      <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
    <xsl:template match="motherboard/memory/byte-size/text()" mode="test"/>
    <xsl:template priority="5" match="motherboard/memory/byte-size" mode="test">
@@ -961,6 +1057,7 @@ details p { margin: 0.2em 0em }
             <mx:gi>byte-size</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-computer_..._motherboard_..._memory_..._byte-size-field"/>
+      <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
    <xsl:template match="motherboard/expansion-card/type/text()" mode="test"/>
    <xsl:template priority="5" match="motherboard/expansion-card/type" mode="test">
@@ -974,16 +1071,20 @@ details p { margin: 0.2em 0em }
             <mx:gi>type</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-computer_..._motherboard_..._expansion-card_..._type-field"/>
+      <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
    <xsl:template match="motherboard/vendor/@id | cpu/vendor/@id | ata-socket/vendor/@id | memory/vendor/@id | expansion-card/vendor/@id"
                  mode="test">
       <xsl:call-template name="require-for-vendor_..._id-flag"/>
+      <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
    <xsl:template match="/computer/@id" mode="test">
       <xsl:call-template name="require-for-computer_..._id-flag"/>
+      <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
    <xsl:template match="cooling/water/@illuminated" mode="test">
       <xsl:call-template name="require-for-cooling_..._water_..._illuminated-flag"/>
+      <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
    <!-- .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     . -->
    <!--     Fallbacks for occurrences of known elements and attributes, except out of context     -->
@@ -1078,17 +1179,7 @@ details p { margin: 0.2em 0em }
             <mx:gi>{ name() }</mx:gi> requires <mx:gi>memory</mx:gi>.</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
-   <xsl:template name="require-for-computer_..._motherboard_..._type-field">
-      <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.572</xsl:with-param>
-         <xsl:with-param name="class">AVCV value-not-allowed</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">not(.=('at','atx','mini-itx','custom'))</xsl:with-param>
-         <xsl:with-param name="condition" select="not(.=('at','atx','mini-itx','custom'))"/>
-         <xsl:with-param name="msg" expand-text="true">
-            <mx:code>{ string(.) }</mx:code>{ .[not(string(.))] ! ' (empty)' } does not appear among permitted (enumerated) values for <mx:gi>{ name() }</mx:gi>: <mx:code>(at|atx|mini-itx|custom)</mx:code>.</xsl:with-param>
-         <xsl:with-param name="level" select="'error'"/>
-      </xsl:call-template>
-   </xsl:template>
+   <xsl:template name="require-for-computer_..._motherboard_..._type-field"/>
    <xsl:template name="require-for-computer_..._motherboard_..._cpu-assembly">
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.372</xsl:with-param>
@@ -1116,16 +1207,7 @@ details p { margin: 0.2em 0em }
       </xsl:call-template>
    </xsl:template>
    <xsl:template name="require-for-computer_..._motherboard_..._cpu_..._architecture-field"/>
-   <xsl:template name="require-for-computer_..._motherboard_..._cpu_..._speed-field">
-      <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.572</xsl:with-param>
-         <xsl:with-param name="class">MRCV regex-match-fail</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">not( {$test} )</xsl:with-param>
-         <xsl:with-param name="condition" select="not(matches(., '^\d+(\.\d+)?(M|G)Hz$'))"/>
-         <xsl:with-param name="msg" expand-text="true">
-            <mx:code>{ string(.) }</mx:code> { string(.)[not(.)] ! ' [empty]' } does not match the regular expression defined for this <mx:gi>{ name() }</mx:gi>: <mx:code>(\d+(\.\d+)?(M|G)Hz)</mx:code>.</xsl:with-param>
-      </xsl:call-template>
-   </xsl:template>
+   <xsl:template name="require-for-computer_..._motherboard_..._cpu_..._speed-field"/>
    <xsl:template name="require-for-computer_..._motherboard_..._ata-socket-assembly">
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.372</xsl:with-param>

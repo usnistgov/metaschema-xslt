@@ -72,7 +72,9 @@
     
     <xsl:mode name="validate-markup-line" on-no-match="text-only-copy"/>
     <xsl:mode name="validate-markup-multiline" on-no-match="shallow-skip"/>
-   
+
+    <xsl:template match="* | @*" priority="1" mode="constraint-cascade"/>
+      
     <xsl:template match="*" mode="validate">
         <xsl:copy>
             <xsl:namespace name="mx">http://csrc.nist.gov/ns/csd/metaschema-xslt</xsl:namespace>
