@@ -198,7 +198,7 @@
     <xsl:variable name="using-name" select="mx:match-name(.)"/>
     
     <!-- matches(.,'\S') filters out matches that come back empty for assemblies never called -->
-    <xsl:variable name="matches" select="( mx:contextualized-matches(ancestor::define-assembly[1]) ! ( . || '/' || $using-name ))[matches(.,'\S')]"/>
+    <xsl:variable name="matches" as="xs:string*" select="( mx:contextualized-matches(ancestor::define-assembly[1]) ! ( . || '/' || $using-name ))[matches(.,'\S')]"/>
     
     <xsl:if test="some $m in ($matches) satisfies matches($m,'\S')">
       <xsl:for-each select="self::field | self::define-field">
@@ -224,10 +224,44 @@
           <XSLT:with-param as="xs:string" tunnel="true" name="matching">{ $using-name }</XSLT:with-param>
         </xsl:if>-->
         </XSLT:call-template>
+        <XSLT:apply-templates mode="constraint-cascade" select="."/>
       </XSLT:template>
+       <xsl:apply-templates select="constraint" mode="generate-constraint-cascade">
+          <xsl:with-param name="matching" as="xs:string+" tunnel="true" select="$matches"/>
+       </xsl:apply-templates>
     </xsl:if>
   </xsl:template>
   <!--</xsl:template>-->
+   
+   <!--mode generate-constraint-cascade produces a template cascade effectuated by xsl:next-match -->
+   
+   <xsl:mode name="generate-constraint-cascade" on-no-match="fail"/>
+   
+   <xsl:variable name="constraint-count" select="count(//constraint/*)"/>
+   
+   <xsl:template mode="generate-constraint-cascade" match="constraint">
+      <xsl:apply-templates select="*" mode="#current"/>
+   </xsl:template>
+   
+   <xsl:template mode="generate-constraint-cascade" match="constraint/*">
+      <xsl:message expand-text="true">matching {name()} we get no template for the constraint cascade</xsl:message>
+      <xsl:apply-templates select="*" mode="#current"/>
+   </xsl:template>
+   
+   <xsl:template mode="generate-constraint-cascade" match="constraint/allowed-values | constraint/matches">
+      <xsl:param name="matching" as="xs:string+" required="true" tunnel="true"/>
+      <xsl:variable name="priority">
+         <xsl:number count="constraint/*" level="any" format="10001"/>
+      </xsl:variable>
+      <xsl:variable name="target-step" expand-text="true">{ @target[not(matches(.,'\s*\.\s*'))] ! ('/(' || . || ')') }</xsl:variable>
+      <xsl:variable name="target-match" select="($matching ! (. || $target-step )) => string-join(' | ')"/>
+      <XSLT:template priority="{ ($constraint-count + 101) - number($priority) }" mode="constraint-cascade" match="{ $target-match }">
+         <xsl:apply-templates select="." mode="produce-constraint-tests"/> 
+         <XSLT:next-match/>
+      </XSLT:template>
+   </xsl:template>
+   
+   <!--mode required-of -->
 
   <xsl:template mode="require-of" expand-text="true"
     match="flag | /*/define-field/define-flag | /*/define-assembly//define-flag">
@@ -235,7 +269,8 @@
     <xsl:variable name="parentage" select="(ancestor::define-field[1] | ancestor::define-assembly[1])/mx:contextualized-matches(.)"/>
     <!-- guarding against making broken templates for definitions never used (hence no parentage) -->
     <xsl:if test="exists($parentage)">
-    <XSLT:template match="{ ( $parentage[matches(.,'\S')] ! (. || '/@' || $using-name) ) => string-join(' | ') }" mode="test">
+       <xsl:variable name="matches" select="( $parentage[matches(.,'\S')] ! (. || '/@' || $using-name) ) => string-join(' | ')"/>
+       <XSLT:template match="{ $matches }" mode="test">
       <!-- no occurrence testing for flags -->
       <!-- datatyping rule -->
       <XSLT:call-template name="require-for-{ mx:definition-name(.) }-flag">
@@ -243,7 +278,11 @@
           <XSLT:with-param as="xs:string" tunnel="true" name="matching">{ $using-name }</XSLT:with-param>
         </xsl:if>-->
       </XSLT:call-template>
+       <XSLT:apply-templates mode="constraint-cascade" select="."/>
     </XSLT:template>
+       <xsl:apply-templates select="constraint" mode="generate-constraint-cascade">
+          <xsl:with-param name="matching" as="xs:string+" tunnel="true" select="$matches"/>
+       </xsl:apply-templates>
     </xsl:if>
   </xsl:template>
   
@@ -378,7 +417,6 @@
       <xsl:if test="$has-unwrapped-markup-multiline">
         <XSLT:apply-templates mode="validate-markup-multiline"/>
       </xsl:if>
-       <xsl:apply-templates select="." mode="produce-constraint-tests"/>
     </XSLT:template>
     <xsl:if test="$has-unwrapped-markup-multiline">
       <xsl:variable name="matches" select="mx:contextualized-matches(.)" as="xs:string+"/>
@@ -436,7 +474,6 @@
       <xsl:for-each select="@as-type[. != 'string']">
         <XSLT:call-template name="check-{ . }-datatype"/>
       </xsl:for-each>
-       <xsl:apply-templates select="." mode="produce-constraint-tests"/>
     </XSLT:template>
   </xsl:template>
   
@@ -454,7 +491,6 @@
       <xsl:for-each select="@as-type[. != 'string']">
         <XSLT:call-template name="check-{ . }-datatype"/>
       </xsl:for-each>
-       <xsl:apply-templates select="." mode="produce-constraint-tests"/>
     </XSLT:template>
   </xsl:template>
   
@@ -550,9 +586,8 @@
   
   <xsl:mode name="produce-constraint-tests" on-no-match="shallow-copy" on-multiple-match="fail"/>
    <!--
-   this mode is called to produce constraint tests in two contexts -
-     o for constraints with target="." or no target, a test is produced on the named template for that object definition
-     o for constraints with designated targets, a separate template is produced to match the targeted nodes in a separate mode to be called from mode='test' on each node through traversal-->
+   this mode is called to produce constraint tests when traversing 'generate-constraint-cascade' to produce
+   templates in mode 'constraint-cascade'-->
    
    <xsl:template match="define-assembly | define-field | define-flag" mode="produce-constraint-tests">
       <xsl:apply-templates select="constraint" mode="#current"/>
@@ -562,11 +597,10 @@
      <xsl:message expand-text="true">matching { name() } for constraint testing</xsl:message>
      <xsl:apply-templates mode="#current"/>
   </xsl:template>
-   
-   <xsl:template match="constraint" mode="produce-constraint-tests">
-      <!-- build out constraint types allowed-values matches expect index-has-key-->
-      <xsl:apply-templates select="allowed-values[not(@target != '.')] | matches[not(@target != '.')] " mode="produce-constraint-tests"/> 
-   </xsl:template>
+  
+   <!-- silent for now -->
+   <xsl:template match="expect" mode="produce-constraint-tests"/>
+      
   
    <xsl:template match="allowed-values" mode="produce-constraint-tests" expand-text="true">
       <xsl:param name="values" select="enum/@value"/>

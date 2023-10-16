@@ -88,6 +88,27 @@
                                 <description>The type of ATA socket on the motherboard , <code>pata</code> (parallel ATA), <code>sata</code> (Serial ATA), or an alternative.</description>
                             </define-field>
                         </model>
+                       <constraint>
+                          <allowed-values target="child::product-name">
+                             <enum value="Socketeer I">Socketeer I</enum>
+                             <enum value="Socketeer II">Socketeer II</enum>
+                             <enum value="LampSocket socket">LampSocket socket</enum>
+                             <enum value="MiniSock Deux">MiniSock Deux</enum>
+                             <enum value="SprocketSocket">SprocketSocket 1000</enum>
+                             <enum value="[Unlisted Socket Product]">Unlisted</enum>
+                          </allowed-values>
+                          <allowed-values target="child::vendor/child::name">
+                             <enum value="Socketeer">Socketeer</enum>
+                             <enum value="LampSocket">LampSocket</enum>
+                             <enum value="MiniSock">MiniSock</enum>
+                             <enum value="SprocketSocket">SprocketSocket</enum>
+                             <enum value="[Unlisted Socket Vendor]">Unlisted</enum>
+                          </allowed-values>
+                          <allowed-values target="self::*[vendor/name='Socketeer']/product-name"><!-- here we have a co-occurrence constraint -->
+                             <enum value="Socketeer I">Socketeer I</enum>
+                             <enum value="Socketeer II">Socketeer II</enum>
+                          </allowed-values>
+                       </constraint>
                     </define-assembly>
                     <define-assembly name="memory" min-occurs="1" max-occurs="unbounded">
                         <formal-name>Motherboard Random Access Memory (RAM) Module(s)</formal-name>

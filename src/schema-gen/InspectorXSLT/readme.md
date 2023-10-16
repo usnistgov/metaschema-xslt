@@ -235,6 +235,11 @@ An example script calling the XSLT pipeline (thus requiring only Saxon, not XML 
 
 ## Plans
 
+### Usability enhancements
+
+- Report match pattern on constraints checking
+- Carry constraint ID
+
 ### Functional enhancements
 
 - Filters to sort, sift?

@@ -19,11 +19,11 @@
         </cpu>
         <ata-socket>
             <vendor id="id7">
-                <name>name2</name>
+               <name>Socketeer</name>
                 <address>address2</address>
                 <website>http://pages.nist.gov/metaschema</website>
             </vendor>
-            <product-name>product-name1</product-name>
+           <product-name>Socketeer I</product-name>
             <type>type1</type>
         </ata-socket>
         <memory>

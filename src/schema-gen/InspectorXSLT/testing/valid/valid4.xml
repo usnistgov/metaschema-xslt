@@ -8,7 +8,7 @@
             <speed>5GHz</speed>
         </cpu>
         <ata-socket>
-            <product-name>product-name1</product-name>
+           <product-name>SprocketSocket</product-name>
             <type>type1</type>
         </ata-socket>
         <memory>
