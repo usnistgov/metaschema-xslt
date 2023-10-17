@@ -5,7 +5,7 @@
     exclude-result-prefixes="#all"
     xmlns="http://www.w3.org/1999/xhtml">
 
-    <xsl:output indent="false" encoding="us-ascii" omit-xml-declaration="true"/>
+    <xsl:output indent="true" encoding="us-ascii" omit-xml-declaration="true"/>
    
    
 <!-- parameter $mode' affects the output:
@@ -72,7 +72,8 @@
     
     <xsl:mode name="validate-markup-line" on-no-match="text-only-copy"/>
     <xsl:mode name="validate-markup-multiline" on-no-match="shallow-skip"/>
-
+    <xsl:mode name="constraint-cascade" on-no-match="fail" on-multiple-match="use-last"/>
+   
     <xsl:template match="* | @*" priority="1" mode="constraint-cascade"/>
       
     <xsl:template match="*" mode="validate">
@@ -184,9 +185,11 @@
 
    <xsl:template name="notice">
       <xsl:param name="cf" as="xs:string" select="AV.186"/><!-- default expecting override -->
+      <xsl:param name="rule-id" as="xs:string*" select="()"/><!-- rule-id may be multiple -->
       <xsl:param name="condition" as="xs:boolean" select="true()"/>
       <xsl:param name="testing" as="xs:string">exists(.)</xsl:param><!-- hints at why something is reported -->
       <xsl:param name="class" as="xs:string">__U uncategorized</xsl:param>
+      <xsl:param name="matching" as="xs:string">*</xsl:param>
       <xsl:param name="msg">[info]</xsl:param>
       <xsl:param name="level" as="xs:string">error</xsl:param>
       <xsl:if test="$condition">
@@ -194,8 +197,14 @@
             <xsl:apply-templates select="." mode="xpath"/>
          </xsl:variable>
          <mx:report cf="{$cf}" test="{ $testing }" class="{$class}" xpath="{ $xpath }">
+            <xsl:if test="exists($rule-id[matches(.,'\S')])">
+               <xsl:attribute name="rule-id" select="string-join($rule-id[matches(.,'\S')],' ')"/>
+            </xsl:if>
             <xsl:if test="not($level = 'error')">
                <xsl:attribute name="level" select="$level"/>
+            </xsl:if>
+            <xsl:if test="not($matching = '*')">
+               <xsl:attribute name="matching" select="$matching"/>
             </xsl:if>
             <xsl:sequence select="$msg"/>
          </mx:report>
@@ -291,7 +300,7 @@
     <!--copied from mx-grabber.xsl -->
     
     <xsl:template match="mx:*" mode="grab-mx">
-        <xsl:copy-of select="."/>
+        <xsl:copy-of select="." copy-namespaces="false"/>
     </xsl:template>
 
    <!--silences empty validation reports -->
@@ -313,7 +322,7 @@
     </xsl:template>
    
    <xsl:template match="/mx:validation" priority="101" mode="grab-mx">
-      <xsl:copy>
+      <xsl:copy copy-namespaces="false">
             <xsl:copy-of select="@*"/>
             <xsl:attribute name="elements" select="count(descendant::* except .//mx:*/descendant-or-self::*)"/>
             <xsl:attribute name="attributes" select="count(descendant::*/@* except .//mx:*/descendant-or-self::*/@*)"/>
@@ -375,13 +384,22 @@ details p { margin: 0.2em 0em }
    </xsl:template>
    
    <xsl:template match="mx:report" mode="mx-to-html" expand-text="true">
-      <details class="report { @class }">
+      <details class="report { @class }{ @level[not(.='error')] ! (' ' ! .) }">
          <summary>
             <xsl:apply-templates mode="#current"/>
          </summary>
-         <p class="xpath">{ @xpath }</p>
-         <p class="exc">[{ @class }]</p>
-         <p class="test">test: <code>{ @test }</code></p>
+         <p class="exc">{ @class }{ @level[not(.='error')] ! (' ' ! .) }</p>
+         <ul>
+            <xsl:for-each select="@rule-id">
+               <li class="test">Rule ID: <code>{ . }</code></li>
+            </xsl:for-each>
+            <li class="test">test: <code>{ @test }</code></li>
+            <xsl:if test="@matching!='*'">
+               <li class="matching">matching: <code>{ @matching }</code></li>
+            </xsl:if>
+            <li class="xpath">xpath: { @xpath }</li>
+               
+         </ul>
       </details>
    </xsl:template>
    
@@ -448,12 +466,22 @@ details p { margin: 0.2em 0em }
         <xsl:apply-templates mode="#current"/>
     </xsl:template>
     
-    <xsl:template mode="html-to-md" match="p" expand-text="true" xpath-default-namespace="http://www.w3.org/1999/xhtml">
-        <xsl:text>{ $lf2 }</xsl:text>
-        <xsl:apply-templates mode="#current"/>
-    </xsl:template>
-    
-    <xsl:template mode="html-to-md" match="b" priority="2" xpath-default-namespace="http://www.w3.org/1999/xhtml">
+   <xsl:template mode="html-to-md" match="p" expand-text="true" xpath-default-namespace="http://www.w3.org/1999/xhtml">
+      <xsl:text>{ $lf2 }</xsl:text>
+      <xsl:apply-templates mode="#current"/>
+   </xsl:template>
+   
+   <xsl:template mode="html-to-md" match="ul" expand-text="true" xpath-default-namespace="http://www.w3.org/1999/xhtml">
+      <xsl:text>{ $lf }</xsl:text>
+      <xsl:apply-templates mode="#current"/>
+   </xsl:template>
+   
+   <xsl:template mode="html-to-md" match="li" expand-text="true" xpath-default-namespace="http://www.w3.org/1999/xhtml">
+      <xsl:text>{ $lf }- </xsl:text>
+      <xsl:apply-templates mode="#current"/>
+   </xsl:template>
+   
+   <xsl:template mode="html-to-md" match="b" priority="2" xpath-default-namespace="http://www.w3.org/1999/xhtml">
         <xsl:text>**</xsl:text>
         <xsl:apply-templates mode="#current"/>
         <xsl:text>**</xsl:text>

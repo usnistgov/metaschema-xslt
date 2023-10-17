@@ -286,6 +286,16 @@
             </xs:complexType>
          </xs:element>
       </xs:sequence>
+      <xs:attribute name="date-of-manufacture" type="StringDatatype">
+         <xs:annotation>
+            <xs:appinfo>
+               <m:formal-name>Date of manufacture</m:formal-name>
+               <m:description>When the computer was manufactured.</m:description>
+            </xs:appinfo>
+            <xs:documentation>
+               <b>Date of manufacture</b>: When the computer was manufactured.</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
       <xs:attribute name="id" use="required" type="StringDatatype">
          <xs:annotation>
             <xs:appinfo>

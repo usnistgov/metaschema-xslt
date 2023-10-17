@@ -45,7 +45,7 @@
         </x:scenario>
         <x:scenario label="For an element with a known name, but out of place">
             <x:context mode="test" select="/c:computer/c:computer">
-                <computer id="0000">
+                <computer id="A0">
                     <computer/>
                 </computer>
             </x:context>
@@ -59,7 +59,7 @@
     <x:scenario label="'AOOP attribute-out-of-place' notices">
         <x:scenario label="For an attribute with a known name, but out of place">
             <x:context mode="test" select="/c:computer">
-                <computer illuminated="true" id="0000"/>
+                <computer illuminated="true" id="A0"/>
             </x:context>
             <x:expect label="an error is reported">
                 <mx:report cf="..." test="exists(.)"
@@ -71,7 +71,7 @@
     
     <x:scenario label="'VDSX violates-datatype-syntax' notices">
         <x:context mode="test" select="/c:computer/c:motherboard/c:cooling/c:water/@illuminated">
-            <computer id="0000">
+            <computer id="A0">
                 <motherboard>
                     <cooling>
                         <water illuminated="truE"/>
@@ -80,15 +80,15 @@
             </computer>
         </x:context>
         <x:expect label="an error is reported">
-            <mx:report cf="..." test="not(string(.) castable as xs:boolean and matches(.,'^true|1|false|0$'))" class="VDSX violates-datatype-syntax"
-                xpath="/computer/motherboard/cooling/water/@illuminated">
-               <mx:gi>illuminated</mx:gi> <mx:code>truE</mx:code> does not conform to <mx:code>boolean</mx:code> datatype.</mx:report>
+           <mx:report cf="..." test="not(string(.) castable as xs:boolean and matches(.,'^true|1|false|0$'))"
+              class="VDSX violates-datatype-syntax"
+              xpath="/computer/motherboard/cooling/water/@illuminated"><mx:gi>illuminated</mx:gi> value <mx:code>truE</mx:code> does not conform to <mx:code>boolean</mx:code> datatype.</mx:report>
         </x:expect>
     </x:scenario>
     
     <x:scenario label="'EATI element-appears-too-infrequently' notices">
         <x:context mode="test" select="/c:computer/c:motherboard/c:cooling/c:fan">
-            <computer id="0000">
+            <computer id="A0">
                 <motherboard>
                     <cooling>
                         <fan/>
@@ -107,7 +107,7 @@
     <x:scenario label="'EATO element-appears-too-often' notices">
         <x:scenario label="For an element appearing too many times">
             <x:context mode="test" select="/c:computer/c:motherboard[2]">
-                <computer id="0000">
+                <computer id="A0">
                     <motherboard/>
                     <motherboard>
                         <type/>
@@ -126,7 +126,7 @@
         <!-- TODO: implement sth with 'choice'       -->
         <!-- /descendant::XSLT:call-template[@name='notice'][6]       -->
         <x:context mode="test" select="/c:computer/c:motherboard/c:cooling/c:fan[1]">
-            <computer id="0000">
+            <computer id="A0">
                 <motherboard>
                     <cooling>
                         <fan/>
@@ -146,7 +146,7 @@
       <!-- /descendant::XSLT:call-template[@name='notice'][7]       -->
       <x:scenario label="An element appearing after an optional successor">
          <x:context mode="test" select="/c:computer/c:motherboard/c:type">
-            <computer id="0000">
+            <computer id="A0">
                <motherboard>
                   <cooling/>
                   <type>custom</type>
@@ -165,59 +165,59 @@
       <!-- /descendant::XSLT:call-template[@name='notice'][7]       -->
       <x:scenario label="A field with a value out of compliance with its enumeration - literally wrong">
          <x:context mode="test" select="/c:computer/c:motherboard/c:type">
-            <computer id="0000">
+            <computer id="A0">
                <motherboard>
                   <type>special</type>
                </motherboard>
             </computer>
          </x:context>
          <x:expect label="an error is reported">
-            <mx:report cf="gix.572" test="not(.=('at','atx','mini-itx','custom'))" class="AVCV value-not-allowed"
+            <mx:report cf="..." test="not(.=('at','atx','mini-itx','custom'))" class="AVCV value-not-allowed" matching="computer/motherboard/type"
                xpath="/computer/motherboard/type"><mx:code>special</mx:code> does not appear among permitted (enumerated) values for <mx:gi>type</mx:gi>: <mx:code>(at|atx|mini-itx|custom)</mx:code>.</mx:report>
          </x:expect>
       </x:scenario>
       <x:scenario label="An empty field whose value must be enumerated">
          <x:context mode="test" select="/c:computer/c:motherboard/c:type">
-            <computer id="0000">
+            <computer id="A0">
                <motherboard>
                   <type/>
                </motherboard>
             </computer>
          </x:context>
          <x:expect label="an error is reported, showing the empty string as '(empty)'">
-            <mx:report cf="gix.572" test="not(.=('at','atx','mini-itx','custom'))" class="AVCV value-not-allowed"
+            <mx:report cf="..." test="not(.=('at','atx','mini-itx','custom'))" class="AVCV value-not-allowed" matching="computer/motherboard/type"
                xpath="/computer/motherboard/type"><mx:code/> (empty) does not appear among permitted (enumerated) values for <mx:gi>type</mx:gi>: <mx:code>(at|atx|mini-itx|custom)</mx:code>.</mx:report>
          </x:expect>
       </x:scenario>
       <x:scenario label="A field with a value out of compliance with its enumeration - wrong CASE, so literally wrong">
          <x:context mode="test" select="/c:computer/c:motherboard/c:type">
-            <computer id="0000">
+            <computer id="A0">
                <motherboard>
                   <type>CUSTOM</type>
                </motherboard>
             </computer>
          </x:context>
          <x:expect label="an error is reported">
-            <mx:report cf="gix.572" test="not(.=('at','atx','mini-itx','custom'))" class="AVCV value-not-allowed"
+            <mx:report cf="..." test="not(.=('at','atx','mini-itx','custom'))" class="AVCV value-not-allowed" matching="computer/motherboard/type"
                xpath="/computer/motherboard/type"><mx:code>CUSTOM</mx:code> does not appear among permitted (enumerated) values for <mx:gi>type</mx:gi>: <mx:code>(at|atx|mini-itx|custom)</mx:code>.</mx:report>
          </x:expect>
       </x:scenario>
       <x:scenario label="A field with a value out of compliance with its enumeration - extra whitespace">
          <x:context mode="test" select="/c:computer/c:motherboard/c:type">
-            <computer id="0000">
+            <computer id="A0">
                <motherboard>
                   <type>   custom   </type>
                </motherboard>
             </computer>
          </x:context>
          <x:expect label="an error is reported">
-            <mx:report cf="gix.572" test="not(.=('at','atx','mini-itx','custom'))" class="AVCV value-not-allowed"
+            <mx:report cf="..." test="not(.=('at','atx','mini-itx','custom'))" class="AVCV value-not-allowed" matching="computer/motherboard/type"
                xpath="/computer/motherboard/type"><mx:code>   custom   </mx:code> does not appear among permitted (enumerated) values for <mx:gi>type</mx:gi>: <mx:code>(at|atx|mini-itx|custom)</mx:code>.</mx:report>
          </x:expect>
       </x:scenario>
       <x:scenario label="A field with a value in compliance with its enumeration">
          <x:context mode="test" select="/c:computer/c:motherboard/c:type">
-            <computer id="0000">
+            <computer id="A0">
                <motherboard>
                   <type>custom</type>
                </motherboard>
@@ -233,7 +233,7 @@
         <!-- /descendant::XSLT:call-template[@name='notice'][8]       -->
         <!-- TODO: add some more here -->
         <x:context mode="test" select="/c:computer/c:motherboard/c:cooling">
-            <computer id="0000">
+            <computer id="A0">
                 <motherboard>
                     <cooling/><!-- contains choice of (required) 'fan' or 'water' -->
                 </motherboard>
@@ -280,7 +280,7 @@
     <x:scenario label="'UA unmatched-attribute' notices">
         <x:scenario label="For an unknown attribute">
             <x:context mode="test" select="/c:computer">
-                <computer id="0000" networkID="hal"/>
+                <computer id="A0" networkID="hal"/>
             </x:context>
             <x:expect label="an error is reported">
                 <mx:report cf="..." test="exists(.)"

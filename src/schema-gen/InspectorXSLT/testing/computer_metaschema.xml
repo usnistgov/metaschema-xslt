@@ -8,11 +8,11 @@
     <define-assembly name="vendor">
         <formal-name>Vendor Information</formal-name>
         <description>Information about a vendor of a computer part.</description>
-        <define-flag name="id" as-type="string" required="yes">
-            <formal-name>Vendor Identifier</formal-name>
-            <description>An identifier for classifying a unique computer parts vendor.</description>
-        </define-flag>
-        <model>
+       <define-flag name="id" as-type="string" required="yes">
+          <formal-name>Vendor Identifier</formal-name>
+          <description>An identifier for classifying a unique computer parts vendor.</description>
+       </define-flag>
+       <model>
             <define-field name="name" min-occurs="1" max-occurs="1">
                 <formal-name>Vendor Name</formal-name>
                 <description>The registered company name of the vendor.</description>
@@ -27,6 +27,11 @@
             </define-field>
         </model>
     </define-assembly>
+   <define-flag name="date-of-manufacture" as-type="string">
+      <formal-name>Date of manufacture</formal-name>
+      <description>When the computer was manufactured.</description>
+      
+   </define-flag>
     <define-field name="product-name" as-type="string">
         <formal-name>Product Name</formal-name>
         <description>The product name from the vendor of the computer part.</description>
@@ -35,10 +40,20 @@
         <formal-name>Computer Assembly</formal-name>
         <description>A container object for a computer, its parts, and its sub-parts.</description>
         <root-name>computer</root-name>
-        <define-flag name="id" as-type="string" required="yes">
+       <flag ref="date-of-manufacture" required="no"/>
+       
+       <define-flag name="id" as-type="string" required="yes">
             <formal-name>Computer Identifier</formal-name>
             <description>An identifier for classifying a unique make and model of computer.</description>
+            <constraint>
+               <matches regex="\i\c*" id="id-naming-rule">
+                  <remarks>
+                     <p>Must match pattern for XML name.</p>
+                  </remarks>
+               </matches>
+            </constraint>
         </define-flag>
+       
         <model>
             <define-assembly name="motherboard">
                 <formal-name>Motherboard Assembly</formal-name>
@@ -143,6 +158,15 @@
                 </model>
             </define-assembly>
         </model>
+       <constraint>
+          <allowed-values  id="manufacture-date-rule_1" target="@date-of-manufacture">
+             <enum value="1960-11-20">Nov 20 1960</enum>
+             <enum value="1962-06-28">Jun 28 1962</enum>
+             <enum value="1963-11-04">Nov 4 1963</enum>
+          </allowed-values>
+          <expect  id="manufacture-date-rule_2" target="@date-of-manufacture" test="xs:date(.) gt xs:date('1950-01-01')"/>
+          <matches  id="manufacture-date-rule_3" target="@date-of-manufacture" datatype="date" level="WARNING" />
+       </constraint>
     </define-assembly>
     
     <define-assembly name="cooling">

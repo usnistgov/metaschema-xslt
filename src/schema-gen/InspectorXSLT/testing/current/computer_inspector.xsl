@@ -5,13 +5,13 @@
                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                version="3.0"
                xpath-default-namespace="http://example.com/ns/computer"
-               exclude-result-prefixes="#all"><!-- Generated 2023-10-16T12:48:43.3591877-04:00 -->
+               exclude-result-prefixes="#all"><!-- Generated 2023-10-17T18:19:55.8768816-04:00 -->
    <xsl:mode on-no-match="fail"/>
    <xsl:mode name="test" on-no-match="shallow-skip"/>
    <!-- .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     . -->
    <!--    Templates copied from boilerplate    -->
    <!-- .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     . -->
-   <xsl:output indent="false" encoding="us-ascii" omit-xml-declaration="true"/>
+   <xsl:output indent="true" encoding="us-ascii" omit-xml-declaration="true"/>
    <!-- parameter $mode' affects the output:
      mode=silent-when-valid suppresses all results when no errors are reported
      mode=concise brings back a single line of Markdown reporting valid/invalid status (it has no effect on HTML)
@@ -63,6 +63,9 @@
    <xsl:mode name="value-only" on-no-match="text-only-copy"/>
    <xsl:mode name="validate-markup-line" on-no-match="text-only-copy"/>
    <xsl:mode name="validate-markup-multiline" on-no-match="shallow-skip"/>
+   <xsl:mode name="constraint-cascade"
+             on-no-match="fail"
+             on-multiple-match="use-last"/>
    <xsl:template match="* | @*" priority="1" mode="constraint-cascade"/>
    <xsl:template match="*" mode="validate">
       <xsl:copy>
@@ -163,10 +166,13 @@
    <xsl:template name="notice">
       <xsl:param name="cf" as="xs:string" select="AV.186"/>
       <!-- default expecting override -->
+      <xsl:param name="rule-id" as="xs:string*" select="()"/>
+      <!-- rule-id may be multiple -->
       <xsl:param name="condition" as="xs:boolean" select="true()"/>
       <xsl:param name="testing" as="xs:string">exists(.)</xsl:param>
       <!-- hints at why something is reported -->
       <xsl:param name="class" as="xs:string">__U uncategorized</xsl:param>
+      <xsl:param name="matching" as="xs:string">*</xsl:param>
       <xsl:param name="msg">[info]</xsl:param>
       <xsl:param name="level" as="xs:string">error</xsl:param>
       <xsl:if test="$condition">
@@ -177,8 +183,14 @@
                     test="{ $testing }"
                     class="{$class}"
                     xpath="{ $xpath }">
+            <xsl:if test="exists($rule-id[matches(.,'\S')])">
+               <xsl:attribute name="rule-id" select="string-join($rule-id[matches(.,'\S')],' ')"/>
+            </xsl:if>
             <xsl:if test="not($level = 'error')">
                <xsl:attribute name="level" select="$level"/>
+            </xsl:if>
+            <xsl:if test="not($matching = '*')">
+               <xsl:attribute name="matching" select="$matching"/>
             </xsl:if>
             <xsl:sequence select="$msg"/>
          </mx:report>
@@ -258,7 +270,7 @@
    <xsl:mode name="grab-mx" on-no-match="shallow-skip"/>
    <!--copied from mx-grabber.xsl -->
    <xsl:template match="mx:*" mode="grab-mx">
-      <xsl:copy-of select="."/>
+      <xsl:copy-of select="." copy-namespaces="false"/>
    </xsl:template>
    <!--silences empty validation reports -->
    <xsl:template match="/mx:validation[$mode='silent-when-valid'][empty(descendant::mx:report)]"
@@ -282,7 +294,7 @@
       <xsl:next-match/>
    </xsl:template>
    <xsl:template match="/mx:validation" priority="101" mode="grab-mx">
-      <xsl:copy>
+      <xsl:copy copy-namespaces="false">
          <xsl:copy-of select="@*"/>
          <xsl:attribute name="elements"
                         select="count(descendant::* except .//mx:*/descendant-or-self::*)"/>
@@ -340,14 +352,24 @@ details p { margin: 0.2em 0em }
       <p class="metadata">Checking against rules derived from <b>{ . }</b> metaschema (namespace <code>{ @namespace }</code>)</p>
    </xsl:template>
    <xsl:template match="mx:report" mode="mx-to-html" expand-text="true">
-      <details class="report { @class }">
+      <details class="report { @class }{ @level[not(.='error')] ! (' ' ! .) }">
          <summary>
             <xsl:apply-templates mode="#current"/>
          </summary>
-         <p class="xpath">{ @xpath }</p>
-         <p class="exc">[{ @class }]</p>
-         <p class="test">test: <code>{ @test }</code>
-         </p>
+         <p class="exc">{ @class }{ @level[not(.='error')] ! (' ' ! .) }</p>
+         <ul>
+            <xsl:for-each select="@rule-id">
+               <li class="test">Rule ID: <code>{ . }</code>
+               </li>
+            </xsl:for-each>
+            <li class="test">test: <code>{ @test }</code>
+            </li>
+            <xsl:if test="@matching!='*'">
+               <li class="matching">matching: <code>{ @matching }</code>
+               </li>
+            </xsl:if>
+            <li class="xpath">xpath: { @xpath }</li>
+         </ul>
       </details>
    </xsl:template>
    <xsl:template match="mx:gi" mode="mx-to-html" priority="1">
@@ -432,6 +454,20 @@ details p { margin: 0.2em 0em }
       <xsl:apply-templates mode="#current"/>
    </xsl:template>
    <xsl:template mode="html-to-md"
+                 match="ul"
+                 expand-text="true"
+                 xpath-default-namespace="http://www.w3.org/1999/xhtml">
+      <xsl:text>{ $lf }</xsl:text>
+      <xsl:apply-templates mode="#current"/>
+   </xsl:template>
+   <xsl:template mode="html-to-md"
+                 match="li"
+                 expand-text="true"
+                 xpath-default-namespace="http://www.w3.org/1999/xhtml">
+      <xsl:text>{ $lf }- </xsl:text>
+      <xsl:apply-templates mode="#current"/>
+   </xsl:template>
+   <xsl:template mode="html-to-md"
                  match="b"
                  priority="2"
                  xpath-default-namespace="http://www.w3.org/1999/xhtml">
@@ -468,6 +504,32 @@ details p { margin: 0.2em 0em }
    <xsl:template match="/computer" mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
       <xsl:call-template name="require-for-computer-assembly"/>
+   </xsl:template>
+   <xsl:template priority="103"
+                 mode="constraint-cascade"
+                 match="computer/(@date-of-manufacture)">
+      <xsl:call-template name="notice">
+         <xsl:with-param name="cf">gix.265</xsl:with-param>
+         <xsl:with-param name="rule-id">manufacture-date-rule_1</xsl:with-param>
+         <xsl:with-param name="matching" as="xs:string">computer/(@date-of-manufacture)</xsl:with-param>
+         <xsl:with-param name="class">AVCV value-not-allowed</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">not(.=('1960-11-20','1962-06-28','1963-11-04'))</xsl:with-param>
+         <xsl:with-param name="condition"
+                         select="not(.=('1960-11-20','1962-06-28','1963-11-04'))"/>
+         <xsl:with-param name="msg" expand-text="true">
+            <mx:code>{ string(.) }</mx:code>{ .[not(string(.))] ! ' (empty)' } does not appear among permitted (enumerated) values for <mx:gi>{ name() }</mx:gi>: <mx:code>(1960-11-20|1962-06-28|1963-11-04)</mx:code>.</xsl:with-param>
+         <xsl:with-param name="level" select="'error'"/>
+      </xsl:call-template>
+      <xsl:next-match/>
+   </xsl:template>
+   <xsl:template priority="101"
+                 mode="constraint-cascade"
+                 match="computer/(@date-of-manufacture)">
+      <xsl:call-template name="check-date-datatype">
+         <xsl:with-param name="rule-id" as="xs:string">manufacture-date-rule_3</xsl:with-param>
+         <xsl:with-param name="matching" as="xs:string">computer/(@date-of-manufacture)</xsl:with-param>
+      </xsl:call-template>
+      <xsl:next-match/>
    </xsl:template>
    <!-- .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     . -->
    <!--     Occurrences - templates in mode 'test'     -->
@@ -661,11 +723,13 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="require-for-computer_..._motherboard_..._ata-socket-assembly"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
-   <xsl:template priority="104"
+   <xsl:template priority="107"
                  mode="constraint-cascade"
                  match="computer/motherboard/ata-socket/(child::product-name)">
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.572</xsl:with-param>
+         <xsl:with-param name="cf">gix.265</xsl:with-param>
+         <xsl:with-param name="rule-id"/>
+         <xsl:with-param name="matching" as="xs:string">computer/motherboard/ata-socket/(child::product-name)</xsl:with-param>
          <xsl:with-param name="class">AVCV value-not-allowed</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">not(.=('Socketeer I','Socketeer II','LampSocket socket','MiniSock Deux','SprocketSocket','[Unlisted Socket Product]'))</xsl:with-param>
          <xsl:with-param name="condition"
@@ -676,11 +740,13 @@ details p { margin: 0.2em 0em }
       </xsl:call-template>
       <xsl:next-match/>
    </xsl:template>
-   <xsl:template priority="103"
+   <xsl:template priority="106"
                  mode="constraint-cascade"
                  match="computer/motherboard/ata-socket/(child::vendor/child::name)">
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.572</xsl:with-param>
+         <xsl:with-param name="cf">gix.265</xsl:with-param>
+         <xsl:with-param name="rule-id"/>
+         <xsl:with-param name="matching" as="xs:string">computer/motherboard/ata-socket/(child::vendor/child::name)</xsl:with-param>
          <xsl:with-param name="class">AVCV value-not-allowed</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">not(.=('Socketeer','LampSocket','MiniSock','SprocketSocket','[Unlisted Socket Vendor]'))</xsl:with-param>
          <xsl:with-param name="condition"
@@ -691,11 +757,13 @@ details p { margin: 0.2em 0em }
       </xsl:call-template>
       <xsl:next-match/>
    </xsl:template>
-   <xsl:template priority="102"
+   <xsl:template priority="105"
                  mode="constraint-cascade"
                  match="computer/motherboard/ata-socket/(self::*[vendor/name='Socketeer']/product-name)">
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.572</xsl:with-param>
+         <xsl:with-param name="cf">gix.265</xsl:with-param>
+         <xsl:with-param name="rule-id"/>
+         <xsl:with-param name="matching" as="xs:string">computer/motherboard/ata-socket/(self::*[vendor/name='Socketeer']/product-name)</xsl:with-param>
          <xsl:with-param name="class">AVCV value-not-allowed</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">not(.=('Socketeer I','Socketeer II'))</xsl:with-param>
          <xsl:with-param name="condition" select="not(.=('Socketeer I','Socketeer II'))"/>
@@ -967,11 +1035,13 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="require-for-computer_..._motherboard_..._type-field"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
-   <xsl:template priority="106"
+   <xsl:template priority="109"
                  mode="constraint-cascade"
                  match="computer/motherboard/type">
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.572</xsl:with-param>
+         <xsl:with-param name="cf">gix.265</xsl:with-param>
+         <xsl:with-param name="rule-id"/>
+         <xsl:with-param name="matching" as="xs:string">computer/motherboard/type</xsl:with-param>
          <xsl:with-param name="class">AVCV value-not-allowed</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">not(.=('at','atx','mini-itx','custom'))</xsl:with-param>
          <xsl:with-param name="condition" select="not(.=('at','atx','mini-itx','custom'))"/>
@@ -1018,16 +1088,18 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="require-for-computer_..._motherboard_..._cpu_..._speed-field"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
-   <xsl:template priority="105"
+   <xsl:template priority="108"
                  mode="constraint-cascade"
                  match="motherboard/cpu/speed">
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.572</xsl:with-param>
+         <xsl:with-param name="cf">gix.544</xsl:with-param>
+         <xsl:with-param name="rule-id"/>
+         <xsl:with-param name="matching" as="xs:string">motherboard/cpu/speed</xsl:with-param>
          <xsl:with-param name="class">MRCV regex-match-fail</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">not( {$test} )</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">not( matches(., '^\d+(\.\d+)?(M|G)Hz$') )</xsl:with-param>
          <xsl:with-param name="condition" select="not(matches(., '^\d+(\.\d+)?(M|G)Hz$'))"/>
          <xsl:with-param name="msg" expand-text="true">
-            <mx:code>{ string(.) }</mx:code> { string(.)[not(.)] ! ' [empty]' } does not match the regular expression defined for this <mx:gi>{ name() }</mx:gi>: <mx:code>(\d+(\.\d+)?(M|G)Hz)</mx:code>.</xsl:with-param>
+            <mx:code>{ string(.) }</mx:code>{ string(.)[not(.)] ! ' (empty)' } does not match the regular expression defined for this <mx:gi>{ name() }</mx:gi>: <mx:code>(\d+(\.\d+)?(M|G)Hz)</mx:code>.</xsl:with-param>
       </xsl:call-template>
       <xsl:next-match/>
    </xsl:template>
@@ -1073,6 +1145,10 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="require-for-computer_..._motherboard_..._expansion-card_..._type-field"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
+   <xsl:template match="/computer/@date-of-manufacture" mode="test">
+      <xsl:call-template name="require-for-date-of-manufacture-flag"/>
+      <xsl:apply-templates mode="constraint-cascade" select="."/>
+   </xsl:template>
    <xsl:template match="motherboard/vendor/@id | cpu/vendor/@id | ata-socket/vendor/@id | memory/vendor/@id | expansion-card/vendor/@id"
                  mode="test">
       <xsl:call-template name="require-for-vendor_..._id-flag"/>
@@ -1082,12 +1158,26 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="require-for-computer_..._id-flag"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
+   <xsl:template priority="110" mode="constraint-cascade" match="/computer/@id">
+      <xsl:call-template name="notice">
+         <xsl:with-param name="cf">gix.544</xsl:with-param>
+         <xsl:with-param name="rule-id">id-naming-rule</xsl:with-param>
+         <xsl:with-param name="matching" as="xs:string">/computer/@id</xsl:with-param>
+         <xsl:with-param name="class">MRCV regex-match-fail</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">not( matches(., '^\i\c*$') )</xsl:with-param>
+         <xsl:with-param name="condition" select="not(matches(., '^\i\c*$'))"/>
+         <xsl:with-param name="msg" expand-text="true">
+            <mx:code>{ string(.) }</mx:code>{ string(.)[not(.)] ! ' (empty)' } does not match the regular expression defined for this <mx:gi>{ name() }</mx:gi>: <mx:code>(\i\c*)</mx:code>.</xsl:with-param>
+      </xsl:call-template>
+      <xsl:next-match/>
+   </xsl:template>
    <xsl:template match="cooling/water/@illuminated" mode="test">
       <xsl:call-template name="require-for-cooling_..._water_..._illuminated-flag"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
    <!-- .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     . -->
-   <!--     Fallbacks for occurrences of known elements and attributes, except out of context     -->
+   <!--     Fallbacks for occurrences of known elements and attributes, except out of
+               context     -->
    <!-- .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     . -->
    <xsl:template mode="test"
                  match="name | address | website | computer | motherboard | vendor | type | cpu | product-name | architecture | speed | ata-socket | memory | byte-size | cooling | expansion-card | fan | water">
@@ -1098,7 +1188,7 @@ details p { margin: 0.2em 0em }
             <mx:gi>{ name() }</mx:gi> is not permitted here.</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
-   <xsl:template mode="test" match="@id | @illuminated">
+   <xsl:template mode="test" match="@id | @date-of-manufacture | @illuminated">
       <xsl:call-template name="notice">
          <xsl:with-param name="cf" as="xs:string">gix.84</xsl:with-param>
          <xsl:with-param name="class">AOOP attribute-out-of-place</xsl:with-param>
@@ -1149,6 +1239,7 @@ details p { margin: 0.2em 0em }
    <xsl:template name="require-for-vendor_..._website-field">
       <xsl:call-template name="check-uri-datatype"/>
    </xsl:template>
+   <xsl:template name="require-for-date-of-manufacture-flag"/>
    <xsl:template name="require-for-product-name-field"/>
    <xsl:template name="require-for-computer-assembly">
       <xsl:call-template name="notice">
@@ -1286,51 +1377,88 @@ details p { margin: 0.2em 0em }
    <!--     Datatypes - a named template for each occurring     -->
    <!-- .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     . -->
    <xsl:template name="check-string-datatype">
+      <xsl:param name="rule-id" as="xs:string*" select="()"/>
+      <xsl:param name="matching" as="xs:string?" select="()"/>
       <xsl:call-template name="notice">
          <xsl:with-param name="cf" as="xs:string">gix.110</xsl:with-param>
+         <xsl:with-param name="rule-id" as="xs:string*" select="$rule-id"/>
+         <xsl:with-param name="matching"
+                         as="xs:string"
+                         select="($matching[matches(.,'\S')],'*')[1]"/>
          <xsl:with-param name="class">VDSX violates-datatype-syntax</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">not(string(.) castable as xs:string and matches(.,'^\S(.*\S)?$'))</xsl:with-param>
          <xsl:with-param name="condition"
                          select="not(string(.) castable as xs:string and matches(.,'^\S(.*\S)?$'))"/>
          <xsl:with-param name="msg" expand-text="true">
-            <mx:gi>{ name(.) }</mx:gi>
-            <mx:code>{ string(.) }</mx:code> does not conform to <mx:code>string</mx:code> datatype.</xsl:with-param>
+            <mx:gi>{ name(.) }</mx:gi> value <mx:code>{ string(.) }</mx:code> does not conform to <mx:code>string</mx:code> datatype.</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
    <xsl:template name="check-uri-datatype">
+      <xsl:param name="rule-id" as="xs:string*" select="()"/>
+      <xsl:param name="matching" as="xs:string?" select="()"/>
       <xsl:call-template name="notice">
          <xsl:with-param name="cf" as="xs:string">gix.110</xsl:with-param>
+         <xsl:with-param name="rule-id" as="xs:string*" select="$rule-id"/>
+         <xsl:with-param name="matching"
+                         as="xs:string"
+                         select="($matching[matches(.,'\S')],'*')[1]"/>
          <xsl:with-param name="class">VDSX violates-datatype-syntax</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">not(string(.) castable as xs:anyURI and matches(.,'^[a-zA-Z][a-zA-Z0-9+\-.]+:.*\S$'))</xsl:with-param>
          <xsl:with-param name="condition"
                          select="not(string(.) castable as xs:anyURI and matches(.,'^[a-zA-Z][a-zA-Z0-9+\-.]+:.*\S$'))"/>
          <xsl:with-param name="msg" expand-text="true">
-            <mx:gi>{ name(.) }</mx:gi>
-            <mx:code>{ string(.) }</mx:code> does not conform to <mx:code>uri</mx:code> datatype.</xsl:with-param>
+            <mx:gi>{ name(.) }</mx:gi> value <mx:code>{ string(.) }</mx:code> does not conform to <mx:code>uri</mx:code> datatype.</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
    <xsl:template name="check-positive-integer-datatype">
+      <xsl:param name="rule-id" as="xs:string*" select="()"/>
+      <xsl:param name="matching" as="xs:string?" select="()"/>
       <xsl:call-template name="notice">
          <xsl:with-param name="cf" as="xs:string">gix.110</xsl:with-param>
+         <xsl:with-param name="rule-id" as="xs:string*" select="$rule-id"/>
+         <xsl:with-param name="matching"
+                         as="xs:string"
+                         select="($matching[matches(.,'\S')],'*')[1]"/>
          <xsl:with-param name="class">VDSX violates-datatype-syntax</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">not(string(.) castable as xs:positiveInteger and matches(.,'^\S(.*\S)?$'))</xsl:with-param>
          <xsl:with-param name="condition"
                          select="not(string(.) castable as xs:positiveInteger and matches(.,'^\S(.*\S)?$'))"/>
          <xsl:with-param name="msg" expand-text="true">
-            <mx:gi>{ name(.) }</mx:gi>
-            <mx:code>{ string(.) }</mx:code> does not conform to <mx:code>positive-integer</mx:code> datatype.</xsl:with-param>
+            <mx:gi>{ name(.) }</mx:gi> value <mx:code>{ string(.) }</mx:code> does not conform to <mx:code>positive-integer</mx:code> datatype.</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
    <xsl:template name="check-boolean-datatype">
+      <xsl:param name="rule-id" as="xs:string*" select="()"/>
+      <xsl:param name="matching" as="xs:string?" select="()"/>
       <xsl:call-template name="notice">
          <xsl:with-param name="cf" as="xs:string">gix.110</xsl:with-param>
+         <xsl:with-param name="rule-id" as="xs:string*" select="$rule-id"/>
+         <xsl:with-param name="matching"
+                         as="xs:string"
+                         select="($matching[matches(.,'\S')],'*')[1]"/>
          <xsl:with-param name="class">VDSX violates-datatype-syntax</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">not(string(.) castable as xs:boolean and matches(.,'^true|1|false|0$'))</xsl:with-param>
          <xsl:with-param name="condition"
                          select="not(string(.) castable as xs:boolean and matches(.,'^true|1|false|0$'))"/>
          <xsl:with-param name="msg" expand-text="true">
-            <mx:gi>{ name(.) }</mx:gi>
-            <mx:code>{ string(.) }</mx:code> does not conform to <mx:code>boolean</mx:code> datatype.</xsl:with-param>
+            <mx:gi>{ name(.) }</mx:gi> value <mx:code>{ string(.) }</mx:code> does not conform to <mx:code>boolean</mx:code> datatype.</xsl:with-param>
+      </xsl:call-template>
+   </xsl:template>
+   <xsl:template name="check-date-datatype">
+      <xsl:param name="rule-id" as="xs:string*" select="()"/>
+      <xsl:param name="matching" as="xs:string?" select="()"/>
+      <xsl:call-template name="notice">
+         <xsl:with-param name="cf" as="xs:string">gix.110</xsl:with-param>
+         <xsl:with-param name="rule-id" as="xs:string*" select="$rule-id"/>
+         <xsl:with-param name="matching"
+                         as="xs:string"
+                         select="($matching[matches(.,'\S')],'*')[1]"/>
+         <xsl:with-param name="class">VDSX violates-datatype-syntax</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">not(string(.) castable as xs:date and matches(.,'^(((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30)))(Z|(-((0[0-9]|1[0-2]):00|0[39]:30)|\+((0[0-9]|1[0-4]):00|(0[34569]|10):30|(0[58]|12):45)))?$'))</xsl:with-param>
+         <xsl:with-param name="condition"
+                         select="not(string(.) castable as xs:date and matches(.,'^(((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30)))(Z|(-((0[0-9]|1[0-2]):00|0[39]:30)|\+((0[0-9]|1[0-4]):00|(0[34569]|10):30|(0[58]|12):45)))?$'))"/>
+         <xsl:with-param name="msg" expand-text="true">
+            <mx:gi>{ name(.) }</mx:gi> value <mx:code>{ string(.) }</mx:code> does not conform to <mx:code>date</mx:code> datatype.</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
    <xsl:template match="ul | ol" mode="validate-markup-multiline">

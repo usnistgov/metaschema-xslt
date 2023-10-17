@@ -272,3 +272,14 @@ Should go into oscal-xslt repository
 ### XSLT 1.0?
 
 We know that we can't do everything under XSLT 1.0 (such as regular expressions for lexical type checking) but we might be able to provide a significant subset, as a "sine qua non" first-cut validator.
+
+---
+
+notes - combinatorial allowed-values implementation
+
+inspector XSLT carries a template cascade
+- it reports back both values and IDs
+- the cascade overloads priority="100" for competing `allowed-values`
+  mode has on-multiple-match="use-last"
+  - these must all be identical so an effective no-op when redundant
+  - any/each of which (only one of them being used under use-last) pulls the entire collection of values/IDs matching this node
