@@ -191,7 +191,7 @@
       <xsl:param name="class" as="xs:string">__U uncategorized</xsl:param>
       <xsl:param name="matching" as="xs:string">*</xsl:param>
       <xsl:param name="msg">[info]</xsl:param>
-      <xsl:param name="level" as="xs:string">error</xsl:param>
+      <xsl:param name="level" as="xs:string">ERROR</xsl:param>
       <xsl:if test="$condition">
          <xsl:variable name="xpath"><!-- handmade paths avoid namespaces and other complications of path(.) -->
             <xsl:apply-templates select="." mode="xpath"/>
@@ -200,7 +200,7 @@
             <xsl:if test="exists($rule-id[matches(.,'\S')])">
                <xsl:attribute name="rule-id" select="string-join($rule-id[matches(.,'\S')],' ')"/>
             </xsl:if>
-            <xsl:if test="not($level = 'error')">
+            <xsl:if test="not($level = 'ERROR')">
                <xsl:attribute name="level" select="$level"/>
             </xsl:if>
             <xsl:if test="not($matching = '*')">
@@ -359,6 +359,8 @@
 <style type="text/css">
 main { max-width: fit-content }
 details { margin-top: 0.5em; padding: 0.5em; outline: thin solid black }
+details.WARNING { outline: thin dotted grey }
+details.INFORMATIONAL { outline: medium solid slateblue }
 summary { margin: 0em }
 details p { margin: 0.2em 0em }   
 .xpath    { font-family: monospace }
@@ -384,11 +386,11 @@ details p { margin: 0.2em 0em }
    </xsl:template>
    
    <xsl:template match="mx:report" mode="mx-to-html" expand-text="true">
-      <details class="report { @class }{ @level[not(.='error')] ! (' ' ! .) }">
+      <details class="report { @class }{ @level[not(.='ERROR')] ! (' ' || .) }">
          <summary>
             <xsl:apply-templates mode="#current"/>
          </summary>
-         <p class="exc">{ @class }{ @level[not(.='error')] ! (' ' ! .) }</p>
+         <p class="exc">{ @class }{ @level[not(.='ERROR')] ! (' ' || .) }</p>
          <ul>
             <xsl:for-each select="@rule-id">
                <li class="test">Rule ID: <code>{ . }</code></li>
@@ -397,7 +399,7 @@ details p { margin: 0.2em 0em }
             <xsl:if test="@matching!='*'">
                <li class="matching">matching: <code>{ @matching }</code></li>
             </xsl:if>
-            <li class="xpath">xpath: { @xpath }</li>
+            <li>XPath: <code class="xpath">{ @xpath }</code></li>
                
          </ul>
       </details>

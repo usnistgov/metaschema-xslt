@@ -280,6 +280,16 @@
                               </xs:simpleType>
                            </xs:element>
                         </xs:sequence>
+                        <xs:attribute name="state" type="StringDatatype">
+                           <xs:annotation>
+                              <xs:appinfo>
+                                 <m:formal-name>Card state</m:formal-name>
+                                 <m:description>If tested or prepackaged, the state of an expansion card may be known.</m:description>
+                              </xs:appinfo>
+                              <xs:documentation>
+                                 <b>Card state</b>: If tested or prepackaged, the state of an expansion card may be known.</xs:documentation>
+                           </xs:annotation>
+                        </xs:attribute>
                      </xs:complexType>
                   </xs:element>
                </xs:sequence>

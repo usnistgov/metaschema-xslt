@@ -525,7 +525,7 @@
             <XSLT:with-param name="testing" as="xs:string">not({$test})</XSLT:with-param>
             <XSLT:with-param name="condition" select="not({$test})"/>
             <XSLT:with-param name="msg" expand-text="true"><mx:code>{{ string(.) }}</mx:code>{{ .[not(string(.))] ! ' (empty)' }} does not appear among permitted (enumerated) values for <mx:gi>{{ name() }}</mx:gi>: <mx:code>({ $values => string-join('|') })</mx:code>.</XSLT:with-param>
-            <XSLT:with-param name="level" select="'{ (@level,'warning'[$allowing-others],'error')[1] }'"/>
+            <XSLT:with-param name="level" select="'{ (@level,'WARNING'[$allowing-others],'ERROR')[1] }'"/>
          </XSLT:call-template>
 
          <XSLT:next-match/>

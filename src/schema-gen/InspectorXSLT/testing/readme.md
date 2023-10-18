@@ -12,12 +12,28 @@ A number of XSpec files in this folder should all complete successfully and repo
 
 #### `computer-constraints.xspec`
 
+
 | CONSTRAINT TYPE    | empty(@target) (flags) | target="."  | target="path"
 |---|---|---|---|
-| allowed-values     | x   | x   | x
-| matches/@regex     | x   | x   | (x)
-| matches/@datatype  | O   | ?   | O    
-| expect             |     |     |  |
+| allowed-values     |    |     |  |
+| allowed-values[@allow-other='yes']     |    |     |  |
+| matches/@regex     |
+| matches/@datatype  |
+| expect             |
+| has-cardinality    |
+| is-unique          |
+| index              |
+| index-has-key      |
+
+#### Computer Model metaschema
+
+| CONSTRAINT TYPE    | empty(@target) (flags) | target="."  | target="path"
+|---|---|---|---|
+| allowed-values     | expansion-card-state-rule_1   | motherboard-type-rule_1  | manufacture-date-rule_1  ata-socket-rule_1 ata-socket-rule_2 ata-socket-rule_3 manufacture-date-rule_1
+| allowed-values[@allow-other='yes']     |    |     |  |
+| matches/@regex     | id-naming-rule_1   | cpu-speed-rule_1   |
+| matches/@datatype  |     |     | manufacture-date-rule_3
+| expect             |     |     | manufacture-date-rule_2
 | has-cardinality    | n/a | n/a |  |
 | is-unique          |     |     |  |
 | index              |     |     |  |
@@ -30,4 +46,5 @@ markup line and markup-multiline validation
 - unknown elements
 - elements out of place
 - text out of place
-- extract from XSD sources?
+- weird edge cases e.g. in-xml
+- extract these from XSD sources?

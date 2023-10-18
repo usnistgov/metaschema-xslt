@@ -46,7 +46,7 @@
             <formal-name>Computer Identifier</formal-name>
             <description>An identifier for classifying a unique make and model of computer.</description>
             <constraint>
-               <matches regex="\i\c*" id="id-naming-rule">
+               <matches regex="\i\c*" id="id-naming-rule_1">
                   <remarks>
                      <p>Must match pattern for XML name.</p>
                   </remarks>
@@ -64,7 +64,7 @@
                         <formal-name>Motherboard Type</formal-name>
                         <description>The type motherboard layout, <code>at</code>, <code>atx</code>, <code>mini-itx</code> or an alternative.</description>
                        <constraint>
-                          <allowed-values target=".">
+                          <allowed-values target="." id="motherboard-type-rule_1">
                              <enum value="at">AT</enum>
                              <enum value="atx">ATX</enum>
                              <enum value="mini-itx">Mini-ITX</enum>
@@ -86,7 +86,7 @@
                                 <formal-name>CPU Speed</formal-name>
                                 <description>The clock speed of the CPU in megahertz or gigahertz.</description>
                                <constraint>
-                                  <matches target="." regex="\d+(\.\d+)?(M|G)Hz"/>
+                                  <matches target="." regex="\d+(\.\d+)?(M|G)Hz" id="cpu-speed-rule_1"/>
                                </constraint>
                             </define-field>
                         </model>
@@ -104,7 +104,7 @@
                             </define-field>
                         </model>
                        <constraint>
-                          <allowed-values target="child::product-name">
+                          <allowed-values target="child::product-name" id="ata-socket-rule_1">
                              <enum value="Socketeer I">Socketeer I</enum>
                              <enum value="Socketeer II">Socketeer II</enum>
                              <enum value="LampSocket socket">LampSocket socket</enum>
@@ -112,14 +112,14 @@
                              <enum value="SprocketSocket">SprocketSocket 1000</enum>
                              <enum value="[Unlisted Socket Product]">Unlisted</enum>
                           </allowed-values>
-                          <allowed-values target="child::vendor/child::name">
+                          <allowed-values target="child::vendor/child::name" id="ata-socket-rule_2">
                              <enum value="Socketeer">Socketeer</enum>
                              <enum value="LampSocket">LampSocket</enum>
                              <enum value="MiniSock">MiniSock</enum>
                              <enum value="SprocketSocket">SprocketSocket</enum>
                              <enum value="[Unlisted Socket Vendor]">Unlisted</enum>
                           </allowed-values>
-                          <allowed-values target="self::*[vendor/name='Socketeer']/product-name"><!-- here we have a co-occurrence constraint -->
+                          <allowed-values target="self::*[vendor/name='Socketeer']/product-name"  id="ata-socket-rule_3"><!-- here we have a co-occurrence constraint -->
                              <enum value="Socketeer I">Socketeer I</enum>
                              <enum value="Socketeer II">Socketeer II</enum>
                           </allowed-values>
@@ -138,7 +138,7 @@
                             </define-field>
                         </model>
                        <constraint>
-                          <expect target="." test="not(@byte-size != ../@byte-size"><!-- All memory must all have the same byte-size--></expect>
+                          <expect target="." test="not(@byte-size != ../@byte-size" id="memory-rule-1"><!-- All memory must all have the same byte-size--></expect>
                        </constraint>
                     </define-assembly>
                     <assembly ref="cooling" min-occurs="0"/>
@@ -146,12 +146,25 @@
                         <formal-name>Motherboard Expansion Card</formal-name>
                         <description>The model number of an expansion card connected to the motherboard of a computer.</description>
                         <group-as name="expansion-cards" in-json="ARRAY"/>
+                       <define-flag name="state">
+                          <formal-name>Card state</formal-name>
+                          <description>If tested or prepackaged, the state of an expansion card may be known.</description>
+                          <constraint>
+                             <allowed-values id="expansion-card-state-rule_1">
+                                <enum value="new">New</enum>
+                                <enum value="refurb">Refurb</enum>
+                                <enum value="inoperative">Inoperative</enum>
+                             </allowed-values>
+                             <matches id="expansion-card-state-rule_3" datatype="uri"/>
+                             
+                          </constraint>
+                       </define-flag>
                         <model>
                             <assembly ref="vendor"/>
                             <field ref="product-name" min-occurs="1" max-occurs="1"/>
                             <define-field name="type" as-type="string" min-occurs="1" max-occurs="1">
                                 <formal-name>Expansion Card Type</formal-name>
-                                <description>The type of expansion card on a motherboard of a computer, such as <code>pci</code> (PCI, e.g. Peripheral Component Interconnect), <code>pcie</code> (PCI Express), or an alternative.</description>
+                               <description>The type of expansion card on a motherboard of a computer, such as <code>pci</code> (PCI, e.g. Peripheral Component Interconnect), <code>pcie</code> (PCI Express), or an alternative.</description>
                             </define-field>
                         </model>
                     </define-assembly>
@@ -159,7 +172,7 @@
             </define-assembly>
         </model>
        <constraint>
-          <allowed-values  id="manufacture-date-rule_1" target="@date-of-manufacture">
+          <allowed-values allow-other="yes" id="manufacture-date-rule_1" target="self::*[starts-with(@id,'A')]/@date-of-manufacture">
              <enum value="1960-11-20">Nov 20 1960</enum>
              <enum value="1962-06-28">Jun 28 1962</enum>
              <enum value="1963-11-04">Nov 4 1963</enum>
@@ -176,7 +189,7 @@
             <choice><!-- modeled as a choice here: multiple fans, or water. -->
                 <define-assembly name="fan" min-occurs="2" max-occurs="12">
                     <formal-name>Fan</formal-name>
-                    <description>A fan header for a single fan; at least two fans are required for adequate cooling.</description>
+                   <description>A fan header for a single fan; at least two fans are required for adequate cooling.</description>                   
                 </define-assembly>
                 <define-assembly name="water" min-occurs="1" max-occurs="1">
                     <formal-name>Water</formal-name>
