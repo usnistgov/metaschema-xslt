@@ -172,7 +172,8 @@
             </computer>
          </x:context>
          <x:expect label="an error is reported">
-            <mx:report cf="..." test="not(.=('at','atx','mini-itx','custom'))" class="AVCV value-not-allowed" matching="computer/motherboard/type"
+            <mx:report cf="..." test="not(.=('at','atx','mini-itx','custom'))"
+               rule-id="motherboard-type-rule_1" class="AVCV value-not-allowed" matching="computer/motherboard/type"
                xpath="/computer/motherboard/type"><mx:code>special</mx:code> does not appear among permitted (enumerated) values for <mx:gi>type</mx:gi>: <mx:code>(at|atx|mini-itx|custom)</mx:code>.</mx:report>
          </x:expect>
       </x:scenario>
@@ -185,7 +186,8 @@
             </computer>
          </x:context>
          <x:expect label="an error is reported, showing the empty string as '(empty)'">
-            <mx:report cf="..." test="not(.=('at','atx','mini-itx','custom'))" class="AVCV value-not-allowed" matching="computer/motherboard/type"
+            <mx:report cf="..." test="not(.=('at','atx','mini-itx','custom'))"
+               rule-id="motherboard-type-rule_1" class="AVCV value-not-allowed" matching="computer/motherboard/type"
                xpath="/computer/motherboard/type"><mx:code/> (empty) does not appear among permitted (enumerated) values for <mx:gi>type</mx:gi>: <mx:code>(at|atx|mini-itx|custom)</mx:code>.</mx:report>
          </x:expect>
       </x:scenario>
@@ -198,7 +200,8 @@
             </computer>
          </x:context>
          <x:expect label="an error is reported">
-            <mx:report cf="..." test="not(.=('at','atx','mini-itx','custom'))" class="AVCV value-not-allowed" matching="computer/motherboard/type"
+            <mx:report cf="..." test="not(.=('at','atx','mini-itx','custom'))"
+               rule-id="motherboard-type-rule_1" class="AVCV value-not-allowed" matching="computer/motherboard/type"
                xpath="/computer/motherboard/type"><mx:code>CUSTOM</mx:code> does not appear among permitted (enumerated) values for <mx:gi>type</mx:gi>: <mx:code>(at|atx|mini-itx|custom)</mx:code>.</mx:report>
          </x:expect>
       </x:scenario>
@@ -211,7 +214,8 @@
             </computer>
          </x:context>
          <x:expect label="an error is reported">
-            <mx:report cf="..." test="not(.=('at','atx','mini-itx','custom'))" class="AVCV value-not-allowed" matching="computer/motherboard/type"
+            <mx:report cf="..." test="not(.=('at','atx','mini-itx','custom'))" class="AVCV value-not-allowed" 
+               rule-id="motherboard-type-rule_1" matching="computer/motherboard/type"
                xpath="/computer/motherboard/type"><mx:code>   custom   </mx:code> does not appear among permitted (enumerated) values for <mx:gi>type</mx:gi>: <mx:code>(at|atx|mini-itx|custom)</mx:code>.</mx:report>
          </x:expect>
       </x:scenario>

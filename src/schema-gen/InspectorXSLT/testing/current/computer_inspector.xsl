@@ -5,7 +5,7 @@
                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                version="3.0"
                xpath-default-namespace="http://example.com/ns/computer"
-               exclude-result-prefixes="#all"><!-- Generated 2023-10-17T18:19:55.8768816-04:00 -->
+               exclude-result-prefixes="#all"><!-- Generated 2023-10-18T13:09:06.5846395-04:00 -->
    <xsl:mode on-no-match="fail"/>
    <xsl:mode name="test" on-no-match="shallow-skip"/>
    <!-- .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     . -->
@@ -174,7 +174,7 @@
       <xsl:param name="class" as="xs:string">__U uncategorized</xsl:param>
       <xsl:param name="matching" as="xs:string">*</xsl:param>
       <xsl:param name="msg">[info]</xsl:param>
-      <xsl:param name="level" as="xs:string">error</xsl:param>
+      <xsl:param name="level" as="xs:string">ERROR</xsl:param>
       <xsl:if test="$condition">
          <xsl:variable name="xpath"><!-- handmade paths avoid namespaces and other complications of path(.) -->
             <xsl:apply-templates select="." mode="xpath"/>
@@ -186,7 +186,7 @@
             <xsl:if test="exists($rule-id[matches(.,'\S')])">
                <xsl:attribute name="rule-id" select="string-join($rule-id[matches(.,'\S')],' ')"/>
             </xsl:if>
-            <xsl:if test="not($level = 'error')">
+            <xsl:if test="not($level = 'ERROR')">
                <xsl:attribute name="level" select="$level"/>
             </xsl:if>
             <xsl:if test="not($matching = '*')">
@@ -331,6 +331,8 @@
 <style type="text/css">
 main { max-width: fit-content }
 details { margin-top: 0.5em; padding: 0.5em; outline: thin solid black }
+details.WARNING { outline: thin dotted grey }
+details.INFORMATIONAL { outline: medium solid slateblue }
 summary { margin: 0em }
 details p { margin: 0.2em 0em }   
 .xpath    { font-family: monospace }
@@ -352,11 +354,11 @@ details p { margin: 0.2em 0em }
       <p class="metadata">Checking against rules derived from <b>{ . }</b> metaschema (namespace <code>{ @namespace }</code>)</p>
    </xsl:template>
    <xsl:template match="mx:report" mode="mx-to-html" expand-text="true">
-      <details class="report { @class }{ @level[not(.='error')] ! (' ' ! .) }">
+      <details class="report { @class }{ @level[not(.='ERROR')] ! (' ' || .) }">
          <summary>
             <xsl:apply-templates mode="#current"/>
          </summary>
-         <p class="exc">{ @class }{ @level[not(.='error')] ! (' ' ! .) }</p>
+         <p class="exc">{ @class }{ @level[not(.='ERROR')] ! (' ' || .) }</p>
          <ul>
             <xsl:for-each select="@rule-id">
                <li class="test">Rule ID: <code>{ . }</code>
@@ -368,7 +370,8 @@ details p { margin: 0.2em 0em }
                <li class="matching">matching: <code>{ @matching }</code>
                </li>
             </xsl:if>
-            <li class="xpath">xpath: { @xpath }</li>
+            <li>XPath: <code class="xpath">{ @xpath }</code>
+            </li>
          </ul>
       </details>
    </xsl:template>
@@ -507,18 +510,18 @@ details p { margin: 0.2em 0em }
    </xsl:template>
    <xsl:template priority="103"
                  mode="constraint-cascade"
-                 match="computer/(@date-of-manufacture)">
+                 match="computer/(self::*[starts-with(@id,'A')]/@date-of-manufacture)">
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.265</xsl:with-param>
          <xsl:with-param name="rule-id">manufacture-date-rule_1</xsl:with-param>
-         <xsl:with-param name="matching" as="xs:string">computer/(@date-of-manufacture)</xsl:with-param>
+         <xsl:with-param name="matching" as="xs:string">computer/(self::*[starts-with(@id,'A')]/@date-of-manufacture)</xsl:with-param>
          <xsl:with-param name="class">AVCV value-not-allowed</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">not(.=('1960-11-20','1962-06-28','1963-11-04'))</xsl:with-param>
          <xsl:with-param name="condition"
                          select="not(.=('1960-11-20','1962-06-28','1963-11-04'))"/>
          <xsl:with-param name="msg" expand-text="true">
             <mx:code>{ string(.) }</mx:code>{ .[not(string(.))] ! ' (empty)' } does not appear among permitted (enumerated) values for <mx:gi>{ name() }</mx:gi>: <mx:code>(1960-11-20|1962-06-28|1963-11-04)</mx:code>.</xsl:with-param>
-         <xsl:with-param name="level" select="'error'"/>
+         <xsl:with-param name="level" select="'WARNING'"/>
       </xsl:call-template>
       <xsl:next-match/>
    </xsl:template>
@@ -723,12 +726,12 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="require-for-computer_..._motherboard_..._ata-socket-assembly"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
-   <xsl:template priority="107"
+   <xsl:template priority="109"
                  mode="constraint-cascade"
                  match="computer/motherboard/ata-socket/(child::product-name)">
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.265</xsl:with-param>
-         <xsl:with-param name="rule-id"/>
+         <xsl:with-param name="rule-id">ata-socket-rule_1</xsl:with-param>
          <xsl:with-param name="matching" as="xs:string">computer/motherboard/ata-socket/(child::product-name)</xsl:with-param>
          <xsl:with-param name="class">AVCV value-not-allowed</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">not(.=('Socketeer I','Socketeer II','LampSocket socket','MiniSock Deux','SprocketSocket','[Unlisted Socket Product]'))</xsl:with-param>
@@ -736,16 +739,16 @@ details p { margin: 0.2em 0em }
                          select="not(.=('Socketeer I','Socketeer II','LampSocket socket','MiniSock Deux','SprocketSocket','[Unlisted Socket Product]'))"/>
          <xsl:with-param name="msg" expand-text="true">
             <mx:code>{ string(.) }</mx:code>{ .[not(string(.))] ! ' (empty)' } does not appear among permitted (enumerated) values for <mx:gi>{ name() }</mx:gi>: <mx:code>(Socketeer I|Socketeer II|LampSocket socket|MiniSock Deux|SprocketSocket|[Unlisted Socket Product])</mx:code>.</xsl:with-param>
-         <xsl:with-param name="level" select="'error'"/>
+         <xsl:with-param name="level" select="'ERROR'"/>
       </xsl:call-template>
       <xsl:next-match/>
    </xsl:template>
-   <xsl:template priority="106"
+   <xsl:template priority="108"
                  mode="constraint-cascade"
                  match="computer/motherboard/ata-socket/(child::vendor/child::name)">
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.265</xsl:with-param>
-         <xsl:with-param name="rule-id"/>
+         <xsl:with-param name="rule-id">ata-socket-rule_2</xsl:with-param>
          <xsl:with-param name="matching" as="xs:string">computer/motherboard/ata-socket/(child::vendor/child::name)</xsl:with-param>
          <xsl:with-param name="class">AVCV value-not-allowed</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">not(.=('Socketeer','LampSocket','MiniSock','SprocketSocket','[Unlisted Socket Vendor]'))</xsl:with-param>
@@ -753,23 +756,23 @@ details p { margin: 0.2em 0em }
                          select="not(.=('Socketeer','LampSocket','MiniSock','SprocketSocket','[Unlisted Socket Vendor]'))"/>
          <xsl:with-param name="msg" expand-text="true">
             <mx:code>{ string(.) }</mx:code>{ .[not(string(.))] ! ' (empty)' } does not appear among permitted (enumerated) values for <mx:gi>{ name() }</mx:gi>: <mx:code>(Socketeer|LampSocket|MiniSock|SprocketSocket|[Unlisted Socket Vendor])</mx:code>.</xsl:with-param>
-         <xsl:with-param name="level" select="'error'"/>
+         <xsl:with-param name="level" select="'ERROR'"/>
       </xsl:call-template>
       <xsl:next-match/>
    </xsl:template>
-   <xsl:template priority="105"
+   <xsl:template priority="107"
                  mode="constraint-cascade"
                  match="computer/motherboard/ata-socket/(self::*[vendor/name='Socketeer']/product-name)">
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.265</xsl:with-param>
-         <xsl:with-param name="rule-id"/>
+         <xsl:with-param name="rule-id">ata-socket-rule_3</xsl:with-param>
          <xsl:with-param name="matching" as="xs:string">computer/motherboard/ata-socket/(self::*[vendor/name='Socketeer']/product-name)</xsl:with-param>
          <xsl:with-param name="class">AVCV value-not-allowed</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">not(.=('Socketeer I','Socketeer II'))</xsl:with-param>
          <xsl:with-param name="condition" select="not(.=('Socketeer I','Socketeer II'))"/>
          <xsl:with-param name="msg" expand-text="true">
             <mx:code>{ string(.) }</mx:code>{ .[not(string(.))] ! ' (empty)' } does not appear among permitted (enumerated) values for <mx:gi>{ name() }</mx:gi>: <mx:code>(Socketeer I|Socketeer II)</mx:code>.</xsl:with-param>
-         <xsl:with-param name="level" select="'error'"/>
+         <xsl:with-param name="level" select="'ERROR'"/>
       </xsl:call-template>
       <xsl:next-match/>
    </xsl:template>
@@ -1035,19 +1038,19 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="require-for-computer_..._motherboard_..._type-field"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
-   <xsl:template priority="109"
+   <xsl:template priority="111"
                  mode="constraint-cascade"
                  match="computer/motherboard/type">
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.265</xsl:with-param>
-         <xsl:with-param name="rule-id"/>
+         <xsl:with-param name="rule-id">motherboard-type-rule_1</xsl:with-param>
          <xsl:with-param name="matching" as="xs:string">computer/motherboard/type</xsl:with-param>
          <xsl:with-param name="class">AVCV value-not-allowed</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">not(.=('at','atx','mini-itx','custom'))</xsl:with-param>
          <xsl:with-param name="condition" select="not(.=('at','atx','mini-itx','custom'))"/>
          <xsl:with-param name="msg" expand-text="true">
             <mx:code>{ string(.) }</mx:code>{ .[not(string(.))] ! ' (empty)' } does not appear among permitted (enumerated) values for <mx:gi>{ name() }</mx:gi>: <mx:code>(at|atx|mini-itx|custom)</mx:code>.</xsl:with-param>
-         <xsl:with-param name="level" select="'error'"/>
+         <xsl:with-param name="level" select="'ERROR'"/>
       </xsl:call-template>
       <xsl:next-match/>
    </xsl:template>
@@ -1088,12 +1091,12 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="require-for-computer_..._motherboard_..._cpu_..._speed-field"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
-   <xsl:template priority="108"
+   <xsl:template priority="110"
                  mode="constraint-cascade"
                  match="motherboard/cpu/speed">
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.544</xsl:with-param>
-         <xsl:with-param name="rule-id"/>
+         <xsl:with-param name="rule-id">cpu-speed-rule_1</xsl:with-param>
          <xsl:with-param name="matching" as="xs:string">motherboard/cpu/speed</xsl:with-param>
          <xsl:with-param name="class">MRCV regex-match-fail</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">not( matches(., '^\d+(\.\d+)?(M|G)Hz$') )</xsl:with-param>
@@ -1158,16 +1161,45 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="require-for-computer_..._id-flag"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
-   <xsl:template priority="110" mode="constraint-cascade" match="/computer/@id">
+   <xsl:template priority="112" mode="constraint-cascade" match="/computer/@id">
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.544</xsl:with-param>
-         <xsl:with-param name="rule-id">id-naming-rule</xsl:with-param>
+         <xsl:with-param name="rule-id">id-naming-rule_1</xsl:with-param>
          <xsl:with-param name="matching" as="xs:string">/computer/@id</xsl:with-param>
          <xsl:with-param name="class">MRCV regex-match-fail</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">not( matches(., '^\i\c*$') )</xsl:with-param>
          <xsl:with-param name="condition" select="not(matches(., '^\i\c*$'))"/>
          <xsl:with-param name="msg" expand-text="true">
             <mx:code>{ string(.) }</mx:code>{ string(.)[not(.)] ! ' (empty)' } does not match the regular expression defined for this <mx:gi>{ name() }</mx:gi>: <mx:code>(\i\c*)</mx:code>.</xsl:with-param>
+      </xsl:call-template>
+      <xsl:next-match/>
+   </xsl:template>
+   <xsl:template match="motherboard/expansion-card/@state" mode="test">
+      <xsl:call-template name="require-for-computer_..._motherboard_..._expansion-card_..._state-flag"/>
+      <xsl:apply-templates mode="constraint-cascade" select="."/>
+   </xsl:template>
+   <xsl:template priority="105"
+                 mode="constraint-cascade"
+                 match="motherboard/expansion-card/@state">
+      <xsl:call-template name="notice">
+         <xsl:with-param name="cf">gix.265</xsl:with-param>
+         <xsl:with-param name="rule-id">expansion-card-state-rule_1</xsl:with-param>
+         <xsl:with-param name="matching" as="xs:string">motherboard/expansion-card/@state</xsl:with-param>
+         <xsl:with-param name="class">AVCV value-not-allowed</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">not(.=('new','refurb','inoperative'))</xsl:with-param>
+         <xsl:with-param name="condition" select="not(.=('new','refurb','inoperative'))"/>
+         <xsl:with-param name="msg" expand-text="true">
+            <mx:code>{ string(.) }</mx:code>{ .[not(string(.))] ! ' (empty)' } does not appear among permitted (enumerated) values for <mx:gi>{ name() }</mx:gi>: <mx:code>(new|refurb|inoperative)</mx:code>.</xsl:with-param>
+         <xsl:with-param name="level" select="'ERROR'"/>
+      </xsl:call-template>
+      <xsl:next-match/>
+   </xsl:template>
+   <xsl:template priority="104"
+                 mode="constraint-cascade"
+                 match="motherboard/expansion-card/@state">
+      <xsl:call-template name="check-uri-datatype">
+         <xsl:with-param name="rule-id" as="xs:string">expansion-card-state-rule_3</xsl:with-param>
+         <xsl:with-param name="matching" as="xs:string">motherboard/expansion-card/@state</xsl:with-param>
       </xsl:call-template>
       <xsl:next-match/>
    </xsl:template>
@@ -1188,7 +1220,7 @@ details p { margin: 0.2em 0em }
             <mx:gi>{ name() }</mx:gi> is not permitted here.</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
-   <xsl:template mode="test" match="@id | @date-of-manufacture | @illuminated">
+   <xsl:template mode="test" match="@id | @date-of-manufacture | @state | @illuminated">
       <xsl:call-template name="notice">
          <xsl:with-param name="cf" as="xs:string">gix.84</xsl:with-param>
          <xsl:with-param name="class">AOOP attribute-out-of-place</xsl:with-param>
@@ -1357,6 +1389,7 @@ details p { margin: 0.2em 0em }
             <mx:gi>{ name() }</mx:gi> requires <mx:gi>type</mx:gi>.</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
+   <xsl:template name="require-for-computer_..._motherboard_..._expansion-card_..._state-flag"/>
    <xsl:template name="require-for-computer_..._motherboard_..._expansion-card_..._type-field"/>
    <xsl:template name="require-for-cooling-assembly">
       <xsl:call-template name="notice">
