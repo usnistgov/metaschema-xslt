@@ -174,7 +174,7 @@
          <x:expect label="an error is reported">
             <mx:report cf="..." test="not(.=('at','atx','mini-itx','custom'))"
                rule-id="motherboard-type-rule_1" class="AVCV value-not-allowed" matching="computer/motherboard/type"
-               xpath="/computer/motherboard/type"><mx:code>special</mx:code> does not appear among permitted (enumerated) values for <mx:gi>type</mx:gi>: <mx:code>(at|atx|mini-itx|custom)</mx:code>.</mx:report>
+               xpath="/computer/motherboard/type"><mx:code>special</mx:code> does not appear among permitted (enumerated) values for <mx:gi>type</mx:gi>: <mx:code>at|atx|mini-itx|custom</mx:code>.</mx:report>
          </x:expect>
       </x:scenario>
       <x:scenario label="An empty field whose value must be enumerated">
@@ -188,7 +188,7 @@
          <x:expect label="an error is reported, showing the empty string as '(empty)'">
             <mx:report cf="..." test="not(.=('at','atx','mini-itx','custom'))"
                rule-id="motherboard-type-rule_1" class="AVCV value-not-allowed" matching="computer/motherboard/type"
-               xpath="/computer/motherboard/type"><mx:code/> (empty) does not appear among permitted (enumerated) values for <mx:gi>type</mx:gi>: <mx:code>(at|atx|mini-itx|custom)</mx:code>.</mx:report>
+               xpath="/computer/motherboard/type"><mx:code/> (empty) does not appear among permitted (enumerated) values for <mx:gi>type</mx:gi>: <mx:code>at|atx|mini-itx|custom</mx:code>.</mx:report>
          </x:expect>
       </x:scenario>
       <x:scenario label="A field with a value out of compliance with its enumeration - wrong CASE, so literally wrong">
@@ -202,7 +202,7 @@
          <x:expect label="an error is reported">
             <mx:report cf="..." test="not(.=('at','atx','mini-itx','custom'))"
                rule-id="motherboard-type-rule_1" class="AVCV value-not-allowed" matching="computer/motherboard/type"
-               xpath="/computer/motherboard/type"><mx:code>CUSTOM</mx:code> does not appear among permitted (enumerated) values for <mx:gi>type</mx:gi>: <mx:code>(at|atx|mini-itx|custom)</mx:code>.</mx:report>
+               xpath="/computer/motherboard/type"><mx:code>CUSTOM</mx:code> does not appear among permitted (enumerated) values for <mx:gi>type</mx:gi>: <mx:code>at|atx|mini-itx|custom</mx:code>.</mx:report>
          </x:expect>
       </x:scenario>
       <x:scenario label="A field with a value out of compliance with its enumeration - extra whitespace">
@@ -216,7 +216,7 @@
          <x:expect label="an error is reported">
             <mx:report cf="..." test="not(.=('at','atx','mini-itx','custom'))" class="AVCV value-not-allowed" 
                rule-id="motherboard-type-rule_1" matching="computer/motherboard/type"
-               xpath="/computer/motherboard/type"><mx:code>   custom   </mx:code> does not appear among permitted (enumerated) values for <mx:gi>type</mx:gi>: <mx:code>(at|atx|mini-itx|custom)</mx:code>.</mx:report>
+               xpath="/computer/motherboard/type"><mx:code>   custom   </mx:code> does not appear among permitted (enumerated) values for <mx:gi>type</mx:gi>: <mx:code>at|atx|mini-itx|custom</mx:code>.</mx:report>
          </x:expect>
       </x:scenario>
       <x:scenario label="A field with a value in compliance with its enumeration">
@@ -246,7 +246,7 @@
         <x:expect label="an error is reported">
             <mx:report  cf="..." test="empty(fan|water)"
                 xpath="/computer/motherboard/cooling" class="MRQC missing-required-contents">
-                <mx:gi>cooling</mx:gi> requires <mx:gi>fan|water</mx:gi>.</mx:report>
+                <mx:gi>cooling</mx:gi> requires element <mx:gi>fan|water</mx:gi>.</mx:report>
         </x:expect>
     </x:scenario>
     

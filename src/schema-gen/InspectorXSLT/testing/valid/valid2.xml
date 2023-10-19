@@ -17,7 +17,7 @@
                 <website>http://pages.nist.gov/metaschema</website>
             </vendor>
             <product-name>product-name3</product-name>
-            <byte-size>50</byte-size>
+            <byte-size>2048</byte-size>
         </memory>
     </motherboard>
 </computer>
