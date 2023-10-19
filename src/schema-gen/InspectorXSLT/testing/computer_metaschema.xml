@@ -135,11 +135,11 @@
                             <define-field name="byte-size" as-type="positive-integer" min-occurs="1" max-occurs="1">
                                 <formal-name>Memory Module Size</formal-name>
                                 <description>Size of the memory module in binary, not SI base-10 units, meaning a kilobyte is 1024 bytes, not 1000 bytes.</description>
+                               <constraint>
+                                  <expect target="." test="(number(.) > 0) and not(. mod 256)" id="byte-size-test_1"/><!-- must be evenly divisible by 256 -->
+                               </constraint>
                             </define-field>
-                        </model>
-                       <constraint>
-                          <expect target="." test="not(@byte-size != ../@byte-size" id="memory-rule-1"><!-- All memory must all have the same byte-size--></expect>
-                       </constraint>
+                        </model>                       
                     </define-assembly>
                     <assembly ref="cooling" min-occurs="0"/>
                     <define-assembly name="expansion-card" min-occurs="0" max-occurs="unbounded">
@@ -154,9 +154,7 @@
                                 <enum value="new">New</enum>
                                 <enum value="refurb">Refurb</enum>
                                 <enum value="inoperative">Inoperative</enum>
-                             </allowed-values>
-                             <matches id="expansion-card-state-rule_3" datatype="uri"/>
-                             
+                             </allowed-values>                             
                           </constraint>
                        </define-flag>
                         <model>
@@ -169,15 +167,18 @@
                         </model>
                     </define-assembly>
                 </model>
+               <constraint>
+                  <expect target="." test="not(memory/byte-size != memory/byte-size)" id="memory-rule_1"><!-- All memory must all have the same byte-size--></expect>
+               </constraint>
             </define-assembly>
         </model>
        <constraint>
           <allowed-values allow-other="yes" id="manufacture-date-rule_1" target="self::*[starts-with(@id,'A')]/@date-of-manufacture">
-             <enum value="1960-11-20">Nov 20 1960</enum>
-             <enum value="1962-06-28">Jun 28 1962</enum>
-             <enum value="1963-11-04">Nov 4 1963</enum>
+             <enum value="1980-04-01">Apr 1 1980</enum>
+             <enum value="1981-04-01">Apr 1 1981</enum>
+             <enum value="1982-04-01">Apr 1 1982</enum>
           </allowed-values>
-          <expect  id="manufacture-date-rule_2" target="@date-of-manufacture" test="xs:date(.) gt xs:date('1950-01-01')"/>
+          <expect id="manufacture-date-rule_2" target="@date-of-manufacture" test="not(. castable as xs:date) or (xs:date(.) >= xs:date('1950-01-01'))"/>
           <matches  id="manufacture-date-rule_3" target="@date-of-manufacture" datatype="date" level="WARNING" />
        </constraint>
     </define-assembly>
