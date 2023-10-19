@@ -36,7 +36,7 @@
                 <website>http://pages.nist.gov/metaschema</website>
             </vendor>
             <product-name>product-name2</product-name>
-            <byte-size>50</byte-size>
+            <byte-size>512</byte-size>
         </memory>
         <expansion-card>
             <vendor id="id13">

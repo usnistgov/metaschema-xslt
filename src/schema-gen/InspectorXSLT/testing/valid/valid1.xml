@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<computer xmlns="http://example.com/ns/computer" id="id1">
+<computer xmlns="http://example.com/ns/computer" id="id1" date-of-manufacture="2000-01-01">
     <motherboard>
         <vendor id="id3">
             <name>name0</name>
@@ -27,23 +27,17 @@
             <type>type1</type>
         </ata-socket>
         <memory>
-            <vendor id="id9">
-                <name>name3</name>
-                <address>address3</address>
-                <website>http://pages.nist.gov/metaschema</website>
-            </vendor>
             <product-name>product-name2</product-name>
-            <byte-size>50</byte-size>
+            <byte-size>256</byte-size>
         </memory>
-        <memory>
-            <vendor id="id11">
-                <name>name4</name>
-                <address>address4</address>
-                <website>http://pages.nist.gov/metaschema</website>
-            </vendor>
-            <product-name>product-name4</product-name>
-            <byte-size>50</byte-size>
-        </memory>
+       <memory>
+          <product-name>product-name4</product-name>
+          <byte-size>256</byte-size>
+       </memory>
+       <memory>
+          <product-name>product-name4</product-name>
+          <byte-size>256</byte-size>
+       </memory>
         <cooling>
             <water illuminated="true"/>
         </cooling>
