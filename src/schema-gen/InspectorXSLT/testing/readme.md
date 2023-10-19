@@ -13,17 +13,24 @@ A number of XSpec files in this folder should all complete successfully and repo
 #### `computer-constraints.xspec`
 
 
-| CONSTRAINT TYPE    | empty(@target) (flags) | target="."  | target="path"
+| CONSTRAINT TYPE    | code | empty(@target) (flags) | target="."  | target="path"
 |---|---|---|---|
-| allowed-values     |    |     |  |
+| allowed-values     | AVCV   |  x | x | x |
 | allowed-values[@allow-other='yes']     |    |     |  |
-| matches/@regex     |
-| matches/@datatype  |
-| expect             |
-| has-cardinality    |
-| is-unique          |
-| index              |
-| index-has-key      |
+| matches/@regex     | MRCV |
+| matches/@datatype  | MDCV (equivalent to VDSX) |
+| expect             | XPKT
+| has-cardinality    | HCCV | n/a | n/a |
+| is-unique          | UNIQ
+| index              | 
+| index-has-key      | NDXK
+
+exists($s) and empty($s[2])
+
+```
+<xsl:variable name="m:is-singleton" as="function(*)"
+      select="function($seq as item()*) as xs:boolean { exists($seq) and empty($seq[2]) }"/>
+```
 
 #### Computer Model metaschema
 
@@ -33,11 +40,15 @@ A number of XSpec files in this folder should all complete successfully and repo
 | allowed-values[@allow-other='yes']     |    |     |  |
 | matches/@regex     | id-naming-rule_1   | cpu-speed-rule_1   |
 | matches/@datatype  |     |     | manufacture-date-rule_3
-| expect             |     |     | manufacture-date-rule_2
+| expect             |     | **byte-size-test_1** memory-rule_1   | **manufacture-date-rule_2**
 | has-cardinality    | n/a | n/a |  |
 | is-unique          |     |     |  |
 | index              |     |     |  |
 | index-has-key      |     |     |  |
+
+for is-unique - generate key that matches targets using value
+  ensure
+     $sec :=key('keyname',$val,$scope) exists($seq) and empty($seq[2])
 
 tbd - markup-validation.xspec
 
