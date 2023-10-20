@@ -58,10 +58,7 @@
             </XSLT:if>
         </xsl:for-each>
     </xsl:template>
-    
-    <!-- Overriding the imported template for casting prose elements (wrt namespace) since we do not need it -->
-    <xsl:template name="cast-prose-template"/>
-    
+        
     <!-- Overriding interface template -->
     <xsl:template match="*" mode="make-match" as="xs:string">
         <xsl:variable name="matching-xml">
@@ -76,15 +73,7 @@
         <!--<xsl:sequence select="m:jsonize-path($matching-xml)"/>-->
         
     </xsl:template>
-    
-    <!-- Overriding interface template -->
-    <xsl:template match="*" mode="make-step" as="xs:string">
-        <xsl:variable name="step-xml">
-            <xsl:apply-templates select="." mode="make-xml-step"/>
-        </xsl:variable>
-        <xsl:sequence select="m:jsonize-path($step-xml)"/>
-    </xsl:template>
-    
+        
     <!-- Overriding interface template in mode 'make-pull' -->
     <xsl:template match="*" mode="make-pull">
         <xsl:apply-templates select="." mode="make-json-pull"/>
