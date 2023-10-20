@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../../../testing/xspec-assurance.sch"?>
+<x:description xmlns:mx="http://csrc.nist.gov/ns/csd/metaschema-xslt"
+    xmlns:mv="http://csrc.nist.gov/ns/csd/metaschema-xslt" xmlns="http://example.com/ns/computer"
+    xmlns:c="http://example.com/ns/computer" xmlns:x="http://www.jenitennison.com/xslt/xspec"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" stylesheet="current/computer_inspector.xsl"
+    xslt-version="3.0">
+
+   <!-- testing constraints expressed in computer_metaschema.xml -->
+   
+<!--
+      
+   
+   -->
+
+   <x:variable name="mx:ACVC-class" as="xs:string">AVCV value-not-allowed</x:variable>
+   <x:variable name="mx:MRCV-class" as="xs:string">MRCV regex-match-fail</x:variable>
+   <x:variable name="mx:MDCV-class" as="xs:string">MDCV datatype-match-fail</x:variable>
+   <x:variable name="mx:XPKT-class" as="xs:string">XPKT expectation-violation</x:variable>
+   <x:variable name="mx:HCCV-class" as="xs:string">HCCV cardinality-violation</x:variable>
+   <x:variable name="mx:UNIQ-class" as="xs:string">UNIQ uniqueness-constraint</x:variable>
+   
+   <x:scenario label="allowed-values tests 'AVCV value-not-allowed' notices">
+      <!-- /descendant::XSLT:call-template[@name='notice'][7]       -->
+      <x:scenario label="A field with a value out of compliance with its enumeration - literally wrong">
+         <x:context mode="test" select="/c:computer/c:motherboard/c:type">
+            <computer id="0000">
+               <motherboard>
+                  <type>special</type>
+               </motherboard>
+            </computer>
+         </x:context>
+         <x:expect label="an error is reported">
+            <mx:report cf="..." test="not(.=('at','atx','mini-itx','custom'))" class="{ $mx:ACVC-class }" matching="computer/motherboard/type"
+               xpath="/computer/motherboard/type" rule-id="motherboard-type-rule_1">Value <mx:code>special</mx:code> does not appear among permissible (enumerated) values for this <mx:gi>type</mx:gi>: <mx:code>at|atx|mini-itx|custom</mx:code>.</mx:report>
+         </x:expect>
+      </x:scenario>
+      <x:scenario label="An empty field whose value must be enumerated">
+         <x:context mode="test" select="/c:computer/c:motherboard/c:type">
+            <computer id="0000">
+               <motherboard>
+                  <type/>
+               </motherboard>
+            </computer>
+         </x:context>
+         <x:expect label="brings an error showing the empty string as '(empty)'">
+            <mx:report cf="..." test="not(.=('at','atx','mini-itx','custom'))" class="{ $mx:ACVC-class }" matching="computer/motherboard/type"
+               xpath="/computer/motherboard/type" rule-id="motherboard-type-rule_1">Value <mx:code/> (empty) does not appear among permissible (enumerated) values for this <mx:gi>type</mx:gi>: <mx:code>at|atx|mini-itx|custom</mx:code>.</mx:report>
+         </x:expect>
+      </x:scenario>
+      <x:scenario label="A field with a value out of compliance with its enumeration - wrong CASE, so literally wrong">
+         <x:context mode="test" select="/c:computer/c:motherboard/c:type">
+            <computer id="0000">
+               <motherboard>
+                  <type>CUSTOM</type>
+               </motherboard>
+            </computer>
+         </x:context>
+         <x:expect label="brings an error">
+            <mx:report cf="..." test="not(.=('at','atx','mini-itx','custom'))" class="{ $mx:ACVC-class }"
+               matching="computer/motherboard/type" xpath="/computer/motherboard/type"
+               rule-id="motherboard-type-rule_1">Value <mx:code>CUSTOM</mx:code> does not appear among permissible (enumerated) values for this <mx:gi>type</mx:gi>: <mx:code>at|atx|mini-itx|custom</mx:code>.</mx:report>
+         </x:expect>
+      </x:scenario>
+      <x:scenario label="A field with a value out of compliance with its enumeration - extra whitespace">
+         <x:context mode="test" select="/c:computer/c:motherboard/c:type">
+            <computer id="0000">
+               <motherboard>
+                  <type>   custom   </type>
+               </motherboard>
+            </computer>
+         </x:context>
+         <x:expect label="brings an error">
+            <mx:report cf="..." test="not(.=('at','atx','mini-itx','custom'))" class="{ $mx:ACVC-class }" matching="computer/motherboard/type"
+               xpath="/computer/motherboard/type" rule-id="motherboard-type-rule_1">Value <mx:code>   custom   </mx:code> does not appear among permissible (enumerated) values for this <mx:gi>type</mx:gi>: <mx:code>at|atx|mini-itx|custom</mx:code>.</mx:report>
+         </x:expect>
+      </x:scenario>
+      <x:scenario label="A field with a value in compliance with its enumeration">
+         <x:context mode="test" select="/c:computer/c:motherboard/c:type">
+            <computer id="0000">
+               <motherboard>
+                  <type>custom</type>
+               </motherboard>
+            </computer>
+         </x:context>
+         <x:expect label="throws no error" select="()"/>
+      </x:scenario>
+</x:scenario>
+   
+   <x:scenario label="allowed-values tests 'AVCV value-not-allowed' notices - WARNING when allow-other='yes'">
+      <x:scenario label="A date conforming to all rules except the one constraining the values when the computer @id starts with 'April'">
+         <x:context mode="test" select="/c:computer">
+            <computer id="April0" date-of-manufacture="2001-01-01"/><!-- violates manufacture-date-rule_1 with allow-other='yes' -->
+         </x:context>
+         <x:expect label="brings back an AVCV WARNING">
+            <mx:report cf="..." test="not(.=('1980-04-01','1981-04-01','1982-04-01'))" class="{ $mx:ACVC-class }"
+               xpath="/computer/@date-of-manufacture" rule-id="manufacture-date-rule_1" level="WARNING"
+               matching="computer/(self::*[starts-with(@id,'April')]/@date-of-manufacture)">Value <mx:code>2001-01-01</mx:code> does not appear among permissible (enumerated) values for this <mx:gi>date-of-manufacture</mx:gi>: <mx:code>1980-04-01|1981-04-01|1982-04-01</mx:code>.</mx:report>
+         </x:expect>
+      </x:scenario>
+   </x:scenario>
+
+   <x:scenario label="matches/@regex produces 'MRCV regex-match-fail' notices">  
+      <x:scenario label="A flag matching the constraint - no target">
+         <x:context mode="test" select="/c:computer/@id">
+            <computer id="9999"/>
+         </x:context>
+         <x:expect label="looks good">
+            <mx:report cf="..." test="not(matches(., '^\i\c*$'))" rule-id="id-naming-rule_1" class="{ $mx:MRCV-class }"
+               xpath="/computer/@id" matching="/computer/@id">
+               <mx:code>9999</mx:code> does not match the regular expression defined for this <mx:gi>id</mx:gi>: <mx:code>\i\c*</mx:code>.</mx:report>
+         </x:expect>
+      </x:scenario>
+      <x:scenario label="A field matching the constraint - target='.'">
+         <x:context mode="test" select="/c:computer/c:motherboard/c:cpu/c:speed">
+            <computer id="9999">
+               <motherboard>
+                  <cpu>
+                     <speed>1200MHz</speed>
+                  </cpu>                  
+               </motherboard>
+            </computer>
+         </x:context>
+         <x:expect label="looks good" select="()"/>
+      </x:scenario>
+      <x:scenario label="A field whose value doesn't match">
+         <x:context mode="test" select="/c:computer/c:motherboard/c:cpu/c:speed">
+            <computer id="9999">
+               <motherboard>
+                  <cpu>
+                     <speed>1200KHz</speed>
+                  </cpu>                  
+               </motherboard>
+            </computer>
+         </x:context>
+         <x:expect label="throws an error">
+            <mx:report cf="..." test="not(matches(., '^\d+(\.\d+)?(M|G)Hz$'))"
+               rule-id="cpu-speed-rule_1" class="{ $mx:MRCV-class }" 
+               xpath="/computer/motherboard/cpu/speed" matching="motherboard/cpu/speed">
+               <mx:code>1200KHz</mx:code> does not match the regular expression defined for this <mx:gi>speed</mx:gi>: <mx:code>\d+(\.\d+)?(M|G)Hz</mx:code>.</mx:report>
+         </x:expect>
+      </x:scenario>
+      <x:scenario label="An empty field">
+         <x:context mode="test" select="/c:computer/c:motherboard/c:cpu/c:speed">
+            <computer id="9999">
+               <motherboard>
+                  <cpu>
+                     <speed/>   
+                  </cpu>                  
+               </motherboard>
+            </computer>
+         </x:context>
+         <x:expect label="throws an error">
+            <mx:report cf="..." test="not(matches(., '^\d+(\.\d+)?(M|G)Hz$'))" class="{ $mx:MRCV-class }" 
+               rule-id="cpu-speed-rule_1" xpath="/computer/motherboard/cpu/speed" matching="motherboard/cpu/speed">
+               <mx:code/> (empty) does not match the regular expression defined for this <mx:gi>speed</mx:gi>: <mx:code>\d+(\.\d+)?(M|G)Hz</mx:code>.</mx:report>
+         </x:expect>
+      </x:scenario>
+   </x:scenario>
+   
+   <x:scenario label="matches tests - matches/@datatype and matches/@regex along with a co-occurrent allowed-value test">
+      <x:scenario label="A flag defined as a string but targeted with  a 'date' field constraint - happens to be a permitted date">
+         <x:context mode="test" select="/c:computer">
+            <computer id="A0" date-of-manufacture="1980-04-01"/>
+         </x:context>
+         <x:expect label="brings back nothing" select="()"/>
+      </x:scenario>
+      <x:scenario label="A flag defined as a string but targeted with  a 'date' field constraint - looks like a date, but not enumerated in extra constraint co-occurrent with id starting with 'April'">
+         <x:context mode="test" select="/c:computer">
+            <computer id="April0" date-of-manufacture="2001-01-01"/>
+         </x:context>
+         <x:expect label="brings back an AVCV error">
+            <mx:report cf="..." test="not(.=('1980-04-01','1981-04-01','1982-04-01'))" class="{ $mx:ACVC-class }"
+               xpath="/computer/@date-of-manufacture" rule-id="manufacture-date-rule_1" level="WARNING"
+               matching="computer/(self::*[starts-with(@id,'April')]/@date-of-manufacture)">Value <mx:code>2001-01-01</mx:code> does not appear among permissible (enumerated) values for this <mx:gi>date-of-manufacture</mx:gi>: <mx:code>1980-04-01|1981-04-01|1982-04-01</mx:code>.</mx:report>
+         </x:expect>
+      </x:scenario>
+      <x:scenario label="A flag defined as a string but targeted with  a 'date' field constraint - not looking like a date">
+         <x:context mode="test" select="/c:computer">
+            <computer id="B0" date-of-manufacture="today"/>
+         </x:context>
+         <!-- note escaping of { } as {{ }} in mx:report/@test LRE to avoid avt eval -->
+         <x:expect label="throws an MDCV error">
+            <mx:report cf="..." class="{ $mx:MDCV-class }" rule-id="manufacture-date-rule_3"
+               test="not(string(.) castable as xs:date and matches(.,'^(((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{{2}})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{{2}})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{{2}})-(0[469]|11)-(0[1-9]|[12][0-9]|30)))(Z|(-((0[0-9]|1[0-2]):00|0[39]:30)|\+((0[0-9]|1[0-4]):00|(0[34569]|10):30|(0[58]|12):45)))?$'))"
+               xpath="/computer/@date-of-manufacture" 
+               matching="computer/(@date-of-manufacture)">Value <mx:code>today</mx:code> of attribute <mx:gi>@date-of-manufacture</mx:gi> does not conform to <mx:code>date</mx:code> datatype.</mx:report>
+         </x:expect>
+      </x:scenario>
+      <x:scenario label="Similarly, but this time an additional allowed-values constraint also applies b/c @id starts-with 'April'">
+         <x:context mode="test" select="/c:computer">
+            <computer id="April" date-of-manufacture="today"/>
+         </x:context>
+         <!-- note escaping of { } as {{ }} in mx:report/@test LRE to avoid avt eval -->
+         <x:expect label="throws an additional error, for two constraints violated, AVCV and MDCV">
+            <mx:report cf="..." test="not(.=('1980-04-01','1981-04-01','1982-04-01'))" class="{ $mx:ACVC-class }"
+               xpath="/computer/@date-of-manufacture" rule-id="manufacture-date-rule_1"
+               level="WARNING" matching="computer/(self::*[starts-with(@id,'April')]/@date-of-manufacture)">Value <mx:code>today</mx:code> does not appear among permissible (enumerated) values for this <mx:gi>date-of-manufacture</mx:gi>: <mx:code>1980-04-01|1981-04-01|1982-04-01</mx:code>.</mx:report>
+            <mx:report cf="..." class="{ $mx:MDCV-class }" rule-id="manufacture-date-rule_3"
+               test="not(string(.) castable as xs:date and matches(.,'^(((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{{2}})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{{2}})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{{2}})-(0[469]|11)-(0[1-9]|[12][0-9]|30)))(Z|(-((0[0-9]|1[0-2]):00|0[39]:30)|\+((0[0-9]|1[0-4]):00|(0[34569]|10):30|(0[58]|12):45)))?$'))"
+               xpath="/computer/@date-of-manufacture" 
+               matching="computer/(@date-of-manufacture)">Value <mx:code>today</mx:code> of attribute <mx:gi>@date-of-manufacture</mx:gi> does not conform to <mx:code>date</mx:code> datatype.</mx:report>
+         </x:expect>
+      </x:scenario>
+      
+   </x:scenario>
+   
+   <x:scenario label="'expect' XPKT">
+      <x:scenario label="An expect, targeting . - value fails test">
+         <x:context mode="test" select="/c:computer/@date-of-manufacture">
+            <computer date-of-manufacture="1949-12-31"/>            
+         </x:context>
+         <x:expect label="throws an error">
+            <mx:report cf="..." test="not(not(. castable as xs:date) or (xs:date(.) >= xs:date('1950-01-01')))"
+               class="{ $mx:XPKT-class }" xpath="/computer/@date-of-manufacture" rule-id="manufacture-date-rule_2"
+               matching="computer/(@date-of-manufacture)">Expression result for <mx:gi>computer/(@date-of-manufacture)</mx:gi> does not conform to expectation <mx:code>not(. castable as xs:date) or (xs:date(.) &gt;= xs:date('1950-01-01'))</mx:code>.</mx:report>
+         </x:expect>
+      </x:scenario>
+      <x:scenario label="Another expect, targeting .">
+         <x:context mode="test" select="/c:computer/c:motherboard/c:memory/c:byte-size">
+            <computer>
+               <motherboard>
+                  <memory>
+                     <byte-size>50</byte-size>
+                  </memory>
+               </motherboard>
+            </computer>
+         </x:context>
+         <x:expect label="throws an error">
+            <mx:report cf="..." test="not((number(.) > 0) and not(. mod 256))" class="{ $mx:XPKT-class }"
+               xpath="/computer/motherboard/memory/byte-size" rule-id="byte-size-test_1"
+               matching="motherboard/memory/byte-size">Expression result for <mx:gi>motherboard/memory/byte-size</mx:gi> does not conform to expectation <mx:code>(number(.) &gt; 0) and not(. mod 256)</mx:code>.</mx:report>
+         </x:expect>
+      </x:scenario>
+      <x:scenario label="Clean test of the same against valid content">
+         <x:context mode="test" select="/c:computer/c:motherboard/c:memory/c:byte-size">
+            <computer>
+               <motherboard>
+                  <memory>
+                     <byte-size>256</byte-size>
+                  </memory>
+               </motherboard>
+            </computer>           
+         </x:context>
+         <x:expect label="throws nothing" select="()"/>
+      </x:scenario>
+      <x:scenario label="Another expect target='.', this one examining descendants, non-compliant">
+         <x:context mode="test" select="/c:computer/c:motherboard">
+            <computer>
+               <motherboard>
+                  <type/>
+                  <memory>
+                     <byte-size>256</byte-size><!-- not the same -->
+                  </memory>
+                  <memory>
+                     <byte-size>512</byte-size>
+                  </memory>
+                  <memory>
+                     <byte-size>512</byte-size>
+                  </memory>
+                  <memory>
+                     <byte-size>512</byte-size>
+                  </memory>
+               </motherboard>
+            </computer>
+         </x:context>
+         <x:expect label="throws an error">
+            <mx:report cf="..." test="not(not(memory/byte-size != memory/byte-size))"
+               class="{ $mx:XPKT-class }" xpath="/computer/motherboard" rule-id="memory-rule_1"
+               matching="/computer/motherboard">Expression result for <mx:gi>/computer/motherboard</mx:gi> does not conform to expectation <mx:code>not(memory/byte-size != memory/byte-size)</mx:code>.</mx:report>
+         </x:expect>
+      </x:scenario>
+      <x:scenario label="Another expect target='.', this one examining good descendants">
+         <x:context mode="test" select="/c:computer/c:motherboard">
+            <computer id="okay">
+               <motherboard>
+                  <type/>
+                  <memory>
+                     <byte-size>512</byte-size>
+                  </memory>
+                  <memory>
+                     <byte-size>512</byte-size>
+                  </memory>
+                  <memory>
+                     <byte-size>512</byte-size>
+                  </memory>
+                  <memory>
+                     <byte-size>512</byte-size>
+                  </memory>
+               </motherboard>
+            </computer>
+         </x:context>
+         <x:expect label="brings no error because the rule passes" select="()"/>
+      </x:scenario>
+      
+   </x:scenario>
+   
+   <x:scenario label="'has-cardinality' HCCV">
+      <x:scenario label="Detecting a cardinality error, apart from others - too many">
+         <x:context mode="test" select="/c:computer/c:motherboard">
+            <computer id="okay">
+               <motherboard>
+                  <type/>
+                  <memory><byte-size>512</byte-size></memory>
+                  <memory><byte-size>512</byte-size></memory>
+                  <memory><byte-size>512</byte-size></memory>
+                  <memory><byte-size>512</byte-size></memory>
+                  <memory><byte-size>512</byte-size></memory>
+                  <memory><byte-size>512</byte-size></memory>
+                  <memory><byte-size>512</byte-size></memory>
+                  <memory><byte-size>512</byte-size></memory>
+                  <memory><byte-size>512</byte-size></memory>
+                  <memory><byte-size>512</byte-size></memory>
+                  <memory><byte-size>512</byte-size></memory>
+                  <memory><byte-size>512</byte-size></memory>
+               </motherboard>
+            </computer>
+         </x:context>
+         <x:expect label="throws an HCCV error">
+            <mx:report cf="..." test="not(count(memory) ge 2 and count(memory) le 10)"
+               class="{ $mx:HCCV-class }" xpath="/computer/motherboard" rule-id="memory-rule_3"
+               matching="/computer/motherboard">Counting <mx:gi>memory</mx:gi> under <mx:code>/computer/motherboard</mx:code> finds 12 - expecting at least 2, no more than 10.</mx:report>
+         </x:expect>
+      </x:scenario>
+      <x:scenario label="Detecting a cardinality error, apart from others - too few">
+         <x:context mode="test" select="/c:computer/c:motherboard">
+            <computer id="okay">
+               <motherboard>
+                  <type/>
+                  <memory/>
+               </motherboard>
+            </computer>
+         </x:context>
+         <x:expect label="reports two errors, an XPKT and an HCCV">
+            <mx:report cf="..." test="not(not(count(memory) mod 2))" class="{ $mx:XPKT-class }"
+               xpath="/computer/motherboard" rule-id="memory-rule_2"
+               matching="/computer/motherboard">Expression result for <mx:gi>/computer/motherboard</mx:gi> does not conform to expectation <mx:code>not(count(memory) mod 2)</mx:code>.</mx:report>
+            <mx:report cf="..." test="not(count(memory) ge 2 and count(memory) le 10)"
+               class="{ $mx:HCCV-class }" xpath="/computer/motherboard" rule-id="memory-rule_3"
+               matching="/computer/motherboard">Counting <mx:gi>memory</mx:gi> under <mx:code>/computer/motherboard</mx:code> finds 1 - expecting at least 2, no more than 10.</mx:report>
+         </x:expect>
+      </x:scenario>
+      <x:scenario label="This one is okay">
+         <x:context mode="test" select="/c:computer/c:motherboard">
+            <computer id="okay">
+               <motherboard>
+                  <type/>
+                  <memory><byte-size>512</byte-size></memory>
+                  <memory><byte-size>512</byte-size></memory>
+                  <memory><byte-size>512</byte-size></memory>
+                  <memory><byte-size>512</byte-size></memory>
+               </motherboard>
+            </computer>
+         </x:context>
+         <x:expect label="and brings back nothing, since the rule passes" select="()"/>
+      </x:scenario>
+      <x:scenario label="Exercising a different test">
+         <x:context mode="test" select="/c:computer">
+            <computer id="okay">
+               <expansion-card/>
+               <expansion-card/>
+               <expansion-card/>
+               <expansion-card/>
+               <expansion-card/>
+            </computer>
+         </x:context>
+         <x:expect label="reports breaking a different rule">
+            <mx:report cf="..." test="not(true() and count(expansion-card) le 4)"
+               class="HCCV cardinality-violation" xpath="/computer" rule-id="expansion-card-rule_1"
+               matching="computer">Counting <mx:gi>expansion-card</mx:gi> under <mx:code>computer</mx:code> finds 5 - expecting no more than 4.</mx:report>
+         </x:expect>
+      </x:scenario>
+   </x:scenario>
+   
+   <x:scenario label="'is-unique' UNIQ" pending="build">   </x:scenario>
+   
+   <!-- test index definition? -->
+   <x:scenario label="'index-has-key' NXHK" pending="build">   </x:scenario>
+    
+</x:description>
