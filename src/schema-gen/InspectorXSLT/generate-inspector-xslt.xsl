@@ -78,7 +78,7 @@
             select="(/*/*/root-name/parent::define-assembly | //model//define-assembly | //model//define-field | //assembly | //field)[not(@in-xml = 'UNWRAPPED')]/mx:use-name(.) => distinct-values()"/>
          <XSLT:template mode="test" match="{ $known-elements => string-join(' | ') }">
             <XSLT:call-template name="notice">
-               <XSLT:with-param name="cf" as="xs:string">gix.73</XSLT:with-param>
+               <XSLT:with-param name="cf" as="xs:string">gix.81</XSLT:with-param>
                <XSLT:with-param name="class">EOOP element-out-of-place</XSLT:with-param>
                <XSLT:with-param name="msg" expand-text="true">Element <mx:gi>{ name() }</mx:gi> is not permitted here.</XSLT:with-param>
             </XSLT:call-template>
@@ -87,7 +87,7 @@
             select="((//flag | //define-assembly/define-flag | define-field/define-flag)/mx:use-name(.) => distinct-values()) ! ('@' || .)"/>
          <XSLT:template mode="test" match="{ $known-attributes => string-join(' | ') }">
             <XSLT:call-template name="notice">
-               <XSLT:with-param name="cf" as="xs:string">gix.82</XSLT:with-param>
+               <XSLT:with-param name="cf" as="xs:string">gix.90</XSLT:with-param>
                <XSLT:with-param name="class">AOOP attribute-out-of-place</XSLT:with-param>
                <XSLT:with-param name="msg" expand-text="true">Attribute <mx:gi>@{ name() }</mx:gi> is not permitted here.</XSLT:with-param>
             </XSLT:call-template>
@@ -118,7 +118,7 @@
                   </xsl:apply-templates>
                </xsl:variable>
                <XSLT:call-template name="notice">
-                  <XSLT:with-param name="cf" as="xs:string">gix.113</XSLT:with-param>
+                  <XSLT:with-param name="cf" as="xs:string">gix.121</XSLT:with-param>
                   <XSLT:with-param name="rule-id" as="xs:string*" select="$rule-id"/>
                   <XSLT:with-param name="matching" as="xs:string" select="($matching[matches(.,'\S')],'*')[1]"/>
                   <XSLT:with-param name="class" as="xs:string" expand-text="true">{{ $class }}</XSLT:with-param>
@@ -130,7 +130,8 @@
          </xsl:iterate>
 
          <!--
-        These are generated instead of copied so that matching on LREs works with the target namespace Can these be copied not generated?
+        These are generated instead of copied so that matching on LREs works with the target namespace
+        Can these be copied not generated?
         ('Finally we have to generate these - instead of keeping them in the static host file - so they will match namespaces.') -->
          <XSLT:template match="ul | ol" mode="validate-markup-multiline">
             <XSLT:apply-templates select="li" mode="validate-markup-multiline"/>
@@ -167,13 +168,10 @@
          <XSLT:template match="a/@href | img/@src | img/@title | insert/@type | insert/@id-ref"
             mode="validate-markup-line"/>
 
-         <XSLT:template
-            match="p/text() | li/text() | h1/text() | h2/text() | h3/text() | h4/text() | h5/text() | h6/text()"
-            mode="test"/>
-         <XSLT:template
-            match="em/text() | i/text() | strong/text() | b/text() | u/text() | q/text() | code/text() | a/text()"
-            mode="test"/>
-
+         <XSLT:template mode="test"
+            match="p/text() | li/text() | h1/text() | h2/text() | h3/text() | h4/text() | h5/text() | h6/text()"/>
+         <XSLT:template mode="test"
+            match="em/text() | i/text() | strong/text() | b/text() | u/text() | q/text() | code/text() | a/text()"/>
 
       </XSLT:transform>
    </xsl:template>
@@ -297,7 +295,7 @@
          <xsl:variable name="test" as="xs:string">empty(following-sibling::{$using-name}) and (count(. | preceding-sibling::{$using-name}) lt {$min})</xsl:variable>
          <!--empty(following-sibling::fan) and (count(. | preceding-sibling::fan) lt 2)-->
          <XSLT:call-template name="notice">
-            <XSLT:with-param name="cf">gix.292</XSLT:with-param>
+            <XSLT:with-param name="cf">gix.298</XSLT:with-param>
             <XSLT:with-param name="class">EATI element-appears-too-infrequently</XSLT:with-param>
             <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
             <XSLT:with-param name="condition" select="{$test}"/>
@@ -308,7 +306,7 @@
          <xsl:variable name="max" select="(@max-occurs ! number(), 1)[1]"/>
          <xsl:variable name="test" as="xs:string">count(. | preceding-sibling::{$using-name}) gt {$max}</xsl:variable>
          <XSLT:call-template name="notice">
-            <XSLT:with-param name="cf">gix.303</XSLT:with-param>
+            <XSLT:with-param name="cf">gix.309</XSLT:with-param>
             <XSLT:with-param name="class">EATO element-appears-too-often</XSLT:with-param>
             <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
             <XSLT:with-param name="condition" select="{$test}"/>
@@ -323,7 +321,7 @@
          <xsl:variable name="test" as="xs:string">empty(preceding-sibling::{$using-name}) and exists(../({
             ($alternatives ! mx:use-name(.)) => string-join(' | ') }))</xsl:variable>
          <XSLT:call-template name="notice">
-            <XSLT:with-param name="cf">gix.318</XSLT:with-param>
+            <XSLT:with-param name="cf">gix.324</XSLT:with-param>
             <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
             <XSLT:with-param name="condition" select="{$test}"/>
             <XSLT:with-param name="class">VEXC violates-exclusive-choice</XSLT:with-param>
@@ -351,7 +349,7 @@
          <xsl:variable name="test" as="xs:string">exists({ ($followers ! mx:match-name(.)) ! ('preceding-sibling::' ||
             .) => string-join(' | ') })</xsl:variable>
          <XSLT:call-template name="notice">
-            <XSLT:with-param name="cf">gix.347</XSLT:with-param>
+            <XSLT:with-param name="cf">gix.352</XSLT:with-param>
             <XSLT:with-param name="class">EOOO element-out-of-order</XSLT:with-param>
             <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
             <XSLT:with-param name="condition" select="{$test}"/>
@@ -418,7 +416,7 @@
             </xsl:variable>
             <xsl:variable name="test" as="xs:string">empty({$requiring})</xsl:variable>
             <XSLT:call-template name="notice">
-               <XSLT:with-param name="cf">gix.415</XSLT:with-param>
+               <XSLT:with-param name="cf">gix.419</XSLT:with-param>
                <XSLT:with-param name="class">MRQC missing-required-contents</XSLT:with-param>
                <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
                <XSLT:with-param name="condition" select="{$test}"/>
@@ -525,7 +523,7 @@
          <!-- test is not type-safe -->
          <xsl:variable name="allowing-others" select="@allow-other = 'yes'"/>
          <XSLT:call-template name="notice">
-            <XSLT:with-param name="cf">gix.522</XSLT:with-param>
+            <XSLT:with-param name="cf">gix.526</XSLT:with-param>
             <XSLT:with-param name="rule-id">{ @id }</XSLT:with-param>
             <XSLT:with-param name="matching" as="xs:string">{ $target-match }</XSLT:with-param>
             <XSLT:with-param name="class">AVCV value-not-allowed</XSLT:with-param>
@@ -534,7 +532,6 @@
             <XSLT:with-param name="msg" expand-text="true">Value <mx:code>{{ string(.) }}</mx:code>{{ .[not(string(.))] ! ' (empty)' }} does not appear among permissible (enumerated) values for this <mx:gi>{{ name() }}</mx:gi>: <mx:code>{ $values => string-join('|') }</mx:code>.</XSLT:with-param>
             <XSLT:with-param name="level" select="'{ (@level,'WARNING'[$allowing-others],'ERROR')[1] }'"/>
          </XSLT:call-template>
-
          <XSLT:next-match/>
       </XSLT:template>
 
@@ -561,7 +558,7 @@
          <xsl:for-each select="@regex">
             <xsl:variable name="assert" expand-text="true">matches(., '^{.}$')</xsl:variable>
             <XSLT:call-template name="notice">
-               <XSLT:with-param name="cf">gix.558</XSLT:with-param>
+               <XSLT:with-param name="cf">gix.561</XSLT:with-param>
                <XSLT:with-param name="rule-id">{ parent::matches/@id }</XSLT:with-param>
                <XSLT:with-param name="matching" as="xs:string">{ $target-match }</XSLT:with-param>
                <XSLT:with-param name="class">MRCV regex-match-fail</XSLT:with-param>
@@ -591,7 +588,7 @@
          <!--<xsl:variable name="test" as="xs:string" expand-text="true">{ @test }</xsl:variable>-->
          <!-- test is not type-safe -->
          <XSLT:call-template name="notice">
-            <XSLT:with-param name="cf">gix.588</XSLT:with-param>
+            <XSLT:with-param name="cf">gix.591</XSLT:with-param>
             <XSLT:with-param name="rule-id">{ @id }</XSLT:with-param>
             <XSLT:with-param name="matching" as="xs:string">{ $target-match }</XSLT:with-param>
             <XSLT:with-param name="class">XPKT expectation-violation</XSLT:with-param>
@@ -617,7 +614,7 @@
          match="{ $matching }">
          <!-- test is not type-safe -->
          <XSLT:call-template name="notice">
-            <XSLT:with-param name="cf">gix.588</XSLT:with-param>
+            <XSLT:with-param name="cf">gix.617</XSLT:with-param>
             <XSLT:with-param name="rule-id">{ @id }</XSLT:with-param>
             <XSLT:with-param name="matching" as="xs:string">{ $matching }</XSLT:with-param>
             <XSLT:with-param name="class">HCCV cardinality-violation</XSLT:with-param>
@@ -646,7 +643,7 @@
          <xsl:variable name="requiring" select="mx:use-name(.)"/>
          <xsl:variable name="test" as="xs:string">empty(@{$requiring})</xsl:variable>
          <XSLT:call-template name="notice">
-            <XSLT:with-param name="cf">gix.617</XSLT:with-param>
+            <XSLT:with-param name="cf">gix.646</XSLT:with-param>
             <XSLT:with-param name="class">MRQA missing-required-attribute</XSLT:with-param>
             <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
             <XSLT:with-param name="condition" select="{$test}"/>
@@ -693,6 +690,7 @@
    </xsl:variable>
 
 
+   <!-- Processing datatype definitions from external file -->
    <xsl:mode name="datatype-test" on-no-match="shallow-skip"/>
 
    <xsl:template match="*" mode="datatype-test" as="xs:string?"/>
@@ -710,7 +708,6 @@
       <xsl:text expand-text="true">string(.) castable as {(xs:restriction/@base,@name)[1]}{ $extra[normalize-space(.)] ! (' and ' || .)}</xsl:text>
    </xsl:template>
 
-
    <xsl:template match="xs:restriction" mode="datatype-test" as="xs:string?">
       <xsl:apply-templates mode="#current"/>
    </xsl:template>
@@ -720,8 +717,10 @@
    </xsl:template>
 
 
+   <!-- Functions make it happen -->
+   
    <!-- For an inline or global definition, the name captures the ancestry;
-     for references, the definition will be at the top level (only) -->
+        for references, the definition will be at the top level (only) -->
    <xsl:function name="mx:definition-name" as="xs:string">
       <xsl:param name="def" as="node()"/>
       <xsl:sequence
