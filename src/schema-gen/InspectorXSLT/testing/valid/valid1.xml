@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<computer xmlns="http://example.com/ns/computer" id="id1" date-of-manufacture="2000-01-01">
+<computer xmlns="http://example.com/ns/computer" id="A0" date-of-manufacture="2000-01-01">
     <motherboard>
         <vendor id="id3">
             <name>name0</name>

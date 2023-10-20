@@ -40,7 +40,7 @@ Coverage notes follow.
 | index-has-key      | NDXK
 
 exists($s) and empty($s[2])
-exists(key(...) except .)
+test= exists(key(...) except .)
 
 ```
 <xsl:variable name="m:is-singleton" as="function(*)"
