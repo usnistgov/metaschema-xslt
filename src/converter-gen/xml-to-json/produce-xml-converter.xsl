@@ -27,11 +27,6 @@
     </xsl:template>
     
     <!-- Interface template for override -->
-    <xsl:template match="*" mode="make-step" as="xs:string">
-        <xsl:apply-templates select="." mode="make-xml-step"/>
-    </xsl:template>
-    
-    <!-- Interface template for override -->
     <xsl:template match="*" mode="make-pull">
         <xsl:apply-templates select="." mode="make-xml-pull"/>
     </xsl:template>
