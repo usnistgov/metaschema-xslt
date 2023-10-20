@@ -22,6 +22,7 @@ That is, it combines the effective functionality of XML schema and Schematron (X
 - [x] Emit reports in native (MX) format, HTML or Markdown
 - [x] Compact mode returns a one-line answer
 - [x] `silent-when-valid` mode returns validations only for files found invalid
+- [x] `compressed` mode reduces Markdown (no double LF)
 - [x] Run in batch, write reports to file(s)
   - [x] Using Saxon feature
   - [ ] Using XProc 
@@ -80,13 +81,13 @@ Command line flags and options for using the InspectorXSLT with Saxon - note use
 - `-it` is short for `-initial-template` while `-im` is short for `-initial-mode`
 - If both `-it` and `-im` are given, expect `-it` to prevail
 - Parameter `mode` further affects the results:
-  - `mode=concise` writes only one-line summaries - most useful for Markdown output
-  - `mode=silent-when-valid` suppresses reports from valid instances\*
+  - `mode=compressed` strips line feeds from Markdown results for a 'compressed ASCII' view (no effect when producing HTML or MX)
+  - `mode=concise` is even more compressed, writes only one-line summaries, and works for HTML as well as Markdown.
+  - `mode=silent-when-valid` suppresses any reports from valid instances\*
   - `mode=noisy` provides extra progress reports to STDOUT - useful for tracing when writing outputs to files
   
 TBD, to be considered:
 
-  - `mode=compressed` could have the effect of removing double-newlines from Markdown
   - filters to remove messages by level, code or matched node (XPath)
 
 \* The setting `mode=silent-when-valid` is most useful when the results come to the console, not a file. Unfortunately, since Saxon directed with `-o` is obliged to write some kind of file output, 0-byte file entities are still produced even for "empty" outputs created when reports of validity are suppressed. These files can be removed with `$ find dir -type f -empty -print -delete` (Linux CL) or equivalent, where `dir` is the directory (path).
