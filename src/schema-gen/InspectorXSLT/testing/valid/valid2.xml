@@ -10,14 +10,18 @@
             <website>http://pages.nist.gov/metaschema</website>
         </vendor>
         <type>mini-itx</type>
-        <memory>
-            <vendor id="id11">
-                <name>name4</name>
-                <address>address4</address>
-                <website>http://pages.nist.gov/metaschema</website>
-            </vendor>
-            <product-name>product-name3</product-name>
-            <byte-size>2048</byte-size>
-        </memory>
+       <memory>
+          <vendor id="id11">
+             <name>name4</name>
+             <address>address4</address>
+             <website>http://pages.nist.gov/metaschema</website>
+          </vendor>
+          <product-name>product-name3</product-name>
+          <byte-size>2048</byte-size>
+       </memory>
+       <memory>
+          <product-name>product-name3</product-name>
+          <byte-size>2048</byte-size>
+       </memory>
     </motherboard>
 </computer>

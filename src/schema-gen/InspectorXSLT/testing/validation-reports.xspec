@@ -106,18 +106,17 @@
     
     <x:scenario label="'EATO element-appears-too-often' notices">
         <x:scenario label="For an element appearing too many times">
-            <x:context mode="test" select="/c:computer/c:motherboard[2]">
+            <x:context mode="test" select="/c:computer/c:motherboard/c:type[2]">
                 <computer id="A0">
-                    <motherboard/>
                     <motherboard>
                         <type/>
-                        <memory/><!-- nb missing contents are not detected by matching 'motherboard' in mode 'test' -->
+                       <type>custom</type>
                     </motherboard>
                 </computer>
             </x:context>
             <x:expect label="an error is reported">
-                <mx:report cf="..." test="count(. | preceding-sibling::motherboard) gt 1" xpath="/computer/motherboard[2]" class="EATO element-appears-too-often">
-                    <mx:gi>motherboard</mx:gi> appears too many times: 1 maximum is permitted.</mx:report>
+                <mx:report cf="..." test="count(. | preceding-sibling::type) gt 1" xpath="/computer/motherboard/type[2]" class="EATO element-appears-too-often">
+                    <mx:gi>type</mx:gi> appears too many times: 1 maximum is permitted.</mx:report>
             </x:expect>
         </x:scenario>
     </x:scenario>
@@ -264,9 +263,6 @@
         <!-- /descendant::XSLT:call-template[@name='notice'][9]       -->
     </x:scenario>
     
-    
-    <!-- return list of descendants like this: /descendant::XSLT:call-template[@name='notice']/(position() || ': ' || XSLT:with-param[@name='cf']) => string-join('&#xA;')
-    -->
     <x:scenario label="'UE unmatched-element' notices">
         <x:scenario label="For an unknown element at the root (document level)">
             <x:context mode="test" select="/c:motherboid">

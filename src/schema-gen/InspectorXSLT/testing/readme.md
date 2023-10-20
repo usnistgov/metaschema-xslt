@@ -4,28 +4,43 @@ See the [Testing](../Testing.md) docs for Inspector XSLT for explanation of how 
 
 ## If you have a metaschema that you wish to use
 
+Use the script to produce your Inspector XSLT, or run the pipeline directly, not skipping composition, (Even a self-containted schema module in one file needs to be composed to link up definitions with their uses.)
+
+[Apply your new Inspector XSLT to your metaschema-defined XML](../readme.md), either directly with an XSLT engine or using adapted versions of the scripts provided for the demo. Please consider reporting what you learn.
+
 ## Working with the trial (model) metaschema
 
-### XSpecing the computer model
+`computer_metaschema.xml` has been provided with some outlandish rules and constraints, enabling it as a testbed for the application of constraints to arbitrary metaschema-defined data (specifically XML for this application).
 
-A number of XSpec files in this folder should all complete successfully and report "all green" -- no warnings, no errors, no unexpected 'pending' sections.
+Some [known-valid](valid/) and [known-invalid](invalid/) instances are also provided, serving as examples and out-of-line tests.
+
+### XSpec demonstrating correctness of the Inspector
+
+An Inspector can be generated from the metaschema `computer_model.xml` and tested against known inputs to demonstrate that the tests performed by the Inspector bring the correct results.
+
+Exercising these tests, a number of XSpec files in this folder calling `current/computer_inspector.xsl` should all complete successfully and report "all green" -- no warnings, no errors, no unexpected 'pending' sections.
+
+See the [Testing](../Testing.md) docs for more information.
+
+Coverage notes follow.
 
 #### `computer-constraints.xspec`
 
 
 | CONSTRAINT TYPE    | code | empty(@target) (flags) | target="."  | target="path"
-|---|---|---|---|
+|---|---|:---:|:---:|:---:|
 | allowed-values     | AVCV   |  x | x | x |
-| allowed-values[@allow-other='yes']     |    |     |  |
-| matches/@regex     | MRCV |
-| matches/@datatype  | MDCV (equivalent to VDSX) |
-| expect             | XPKT
+| allowed-values[@allow-other='yes']   |    |     |  |
+| matches/@regex     | MRCV | x | x |  | 
+| matches/@datatype  | MDCV (equivalent to VDSX) | | | x |
+| expect             | XPKT | | x | x |
 | has-cardinality    | HCCV | n/a | n/a |
 | is-unique          | UNIQ
 | index              | 
 | index-has-key      | NDXK
 
 exists($s) and empty($s[2])
+exists(key(...) except .)
 
 ```
 <xsl:variable name="m:is-singleton" as="function(*)"
@@ -40,7 +55,7 @@ exists($s) and empty($s[2])
 | allowed-values[@allow-other='yes']     |    |     |  |
 | matches/@regex     | id-naming-rule_1   | cpu-speed-rule_1   |
 | matches/@datatype  |     |     | manufacture-date-rule_3
-| expect             |     | **byte-size-test_1** memory-rule_1   | **manufacture-date-rule_2**
+| expect             |     | byte-size-test_1 memory-rule_1   | manufacture-date-rule_2
 | has-cardinality    | n/a | n/a |  |
 | is-unique          |     |     |  |
 | index              |     |     |  |
@@ -49,6 +64,8 @@ exists($s) and empty($s[2])
 for is-unique - generate key that matches targets using value
   ensure
      $sec :=key('keyname',$val,$scope) exists($seq) and empty($seq[2])
+
+to ensure coverage, find values of metaschema //constraint/*/@id among rule-id values in scenarios - each should have positive and negative tests
 
 tbd - markup-validation.xspec
 
