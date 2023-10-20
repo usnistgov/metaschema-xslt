@@ -21,7 +21,7 @@ That is, it combines the effective functionality of XML schema and Schematron (X
 - [x] Write reports to file system (lower ASCII, escaped HTML for emoji)
 - [x] Emit reports in native (MX) format, HTML or Markdown
 - [x] Compact mode returns a one-line answer
-- [x] Silent-if-valid mode returns validations only for files found invalid
+- [x] `silent-when-valid` mode returns validations only for files found invalid
 - [x] Run in batch, write reports to file(s)
   - [x] Using Saxon feature
   - [ ] Using XProc 
@@ -98,7 +98,12 @@ Saxon supports the excellent feature of processing an entire directory of inputs
 Especially when Markdown or HTML results are produced in batch with names matching the names of XML inputs, it can be useful to follow a directory-level operation with a global renaming of `.xml` to `-report.html` (or `-report.md` etc.). The many ways to do this including (in Linux systems) a bash script invoked inside a subshell:
 
 ```
-(cd reports && for f in $(ls *.xml); do mv $f ${f%.*}-report.html; done)?
+(cd reports && for f in $(ls *.xml); do mv $f ${f%.*}-report.html; done)
+```
+
+```
+(cd valid && for f in $(ls *.xml); do ./inspect-computer-md.sh -s:$f mode=concise; done)
+
 ```
 
 `reports` being the path to the directory where the misnamed files can be found.
@@ -106,10 +111,10 @@ Especially when Markdown or HTML results are produced in batch with names matchi
 Of course this also not the only way to automate the validation and reporting processes for efficiency over many inputs in one run.
 
 #### Scenarios calling Saxon
----
+
+Various different command-line options can modify operations, either using Saxon and runtime parameters directly, or through scripting.
 
 Having produced the XSLT `computer-inspector.xsl` for inspecting `computer` XML documents: **to validate a file** `invalid10.xml` ...
-
 
 ---
 
@@ -185,19 +190,40 @@ To **run over a set of files** in a folder named `to-validate` and produce resul
 saxon -xslt:computer-inspector.xsl -s:to-validate -o:reports
 ```
 
-Note - results are written for all files, valid and invalid, irrespective of findings. So even when `mode=silent-if-valid`, empty files is produced for a valid instances. See above for hints.
+Note - results are written for all files, valid and invalid, irrespective of findings. So even when `mode=silent-when-valid`, empty files is produced for a valid instances. See above for hints.
 
 ---
 
 To **report as files are found to be valid or invalid** to STDOUT, *additional* to producing reports.
 
-Use `mode=noisy` if you wish to see progress in the console even when directing results to file outputs. It will announce findings of both valid and invalid files, one line per file; so it is similar to `mode=concise` except it supplements instead of replaces the production of complete reports - so progress can be monitored as well as results can be written out. This mode cannot be used with `silent-if-valid` or `concise`.
+Use `mode=noisy` if you wish to see progress in the console even when directing results to file outputs. It will announce findings of both valid and invalid files, one line per file; so it is similar to `mode=concise` except it supplements instead of replaces the production of complete reports - so progress can be monitored as well as results can be written out. This mode cannot be used with `silent-when-valid` or `concise`.
 
 This feature is designed to be used when validating in batch and writing results to files. When validating a single file or not producing static results, consider using `mode=concise` instead (for example, to produce and see Markdown in the console).
 
 ```bash
 saxon -it:html -xslt:computer-inspector.xsl -s:invalid10.xml -o:invalid10-report.html mode=noisy
 ```
+
+---
+
+Alternatively, to **use bash to loop over one file at a time, collecting the outputs coming to STDOUT** to a file.
+
+With `mode=concise` we get one line per file.
+
+```bash
+(for f in $(ls collectionls /*.xml); do saxon -it:md -xslt:computer-inspector.xsl -s:$f mode=concise; done) 1> validated.txt
+```
+
+---
+
+Or running without `mode=concise` to **create a single Markdown report** (note result file name) - modes `noisy` or `silent-when-valid` are available :
+
+
+```bash
+(for f in $(ls collection/*.xml); do saxon -it:md -xslt:computer-inspector.xsl -s:$f mode=noisy; done) 1> validation-report.md
+```
+
+This time, all results are written in Markdown into the file `validation-report.md`, while `mode=noisy` provides progress indicators echoed to the console.
 
 ---
 
