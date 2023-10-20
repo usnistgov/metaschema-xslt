@@ -426,7 +426,7 @@ details p { margin: 0.2em 0em }
     <xsl:mode name="html-to-md" on-no-match="text-only-copy"/>
     
     <xsl:variable name="lf" as="xs:string"  expand-text="true">{ codepoints-to-string(10) }</xsl:variable>
-    <xsl:variable name="lf2" as="xs:string" expand-text="true">{$lf || $lf}</xsl:variable>
+    <xsl:variable name="lf2" as="xs:string" expand-text="true">{$lf || $lf[not($mode='compressed')]}</xsl:variable>
     
    <xsl:template mode="html-to-md" match="html" xpath-default-namespace="http://www.w3.org/1999/xhtml">
       <xsl:apply-templates mode="#current" select="body"/>
@@ -474,7 +474,7 @@ details p { margin: 0.2em 0em }
    </xsl:template>
    
    <xsl:template mode="html-to-md" match="ul" expand-text="true" xpath-default-namespace="http://www.w3.org/1999/xhtml">
-      <xsl:text>{ $lf }</xsl:text>
+      <xsl:text>{ $lf[not($mode='compressed')] }</xsl:text>
       <xsl:apply-templates mode="#current"/>
    </xsl:template>
    
