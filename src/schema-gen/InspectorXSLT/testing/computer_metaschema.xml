@@ -168,18 +168,21 @@
                     </define-assembly>
                 </model>
                <constraint>
-                  <expect target="." test="not(memory/byte-size != memory/byte-size)" id="memory-rule_1"><!-- All memory must all have the same byte-size--></expect>
+                  <expect target="." test="not(memory/byte-size != memory/byte-size)" id="memory-rule_1"/>
+                  <expect target="." test="not(count(memory) mod 2)" id="memory-rule_2"/><!-- there must be an even number of memory units-->
+                  <has-cardinality target="memory" id="memory-rule_3" min-occurs="2" max-occurs="10"/>
                </constraint>
             </define-assembly>
         </model>
        <constraint>
-          <allowed-values allow-other="yes" id="manufacture-date-rule_1" target="self::*[starts-with(@id,'A')]/@date-of-manufacture">
+          <allowed-values allow-other="yes" id="manufacture-date-rule_1" target="self::*[starts-with(@id,'April')]/@date-of-manufacture">
              <enum value="1980-04-01">Apr 1 1980</enum>
              <enum value="1981-04-01">Apr 1 1981</enum>
              <enum value="1982-04-01">Apr 1 1982</enum>
           </allowed-values>
           <expect id="manufacture-date-rule_2" target="@date-of-manufacture" test="not(. castable as xs:date) or (xs:date(.) >= xs:date('1950-01-01'))"/>
           <matches  id="manufacture-date-rule_3" target="@date-of-manufacture" datatype="date" level="WARNING" />
+          <has-cardinality target="expansion-card" max-occurs="4" id="expansion-card-rule_1"/>
        </constraint>
     </define-assembly>
     

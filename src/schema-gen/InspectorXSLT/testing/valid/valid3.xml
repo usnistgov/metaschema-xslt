@@ -29,16 +29,20 @@
            <product-name>SprocketSocket</product-name>
             <type>type1</type>
         </ata-socket>
-        <memory>
-            <vendor id="id9">
-                <name>name3</name>
-                <address>address3</address>
-                <website>http://pages.nist.gov/metaschema</website>
-            </vendor>
-            <product-name>product-name2</product-name>
-            <byte-size>512</byte-size>
-        </memory>
-        <expansion-card>
+       <memory>
+          <vendor id="id9">
+             <name>name3</name>
+             <address>address3</address>
+             <website>http://pages.nist.gov/metaschema</website>
+          </vendor>
+          <product-name>product-name2</product-name>
+          <byte-size>512</byte-size>
+       </memory>
+       <memory>
+          <product-name>product-name2</product-name>
+          <byte-size>512</byte-size>
+       </memory>
+       <expansion-card>
             <vendor id="id13">
                 <name>name5</name>
                 <address>address5</address>

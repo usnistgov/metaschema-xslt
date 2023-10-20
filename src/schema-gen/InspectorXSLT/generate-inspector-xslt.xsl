@@ -103,7 +103,7 @@
                <XSLT:param name="rule-id" as="xs:string*" select="()"/>
                <XSLT:param name="class" as="xs:string">VDSX violates-datatype-syntax</XSLT:param>
                <XSLT:param name="matching" as="xs:string?" select="()"/>
-               <xsl:variable name="test" as="xs:string?" expand-text="true">
+               <xsl:variable name="assert" as="xs:string?" expand-text="true">
                   <xsl:apply-templates select="key('simpleType-by-name', $simpleType-name, $type-definitions)"
                      mode="datatype-test">
                      <xsl:with-param name="as-type-name" select="$this-type"/>
@@ -114,8 +114,8 @@
                   <XSLT:with-param name="rule-id" as="xs:string*" select="$rule-id"/>
                   <XSLT:with-param name="matching" as="xs:string" select="($matching[matches(.,'\S')],'*')[1]"/>
                   <XSLT:with-param name="class" as="xs:string" expand-text="true">{{ $class }}</XSLT:with-param>
-                  <XSLT:with-param name="testing" as="xs:string">not({$test})</XSLT:with-param>
-                  <XSLT:with-param name="condition" select="not({$test})"/>
+                  <XSLT:with-param name="testing" as="xs:string">not({$assert})</XSLT:with-param>
+                  <XSLT:with-param name="condition" select="not({$assert})"/>
                   <XSLT:with-param name="msg" expand-text="true"><mx:gi>{{ name(.) }}</mx:gi> value <mx:code>{{ string(.) }}</mx:code> does not conform to <mx:code>{ $this-type }</mx:code> datatype.</XSLT:with-param>
                </XSLT:call-template>
             </XSLT:template>
@@ -195,7 +195,7 @@
 
          <XSLT:apply-templates select="@*" mode="test"/>
          <XSLT:call-template name="require-for-{ mx:definition-name(.) }-assembly"/>
-
+         <XSLT:apply-templates select="." mode="constraint-cascade"/>
       </XSLT:template>
       <xsl:apply-templates select="constraint" mode="generate-constraint-cascade">
          <xsl:with-param name="matching" as="xs:string+" tunnel="true" select="$matching"/>
@@ -515,7 +515,7 @@
 
          <xsl:variable name="values" select="enum/@value"/>
          <xsl:variable name="value-sequence" select="($values ! ('''' || . || '''')) => string-join(',')"/>
-         <xsl:variable name="test" as="xs:string" expand-text="true">.=({$value-sequence})</xsl:variable>
+         <xsl:variable name="assert" as="xs:string" expand-text="true">.=({$value-sequence})</xsl:variable>
          <!-- test is not type-safe -->
          <xsl:variable name="allowing-others" select="@allow-other = 'yes'"/>
          <XSLT:call-template name="notice">
@@ -523,8 +523,8 @@
             <XSLT:with-param name="rule-id">{ @id }</XSLT:with-param>
             <XSLT:with-param name="matching" as="xs:string">{ $target-match }</XSLT:with-param>
             <XSLT:with-param name="class">AVCV value-not-allowed</XSLT:with-param>
-            <XSLT:with-param name="testing" as="xs:string">not({$test})</XSLT:with-param>
-            <XSLT:with-param name="condition" select="not({$test})"/>
+            <XSLT:with-param name="testing" as="xs:string">not({$assert})</XSLT:with-param>
+            <XSLT:with-param name="condition" select="not({$assert})"/>
             <XSLT:with-param name="msg" expand-text="true"><mx:code>{{ string(.) }}</mx:code>{{ .[not(string(.))] ! ' (empty)' }} does not appear among permitted (enumerated) values for <mx:gi>{{ name() }}</mx:gi>: <mx:code>{ $values => string-join('|') }</mx:code>.</XSLT:with-param>
             <XSLT:with-param name="level" select="'{ (@level,'WARNING'[$allowing-others],'ERROR')[1] }'"/>
          </XSLT:call-template>
@@ -553,14 +553,14 @@
             </XSLT:call-template>
          </xsl:for-each>
          <xsl:for-each select="@regex">
-            <xsl:variable name="test" expand-text="true">matches(., '^{.}$')</xsl:variable>
+            <xsl:variable name="assert" expand-text="true">matches(., '^{.}$')</xsl:variable>
             <XSLT:call-template name="notice">
                <XSLT:with-param name="cf">gix.558</XSLT:with-param>
                <XSLT:with-param name="rule-id">{ parent::matches/@id }</XSLT:with-param>
                <XSLT:with-param name="matching" as="xs:string">{ $target-match }</XSLT:with-param>
                <XSLT:with-param name="class">MRCV regex-match-fail</XSLT:with-param>
-               <XSLT:with-param name="testing" as="xs:string">not( {$test} )</XSLT:with-param>
-               <XSLT:with-param name="condition" select="not({$test})"/>
+               <XSLT:with-param name="testing" as="xs:string">not({$assert})</XSLT:with-param>
+               <XSLT:with-param name="condition" select="not({$assert})"/>
                <XSLT:with-param name="msg" expand-text="true"><mx:code>{{ string(.) }}</mx:code>{{ string(.)[not(.)] ! ' (empty)' }} does not match the regular expression defined for this <mx:gi>{{ name() }}</mx:gi>: <mx:code>{ . }</mx:code>.</XSLT:with-param>
             </XSLT:call-template>
          </xsl:for-each>
@@ -577,27 +577,53 @@
       <xsl:variable name="target-step" expand-text="true">{ @target[not(matches(.,'\s*\.\s*'))] ! ('/(' || . || ')')
          }</xsl:variable>
       <xsl:variable name="target-match" select="($matching ! (. || $target-step)) => string-join(' | ')"/>
+      <xsl:variable name="assert" expand-text="true">{ @test }</xsl:variable>
       <xsl:message expand-text="true">matching {name()}{ @id ! ('[@id=' || . || ']')} with match={ $target-match } to make template in mode constraint-cascade, priority {  ($constraint-count + 101) - number($priority)} </xsl:message>
       <XSLT:template priority="{ ($constraint-count + 101) - number($priority) }" mode="constraint-cascade"
          match="{ $target-match }">
          
          <!--<xsl:variable name="test" as="xs:string" expand-text="true">{ @test }</xsl:variable>-->
          <!-- test is not type-safe -->
-         <xsl:variable name="allowing-others" select="@allow-other = 'yes'"/>
          <XSLT:call-template name="notice">
             <XSLT:with-param name="cf">gix.588</XSLT:with-param>
             <XSLT:with-param name="rule-id">{ @id }</XSLT:with-param>
             <XSLT:with-param name="matching" as="xs:string">{ $target-match }</XSLT:with-param>
             <XSLT:with-param name="class">XPKT expectation-violation</XSLT:with-param>
-            <XSLT:with-param name="testing" as="xs:string">not({@test})</XSLT:with-param>
-            <XSLT:with-param name="condition" select="not({@test})"/>
+            <XSLT:with-param name="testing" as="xs:string">not({$assert})</XSLT:with-param>
+            <XSLT:with-param name="condition" select="not({$assert})"/>
             <XSLT:with-param name="msg" expand-text="true">Expression result for <mx:gi>{ $target-match }</mx:gi> does not conform to expectation <mx:code>{@test}</mx:code>.</XSLT:with-param>
          </XSLT:call-template>
          <XSLT:next-match/>
       </XSLT:template>
    </xsl:template>
-
-
+   
+   <xsl:template mode="generate-constraint-cascade" priority="10" match="constraint/has-cardinality" expand-text="true">
+      <xsl:param name="matching" as="xs:string+" required="true" tunnel="true"/>
+      <xsl:variable name="priority">
+         <xsl:number count="constraint/*" level="any" format="10001"/>
+      </xsl:variable>
+      <xsl:variable name="count-expr" as="xs:string">count({ @target })</xsl:variable>
+      <xsl:variable name="assert" expand-text="true">{
+         (@min-occurs ! ($count-expr || ' ge ' || .),'true()')[1] } and {
+         (@max-occurs ! ($count-expr || ' le ' || .),'true()')[1] }</xsl:variable>
+      <xsl:message expand-text="true">matching {name()}{ @id ! ('[@id=' || . || ']')} with match={ $matching } to make template in mode constraint-cascade, priority {  ($constraint-count + 101) - number($priority)} </xsl:message>
+      <XSLT:template priority="{ ($constraint-count + 101) - number($priority) }" mode="constraint-cascade"
+         match="{ $matching }">
+         <!-- test is not type-safe -->
+         <XSLT:call-template name="notice">
+            <XSLT:with-param name="cf">gix.588</XSLT:with-param>
+            <XSLT:with-param name="rule-id">{ @id }</XSLT:with-param>
+            <XSLT:with-param name="matching" as="xs:string">{ $matching }</XSLT:with-param>
+            <XSLT:with-param name="class">HCCV cardinality-violation</XSLT:with-param>
+            <XSLT:with-param name="testing" as="xs:string">not({$assert})</XSLT:with-param>
+            <XSLT:with-param name="condition" select="not({$assert})"/>
+            <XSLT:with-param name="msg" expand-text="true">Counting <mx:gi>{ @target }</mx:gi> under <mx:code>{ $matching }</mx:code> finds {{{$count-expr}}} - expecting { @min-occurs ! ('at least ' || . || (../@max-occurs !', ')) }{ @max-occurs ! ('no more than ' || .) }.</XSLT:with-param>
+         </XSLT:call-template>
+         <XSLT:next-match/>
+      </XSLT:template>
+   </xsl:template>
+   
+   
    <xsl:template mode="require-for" match="define-flag" expand-text="true">
       <XSLT:template name="require-for-{ mx:definition-name(.) }-flag">
          <!--<XSLT:param tunnel="true" name="matching" as="xs:string">{ (use-name,@name)[1] }</XSLT:param>-->

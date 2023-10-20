@@ -28,15 +28,19 @@
         </ata-socket>
         <memory>
             <product-name>product-name2</product-name>
-            <byte-size>256</byte-size>
+            <byte-size>512</byte-size>
         </memory>
        <memory>
           <product-name>product-name4</product-name>
-          <byte-size>256</byte-size>
+          <byte-size>512</byte-size>
        </memory>
        <memory>
           <product-name>product-name4</product-name>
-          <byte-size>256</byte-size>
+          <byte-size>512</byte-size>
+       </memory>
+       <memory>
+          <product-name>product-name4</product-name>
+          <byte-size>512</byte-size>
        </memory>
         <cooling>
             <water illuminated="true"/>

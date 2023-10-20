@@ -237,8 +237,11 @@ An example script calling the XSLT pipeline (thus requiring only Saxon, not XML 
 
 ### Usability enhancements
 
-- Report match pattern on constraints checking
-- Carry constraint ID
+- [x] Report match pattern on constraints checking
+- [x] Carry constraint ID
+- [ ] filter results
+
+
 
 ### Functional enhancements
 
@@ -280,6 +283,6 @@ notes - combinatorial allowed-values implementation
 inspector XSLT carries a template cascade
 - it reports back both values and IDs
 - the cascade overloads priority="100" for competing `allowed-values`
-  mode has on-multiple-match="use-last"
+  mode has on-multiple-match="use-last" so that they can be made (purposefully) to compete (last wins)
   - these must all be identical so an effective no-op when redundant
   - any/each of which (only one of them being used under use-last) pulls the entire collection of values/IDs matching this node
