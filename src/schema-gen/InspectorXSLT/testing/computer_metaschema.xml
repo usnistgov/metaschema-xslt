@@ -41,6 +41,7 @@
         <description>A container object for a computer, its parts, and its sub-parts.</description>
         <root-name>computer</root-name>
        <flag ref="date-of-manufacture" required="no"/>
+       <flag ref="serial-number"/>
        
        <define-flag name="id" as-type="string" required="yes">
             <formal-name>Computer Identifier</formal-name>
@@ -58,6 +59,7 @@
             <define-assembly name="motherboard">
                 <formal-name>Motherboard Assembly</formal-name>
                 <description>A container object for a motherboard in a computer and its sub-parts.</description>
+                <flag ref="serial-number"/>
                 <model>
                     <assembly ref="vendor"/>
                     <define-field name="type" as-type="string" min-occurs="1" max-occurs="1">
@@ -146,6 +148,7 @@
                         <formal-name>Motherboard Expansion Card</formal-name>
                         <description>The model number of an expansion card connected to the motherboard of a computer.</description>
                         <group-as name="expansion-cards" in-json="ARRAY"/>
+                       <flag ref="serial-number"/>
                        <define-flag name="state">
                           <formal-name>Card state</formal-name>
                           <description>If tested or prepackaged, the state of an expansion card may be known.</description>
@@ -183,12 +186,22 @@
           <expect id="manufacture-date-rule_2" target="@date-of-manufacture" test="not(. castable as xs:date) or (xs:date(.) >= xs:date('1950-01-01'))"/>
           <matches  id="manufacture-date-rule_3" target="@date-of-manufacture" datatype="date" level="WARNING" />
           <has-cardinality target="expansion-card" max-occurs="4" id="expansion-card-rule_1"/>
+          <!--<is-unique target="//*" id="unique-serial-numbers">
+             <key-field target="@sn"/>
+          </is-unique>-->
        </constraint>
     </define-assembly>
     
+    <define-flag name="serial-number">
+       <formal-name>Serial Number</formal-name>
+       <description>A code for this item only.</description>
+       <use-name>sn</use-name>
+    </define-flag>
+   
     <define-assembly name="cooling">
         <formal-name>Cooling</formal-name>
         <description>How the computer cools itself.</description>
+        <flag ref="serial-number"/>
         <model>
             <choice><!-- modeled as a choice here: multiple fans, or water. -->
                 <define-assembly name="fan" min-occurs="2" max-occurs="12">

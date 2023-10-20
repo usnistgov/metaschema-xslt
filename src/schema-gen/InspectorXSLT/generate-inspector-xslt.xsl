@@ -9,11 +9,19 @@
    <xsl:output indent="yes" encoding="us-ascii"/>
    <!-- pushing out upper ASCII using entity notation -->
 
+   <xsl:namespace-alias stylesheet-prefix="XSLT" result-prefix="xsl"/>
+   
    <!-- Maintaining the boilerplate out of line makes it easier to test and lint. -->
    <xsl:variable name="XSLT-template" as="document-node()" select="document('apply-validator.xsl')"/>
 
-   <xsl:namespace-alias stylesheet-prefix="XSLT" result-prefix="xsl"/>
-
+   <xsl:variable name="metaschema-repository" as="xs:string">../../../support/metaschema</xsl:variable>
+   
+   <xsl:variable name="atomictype-modules" as="element()*" expand-text="true">
+      <module>{$metaschema-repository}/schema/xml/metaschema-datatypes.xsd</module>
+   </xsl:variable>
+   
+   <xsl:variable name="type-definitions" select="document($atomictype-modules)"/>
+   
    <xsl:template match="/*">
       <XSLT:transform version="3.0" xpath-default-namespace="{ /METASCHEMA/namespace }" exclude-result-prefixes="#all">
 
@@ -72,7 +80,7 @@
             <XSLT:call-template name="notice">
                <XSLT:with-param name="cf" as="xs:string">gix.73</XSLT:with-param>
                <XSLT:with-param name="class">EOOP element-out-of-place</XSLT:with-param>
-               <XSLT:with-param name="msg" expand-text="true"><mx:gi>{ name() }</mx:gi> is not permitted here.</XSLT:with-param>
+               <XSLT:with-param name="msg" expand-text="true">Element <mx:gi>{ name() }</mx:gi> is not permitted here.</XSLT:with-param>
             </XSLT:call-template>
          </XSLT:template>
          <xsl:variable name="known-attributes"
@@ -81,7 +89,7 @@
             <XSLT:call-template name="notice">
                <XSLT:with-param name="cf" as="xs:string">gix.82</XSLT:with-param>
                <XSLT:with-param name="class">AOOP attribute-out-of-place</XSLT:with-param>
-               <XSLT:with-param name="msg" expand-text="true"><mx:gi>@{ name() }</mx:gi> is not permitted here.</XSLT:with-param>
+               <XSLT:with-param name="msg" expand-text="true">Attribute <mx:gi>@{ name() }</mx:gi> is not permitted here.</XSLT:with-param>
             </XSLT:call-template>
          </XSLT:template>
 
@@ -116,7 +124,7 @@
                   <XSLT:with-param name="class" as="xs:string" expand-text="true">{{ $class }}</XSLT:with-param>
                   <XSLT:with-param name="testing" as="xs:string">not({$assert})</XSLT:with-param>
                   <XSLT:with-param name="condition" select="not({$assert})"/>
-                  <XSLT:with-param name="msg" expand-text="true"><mx:gi>{{ name(.) }}</mx:gi> value <mx:code>{{ string(.) }}</mx:code> does not conform to <mx:code>{ $this-type }</mx:code> datatype.</XSLT:with-param>
+                  <XSLT:with-param name="msg" expand-text="true">Value <mx:code>{{ string(.) }}</mx:code> of {{ if (self::element()) then 'element' else 'attribute' }} <mx:gi>{{ self::attribute()/'@' }}{{ name(.) }}</mx:gi> does not conform to <mx:code>{ $this-type }</mx:code> datatype.</XSLT:with-param>
                </XSLT:call-template>
             </XSLT:template>
          </xsl:iterate>
@@ -293,7 +301,7 @@
             <XSLT:with-param name="class">EATI element-appears-too-infrequently</XSLT:with-param>
             <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
             <XSLT:with-param name="condition" select="{$test}"/>
-            <XSLT:with-param name="msg"><mx:gi>{ mx:use-name(.) }</mx:gi> appears too few times: { $min } minimum are required.</XSLT:with-param>
+            <XSLT:with-param name="msg">Element <mx:gi>{ mx:use-name(.) }</mx:gi> appears too few times: { $min } minimum are required.</XSLT:with-param>
          </XSLT:call-template>
       </xsl:if>
       <xsl:if test="not(@max-occurs = 'unbounded')">
@@ -304,7 +312,7 @@
             <XSLT:with-param name="class">EATO element-appears-too-often</XSLT:with-param>
             <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
             <XSLT:with-param name="condition" select="{$test}"/>
-            <XSLT:with-param name="msg"><mx:gi>{ mx:use-name(.) }</mx:gi> appears too many times: { $max } maximum { if
+            <XSLT:with-param name="msg">Element <mx:gi>{ mx:use-name(.) }</mx:gi> appears too many times: { $max } maximum { if
                ($max eq 1) then 'is' else 'are' } permitted.</XSLT:with-param>
          </XSLT:call-template>
       </xsl:if>
@@ -319,8 +327,7 @@
             <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
             <XSLT:with-param name="condition" select="{$test}"/>
             <XSLT:with-param name="class">VEXC violates-exclusive-choice</XSLT:with-param>
-            <XSLT:with-param name="msg">
-               <mx:gi>{ mx:use-name(.) }</mx:gi>
+            <XSLT:with-param name="msg">Element <mx:gi>{ mx:use-name(.) }</mx:gi>
                <xsl:text> is unexpected along with </xsl:text>
                <xsl:call-template name="punctuate-or-code-sequence">
                   <xsl:with-param name="items" select="$alternatives"/>
@@ -348,8 +355,7 @@
             <XSLT:with-param name="class">EOOO element-out-of-order</XSLT:with-param>
             <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
             <XSLT:with-param name="condition" select="{$test}"/>
-            <XSLT:with-param name="msg">
-               <mx:gi>{ mx:use-name(.) }</mx:gi>
+            <XSLT:with-param name="msg">Element <mx:gi>{ mx:use-name(.) }</mx:gi>
                <xsl:text> is unexpected following </xsl:text>
                <xsl:call-template name="punctuate-or-code-sequence">
                   <xsl:with-param name="items" select="$followers"/>
@@ -416,7 +422,7 @@
                <XSLT:with-param name="class">MRQC missing-required-contents</XSLT:with-param>
                <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
                <XSLT:with-param name="condition" select="{$test}"/>
-               <XSLT:with-param name="msg" expand-text="true"><mx:gi>{{ name() }}</mx:gi> requires element <mx:gi>{ $requiring
+               <XSLT:with-param name="msg" expand-text="true">Element <mx:gi>{{ name() }}</mx:gi> requires element <mx:gi>{ $requiring
                      }</mx:gi>.</XSLT:with-param>
             </XSLT:call-template>
          </xsl:for-each>
@@ -525,7 +531,7 @@
             <XSLT:with-param name="class">AVCV value-not-allowed</XSLT:with-param>
             <XSLT:with-param name="testing" as="xs:string">not({$assert})</XSLT:with-param>
             <XSLT:with-param name="condition" select="not({$assert})"/>
-            <XSLT:with-param name="msg" expand-text="true"><mx:code>{{ string(.) }}</mx:code>{{ .[not(string(.))] ! ' (empty)' }} does not appear among permitted (enumerated) values for <mx:gi>{{ name() }}</mx:gi>: <mx:code>{ $values => string-join('|') }</mx:code>.</XSLT:with-param>
+            <XSLT:with-param name="msg" expand-text="true">Value <mx:code>{{ string(.) }}</mx:code>{{ .[not(string(.))] ! ' (empty)' }} does not appear among permissible (enumerated) values for this <mx:gi>{{ name() }}</mx:gi>: <mx:code>{ $values => string-join('|') }</mx:code>.</XSLT:with-param>
             <XSLT:with-param name="level" select="'{ (@level,'WARNING'[$allowing-others],'ERROR')[1] }'"/>
          </XSLT:call-template>
 
@@ -644,7 +650,7 @@
             <XSLT:with-param name="class">MRQA missing-required-attribute</XSLT:with-param>
             <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
             <XSLT:with-param name="condition" select="{$test}"/>
-            <XSLT:with-param name="msg" expand-text="true"><mx:gi>{{ name() }}</mx:gi> requires <mx:gi>@{ $requiring }</mx:gi>.</XSLT:with-param>
+            <XSLT:with-param name="msg" expand-text="true">Element <mx:gi>{{ name() }}</mx:gi> requires attribute <mx:gi>@{ $requiring }</mx:gi>.</XSLT:with-param>
          </XSLT:call-template>
       </xsl:for-each>
    </xsl:template>
@@ -685,16 +691,6 @@
       <type prefer="non-negative-integer" as-type="nonNegativeInteger">NonNegativeIntegerDatatype</type>
       <type prefer="positive-integer" as-type="positiveInteger">PositiveIntegerDatatype</type>
    </xsl:variable>
-
-
-   <xsl:variable name="metaschema-repository" as="xs:string">../../../support/metaschema</xsl:variable>
-
-   <xsl:variable name="atomictype-modules" as="element()*" expand-text="true">
-      <module>{$metaschema-repository}/schema/xml/metaschema-datatypes.xsd</module>
-   </xsl:variable>
-
-   <xsl:variable name="type-definitions" select="document($atomictype-modules)"/>
-
 
 
    <xsl:mode name="datatype-test" on-no-match="shallow-skip"/>

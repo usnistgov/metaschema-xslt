@@ -5,7 +5,7 @@
                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                version="3.0"
                xpath-default-namespace="http://example.com/ns/computer"
-               exclude-result-prefixes="#all"><!-- Generated 2023-10-20T14:21:58.1525964-04:00 -->
+               exclude-result-prefixes="#all"><!-- Generated 2023-10-20T16:29:34.1461133-04:00 -->
    <xsl:mode on-no-match="fail"/>
    <xsl:mode name="test" on-no-match="shallow-skip"/>
    <!-- .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     . -->
@@ -520,8 +520,7 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="testing" as="xs:string">not(.=('1980-04-01','1981-04-01','1982-04-01'))</xsl:with-param>
          <xsl:with-param name="condition"
                          select="not(.=('1980-04-01','1981-04-01','1982-04-01'))"/>
-         <xsl:with-param name="msg" expand-text="true">
-            <mx:code>{ string(.) }</mx:code>{ .[not(string(.))] ! ' (empty)' } does not appear among permitted (enumerated) values for <mx:gi>{ name() }</mx:gi>: <mx:code>1980-04-01|1981-04-01|1982-04-01</mx:code>.</xsl:with-param>
+         <xsl:with-param name="msg" expand-text="true">Value <mx:code>{ string(.) }</mx:code>{ .[not(string(.))] ! ' (empty)' } does not appear among permissible (enumerated) values for this <mx:gi>{ name() }</mx:gi>: <mx:code>1980-04-01|1981-04-01|1982-04-01</mx:code>.</xsl:with-param>
          <xsl:with-param name="level" select="'WARNING'"/>
       </xsl:call-template>
       <xsl:next-match/>
@@ -573,8 +572,7 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="class">EATO element-appears-too-often</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::vendor) gt 1</xsl:with-param>
          <xsl:with-param name="condition" select="count(. | preceding-sibling::vendor) gt 1"/>
-         <xsl:with-param name="msg">
-            <mx:gi>vendor</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
+         <xsl:with-param name="msg">Element <mx:gi>vendor</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.347</xsl:with-param>
@@ -582,8 +580,7 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::type | preceding-sibling::cpu | preceding-sibling::ata-socket | preceding-sibling::memory | preceding-sibling::cooling | preceding-sibling::expansion-card)</xsl:with-param>
          <xsl:with-param name="condition"
                          select="exists(preceding-sibling::type | preceding-sibling::cpu | preceding-sibling::ata-socket | preceding-sibling::memory | preceding-sibling::cooling | preceding-sibling::expansion-card)"/>
-         <xsl:with-param name="msg">
-            <mx:gi>vendor</mx:gi> is unexpected following <mx:gi>type</mx:gi>, <mx:gi>cpu</mx:gi>, <mx:gi>ata-socket</mx:gi>, <mx:gi>memory</mx:gi>, <mx:gi>cooling</mx:gi>, or <mx:gi>expansion-card</mx:gi>.</xsl:with-param>
+         <xsl:with-param name="msg">Element <mx:gi>vendor</mx:gi> is unexpected following <mx:gi>type</mx:gi>, <mx:gi>cpu</mx:gi>, <mx:gi>ata-socket</mx:gi>, <mx:gi>memory</mx:gi>, <mx:gi>cooling</mx:gi>, or <mx:gi>expansion-card</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-vendor-assembly"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
@@ -595,8 +592,7 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="class">EATO element-appears-too-often</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::vendor) gt 1</xsl:with-param>
          <xsl:with-param name="condition" select="count(. | preceding-sibling::vendor) gt 1"/>
-         <xsl:with-param name="msg">
-            <mx:gi>vendor</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
+         <xsl:with-param name="msg">Element <mx:gi>vendor</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.347</xsl:with-param>
@@ -604,8 +600,7 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::product-name | preceding-sibling::architecture | preceding-sibling::speed)</xsl:with-param>
          <xsl:with-param name="condition"
                          select="exists(preceding-sibling::product-name | preceding-sibling::architecture | preceding-sibling::speed)"/>
-         <xsl:with-param name="msg">
-            <mx:gi>vendor</mx:gi> is unexpected following <mx:gi>product-name</mx:gi>, <mx:gi>architecture</mx:gi>, or <mx:gi>speed</mx:gi>.</xsl:with-param>
+         <xsl:with-param name="msg">Element <mx:gi>vendor</mx:gi> is unexpected following <mx:gi>product-name</mx:gi>, <mx:gi>architecture</mx:gi>, or <mx:gi>speed</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-vendor-assembly"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
@@ -617,8 +612,7 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="class">EATO element-appears-too-often</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::vendor) gt 1</xsl:with-param>
          <xsl:with-param name="condition" select="count(. | preceding-sibling::vendor) gt 1"/>
-         <xsl:with-param name="msg">
-            <mx:gi>vendor</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
+         <xsl:with-param name="msg">Element <mx:gi>vendor</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.347</xsl:with-param>
@@ -626,8 +620,7 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::product-name | preceding-sibling::type)</xsl:with-param>
          <xsl:with-param name="condition"
                          select="exists(preceding-sibling::product-name | preceding-sibling::type)"/>
-         <xsl:with-param name="msg">
-            <mx:gi>vendor</mx:gi> is unexpected following <mx:gi>product-name</mx:gi> or <mx:gi>type</mx:gi>.</xsl:with-param>
+         <xsl:with-param name="msg">Element <mx:gi>vendor</mx:gi> is unexpected following <mx:gi>product-name</mx:gi> or <mx:gi>type</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-vendor-assembly"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
@@ -639,8 +632,7 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="class">EATO element-appears-too-often</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::vendor) gt 1</xsl:with-param>
          <xsl:with-param name="condition" select="count(. | preceding-sibling::vendor) gt 1"/>
-         <xsl:with-param name="msg">
-            <mx:gi>vendor</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
+         <xsl:with-param name="msg">Element <mx:gi>vendor</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.347</xsl:with-param>
@@ -648,8 +640,7 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::product-name | preceding-sibling::byte-size)</xsl:with-param>
          <xsl:with-param name="condition"
                          select="exists(preceding-sibling::product-name | preceding-sibling::byte-size)"/>
-         <xsl:with-param name="msg">
-            <mx:gi>vendor</mx:gi> is unexpected following <mx:gi>product-name</mx:gi> or <mx:gi>byte-size</mx:gi>.</xsl:with-param>
+         <xsl:with-param name="msg">Element <mx:gi>vendor</mx:gi> is unexpected following <mx:gi>product-name</mx:gi> or <mx:gi>byte-size</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-vendor-assembly"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
@@ -661,16 +652,14 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="class">EATO element-appears-too-often</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::cooling) gt 1</xsl:with-param>
          <xsl:with-param name="condition" select="count(. | preceding-sibling::cooling) gt 1"/>
-         <xsl:with-param name="msg">
-            <mx:gi>cooling</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
+         <xsl:with-param name="msg">Element <mx:gi>cooling</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.347</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::expansion-card)</xsl:with-param>
          <xsl:with-param name="condition" select="exists(preceding-sibling::expansion-card)"/>
-         <xsl:with-param name="msg">
-            <mx:gi>cooling</mx:gi> is unexpected following <mx:gi>expansion-card</mx:gi>.</xsl:with-param>
+         <xsl:with-param name="msg">Element <mx:gi>cooling</mx:gi> is unexpected following <mx:gi>expansion-card</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-cooling-assembly"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
@@ -682,8 +671,7 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="class">EATO element-appears-too-often</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::vendor) gt 1</xsl:with-param>
          <xsl:with-param name="condition" select="count(. | preceding-sibling::vendor) gt 1"/>
-         <xsl:with-param name="msg">
-            <mx:gi>vendor</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
+         <xsl:with-param name="msg">Element <mx:gi>vendor</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.347</xsl:with-param>
@@ -691,8 +679,7 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::product-name | preceding-sibling::type)</xsl:with-param>
          <xsl:with-param name="condition"
                          select="exists(preceding-sibling::product-name | preceding-sibling::type)"/>
-         <xsl:with-param name="msg">
-            <mx:gi>vendor</mx:gi> is unexpected following <mx:gi>product-name</mx:gi> or <mx:gi>type</mx:gi>.</xsl:with-param>
+         <xsl:with-param name="msg">Element <mx:gi>vendor</mx:gi> is unexpected following <mx:gi>product-name</mx:gi> or <mx:gi>type</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-vendor-assembly"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
@@ -705,8 +692,7 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::motherboard) gt 1</xsl:with-param>
          <xsl:with-param name="condition"
                          select="count(. | preceding-sibling::motherboard) gt 1"/>
-         <xsl:with-param name="msg">
-            <mx:gi>motherboard</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
+         <xsl:with-param name="msg">Element <mx:gi>motherboard</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-computer_..._motherboard-assembly"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
@@ -762,8 +748,7 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="class">EATO element-appears-too-often</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::cpu) gt 1</xsl:with-param>
          <xsl:with-param name="condition" select="count(. | preceding-sibling::cpu) gt 1"/>
-         <xsl:with-param name="msg">
-            <mx:gi>cpu</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
+         <xsl:with-param name="msg">Element <mx:gi>cpu</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.347</xsl:with-param>
@@ -771,8 +756,7 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::ata-socket | preceding-sibling::memory | preceding-sibling::cooling | preceding-sibling::expansion-card)</xsl:with-param>
          <xsl:with-param name="condition"
                          select="exists(preceding-sibling::ata-socket | preceding-sibling::memory | preceding-sibling::cooling | preceding-sibling::expansion-card)"/>
-         <xsl:with-param name="msg">
-            <mx:gi>cpu</mx:gi> is unexpected following <mx:gi>ata-socket</mx:gi>, <mx:gi>memory</mx:gi>, <mx:gi>cooling</mx:gi>, or <mx:gi>expansion-card</mx:gi>.</xsl:with-param>
+         <xsl:with-param name="msg">Element <mx:gi>cpu</mx:gi> is unexpected following <mx:gi>ata-socket</mx:gi>, <mx:gi>memory</mx:gi>, <mx:gi>cooling</mx:gi>, or <mx:gi>expansion-card</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-computer_..._motherboard_..._cpu-assembly"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
@@ -784,8 +768,7 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="class">EATO element-appears-too-often</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::ata-socket) gt 1</xsl:with-param>
          <xsl:with-param name="condition" select="count(. | preceding-sibling::ata-socket) gt 1"/>
-         <xsl:with-param name="msg">
-            <mx:gi>ata-socket</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
+         <xsl:with-param name="msg">Element <mx:gi>ata-socket</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.347</xsl:with-param>
@@ -793,8 +776,7 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::memory | preceding-sibling::cooling | preceding-sibling::expansion-card)</xsl:with-param>
          <xsl:with-param name="condition"
                          select="exists(preceding-sibling::memory | preceding-sibling::cooling | preceding-sibling::expansion-card)"/>
-         <xsl:with-param name="msg">
-            <mx:gi>ata-socket</mx:gi> is unexpected following <mx:gi>memory</mx:gi>, <mx:gi>cooling</mx:gi>, or <mx:gi>expansion-card</mx:gi>.</xsl:with-param>
+         <xsl:with-param name="msg">Element <mx:gi>ata-socket</mx:gi> is unexpected following <mx:gi>memory</mx:gi>, <mx:gi>cooling</mx:gi>, or <mx:gi>expansion-card</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-computer_..._motherboard_..._ata-socket-assembly"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
@@ -810,8 +792,7 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="testing" as="xs:string">not(.=('Socketeer I','Socketeer II','LampSocket socket','MiniSock Deux','SprocketSocket','[Unlisted Socket Product]'))</xsl:with-param>
          <xsl:with-param name="condition"
                          select="not(.=('Socketeer I','Socketeer II','LampSocket socket','MiniSock Deux','SprocketSocket','[Unlisted Socket Product]'))"/>
-         <xsl:with-param name="msg" expand-text="true">
-            <mx:code>{ string(.) }</mx:code>{ .[not(string(.))] ! ' (empty)' } does not appear among permitted (enumerated) values for <mx:gi>{ name() }</mx:gi>: <mx:code>Socketeer I|Socketeer II|LampSocket socket|MiniSock Deux|SprocketSocket|[Unlisted Socket Product]</mx:code>.</xsl:with-param>
+         <xsl:with-param name="msg" expand-text="true">Value <mx:code>{ string(.) }</mx:code>{ .[not(string(.))] ! ' (empty)' } does not appear among permissible (enumerated) values for this <mx:gi>{ name() }</mx:gi>: <mx:code>Socketeer I|Socketeer II|LampSocket socket|MiniSock Deux|SprocketSocket|[Unlisted Socket Product]</mx:code>.</xsl:with-param>
          <xsl:with-param name="level" select="'ERROR'"/>
       </xsl:call-template>
       <xsl:next-match/>
@@ -827,8 +808,7 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="testing" as="xs:string">not(.=('Socketeer','LampSocket','MiniSock','SprocketSocket','[Unlisted Socket Vendor]'))</xsl:with-param>
          <xsl:with-param name="condition"
                          select="not(.=('Socketeer','LampSocket','MiniSock','SprocketSocket','[Unlisted Socket Vendor]'))"/>
-         <xsl:with-param name="msg" expand-text="true">
-            <mx:code>{ string(.) }</mx:code>{ .[not(string(.))] ! ' (empty)' } does not appear among permitted (enumerated) values for <mx:gi>{ name() }</mx:gi>: <mx:code>Socketeer|LampSocket|MiniSock|SprocketSocket|[Unlisted Socket Vendor]</mx:code>.</xsl:with-param>
+         <xsl:with-param name="msg" expand-text="true">Value <mx:code>{ string(.) }</mx:code>{ .[not(string(.))] ! ' (empty)' } does not appear among permissible (enumerated) values for this <mx:gi>{ name() }</mx:gi>: <mx:code>Socketeer|LampSocket|MiniSock|SprocketSocket|[Unlisted Socket Vendor]</mx:code>.</xsl:with-param>
          <xsl:with-param name="level" select="'ERROR'"/>
       </xsl:call-template>
       <xsl:next-match/>
@@ -843,8 +823,7 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="class">AVCV value-not-allowed</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">not(.=('Socketeer I','Socketeer II'))</xsl:with-param>
          <xsl:with-param name="condition" select="not(.=('Socketeer I','Socketeer II'))"/>
-         <xsl:with-param name="msg" expand-text="true">
-            <mx:code>{ string(.) }</mx:code>{ .[not(string(.))] ! ' (empty)' } does not appear among permitted (enumerated) values for <mx:gi>{ name() }</mx:gi>: <mx:code>Socketeer I|Socketeer II</mx:code>.</xsl:with-param>
+         <xsl:with-param name="msg" expand-text="true">Value <mx:code>{ string(.) }</mx:code>{ .[not(string(.))] ! ' (empty)' } does not appear among permissible (enumerated) values for this <mx:gi>{ name() }</mx:gi>: <mx:code>Socketeer I|Socketeer II</mx:code>.</xsl:with-param>
          <xsl:with-param name="level" select="'ERROR'"/>
       </xsl:call-template>
       <xsl:next-match/>
@@ -857,8 +836,7 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::cooling | preceding-sibling::expansion-card)</xsl:with-param>
          <xsl:with-param name="condition"
                          select="exists(preceding-sibling::cooling | preceding-sibling::expansion-card)"/>
-         <xsl:with-param name="msg">
-            <mx:gi>memory</mx:gi> is unexpected following <mx:gi>cooling</mx:gi> or <mx:gi>expansion-card</mx:gi>.</xsl:with-param>
+         <xsl:with-param name="msg">Element <mx:gi>memory</mx:gi> is unexpected following <mx:gi>cooling</mx:gi> or <mx:gi>expansion-card</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-computer_..._motherboard_..._memory-assembly"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
@@ -878,16 +856,14 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="testing" as="xs:string">empty(following-sibling::fan) and (count(. | preceding-sibling::fan) lt 2)</xsl:with-param>
          <xsl:with-param name="condition"
                          select="empty(following-sibling::fan) and (count(. | preceding-sibling::fan) lt 2)"/>
-         <xsl:with-param name="msg">
-            <mx:gi>fan</mx:gi> appears too few times: 2 minimum are required.</xsl:with-param>
+         <xsl:with-param name="msg">Element <mx:gi>fan</mx:gi> appears too few times: 2 minimum are required.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.303</xsl:with-param>
          <xsl:with-param name="class">EATO element-appears-too-often</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::fan) gt 12</xsl:with-param>
          <xsl:with-param name="condition" select="count(. | preceding-sibling::fan) gt 12"/>
-         <xsl:with-param name="msg">
-            <mx:gi>fan</mx:gi> appears too many times: 12 maximum are permitted.</xsl:with-param>
+         <xsl:with-param name="msg">Element <mx:gi>fan</mx:gi> appears too many times: 12 maximum are permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.318</xsl:with-param>
@@ -895,8 +871,7 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="condition"
                          select="empty(preceding-sibling::fan) and exists(../(water))"/>
          <xsl:with-param name="class">VEXC violates-exclusive-choice</xsl:with-param>
-         <xsl:with-param name="msg">
-            <mx:gi>fan</mx:gi> is unexpected along with <mx:gi>water</mx:gi>.</xsl:with-param>
+         <xsl:with-param name="msg">Element <mx:gi>fan</mx:gi> is unexpected along with <mx:gi>water</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-cooling_..._fan-assembly"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
@@ -908,8 +883,7 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="class">EATO element-appears-too-often</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::water) gt 1</xsl:with-param>
          <xsl:with-param name="condition" select="count(. | preceding-sibling::water) gt 1"/>
-         <xsl:with-param name="msg">
-            <mx:gi>water</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
+         <xsl:with-param name="msg">Element <mx:gi>water</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.318</xsl:with-param>
@@ -917,8 +891,7 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="condition"
                          select="empty(preceding-sibling::water) and exists(../(fan))"/>
          <xsl:with-param name="class">VEXC violates-exclusive-choice</xsl:with-param>
-         <xsl:with-param name="msg">
-            <mx:gi>water</mx:gi> is unexpected along with <mx:gi>fan</mx:gi>.</xsl:with-param>
+         <xsl:with-param name="msg">Element <mx:gi>water</mx:gi> is unexpected along with <mx:gi>fan</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-cooling_..._water-assembly"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
@@ -932,8 +905,7 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::product-name) gt 1</xsl:with-param>
          <xsl:with-param name="condition"
                          select="count(. | preceding-sibling::product-name) gt 1"/>
-         <xsl:with-param name="msg">
-            <mx:gi>product-name</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
+         <xsl:with-param name="msg">Element <mx:gi>product-name</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.347</xsl:with-param>
@@ -941,8 +913,7 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::architecture | preceding-sibling::speed)</xsl:with-param>
          <xsl:with-param name="condition"
                          select="exists(preceding-sibling::architecture | preceding-sibling::speed)"/>
-         <xsl:with-param name="msg">
-            <mx:gi>product-name</mx:gi> is unexpected following <mx:gi>architecture</mx:gi> or <mx:gi>speed</mx:gi>.</xsl:with-param>
+         <xsl:with-param name="msg">Element <mx:gi>product-name</mx:gi> is unexpected following <mx:gi>architecture</mx:gi> or <mx:gi>speed</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-product-name-field"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
@@ -958,16 +929,14 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::product-name) gt 1</xsl:with-param>
          <xsl:with-param name="condition"
                          select="count(. | preceding-sibling::product-name) gt 1"/>
-         <xsl:with-param name="msg">
-            <mx:gi>product-name</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
+         <xsl:with-param name="msg">Element <mx:gi>product-name</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.347</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::type)</xsl:with-param>
          <xsl:with-param name="condition" select="exists(preceding-sibling::type)"/>
-         <xsl:with-param name="msg">
-            <mx:gi>product-name</mx:gi> is unexpected following <mx:gi>type</mx:gi>.</xsl:with-param>
+         <xsl:with-param name="msg">Element <mx:gi>product-name</mx:gi> is unexpected following <mx:gi>type</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-product-name-field"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
@@ -981,16 +950,14 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::product-name) gt 1</xsl:with-param>
          <xsl:with-param name="condition"
                          select="count(. | preceding-sibling::product-name) gt 1"/>
-         <xsl:with-param name="msg">
-            <mx:gi>product-name</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
+         <xsl:with-param name="msg">Element <mx:gi>product-name</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.347</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::byte-size)</xsl:with-param>
          <xsl:with-param name="condition" select="exists(preceding-sibling::byte-size)"/>
-         <xsl:with-param name="msg">
-            <mx:gi>product-name</mx:gi> is unexpected following <mx:gi>byte-size</mx:gi>.</xsl:with-param>
+         <xsl:with-param name="msg">Element <mx:gi>product-name</mx:gi> is unexpected following <mx:gi>byte-size</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-product-name-field"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
@@ -1006,16 +973,14 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::product-name) gt 1</xsl:with-param>
          <xsl:with-param name="condition"
                          select="count(. | preceding-sibling::product-name) gt 1"/>
-         <xsl:with-param name="msg">
-            <mx:gi>product-name</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
+         <xsl:with-param name="msg">Element <mx:gi>product-name</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.347</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::type)</xsl:with-param>
          <xsl:with-param name="condition" select="exists(preceding-sibling::type)"/>
-         <xsl:with-param name="msg">
-            <mx:gi>product-name</mx:gi> is unexpected following <mx:gi>type</mx:gi>.</xsl:with-param>
+         <xsl:with-param name="msg">Element <mx:gi>product-name</mx:gi> is unexpected following <mx:gi>type</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-product-name-field"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
@@ -1031,8 +996,7 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="class">EATO element-appears-too-often</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::name) gt 1</xsl:with-param>
          <xsl:with-param name="condition" select="count(. | preceding-sibling::name) gt 1"/>
-         <xsl:with-param name="msg">
-            <mx:gi>name</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
+         <xsl:with-param name="msg">Element <mx:gi>name</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.347</xsl:with-param>
@@ -1040,8 +1004,7 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::address | preceding-sibling::website)</xsl:with-param>
          <xsl:with-param name="condition"
                          select="exists(preceding-sibling::address | preceding-sibling::website)"/>
-         <xsl:with-param name="msg">
-            <mx:gi>name</mx:gi> is unexpected following <mx:gi>address</mx:gi> or <mx:gi>website</mx:gi>.</xsl:with-param>
+         <xsl:with-param name="msg">Element <mx:gi>name</mx:gi> is unexpected following <mx:gi>address</mx:gi> or <mx:gi>website</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-vendor_..._name-field"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
@@ -1057,16 +1020,14 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="class">EATO element-appears-too-often</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::address) gt 1</xsl:with-param>
          <xsl:with-param name="condition" select="count(. | preceding-sibling::address) gt 1"/>
-         <xsl:with-param name="msg">
-            <mx:gi>address</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
+         <xsl:with-param name="msg">Element <mx:gi>address</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.347</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::website)</xsl:with-param>
          <xsl:with-param name="condition" select="exists(preceding-sibling::website)"/>
-         <xsl:with-param name="msg">
-            <mx:gi>address</mx:gi> is unexpected following <mx:gi>website</mx:gi>.</xsl:with-param>
+         <xsl:with-param name="msg">Element <mx:gi>address</mx:gi> is unexpected following <mx:gi>website</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-vendor_..._address-field"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
@@ -1082,8 +1043,7 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="class">EATO element-appears-too-often</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::website) gt 1</xsl:with-param>
          <xsl:with-param name="condition" select="count(. | preceding-sibling::website) gt 1"/>
-         <xsl:with-param name="msg">
-            <mx:gi>website</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
+         <xsl:with-param name="msg">Element <mx:gi>website</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-vendor_..._website-field"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
@@ -1096,8 +1056,7 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="class">EATO element-appears-too-often</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::type) gt 1</xsl:with-param>
          <xsl:with-param name="condition" select="count(. | preceding-sibling::type) gt 1"/>
-         <xsl:with-param name="msg">
-            <mx:gi>type</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
+         <xsl:with-param name="msg">Element <mx:gi>type</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.347</xsl:with-param>
@@ -1105,8 +1064,7 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::cpu | preceding-sibling::ata-socket | preceding-sibling::memory | preceding-sibling::cooling | preceding-sibling::expansion-card)</xsl:with-param>
          <xsl:with-param name="condition"
                          select="exists(preceding-sibling::cpu | preceding-sibling::ata-socket | preceding-sibling::memory | preceding-sibling::cooling | preceding-sibling::expansion-card)"/>
-         <xsl:with-param name="msg">
-            <mx:gi>type</mx:gi> is unexpected following <mx:gi>cpu</mx:gi>, <mx:gi>ata-socket</mx:gi>, <mx:gi>memory</mx:gi>, <mx:gi>cooling</mx:gi>, or <mx:gi>expansion-card</mx:gi>.</xsl:with-param>
+         <xsl:with-param name="msg">Element <mx:gi>type</mx:gi> is unexpected following <mx:gi>cpu</mx:gi>, <mx:gi>ata-socket</mx:gi>, <mx:gi>memory</mx:gi>, <mx:gi>cooling</mx:gi>, or <mx:gi>expansion-card</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-computer_..._motherboard_..._type-field"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
@@ -1121,8 +1079,7 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="class">AVCV value-not-allowed</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">not(.=('at','atx','mini-itx','custom'))</xsl:with-param>
          <xsl:with-param name="condition" select="not(.=('at','atx','mini-itx','custom'))"/>
-         <xsl:with-param name="msg" expand-text="true">
-            <mx:code>{ string(.) }</mx:code>{ .[not(string(.))] ! ' (empty)' } does not appear among permitted (enumerated) values for <mx:gi>{ name() }</mx:gi>: <mx:code>at|atx|mini-itx|custom</mx:code>.</xsl:with-param>
+         <xsl:with-param name="msg" expand-text="true">Value <mx:code>{ string(.) }</mx:code>{ .[not(string(.))] ! ' (empty)' } does not appear among permissible (enumerated) values for this <mx:gi>{ name() }</mx:gi>: <mx:code>at|atx|mini-itx|custom</mx:code>.</xsl:with-param>
          <xsl:with-param name="level" select="'ERROR'"/>
       </xsl:call-template>
       <xsl:next-match/>
@@ -1136,16 +1093,14 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::architecture) gt 1</xsl:with-param>
          <xsl:with-param name="condition"
                          select="count(. | preceding-sibling::architecture) gt 1"/>
-         <xsl:with-param name="msg">
-            <mx:gi>architecture</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
+         <xsl:with-param name="msg">Element <mx:gi>architecture</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.347</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::speed)</xsl:with-param>
          <xsl:with-param name="condition" select="exists(preceding-sibling::speed)"/>
-         <xsl:with-param name="msg">
-            <mx:gi>architecture</mx:gi> is unexpected following <mx:gi>speed</mx:gi>.</xsl:with-param>
+         <xsl:with-param name="msg">Element <mx:gi>architecture</mx:gi> is unexpected following <mx:gi>speed</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-computer_..._motherboard_..._cpu_..._architecture-field"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
@@ -1158,8 +1113,7 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="class">EATO element-appears-too-often</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::speed) gt 1</xsl:with-param>
          <xsl:with-param name="condition" select="count(. | preceding-sibling::speed) gt 1"/>
-         <xsl:with-param name="msg">
-            <mx:gi>speed</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
+         <xsl:with-param name="msg">Element <mx:gi>speed</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-computer_..._motherboard_..._cpu_..._speed-field"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
@@ -1187,8 +1141,7 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="class">EATO element-appears-too-often</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::type) gt 1</xsl:with-param>
          <xsl:with-param name="condition" select="count(. | preceding-sibling::type) gt 1"/>
-         <xsl:with-param name="msg">
-            <mx:gi>type</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
+         <xsl:with-param name="msg">Element <mx:gi>type</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-computer_..._motherboard_..._ata-socket_..._type-field"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
@@ -1201,8 +1154,7 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="class">EATO element-appears-too-often</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::byte-size) gt 1</xsl:with-param>
          <xsl:with-param name="condition" select="count(. | preceding-sibling::byte-size) gt 1"/>
-         <xsl:with-param name="msg">
-            <mx:gi>byte-size</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
+         <xsl:with-param name="msg">Element <mx:gi>byte-size</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-computer_..._motherboard_..._memory_..._byte-size-field"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
@@ -1229,14 +1181,29 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="class">EATO element-appears-too-often</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::type) gt 1</xsl:with-param>
          <xsl:with-param name="condition" select="count(. | preceding-sibling::type) gt 1"/>
-         <xsl:with-param name="msg">
-            <mx:gi>type</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
+         <xsl:with-param name="msg">Element <mx:gi>type</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-computer_..._motherboard_..._expansion-card_..._type-field"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
    <xsl:template match="/computer/@date-of-manufacture" mode="test">
       <xsl:call-template name="require-for-date-of-manufacture-flag"/>
+      <xsl:apply-templates mode="constraint-cascade" select="."/>
+   </xsl:template>
+   <xsl:template match="/computer/@sn" mode="test">
+      <xsl:call-template name="require-for-serial-number-flag"/>
+      <xsl:apply-templates mode="constraint-cascade" select="."/>
+   </xsl:template>
+   <xsl:template match="computer/motherboard/@sn" mode="test">
+      <xsl:call-template name="require-for-serial-number-flag"/>
+      <xsl:apply-templates mode="constraint-cascade" select="."/>
+   </xsl:template>
+   <xsl:template match="motherboard/expansion-card/@sn" mode="test">
+      <xsl:call-template name="require-for-serial-number-flag"/>
+      <xsl:apply-templates mode="constraint-cascade" select="."/>
+   </xsl:template>
+   <xsl:template match="motherboard/cooling/@sn" mode="test">
+      <xsl:call-template name="require-for-serial-number-flag"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
    <xsl:template match="motherboard/vendor/@id | cpu/vendor/@id | ata-socket/vendor/@id | memory/vendor/@id | expansion-card/vendor/@id"
@@ -1275,8 +1242,7 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="class">AVCV value-not-allowed</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">not(.=('new','refurb','inoperative'))</xsl:with-param>
          <xsl:with-param name="condition" select="not(.=('new','refurb','inoperative'))"/>
-         <xsl:with-param name="msg" expand-text="true">
-            <mx:code>{ string(.) }</mx:code>{ .[not(string(.))] ! ' (empty)' } does not appear among permitted (enumerated) values for <mx:gi>{ name() }</mx:gi>: <mx:code>new|refurb|inoperative</mx:code>.</xsl:with-param>
+         <xsl:with-param name="msg" expand-text="true">Value <mx:code>{ string(.) }</mx:code>{ .[not(string(.))] ! ' (empty)' } does not appear among permissible (enumerated) values for this <mx:gi>{ name() }</mx:gi>: <mx:code>new|refurb|inoperative</mx:code>.</xsl:with-param>
          <xsl:with-param name="level" select="'ERROR'"/>
       </xsl:call-template>
       <xsl:next-match/>
@@ -1294,16 +1260,15 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf" as="xs:string">gix.73</xsl:with-param>
          <xsl:with-param name="class">EOOP element-out-of-place</xsl:with-param>
-         <xsl:with-param name="msg" expand-text="true">
-            <mx:gi>{ name() }</mx:gi> is not permitted here.</xsl:with-param>
+         <xsl:with-param name="msg" expand-text="true">Element <mx:gi>{ name() }</mx:gi> is not permitted here.</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
-   <xsl:template mode="test" match="@id | @date-of-manufacture | @state | @illuminated">
+   <xsl:template mode="test"
+                 match="@id | @date-of-manufacture | @sn | @state | @illuminated">
       <xsl:call-template name="notice">
          <xsl:with-param name="cf" as="xs:string">gix.82</xsl:with-param>
          <xsl:with-param name="class">AOOP attribute-out-of-place</xsl:with-param>
-         <xsl:with-param name="msg" expand-text="true">
-            <mx:gi>@{ name() }</mx:gi> is not permitted here.</xsl:with-param>
+         <xsl:with-param name="msg" expand-text="true">Attribute <mx:gi>@{ name() }</mx:gi> is not permitted here.</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
    <!-- .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     . -->
@@ -1315,32 +1280,28 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="class">MRQA missing-required-attribute</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">empty(@id)</xsl:with-param>
          <xsl:with-param name="condition" select="empty(@id)"/>
-         <xsl:with-param name="msg" expand-text="true">
-            <mx:gi>{ name() }</mx:gi> requires <mx:gi>@id</mx:gi>.</xsl:with-param>
+         <xsl:with-param name="msg" expand-text="true">Element <mx:gi>{ name() }</mx:gi> requires attribute <mx:gi>@id</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.415</xsl:with-param>
          <xsl:with-param name="class">MRQC missing-required-contents</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">empty(name)</xsl:with-param>
          <xsl:with-param name="condition" select="empty(name)"/>
-         <xsl:with-param name="msg" expand-text="true">
-            <mx:gi>{ name() }</mx:gi> requires element <mx:gi>name</mx:gi>.</xsl:with-param>
+         <xsl:with-param name="msg" expand-text="true">Element <mx:gi>{ name() }</mx:gi> requires element <mx:gi>name</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.415</xsl:with-param>
          <xsl:with-param name="class">MRQC missing-required-contents</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">empty(address)</xsl:with-param>
          <xsl:with-param name="condition" select="empty(address)"/>
-         <xsl:with-param name="msg" expand-text="true">
-            <mx:gi>{ name() }</mx:gi> requires element <mx:gi>address</mx:gi>.</xsl:with-param>
+         <xsl:with-param name="msg" expand-text="true">Element <mx:gi>{ name() }</mx:gi> requires element <mx:gi>address</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.415</xsl:with-param>
          <xsl:with-param name="class">MRQC missing-required-contents</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">empty(website)</xsl:with-param>
          <xsl:with-param name="condition" select="empty(website)"/>
-         <xsl:with-param name="msg" expand-text="true">
-            <mx:gi>{ name() }</mx:gi> requires element <mx:gi>website</mx:gi>.</xsl:with-param>
+         <xsl:with-param name="msg" expand-text="true">Element <mx:gi>{ name() }</mx:gi> requires element <mx:gi>website</mx:gi>.</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
    <xsl:template name="require-for-vendor_..._id-flag"/>
@@ -1357,8 +1318,7 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="class">MRQA missing-required-attribute</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">empty(@id)</xsl:with-param>
          <xsl:with-param name="condition" select="empty(@id)"/>
-         <xsl:with-param name="msg" expand-text="true">
-            <mx:gi>{ name() }</mx:gi> requires <mx:gi>@id</mx:gi>.</xsl:with-param>
+         <xsl:with-param name="msg" expand-text="true">Element <mx:gi>{ name() }</mx:gi> requires attribute <mx:gi>@id</mx:gi>.</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
    <xsl:template name="require-for-computer_..._id-flag"/>
@@ -1368,16 +1328,14 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="class">MRQC missing-required-contents</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">empty(type)</xsl:with-param>
          <xsl:with-param name="condition" select="empty(type)"/>
-         <xsl:with-param name="msg" expand-text="true">
-            <mx:gi>{ name() }</mx:gi> requires element <mx:gi>type</mx:gi>.</xsl:with-param>
+         <xsl:with-param name="msg" expand-text="true">Element <mx:gi>{ name() }</mx:gi> requires element <mx:gi>type</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.415</xsl:with-param>
          <xsl:with-param name="class">MRQC missing-required-contents</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">empty(memory)</xsl:with-param>
          <xsl:with-param name="condition" select="empty(memory)"/>
-         <xsl:with-param name="msg" expand-text="true">
-            <mx:gi>{ name() }</mx:gi> requires element <mx:gi>memory</mx:gi>.</xsl:with-param>
+         <xsl:with-param name="msg" expand-text="true">Element <mx:gi>{ name() }</mx:gi> requires element <mx:gi>memory</mx:gi>.</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
    <xsl:template name="require-for-computer_..._motherboard_..._type-field"/>
@@ -1387,24 +1345,21 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="class">MRQC missing-required-contents</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">empty(product-name)</xsl:with-param>
          <xsl:with-param name="condition" select="empty(product-name)"/>
-         <xsl:with-param name="msg" expand-text="true">
-            <mx:gi>{ name() }</mx:gi> requires element <mx:gi>product-name</mx:gi>.</xsl:with-param>
+         <xsl:with-param name="msg" expand-text="true">Element <mx:gi>{ name() }</mx:gi> requires element <mx:gi>product-name</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.415</xsl:with-param>
          <xsl:with-param name="class">MRQC missing-required-contents</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">empty(architecture)</xsl:with-param>
          <xsl:with-param name="condition" select="empty(architecture)"/>
-         <xsl:with-param name="msg" expand-text="true">
-            <mx:gi>{ name() }</mx:gi> requires element <mx:gi>architecture</mx:gi>.</xsl:with-param>
+         <xsl:with-param name="msg" expand-text="true">Element <mx:gi>{ name() }</mx:gi> requires element <mx:gi>architecture</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.415</xsl:with-param>
          <xsl:with-param name="class">MRQC missing-required-contents</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">empty(speed)</xsl:with-param>
          <xsl:with-param name="condition" select="empty(speed)"/>
-         <xsl:with-param name="msg" expand-text="true">
-            <mx:gi>{ name() }</mx:gi> requires element <mx:gi>speed</mx:gi>.</xsl:with-param>
+         <xsl:with-param name="msg" expand-text="true">Element <mx:gi>{ name() }</mx:gi> requires element <mx:gi>speed</mx:gi>.</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
    <xsl:template name="require-for-computer_..._motherboard_..._cpu_..._architecture-field"/>
@@ -1415,16 +1370,14 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="class">MRQC missing-required-contents</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">empty(product-name)</xsl:with-param>
          <xsl:with-param name="condition" select="empty(product-name)"/>
-         <xsl:with-param name="msg" expand-text="true">
-            <mx:gi>{ name() }</mx:gi> requires element <mx:gi>product-name</mx:gi>.</xsl:with-param>
+         <xsl:with-param name="msg" expand-text="true">Element <mx:gi>{ name() }</mx:gi> requires element <mx:gi>product-name</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.415</xsl:with-param>
          <xsl:with-param name="class">MRQC missing-required-contents</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">empty(type)</xsl:with-param>
          <xsl:with-param name="condition" select="empty(type)"/>
-         <xsl:with-param name="msg" expand-text="true">
-            <mx:gi>{ name() }</mx:gi> requires element <mx:gi>type</mx:gi>.</xsl:with-param>
+         <xsl:with-param name="msg" expand-text="true">Element <mx:gi>{ name() }</mx:gi> requires element <mx:gi>type</mx:gi>.</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
    <xsl:template name="require-for-computer_..._motherboard_..._ata-socket_..._type-field"/>
@@ -1434,16 +1387,14 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="class">MRQC missing-required-contents</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">empty(product-name)</xsl:with-param>
          <xsl:with-param name="condition" select="empty(product-name)"/>
-         <xsl:with-param name="msg" expand-text="true">
-            <mx:gi>{ name() }</mx:gi> requires element <mx:gi>product-name</mx:gi>.</xsl:with-param>
+         <xsl:with-param name="msg" expand-text="true">Element <mx:gi>{ name() }</mx:gi> requires element <mx:gi>product-name</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.415</xsl:with-param>
          <xsl:with-param name="class">MRQC missing-required-contents</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">empty(byte-size)</xsl:with-param>
          <xsl:with-param name="condition" select="empty(byte-size)"/>
-         <xsl:with-param name="msg" expand-text="true">
-            <mx:gi>{ name() }</mx:gi> requires element <mx:gi>byte-size</mx:gi>.</xsl:with-param>
+         <xsl:with-param name="msg" expand-text="true">Element <mx:gi>{ name() }</mx:gi> requires element <mx:gi>byte-size</mx:gi>.</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
    <xsl:template name="require-for-computer_..._motherboard_..._memory_..._byte-size-field">
@@ -1455,28 +1406,26 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="class">MRQC missing-required-contents</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">empty(product-name)</xsl:with-param>
          <xsl:with-param name="condition" select="empty(product-name)"/>
-         <xsl:with-param name="msg" expand-text="true">
-            <mx:gi>{ name() }</mx:gi> requires element <mx:gi>product-name</mx:gi>.</xsl:with-param>
+         <xsl:with-param name="msg" expand-text="true">Element <mx:gi>{ name() }</mx:gi> requires element <mx:gi>product-name</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.415</xsl:with-param>
          <xsl:with-param name="class">MRQC missing-required-contents</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">empty(type)</xsl:with-param>
          <xsl:with-param name="condition" select="empty(type)"/>
-         <xsl:with-param name="msg" expand-text="true">
-            <mx:gi>{ name() }</mx:gi> requires element <mx:gi>type</mx:gi>.</xsl:with-param>
+         <xsl:with-param name="msg" expand-text="true">Element <mx:gi>{ name() }</mx:gi> requires element <mx:gi>type</mx:gi>.</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
    <xsl:template name="require-for-computer_..._motherboard_..._expansion-card_..._state-flag"/>
    <xsl:template name="require-for-computer_..._motherboard_..._expansion-card_..._type-field"/>
+   <xsl:template name="require-for-serial-number-flag"/>
    <xsl:template name="require-for-cooling-assembly">
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.415</xsl:with-param>
          <xsl:with-param name="class">MRQC missing-required-contents</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">empty(fan|water)</xsl:with-param>
          <xsl:with-param name="condition" select="empty(fan|water)"/>
-         <xsl:with-param name="msg" expand-text="true">
-            <mx:gi>{ name() }</mx:gi> requires element <mx:gi>fan|water</mx:gi>.</xsl:with-param>
+         <xsl:with-param name="msg" expand-text="true">Element <mx:gi>{ name() }</mx:gi> requires element <mx:gi>fan|water</mx:gi>.</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
    <xsl:template name="require-for-cooling_..._fan-assembly"/>
@@ -1501,8 +1450,7 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="testing" as="xs:string">not(string(.) castable as xs:string and matches(.,'^\S(.*\S)?$'))</xsl:with-param>
          <xsl:with-param name="condition"
                          select="not(string(.) castable as xs:string and matches(.,'^\S(.*\S)?$'))"/>
-         <xsl:with-param name="msg" expand-text="true">
-            <mx:gi>{ name(.) }</mx:gi> value <mx:code>{ string(.) }</mx:code> does not conform to <mx:code>string</mx:code> datatype.</xsl:with-param>
+         <xsl:with-param name="msg" expand-text="true">Value <mx:code>{ string(.) }</mx:code> of { if (self::element()) then 'element' else 'attribute' } <mx:gi>{ self::attribute()/'@' }{ name(.) }</mx:gi> does not conform to <mx:code>string</mx:code> datatype.</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
    <xsl:template name="check-uri-datatype">
@@ -1519,8 +1467,7 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="testing" as="xs:string">not(string(.) castable as xs:anyURI and matches(.,'^[a-zA-Z][a-zA-Z0-9+\-.]+:.*\S$'))</xsl:with-param>
          <xsl:with-param name="condition"
                          select="not(string(.) castable as xs:anyURI and matches(.,'^[a-zA-Z][a-zA-Z0-9+\-.]+:.*\S$'))"/>
-         <xsl:with-param name="msg" expand-text="true">
-            <mx:gi>{ name(.) }</mx:gi> value <mx:code>{ string(.) }</mx:code> does not conform to <mx:code>uri</mx:code> datatype.</xsl:with-param>
+         <xsl:with-param name="msg" expand-text="true">Value <mx:code>{ string(.) }</mx:code> of { if (self::element()) then 'element' else 'attribute' } <mx:gi>{ self::attribute()/'@' }{ name(.) }</mx:gi> does not conform to <mx:code>uri</mx:code> datatype.</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
    <xsl:template name="check-positive-integer-datatype">
@@ -1537,8 +1484,7 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="testing" as="xs:string">not(string(.) castable as xs:positiveInteger and matches(.,'^\S(.*\S)?$'))</xsl:with-param>
          <xsl:with-param name="condition"
                          select="not(string(.) castable as xs:positiveInteger and matches(.,'^\S(.*\S)?$'))"/>
-         <xsl:with-param name="msg" expand-text="true">
-            <mx:gi>{ name(.) }</mx:gi> value <mx:code>{ string(.) }</mx:code> does not conform to <mx:code>positive-integer</mx:code> datatype.</xsl:with-param>
+         <xsl:with-param name="msg" expand-text="true">Value <mx:code>{ string(.) }</mx:code> of { if (self::element()) then 'element' else 'attribute' } <mx:gi>{ self::attribute()/'@' }{ name(.) }</mx:gi> does not conform to <mx:code>positive-integer</mx:code> datatype.</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
    <xsl:template name="check-boolean-datatype">
@@ -1555,8 +1501,7 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="testing" as="xs:string">not(string(.) castable as xs:boolean and matches(.,'^true|1|false|0$'))</xsl:with-param>
          <xsl:with-param name="condition"
                          select="not(string(.) castable as xs:boolean and matches(.,'^true|1|false|0$'))"/>
-         <xsl:with-param name="msg" expand-text="true">
-            <mx:gi>{ name(.) }</mx:gi> value <mx:code>{ string(.) }</mx:code> does not conform to <mx:code>boolean</mx:code> datatype.</xsl:with-param>
+         <xsl:with-param name="msg" expand-text="true">Value <mx:code>{ string(.) }</mx:code> of { if (self::element()) then 'element' else 'attribute' } <mx:gi>{ self::attribute()/'@' }{ name(.) }</mx:gi> does not conform to <mx:code>boolean</mx:code> datatype.</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
    <xsl:template name="check-date-datatype">
@@ -1573,8 +1518,7 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="testing" as="xs:string">not(string(.) castable as xs:date and matches(.,'^(((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30)))(Z|(-((0[0-9]|1[0-2]):00|0[39]:30)|\+((0[0-9]|1[0-4]):00|(0[34569]|10):30|(0[58]|12):45)))?$'))</xsl:with-param>
          <xsl:with-param name="condition"
                          select="not(string(.) castable as xs:date and matches(.,'^(((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30)))(Z|(-((0[0-9]|1[0-2]):00|0[39]:30)|\+((0[0-9]|1[0-4]):00|(0[34569]|10):30|(0[58]|12):45)))?$'))"/>
-         <xsl:with-param name="msg" expand-text="true">
-            <mx:gi>{ name(.) }</mx:gi> value <mx:code>{ string(.) }</mx:code> does not conform to <mx:code>date</mx:code> datatype.</xsl:with-param>
+         <xsl:with-param name="msg" expand-text="true">Value <mx:code>{ string(.) }</mx:code> of { if (self::element()) then 'element' else 'attribute' } <mx:gi>{ self::attribute()/'@' }{ name(.) }</mx:gi> does not conform to <mx:code>date</mx:code> datatype.</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
    <xsl:template match="ul | ol" mode="validate-markup-multiline">
