@@ -22,9 +22,10 @@ That is, it combines the effective functionality of XML schema and Schematron (X
 - [x] Emit reports in native (MX) format, HTML or Markdown
 - [x] Compact mode returns a one-line answer
 - [x] `silent-when-valid` mode returns validations only for files found invalid
-- [x] `compressed` mode reduces Markdown (no double LF)
+- [x] `compact` mode reduces Markdown (no double LF)
 - [x] Run in batch, write reports to file(s)
   - [x] Using Saxon feature
+  - [x] Using shell
   - [ ] Using XProc 
   - [ ] make post-process XSLT digesting a sequence of MX results
 - [x] Validate structures - names and cardinalities
@@ -34,6 +35,7 @@ That is, it combines the effective functionality of XML schema and Schematron (X
 - [x] Write reports to file (HTML, Markdown)
 - [x] Emit copy of source annotated with validation messages
 - [ ] Run in browser / SaxonJS
+- [ ] MX->SVRL filter postprocess
 - [ ] other ideas below
 
 ## Design goals and principles
@@ -49,6 +51,23 @@ The aims of the reporting are clarity/ease of use; to be unambiguous; to be trac
 Reporting can be parsimonious - no need to be exhaustive.
 
 At the same time, errors anywhere are of interest (see 'no need to quit'). Some amount of redundancy is okay if not too noisy.
+
+### Theoretical considerations
+
+This is a very different model of validation from what is usually (yet) practiced over data sets in exchange, even XML data except in some specialized circumstances. In considering the strengths, weaknesses and feature set of the tool, it may help to keep these differences in mind. What may be interesting is that this model - here called the <q>pull</q> model of validation - while very different from the usual historic model (<q>push</q>), is also very complimentary to it. A mature and capable system can have uses for both models in combination.
+
+Setting aside the question of what is the pull model and why called <q>pull</q> - this is *somewhat* analogous to push and pull parsing, two different techniques for building interpreters for character streams aka text processing - suffice it to say here that one aspect of pull is that conceptually, the data set under examination has already been parsed and is already available for inspection. This is not paradoxical if the 'push' model is also in place. Fortunately, the syntactic rules of XML well-formedness are sufficiently well-defined that this is feasible in reality.
+
+So in the field we work first by determining that an artifact purportedly and apparently XML is in fact XML - which we do, typically, with a neutral parse or 'well-formedness check'. (Indeed every day XML tools are doing this for their operators without their direct awareness.) While a low threshhold for interpretability - XML syntax assures nothing about an artifact other than its *potential* use *as XML* - which is to say, it is not zero. Based on that discovery alone, 
+
+Traditional push-based validation such as XSD validation is defined in such a way that it can be conducted as a document is parsed for the first time - that is, without reference to any prior representation of anything in the document after the parser position. While powerful and enabling - helping to manage, among other things, the complexity of memory requirements for the parse relative to document size - this comes at a steep cost for expressibility. In particular, any rules we wish to assert over documents that requires or implies *random access* to document contents (both before and after the point under examination or enforcement), cannot be provided for without the fuller capabilities of a transformation language capable of querying, binding variables, caching and the rest.
+
+In contrast, a pull-based validation can express any rules at all over a document conceived of spatially, i.e. as a resource all of which is accessible from any point.
+
+Interestingly, this different perspective on the rule set leads to different strengths and weaknesses in deployment - strengths and weaknesses that being opposite from the currently most common approach, also complement it.
+
+[XSD, RNG, DTD are all 'push-based' validation - rules can be checked and enforced as a parse proceeds; Schematron being XSLT is 'pull' based]
+
 
 ## Interfaces - how to use
 
@@ -81,8 +100,8 @@ Command line flags and options for using the InspectorXSLT with Saxon - note use
 - `-it` is short for `-initial-template` while `-im` is short for `-initial-mode`
 - If both `-it` and `-im` are given, expect `-it` to prevail
 - Parameter `mode` further affects the results:
-  - `mode=compressed` strips line feeds from Markdown results for a 'compressed ASCII' view (no effect when producing HTML or MX)
-  - `mode=concise` is even more compressed, writes only one-line summaries, and works for HTML as well as Markdown.
+  - `mode=compact` strips line feeds from Markdown results for a 'compact ASCII' view (no effect when producing HTML or MX)
+  - `mode=one-liner` is even more compact, writes only one-line summaries, and works for HTML as well as Markdown.
   - `mode=silent-when-valid` suppresses any reports from valid instances\*
   - `mode=noisy` provides extra progress reports to STDOUT - useful for tracing when writing outputs to files
   
@@ -103,7 +122,7 @@ Especially when Markdown or HTML results are produced in batch with names matchi
 ```
 
 ```
-(cd valid && for f in $(ls *.xml); do ./inspect-computer-md.sh -s:$f mode=concise; done)
+(cd valid && for f in $(ls *.xml); do ./inspect-computer-md.sh -s:$f mode=one-liner; done)
 
 ```
 
@@ -170,7 +189,7 @@ saxon -it:md -xslt:computer-inspector.xsl -s:invalid10.xml
 To write **Markdown results to STDOUT except emit *one line only***. This uses the `mode` parameter.:
 
 ```bash
-saxon -it:md -xslt:computer-inspector.xsl -s:invalid10.xml mode=concise
+saxon -it:md -xslt:computer-inspector.xsl -s:invalid10.xml mode=one-liner
 ```
 
 ---
@@ -197,9 +216,9 @@ Note - results are written for all files, valid and invalid, irrespective of fin
 
 To **report as files are found to be valid or invalid** to STDOUT, *additional* to producing reports.
 
-Use `mode=noisy` if you wish to see progress in the console even when directing results to file outputs. It will announce findings of both valid and invalid files, one line per file; so it is similar to `mode=concise` except it supplements instead of replaces the production of complete reports - so progress can be monitored as well as results can be written out. This mode cannot be used with `silent-when-valid` or `concise`.
+Use `mode=noisy` if you wish to see progress in the console even when directing results to file outputs. It will announce findings of both valid and invalid files, one line per file; so it is similar to `mode=one-liner` except it supplements instead of replaces the production of complete reports - so progress can be monitored as well as results can be written out. This mode cannot be used with `silent-when-valid` or `one-liner`.
 
-This feature is designed to be used when validating in batch and writing results to files. When validating a single file or not producing static results, consider using `mode=concise` instead (for example, to produce and see Markdown in the console).
+This feature is designed to be used when validating in batch and writing results to files. When validating a single file or not producing static results, consider using `mode=one-liner` instead (for example, to produce and see Markdown in the console).
 
 ```bash
 saxon -it:html -xslt:computer-inspector.xsl -s:invalid10.xml -o:invalid10-report.html mode=noisy
@@ -209,15 +228,15 @@ saxon -it:html -xslt:computer-inspector.xsl -s:invalid10.xml -o:invalid10-report
 
 Alternatively, to **use bash to loop over one file at a time, collecting the outputs coming to STDOUT** to a file.
 
-With `mode=concise` we get one line per file.
+With `mode=one-liner` we get one line per file.
 
 ```bash
-(for f in $(ls collectionls /*.xml); do saxon -it:md -xslt:computer-inspector.xsl -s:$f mode=concise; done) 1> validated.txt
+(for f in $(ls collectionls /*.xml); do saxon -it:md -xslt:computer-inspector.xsl -s:$f mode=one-liner; done) 1> validated.txt
 ```
 
 ---
 
-Or running without `mode=concise` to **create a single Markdown report** (note result file name) - modes `noisy` or `silent-when-valid` are available :
+Or running without `mode=one-liner` to **create a single Markdown report** (note result file name) - modes `noisy` or `silent-when-valid` are available :
 
 
 ```bash
@@ -242,7 +261,7 @@ computerInspectorXSLT data.xml results.xml
 computerInspectorXSLT -md data.xml (writes results to STDOUT)
 computerInspectorXSLT -mx data.xml (writes results to STDOUT)
 computerInspectorXSLT -html data.xml (writes results to STDOUT)
-computerInspectorXSLT -md data.xml mode=concise
+computerInspectorXSLT -md data.xml mode=one-liner
 ```
 
 This all ought to be doable in `make`, no?
@@ -259,6 +278,12 @@ A fresh and complete Inspector XSLT for any metaschema (any valid and workable i
 In this sequence of transformations the target (result) XSLT is assembled dynamically, by combining templates produced from a metaschema source with static boilerplate and infrastructure.
 
 An example script calling the XSLT pipeline (thus requiring only Saxon, not XML Calabash) is given as [testing/mvn-refresh-computer-inspector.sh](testing/refresh-computer-inspector.sh).
+
+## If you have only JSON
+
+This tool is based on the XML stack and its support for JSON is nominal; however, one promise of Metaschema is that it provides a basis for bridging boundarites on the basis of discernable *commonalities* between data points in the respective formats - notably of course the *names* of elements (in XML) or properties (in JSON). So even though the Inspector cannot inspect your JSON since it can't 
+
+That being said, JSON is expressible as XDM maps and the application of metaschema-based constraints (or JSON-schema-based constraints?) over XDM maps is a ... fascinating proposition.
 
 ## Plans
 
@@ -298,6 +323,16 @@ How hard can it be?
 ### OSCAL application
 
 Should go into oscal-xslt repository
+
+### JSON support?
+
+One approach could be to produce templates not to match XML (that is or is not conformant to expectations) but JSON (that is or is not conformant to the metaschema-analogous expectations).
+
+JSON could first be cast into an XDM map, so this operation conceivably could mean an XSLT generator whose output XSLT would match not nodes but objects (properties) in this map - checking to see whether they resolve to maps, arrays and values as planned - and whose templates indeed would perform a 'map traversal'.
+
+### Line numbers
+
+Alas, can't get line numbers in Saxon HE.
 
 ### XSLT 1.0?
 

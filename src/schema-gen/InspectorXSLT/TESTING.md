@@ -90,3 +90,13 @@ Question: *Is the XSLT produced from a metaschema instance produced correctly to
 This pipeline produces an XSLT which, when applied to a Computer XML document, reports the result tree annotated with error and warning reports. The results of this XSLT can be post-processed (in the testing framework or elsewhere) to show just the reports.
 
 Unit test this production with an [inspector production XSpec](testing/produce-inspector.xspec).
+
+## Testing the "costuming" post-processing pipelines
+
+Inspector XSLT first produces MX outputs. These are further processed, first by being filtered, then into HTML and Markdown results.
+
+These transformations can be tested. Generally speaking, an XSpec can present tests and run templates from `apply-validator.xsl` shell directly.
+
+An HTML-to-Markdown XSpec could also be useful elsewhere, FTM.
+
+If these are not already to be found among the tests it remains a TODO item.

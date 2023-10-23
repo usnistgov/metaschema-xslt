@@ -11,7 +11,7 @@
 <!-- parameter $mode' affects the output:
      mode=silent-when-valid suppresses all results when no errors are reported
      mode=concise brings back a single line of Markdown reporting valid/invalid status (it has no effect on HTML)
-   
+     mode=compact when writing Markdown removes double LF
    more elaborate reports with support for sorting, warning levels etc. are tbd -->
 
    <xsl:param name="mode" as="xs:string">verbose</xsl:param>
@@ -426,7 +426,7 @@ details p { margin: 0.2em 0em }
     <xsl:mode name="html-to-md" on-no-match="text-only-copy"/>
     
     <xsl:variable name="lf" as="xs:string"  expand-text="true">{ codepoints-to-string(10) }</xsl:variable>
-    <xsl:variable name="lf2" as="xs:string" expand-text="true">{$lf || $lf[not($mode='compressed')]}</xsl:variable>
+    <xsl:variable name="lf2" as="xs:string" expand-text="true">{$lf || $lf[not($mode='compact')]}</xsl:variable>
     
    <xsl:template mode="html-to-md" match="html" xpath-default-namespace="http://www.w3.org/1999/xhtml">
       <xsl:apply-templates mode="#current" select="body"/>
@@ -434,7 +434,7 @@ details p { margin: 0.2em 0em }
    
    <xsl:template mode="html-to-md" match="style" xpath-default-namespace="http://www.w3.org/1999/xhtml"/>
    
-   <xsl:template mode="html-to-md" match="body[$mode='concise']" expand-text="true" xpath-default-namespace="http://www.w3.org/1999/xhtml">
+   <xsl:template mode="html-to-md" match="body[$mode='one-liner']" expand-text="true" xpath-default-namespace="http://www.w3.org/1999/xhtml">
       <xsl:apply-templates mode="#current" select="h1"/>
    </xsl:template>
    
@@ -474,7 +474,7 @@ details p { margin: 0.2em 0em }
    </xsl:template>
    
    <xsl:template mode="html-to-md" match="ul" expand-text="true" xpath-default-namespace="http://www.w3.org/1999/xhtml">
-      <xsl:text>{ $lf[not($mode='compressed')] }</xsl:text>
+      <xsl:text>{ $lf[not($mode='compact')] }</xsl:text>
       <xsl:apply-templates mode="#current"/>
    </xsl:template>
    
