@@ -16,6 +16,8 @@
     
     <xsl:namespace-alias stylesheet-prefix="XSLT" result-prefix="xsl"/>
     
+    <xsl:mode name="make-step" on-no-match="fail"><!-- Obsolete mode --></xsl:mode>
+
     <xsl:variable name="source-namespace" select="string(/*/@namespace)"/>
     <xsl:variable name="source-prefix"    select="string(/*/@prefix)"/>
     
