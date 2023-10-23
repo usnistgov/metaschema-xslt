@@ -22,6 +22,31 @@ Exercising these tests, a number of XSpec files in this folder calling `current/
 
 See the [Testing](../Testing.md) docs for more information.
 
+#### Next up
+
+Oct 23 - (not necessarily in priority order)
+
+- [ ] Complete constraints feature set
+   - [ ] `index`
+   - [ ] `index-has-key`
+   - [ ] `unique`
+   - [ ] align `allow-values` with current/best?
+     - [ ] XSpec the retrieval function returning (rule/value)*
+   - [ ] check back, anything missed?
+- [ ] Test out other aspects
+   - [ ] interesting assembly/field settings, use-name etc
+   - [ ] markup-line and markup-multiline
+   - [ ] MX to HTML to Markdown
+   - [ ] Anthology example for some of these?
+- [ ] Review specs with eye to contributions
+- [ ] OSCAL implementation
+   - [ ] Publishing considerations
+   - [ ] Pages / platform
+- [ ] CSX version
+   - [ ] CI/CD support for deployment from updated metaschema sources?
+- [ ] Release plans and considerations
+- [ ] Review opportunities for unit tests: reuse / pubs / pool 
+
 Coverage notes follow.
 
 #### `computer-constraints.xspec`
@@ -38,14 +63,6 @@ Coverage notes follow.
 | is-unique          | UNIQ
 | index              | 
 | index-has-key      | NDXK
-
-exists($s) and empty($s[2])
-test= exists(key(...) except .)
-
-```
-<xsl:variable name="m:is-singleton" as="function(*)"
-      select="function($seq as item()*) as xs:boolean { exists($seq) and empty($seq[2]) }"/>
-```
 
 #### Computer Model metaschema
 
@@ -65,7 +82,22 @@ for is-unique - generate key that matches targets using value
   ensure
      $sec :=key('keyname',$val,$scope) exists($seq) and empty($seq[2])
 
-to ensure coverage, find values of metaschema //constraint/*/@id among rule-id values in scenarios - each should have positive and negative tests
+
+exists($s) and empty($s[2])
+test= exists(key(...) except .)
+
+bare XPath is best for transparency
+
+```
+<xsl:variable name="m:is-singleton" as="function(*)"
+      select="function($seq as item()*) as xs:boolean { exists($seq) and empty($seq[2]) }"/>
+```
+
+### Test coverage
+
+poll metaschema w/ reference to XSpecs
+
+for each constraint ensuring it has an @id locate all x:scenario//mx:report with that rule-id
 
 tbd - markup-validation.xspec
 
