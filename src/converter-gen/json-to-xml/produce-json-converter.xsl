@@ -22,6 +22,8 @@
     
     <xsl:output indent="yes"/>
     
+    <xsl:mode name="make-step" on-no-match="fail"><!-- Obsolete mode --></xsl:mode>
+
     <xsl:namespace-alias stylesheet-prefix="XSLT" result-prefix="xsl"/>
     
     <!-- $px is the prefix to be used on names in the XPath JSON -->
