@@ -42,7 +42,7 @@ Unit tests are expected to run successfully when committed - both completing, an
 
 While this project began as an experimental proof of concept, it now aims for higher levels of assurance and confidence than are necessary or appropriate for applications intended only to produce findings regarding feasibility and levels of effort. Accordingly, our development approach has shifted from rapid prototyping to a more explicit and traceable process of design, specification and implementation.
 
-If you touch a particular unit of code that doesn't have tests, write tests for it in the same PR as your change. If you touch a particular unit of code that has tests, update or augment them to test the change you are making. In general, push the tests ahead of the code, not the other way around, aligning the tests with specifications first.
+If you touch a particular unit of code that doesn't have tests, write tests for it in the same PR as your change. If you touch a particular unit of code that has tests, update or augment them to test the change you are making. In general, push the tests ahead of the code, not the other way around, aligning the tests with [the Metaschema specification(s)](https://pages.nist.gov/metaschema/specification/) first.
 
 This expenditure of effort prevents bugs (easier than repairing them) and guards against regression, opening opportunities to do more interesting things. So it is not so much "extra" as an investment in future stability and sustainability.
 
