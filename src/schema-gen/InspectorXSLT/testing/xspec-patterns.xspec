@@ -104,7 +104,7 @@ Modes to test:
          <x:expect label="is marked as unexpected">
             <e>
                <mx:report cf="..." test="exists(.)" class="_UE unmatched-element"
-                  xpath="/e">Unrecognized element <mx:gi>e</mx:gi>.</mx:report>
+                  xpath="/e" level="ERROR">Unrecognized element <mx:gi>e</mx:gi>.</mx:report>
             </e>
          </x:expect>
       </x:scenario>
@@ -115,7 +115,7 @@ Modes to test:
          <x:expect label="is also marked as unexpected">
             <computer id="c" nope="x">
                <mx:report cf="..." test="exists(.)" class="_UA unmatched-attribute"
-                  xpath="/computer/@nope">Unrecognized attribute <mx:gi>@nope</mx:gi> on element <mx:gi>computer</mx:gi>.</mx:report>
+                  xpath="/computer/@nope" level="ERROR">Unrecognized attribute <mx:gi>@nope</mx:gi> on element <mx:gi>computer</mx:gi>.</mx:report>
             </computer>
          </x:expect>
       </x:scenario>
@@ -140,7 +140,7 @@ Modes to test:
          </x:context>
          <x:expect label="we see a single error report marking it as unexpected" test="mx:pull-reports($x:result)">
             <mx:report cf="..." test="exists(.)" class="_UE unmatched-element"
-               xpath="/nil">Unrecognized element <mx:gi>nil</mx:gi>.</mx:report>
+               xpath="/nil" level="ERROR">Unrecognized element <mx:gi>nil</mx:gi>.</mx:report>
          </x:expect>
       </x:scenario>
    </x:scenario>
@@ -152,7 +152,7 @@ Modes to test:
       </x:scenario>
       <x:scenario label="Given as a literal, an invalid instance">
          <x:context mode="validate">
-            <computer xmlns="http://example.com/ns/computer" id="id1">
+            <computer id="id1">
                <motherboard>
                   <vendor id="id3">
                      <name>name0</name>

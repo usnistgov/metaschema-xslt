@@ -5,19 +5,20 @@
                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                version="3.0"
                xpath-default-namespace="http://example.com/ns/computer"
-               exclude-result-prefixes="#all"><!-- Generated 2023-10-20T17:55:38.3094911-04:00 -->
+               exclude-result-prefixes="#all"><!-- Generated 2023-10-24T09:56:26.2749703-04:00 -->
    <xsl:mode on-no-match="fail"/>
    <xsl:mode name="test" on-no-match="shallow-skip"/>
    <!-- .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     . -->
    <!--    Templates copied from boilerplate    -->
    <!-- .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     . -->
    <xsl:output indent="true" encoding="us-ascii" omit-xml-declaration="true"/>
-   <!-- parameter $mode' affects the output:
-     mode=silent-when-valid suppresses all results when no errors are reported
-     mode=concise brings back a single line of Markdown reporting valid/invalid status (it has no effect on HTML)
-   
-   more elaborate reports with support for sorting, warning levels etc. are tbd -->
-   <xsl:param name="mode" as="xs:string">verbose</xsl:param>
+   <xsl:param name="echo" as="xs:string">none</xsl:param>
+   <!-- echo = (none|invalid-docs|docs|info|warnings|all) - runtime messaging provided with grab-mx mode -->
+   <xsl:param name="form" as="xs:string">full</xsl:param>
+   <!-- form = (full|summary|one-line) - in mx-to-html mode -->
+   <!-- Use -it: for mx, html, markdown or plaintext results  -->
+   <!-- Use parameter 'form' - optionally reduce outputs to one-line or summary - whether writing to STDOUT or directing outputs using -o -->
+   <!-- Use parameter 'echo' - to produce secondary outputs via xsl:message - they usually go to STDERR and are seen on the console -->
    <!-- returns annotated copy of input tree   -->
    <xsl:template match="/" name="xsl:initial-template">
       <mx:validation src="{ base-uri(.) }">
@@ -42,7 +43,8 @@
       <xsl:call-template name="html"/>
    </xsl:template>
    <xsl:template name="html">
-      <xsl:variable name="mx-reports"><!-- reports has a summary along with any reports -->
+      <xsl:variable name="mx-reports">
+         <!-- reports has a summary along with any reports -->
          <xsl:call-template name="mx-reports"/>
       </xsl:variable>
       <xsl:apply-templates mode="mx-to-html" select="$mx-reports/*"/>
@@ -55,6 +57,21 @@
          <xsl:call-template name="html"/>
       </xsl:variable>
       <xsl:apply-templates mode="html-to-md" select="$html-report/*"/>
+   </xsl:template>
+   <xsl:template match="/" mode="plaintext">
+      <xsl:call-template name="markdown"/>
+   </xsl:template>
+   <xsl:template name="plaintext">
+      <xsl:variable name="html-report">
+         <xsl:call-template name="html"/>
+      </xsl:variable>
+      <xsl:apply-templates mode="html-to-md" select="$html-report/*">
+         <!--single lf passed to override double lf -->
+         <xsl:with-param name="lf2"
+                         tunnel="true"
+                         as="xs:string"
+                         select="codepoints-to-string(10)"/>
+      </xsl:apply-templates>
    </xsl:template>
    <xsl:template name="md">
       <xsl:call-template name="markdown"/>
@@ -88,18 +105,18 @@
    <!-- wrapper template for testing on each node, to be overridden
          and extended for known elements -->
    <xsl:template match="*" mode="test">
-        <!-- report if not recognized -->
+      <!-- report if not recognized -->
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">av.103</xsl:with-param>
+         <xsl:with-param name="cf">av.118</xsl:with-param>
          <xsl:with-param name="class">_UE unmatched-element</xsl:with-param>
          <xsl:with-param name="msg" expand-text="true">Unrecognized element <mx:gi>{ name() }</mx:gi>.</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
-   <xsl:template match="text()[not(matches(.,'\S'))]" priority="0.1" mode="test"/>
+   <xsl:template match="text()[not(matches(., '\S'))]" priority="0.1" mode="test"/>
    <xsl:template match="text()" mode="test">
-        <!-- report if not recognized -->
+      <!-- report if not recognized -->
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">av.114</xsl:with-param>
+         <xsl:with-param name="cf">av.129</xsl:with-param>
          <xsl:with-param name="class">_UT unexpected-text</xsl:with-param>
          <xsl:with-param name="msg" expand-text="true">Errant text content.</xsl:with-param>
       </xsl:call-template>
@@ -107,13 +124,14 @@
    <!-- report if not recognized -->
    <xsl:template match="*" mode="validate-markup-multiline" name="notice-multiline">
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">av.123</xsl:with-param>
+         <xsl:with-param name="cf">av.138</xsl:with-param>
          <xsl:with-param name="class">_UMM unmatched-markup-multiline</xsl:with-param>
-         <xsl:with-param name="msg" expand-text="true">Unrecognized element <mx:gi>{ name() }</mx:gi> in multiline markup.</xsl:with-param>
+         <xsl:with-param name="msg" expand-text="true">Unrecognized element <mx:gi>{ name() }</mx:gi> in multiline
+            markup.</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
    <xsl:variable name="markup-multline-blocks"
-                 select="'p','pre','ul','ol','table',         'h1','h2','h3','h4','h5'"/>
+                 select="          'p', 'pre', 'ul', 'ol', 'table',          'h1', 'h2', 'h3', 'h4', 'h5'"/>
    <!--<xsl:template match="p | pre | h1 | h2 | h3 | h5 | h5 | h6 | li | td" mode="validate-markup-multiline">
         <xsl:apply-templates mode="validate-markup-line"/>
     </xsl:template>
@@ -145,9 +163,9 @@
     
     <xsl:template match="text()" mode="validate-markup-line"/>-->
    <xsl:template match="*" mode="validate-markup-line">
-        <!-- report if not recognized -->
+      <!-- report if not recognized -->
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">av.166</xsl:with-param>
+         <xsl:with-param name="cf">av.181</xsl:with-param>
          <xsl:with-param name="class">_UM unmatched-markup</xsl:with-param>
          <xsl:with-param name="msg" expand-text="true">Unrecognized element <mx:gi>{ name() }</mx:gi>.</xsl:with-param>
       </xsl:call-template>
@@ -155,7 +173,7 @@
    <!-- ... and attributes ...  -->
    <xsl:template match="@*" mode="test validate-markup-line validate-markup-multiline">
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">av.175</xsl:with-param>
+         <xsl:with-param name="cf">av.190</xsl:with-param>
          <xsl:with-param name="class">_UA unmatched-attribute</xsl:with-param>
          <xsl:with-param name="msg" expand-text="true">Unrecognized attribute <mx:gi>@{ name() }</mx:gi> on element <mx:gi>{ name(..) }</mx:gi>.</xsl:with-param>
       </xsl:call-template>
@@ -164,7 +182,7 @@
                  mode="test"
                  match="@xsi:*"/>
    <xsl:template name="notice">
-      <xsl:param name="cf" as="xs:string" select="AV.186"/>
+      <xsl:param name="cf" as="xs:string" select="AV.199"/>
       <!-- default expecting override -->
       <xsl:param name="rule-id" as="xs:string*" select="()"/>
       <!-- rule-id may be multiple -->
@@ -176,18 +194,17 @@
       <xsl:param name="msg">[info]</xsl:param>
       <xsl:param name="level" as="xs:string">ERROR</xsl:param>
       <xsl:if test="$condition">
-         <xsl:variable name="xpath"><!-- handmade paths avoid namespaces and other complications of path(.) -->
+         <xsl:variable name="xpath">
+            <!-- handmade paths avoid namespaces and other complications of path(.) -->
             <xsl:apply-templates select="." mode="xpath"/>
          </xsl:variable>
          <mx:report cf="{$cf}"
                     test="{ $testing }"
                     class="{$class}"
-                    xpath="{ $xpath }">
-            <xsl:if test="exists($rule-id[matches(.,'\S')])">
-               <xsl:attribute name="rule-id" select="string-join($rule-id[matches(.,'\S')],' ')"/>
-            </xsl:if>
-            <xsl:if test="not($level = 'ERROR')">
-               <xsl:attribute name="level" select="$level"/>
+                    xpath="{ $xpath }"
+                    level="{ $level }">
+            <xsl:if test="exists($rule-id[matches(., '\S')])">
+               <xsl:attribute name="rule-id" select="string-join($rule-id[matches(., '\S')], ' ')"/>
             </xsl:if>
             <xsl:if test="not($matching = '*')">
                <xsl:attribute name="matching" select="$matching"/>
@@ -196,9 +213,9 @@
          </mx:report>
       </xsl:if>
    </xsl:template>
-   <xsl:template name="announce-aside">
+   <xsl:template name="echoing">
       <xsl:param name="msg">[info]</xsl:param>
-      <xsl:if test="$mode='noisy'">
+      <xsl:if test="not($echo = 'none')">
          <xsl:message>
             <xsl:sequence select="$msg"/>
          </xsl:message>
@@ -209,9 +226,9 @@
       <xsl:text expand-text="true">/{ name() }</xsl:text>
    </xsl:template>
    <xsl:template mode="xpath"
-                 match="*[node-name()=(../* except current() )/node-name()]">
+                 match="*[node-name() = (../* except current())/node-name()]">
       <xsl:apply-templates select="parent::*" mode="#current"/>
-      <xsl:variable name="kin" select="../*[node-name()=current()/node-name()]"/>
+      <xsl:variable name="kin" select="../*[node-name() = current()/node-name()]"/>
       <xsl:text expand-text="true">/{ name() }[{ mx:element-position(.)[count($kin) gt 1] }]</xsl:text>
    </xsl:template>
    <xsl:template mode="xpath" match="@*">
@@ -233,7 +250,8 @@
    <xsl:template mode="xpath" match="processing-instruction()">
       <xsl:apply-templates select="parent::*" mode="#current"/>
       <xsl:variable name="kin" select="../processing-instruction()"/>
-      <xsl:variable name="place" expand-text="true">[{ count(preceding-sibling::processing-instruction()|.) }]</xsl:variable>
+      <xsl:variable name="place" expand-text="true">[{ count(preceding-sibling::processing-instruction()|.)
+         }]</xsl:variable>
       <xsl:text expand-text="true">/text(){ (count($kin)[. gt 1]) ! $place }</xsl:text>
    </xsl:template>
    <xsl:template name="check-datatype">
@@ -272,25 +290,36 @@
    <xsl:template match="mx:*" mode="grab-mx">
       <xsl:copy-of select="." copy-namespaces="false"/>
    </xsl:template>
-   <!--silences empty validation reports -->
-   <xsl:template match="/mx:validation[$mode='silent-when-valid'][empty(descendant::mx:report)]"
-                 priority="104"
-                 mode="grab-mx"/>
-   <xsl:template match="/mx:validation[$mode='noisy'][empty(descendant::mx:report)]"
+   <!-- Nominally invalid examples has errors or critical along with warning and info reports but no errors or critical -->
+   <xsl:template match="/mx:validation[descendant::mx:report/@level = ('CRITICAL', 'ERROR')]"
                  priority="103"
                  mode="grab-mx">
-      <xsl:call-template name="announce-aside" expand-text="true">
-         <xsl:with-param name="msg">File { replace(@src,'.*/','') } is reported VALID, no issues ... </xsl:with-param>
+      <xsl:variable name="report-count" select="count(.//mx:report)"/>
+      <xsl:variable name="error-count"
+                    select="count(.//mx:report[@level = ('CRITICAL', 'ERROR')])"/>
+      <xsl:call-template name="echoing" expand-text="true">
+         <xsl:with-param name="msg">
+            <xsl:choose>
+               <xsl:when test="$report-count eq $error-count">File { replace(@src,'.*/','') } has { $error-count } {
+                  mx:pluralize($error-count,'error')}.</xsl:when>
+               <xsl:otherwise>File { replace(@src,'.*/','') } has { $report-count } {
+                  mx:pluralize($report-count,'issue') } reported including { $error-count } {
+                  mx:pluralize($error-count,'error')}.</xsl:otherwise>
+            </xsl:choose>
+         </xsl:with-param>
       </xsl:call-template>
       <xsl:next-match/>
    </xsl:template>
-   <xsl:template match="/mx:validation[$mode='noisy'][exists(descendant::mx:report)]"
+   <!-- Nominally valid examples may have warning or info reports but no errors or critical -->
+   <xsl:template match="/mx:validation[not(descendant::mx:report/@level = ('CRITICAL', 'ERROR'))]"
                  priority="102"
                  mode="grab-mx">
-      <xsl:variable name="report-count" select="count(.//mx:report)"/>
-      <xsl:call-template name="announce-aside" expand-text="true">
-         <xsl:with-param name="msg">File { replace(@src,'.*/','') } has { $report-count } { mx:pluralize($report-count,'issue') } reported ... </xsl:with-param>
-      </xsl:call-template>
+      <xsl:if test="not($echo = 'invalid-only')">
+         <xsl:call-template name="echoing" expand-text="true">
+            <xsl:with-param name="msg">File { replace(@src,'.*/','') } is reported VALID, no issues ...
+            </xsl:with-param>
+         </xsl:call-template>
+      </xsl:if>
       <xsl:next-match/>
    </xsl:template>
    <xsl:template match="/mx:validation" priority="101" mode="grab-mx">
@@ -301,29 +330,56 @@
          <xsl:attribute name="attributes"
                         select="count(descendant::*/@* except .//mx:*/descendant-or-self::*/@*)"/>
          <xsl:attribute name="reports" select="count(.//mx:report)"/>
+         <xsl:attribute name="severe-reports"
+                        select="count(.//mx:report[@level = ('CRITICAL', 'ERROR')])"/>
          <xsl:apply-templates mode="grab-mx"/>
       </xsl:copy>
+   </xsl:template>
+   <!-- copy reports but do not announce them -->
+   <xsl:template match="mx:report[$echo = ('docs', 'info')][@level = ('ERROR', 'CRITICAL', 'WARNING')]"
+                 mode="grab-mx">
+      <xsl:copy-of select="." copy-namespaces="false"/>
+   </xsl:template>
+   <xsl:template match="mx:report[$echo = 'warnings'][@level = ('ERROR', 'CRITICAL')]"
+                 mode="grab-mx">
+      <xsl:copy-of select="." copy-namespaces="false"/>
+   </xsl:template>
+   <xsl:template match="mx:report" mode="grab-mx" expand-text="true">
+      <xsl:if test="not($form = ('summary', 'one-line'))">
+         <xsl:call-template name="echoing" expand-text="true">
+            <xsl:with-param name="msg">{ (@level,'ERROR')[1] } [CLASS) { @class } ][PATH) { @xpath } ][REPORT) {
+               string(.) }]</xsl:with-param>
+         </xsl:call-template>
+      </xsl:if>
+      <xsl:next-match/>
    </xsl:template>
    <xsl:mode name="mx-to-html" on-no-match="text-only-copy"/>
    <xsl:template match="/mx:validation" mode="mx-to-html" expand-text="true">
       <xsl:variable name="reported-valid" select="@reports = 0"/>
-      <xsl:variable name="validating-filename" select="replace(@src,'.*/','')"/>
-      <xsl:variable name="checked" select="if ($reported-valid) then '&#x2714;' else '&#x2718;'"/>
+      <xsl:variable name="validating-filename" select="replace(@src, '.*/', '')"/>
+      <xsl:variable name="checked"
+                    select="             if ($reported-valid) then                '&#x2714;'             else                '&#x2718;'"/>
       <html>
          <head>
             <title>{ $validating-filename } - { $checked } - { mx:metaschema/@shortname } validation</title>
             <xsl:call-template name="html-css"/>
          </head>
          <body>
-            <h1>{ $checked } Validating <a href="{ @src }">{ $validating-filename }</a> - { mx:metaschema } - found { 'IN'[not($reported-valid)] }VALID</h1>
-            <xsl:apply-templates mode="#current" select="mx:metaschema"/>
-            <p>
-               <code>{ $validating-filename }</code> contains { @elements} { mx:pluralize(@elements/number(),'element') } and { @attributes } {
-               mx:pluralize(@attributes/number(),'attribute') }.</p>
-            <xsl:apply-templates select="." mode="summary"/>
-            <main>
-               <xsl:apply-templates mode="#current" select="child::* except mx:metaschema"/>
-            </main>
+            <h1>{ $checked } Validating <a href="{ @src }">{ $validating-filename }</a> - { mx:metaschema } - found {
+               'IN'[not($reported-valid)] }VALID</h1>
+            <xsl:if test="not($form = 'one-line')">
+               <xsl:apply-templates mode="#current" select="mx:metaschema"/>
+               <p>
+                  <code>{ $validating-filename }</code> contains { @elements} {
+                  mx:pluralize(@elements/number(),'element') } and { @attributes } {
+                  mx:pluralize(@attributes/number(),'attribute') }.</p>
+               <xsl:apply-templates select="." mode="summary"/>
+               <xsl:if test="not($form = ('one-line', 'summary'))">
+                  <main>
+                     <xsl:apply-templates mode="#current" select="child::* except mx:metaschema"/>
+                  </main>
+               </xsl:if>
+            </xsl:if>
          </body>
       </html>
    </xsl:template>
@@ -351,7 +407,8 @@ details p { margin: 0.2em 0em }
       </div>
    </xsl:template>
    <xsl:template match="mx:metaschema" mode="mx-to-html" expand-text="true">
-      <p class="metadata">Checking against rules derived from <b>{ . }</b> metaschema (namespace <code>{ @namespace }</code>)</p>
+      <p class="metadata">Checking against rules derived from <b>{ . }</b> metaschema (namespace <code>{ @namespace
+            }</code>)</p>
    </xsl:template>
    <xsl:template match="mx:report" mode="mx-to-html" expand-text="true">
       <details class="report { @class }{ @level[not(.='ERROR')] ! (' ' || .) }">
@@ -366,7 +423,7 @@ details p { margin: 0.2em 0em }
             </xsl:for-each>
             <li class="test">test: <code>{ @test }</code>
             </li>
-            <xsl:if test="@matching!='*'">
+            <xsl:if test="@matching != '*'">
                <li class="matching">matching: <code>{ @matching }</code>
                </li>
             </xsl:if>
@@ -392,7 +449,6 @@ details p { margin: 0.2em 0em }
    </xsl:template>
    <xsl:mode name="html-to-md" on-no-match="text-only-copy"/>
    <xsl:variable name="lf" as="xs:string" expand-text="true">{ codepoints-to-string(10) }</xsl:variable>
-   <xsl:variable name="lf2" as="xs:string" expand-text="true">{$lf || $lf[not($mode='compressed')]}</xsl:variable>
    <xsl:template mode="html-to-md"
                  match="html"
                  xpath-default-namespace="http://www.w3.org/1999/xhtml">
@@ -401,12 +457,6 @@ details p { margin: 0.2em 0em }
    <xsl:template mode="html-to-md"
                  match="style"
                  xpath-default-namespace="http://www.w3.org/1999/xhtml"/>
-   <xsl:template mode="html-to-md"
-                 match="body[$mode='concise']"
-                 expand-text="true"
-                 xpath-default-namespace="http://www.w3.org/1999/xhtml">
-      <xsl:apply-templates mode="#current" select="h1"/>
-   </xsl:template>
    <xsl:template mode="html-to-md"
                  match="body"
                  expand-text="true"
@@ -418,6 +468,7 @@ details p { margin: 0.2em 0em }
                  match="div | details"
                  expand-text="true"
                  xpath-default-namespace="http://www.w3.org/1999/xhtml">
+      <xsl:param name="lf2" tunnel="true" as="xs:string" select="$lf || $lf"/>
       <xsl:text>{ $lf2 }---</xsl:text>
       <xsl:apply-templates mode="#current"/>
    </xsl:template>
@@ -432,6 +483,7 @@ details p { margin: 0.2em 0em }
                  match="h1"
                  expand-text="true"
                  xpath-default-namespace="http://www.w3.org/1999/xhtml">
+      <xsl:param name="lf2" tunnel="true" as="xs:string" select="$lf || $lf"/>
       <xsl:text>{ $lf2 }# </xsl:text>
       <xsl:apply-templates mode="#current"/>
    </xsl:template>
@@ -439,6 +491,7 @@ details p { margin: 0.2em 0em }
                  match="h2"
                  expand-text="true"
                  xpath-default-namespace="http://www.w3.org/1999/xhtml">
+      <xsl:param name="lf2" tunnel="true" as="xs:string" select="$lf || $lf"/>
       <xsl:text>{ $lf2 }## </xsl:text>
       <xsl:apply-templates mode="#current"/>
    </xsl:template>
@@ -446,6 +499,7 @@ details p { margin: 0.2em 0em }
                  match="h3 | details/summary"
                  expand-text="true"
                  xpath-default-namespace="http://www.w3.org/1999/xhtml">
+      <xsl:param name="lf2" tunnel="true" as="xs:string" select="$lf || $lf"/>
       <xsl:text>{ $lf2 }### </xsl:text>
       <xsl:apply-templates mode="#current"/>
    </xsl:template>
@@ -453,6 +507,7 @@ details p { margin: 0.2em 0em }
                  match="p"
                  expand-text="true"
                  xpath-default-namespace="http://www.w3.org/1999/xhtml">
+      <xsl:param name="lf2" tunnel="true" as="xs:string" select="$lf || $lf"/>
       <xsl:text>{ $lf2 }</xsl:text>
       <xsl:apply-templates mode="#current"/>
    </xsl:template>
@@ -460,7 +515,8 @@ details p { margin: 0.2em 0em }
                  match="ul"
                  expand-text="true"
                  xpath-default-namespace="http://www.w3.org/1999/xhtml">
-      <xsl:text>{ $lf[not($mode='compressed')] }</xsl:text>
+      <xsl:param name="lf2" tunnel="true" as="xs:string" select="$lf || $lf"/>
+      <xsl:sequence select="replace($lf2, '&#xA;$', '')"/>
       <xsl:apply-templates mode="#current"/>
    </xsl:template>
    <xsl:template mode="html-to-md"

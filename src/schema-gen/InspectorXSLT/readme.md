@@ -17,14 +17,14 @@ That is, it combines the effective functionality of XML schema and Schematron (X
 
 ## Feature set (for demo)
 
+- [x] Emit copy of source annotated with validation messages
 - [x] Emit reports to STDOUT
 - [x] Write reports to file system (lower ASCII, escaped HTML for emoji)
-- [x] Emit reports in native (MX) format, HTML or Markdown
-- [x] Compact mode returns a one-line answer
-- [x] `silent-when-valid` mode returns validations only for files found invalid
-- [x] `compact` mode reduces Markdown (no double LF)
-- [x] Run in batch, write reports to file(s)
-  - [x] Using Saxon feature
+- [x] Emit reports in native (MX) format, HTML, Markdown or plain text (compacted Markdown)
+- [x] Supports full, summary or one-line results per instance
+- [x] Can echo progress as it writes
+- [x] Run in batch
+  - [x] Using Saxon feature (writing files)
   - [x] Using shell
   - [ ] Using XProc 
   - [ ] make post-process XSLT digesting a sequence of MX results
@@ -32,8 +32,6 @@ That is, it combines the effective functionality of XML schema and Schematron (X
 - [x] Validate lexical rules over datatypes
   - [ ] more testing 
 - [ ] Validate constraints
-- [x] Write reports to file (HTML, Markdown)
-- [x] Emit copy of source annotated with validation messages
 - [ ] Run in browser / SaxonJS
 - [ ] MX->SVRL filter postprocess
 - [ ] other ideas below
@@ -94,22 +92,33 @@ Command line flags and options for using the InspectorXSLT with Saxon - note use
 - `-s` required flag indicates the source file or directory - if a directory, `-o` is also required
 - `-o` optional flag indicates where to write a report file; if omitted the report comes back to STDOUT; required when `-s` is a directory
 - `-it:markdown`, `-it:md`, `-im:markdown` and `-im:md` all produce Markdown
+- `-it:plaintext`, and `-im:plaintext` drop double line-feeds from the Markdown producing a plain text format
 - `-it:html` and `-im:html` produce (the same) HTML
 - `-it:mx-report`, `-it:mx`, `-im:mx-report`, and `-im:mx` all produce (the same) report in an MX XML format, suitable for further processing
 - Leaving out `-it` or `-im`, you should expect a copy of the document with its MX reports embedded close to the validation errors they report
 - `-it` is short for `-initial-template` while `-im` is short for `-initial-mode`
 - If both `-it` and `-im` are given, expect `-it` to prevail
-- Parameter `mode` further affects the results:
-  - `mode=compact` strips line feeds from Markdown results for a 'compact ASCII' view (no effect when producing HTML or MX)
-  - `mode=one-liner` is even more compact, writes only one-line summaries, and works for HTML as well as Markdown.
-  - `mode=silent-when-valid` suppresses any reports from valid instances\*
-  - `mode=noisy` provides extra progress reports to STDOUT - useful for tracing when writing outputs to files
+
+Parameters further affect the results.
+
+The `form` parameter provides for adjustments to be made to outputs (HTML, Markdown or plaintext):
+
+  - `form=summary` suppresses all details and presents only a summary
+  - `form=one-line` suppresses everything but a single summary line
+  - Otherwise a form value `full` is inferred and the full results included
+
+The `echo` parameter can be used to supplement output reports with messages to the console. This feature is *complementary* to the basic reporting and is expected to be used along with it, especially when reports are written to files.
+
+  - `echo=none` or no `echo` parameter provides no echo
+  - `echo=docs` reports an instance found valid or invalid
+  - `echo=invalid-only` reports an instance found invalid
+  - `echo=info` reports the valid/invalid finding plus info messages
+  - `echo=warnings` reports the valid/invalid finding plus warnings and info messages
+  - `echo=all` (or any `echo` other than `none`) reports the finding plus all errors, warnings and info messages
   
 TBD, to be considered:
 
   - filters to remove messages by level, code or matched node (XPath)
-
-\* The setting `mode=silent-when-valid` is most useful when the results come to the console, not a file. Unfortunately, since Saxon directed with `-o` is obliged to write some kind of file output, 0-byte file entities are still produced even for "empty" outputs created when reports of validity are suppressed. These files can be removed with `$ find dir -type f -empty -print -delete` (Linux CL) or equivalent, where `dir` is the directory (path).
 
 #### Tweaking result file names
 
@@ -121,8 +130,10 @@ Especially when Markdown or HTML results are produced in batch with names matchi
 (cd reports && for f in $(ls *.xml); do mv $f ${f%.*}-report.html; done)
 ```
 
+Write a series of one-line reports for a pile of documents in a folder called `valid`:
+
 ```
-(cd valid && for f in $(ls *.xml); do ./inspect-computer-md.sh -s:$f mode=one-liner; done)
+(cd valid && for f in $(ls *.xml); do ./inspect-computer-md.sh -s:$f form=one-line; done)
 
 ```
 
@@ -134,7 +145,7 @@ Of course this also not the only way to automate the validation and reporting pr
 
 Various different command-line options can modify operations, either using Saxon and runtime parameters directly, or through scripting.
 
-Having produced the XSLT `computer-inspector.xsl` for inspecting `computer` XML documents: **to validate a file** `invalid10.xml` ...
+The XSLT initial template feature, XSLT runtime parameters, and redirecting processing results together provide a range of capabilities. Having produced the XSLT `computer-inspector.xsl` for inspecting `computer` XML documents: **to validate a file** `invalid10.xml` ...
 
 ---
 
@@ -186,10 +197,10 @@ saxon -it:md -xslt:computer-inspector.xsl -s:invalid10.xml
 
 ---
 
-To write **Markdown results to STDOUT except emit *one line only***. This uses the `mode` parameter.:
+To write **Markdown results to STDOUT except emit *one line only***. This uses the `form` parameter.:
 
 ```bash
-saxon -it:md -xslt:computer-inspector.xsl -s:invalid10.xml mode=one-liner
+saxon -it:md -xslt:computer-inspector.xsl -s:invalid10.xml form=one-line
 ```
 
 ---
@@ -197,10 +208,18 @@ saxon -it:md -xslt:computer-inspector.xsl -s:invalid10.xml mode=one-liner
 And to **silence results entirely when a file is found to be valid**:
 
 ```bash
-saxon -it:md -xslt:computer-inspector.xsl -s:invalid10.xml mode=silent-when-valid
+saxon -it:md -xslt:computer-inspector.xsl -s:invalid10.xml -o:/dev/null echo=invalid-only
 ```
 
-(This also works with `-it:html` for HTML reports.)
+---
+
+Or instead to **echo warnings and info** (only) to the console but otherwise silence results:
+
+```bash
+saxon -it:md -xslt:computer-inspector.xsl -s:invalid10.xml -o:/dev/null echo=warnings
+```
+
+Why would you want to do this? Because you know of errors already but want an update regarding any warnings.
 
 ---
 
@@ -216,19 +235,19 @@ Note - results are written for all files, valid and invalid, irrespective of fin
 
 To **report as files are found to be valid or invalid** to STDOUT, *additional* to producing reports.
 
-Use `mode=noisy` if you wish to see progress in the console even when directing results to file outputs. It will announce findings of both valid and invalid files, one line per file; so it is similar to `mode=one-liner` except it supplements instead of replaces the production of complete reports - so progress can be monitored as well as results can be written out. This mode cannot be used with `silent-when-valid` or `one-liner`.
+The `echo` feature is useful when using the `-o` argument to direct outputs (complete or summaries) to file or device. Additional to the primary outputs, `echo` produces a record and summary view to a secondary output, generally STDERR (via `xsl:message`).
 
-This feature is designed to be used when validating in batch and writing results to files. When validating a single file or not producing static results, consider using `mode=one-liner` instead (for example, to produce and see Markdown in the console).
+Use `echo` (see above) if you wish to see progress in the console even when directing results to file outputs. It will announce findings of both valid and invalid files, one line per file, in addition to other messages; so it can be similar to `mode=one-liner` except it supplements instead of replaces the production of complete reports (i.e., the primary result) - so progress can be monitored as well as results can be written out.
 
-```bash
-saxon -it:html -xslt:computer-inspector.xsl -s:invalid10.xml -o:invalid10-report.html mode=noisy
-```
+`echo` and `form` can be used at the same time - `form` affecting how results look, and `echo` affecting what gets reported via messaging along with that production.
+
+This feature is designed to be especially useful when validating inputs in batches and writing results to files. Often an operator prefers to have some runtime notification of what is happening, even when the main interest is in 'side effects' such as files written to the system.
 
 ---
 
 Alternatively, to **use bash to loop over one file at a time, collecting the outputs coming to STDOUT** to a file.
 
-With `mode=one-liner` we get one line per file.
+With `form=one-line` and Markdown or plaintext results, we get one line per file.
 
 ```bash
 (for f in $(ls collectionls /*.xml); do saxon -it:md -xslt:computer-inspector.xsl -s:$f mode=one-liner; done) 1> validated.txt
@@ -236,14 +255,14 @@ With `mode=one-liner` we get one line per file.
 
 ---
 
-Or running without `mode=one-liner` to **create a single Markdown report** (note result file name) - modes `noisy` or `silent-when-valid` are available :
+Or running without `form=one-line` to **create a single Markdown report** (note result file name) - `echo` settings are available:
 
 
 ```bash
-(for f in $(ls collection/*.xml); do saxon -it:md -xslt:computer-inspector.xsl -s:$f mode=noisy; done) 1> validation-report.md
+(for f in $(ls collection/*.xml); do saxon -it:md -xslt:computer-inspector.xsl -s:$f echo=all; done) 1> validation-report.md
 ```
 
-This time, all results are written in Markdown into the file `validation-report.md`, while `mode=noisy` provides progress indicators echoed to the console.
+This time, all results are written in Markdown into the file `validation-report.md`, while `echo=all` provides progress indicators echoed to the console. Use other `echo` settings for less noise.
 
 ---
 
