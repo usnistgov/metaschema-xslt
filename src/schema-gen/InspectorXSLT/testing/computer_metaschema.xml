@@ -97,7 +97,8 @@
                     <define-assembly name="ata-socket">
                         <formal-name>Motherboard Advanced Technology Attachment (ATA) Socket</formal-name>
                         <description>The model number of ATA socket on the motherboard of a computer. There will only be one socket on any motherboard.</description>
-                        <model>
+                       <flag ref="serial-number"/>
+                       <model>
                             <assembly ref="vendor"/>        
                             <field ref="product-name" min-occurs="1" max-occurs="1"/>
                             <define-field name="type" as-type="string" min-occurs="1" max-occurs="1">
@@ -131,7 +132,8 @@
                         <formal-name>Motherboard Random Access Memory (RAM) Module(s)</formal-name>
                         <description>Random access memory hardware installed on the motherboard of a computer.</description>
                         <group-as name="memory-modules" in-json="ARRAY"/>
-                        <model>
+                       <flag ref="serial-number"/>
+                       <model>
                             <assembly ref="vendor"/>
                             <field ref="product-name" min-occurs="1" max-occurs="1"/>
                             <define-field name="byte-size" as-type="positive-integer" min-occurs="1" max-occurs="1">
@@ -186,9 +188,9 @@
           <expect id="manufacture-date-rule_2" target="@date-of-manufacture" test="not(. castable as xs:date) or (xs:date(.) >= xs:date('1950-01-01'))"/>
           <matches  id="manufacture-date-rule_3" target="@date-of-manufacture" datatype="date" level="WARNING" />
           <has-cardinality target="expansion-card" max-occurs="4" id="expansion-card-rule_1"/>
-          <!--<is-unique target="//*" id="unique-serial-numbers">
+          <is-unique target="descendant::*[exists(@sn)]" id="unique-serial-numbers">
              <key-field target="@sn"/>
-          </is-unique>-->
+          </is-unique>
        </constraint>
     </define-assembly>
     
