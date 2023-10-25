@@ -513,7 +513,6 @@
       <xsl:variable name="target-step" expand-text="true">{ @target[not(matches(.,'\s*\.\s*'))] ! ('/(' || . || ')')
          }</xsl:variable>
       <xsl:variable name="target-match" select="($matching ! (. || $target-step)) => string-join(' | ')"/>
-      <xsl:message expand-text="true">matching {name()}{ @id ! ('[@id=' || . || ']')} with match={ $target-match } to make template in mode constraint-cascade, priority {  ($constraint-count + 101) - number($priority)} </xsl:message>
       <XSLT:template priority="{ ($constraint-count + 101) - number($priority) }" mode="constraint-cascade"
          match="{ $target-match }">
 
@@ -545,7 +544,6 @@
       <xsl:variable name="target-step" expand-text="true">{ @target[not(matches(.,'\s*\.\s*'))] ! ('/(' || . || ')')
          }</xsl:variable>
       <xsl:variable name="target-match" select="($matching ! (. || $target-step)) => string-join(' | ')"/>
-      <xsl:message expand-text="true">matching {name()}{ @id ! ('[@id=' || . || ']')} with match={ $target-match } to make template in mode constraint-cascade, priority {  ($constraint-count + 101) - number($priority)} </xsl:message>
       <XSLT:template priority="{ ($constraint-count + 101) - number($priority) }" mode="constraint-cascade"
          match="{ $target-match }">
          <xsl:for-each select="@datatype">
@@ -581,7 +579,6 @@
          }</xsl:variable>
       <xsl:variable name="target-match" select="($matching ! (. || $target-step)) => string-join(' | ')"/>
       <xsl:variable name="assert" expand-text="true">{ @test }</xsl:variable>
-      <xsl:message expand-text="true">matching {name()}{ @id ! ('[@id=' || . || ']')} with match={ $target-match } to make template in mode constraint-cascade, priority {  ($constraint-count + 101) - number($priority)} </xsl:message>
       <XSLT:template priority="{ ($constraint-count + 101) - number($priority) }" mode="constraint-cascade"
          match="{ $target-match }">
          
@@ -609,7 +606,6 @@
       <xsl:variable name="assert" expand-text="true">{
          (@min-occurs ! ($count-expr || ' ge ' || .),'true()')[1] } and {
          (@max-occurs ! ($count-expr || ' le ' || .),'true()')[1] }</xsl:variable>
-      <xsl:message expand-text="true">matching {name()}{ @id ! ('[@id=' || . || ']')} with match={ $matching } to make template in mode constraint-cascade, priority {  ($constraint-count + 101) - number($priority)} </xsl:message>
       <XSLT:template priority="{ ($constraint-count + 101) - number($priority) }" mode="constraint-cascade"
          match="{ $matching }">
          <!-- test is not type-safe -->
@@ -626,6 +622,86 @@
       </XSLT:template>
    </xsl:template>
    
+   
+   <xsl:template mode="generate-constraint-cascade" priority="10" match="constraint/is-unique" expand-text="true">
+      <xsl:param name="matching" as="xs:string+" required="true" tunnel="true"/>
+      <xsl:variable name="priority">
+         <xsl:number count="constraint/*" level="any" format="10001"/>
+      </xsl:variable>
+      <xsl:variable name="keyname" as="xs:string">
+         <xsl:apply-templates select="." mode="make-key-name"/>
+      </xsl:variable>
+     <!-- <xsl:variable name="target-step" expand-text="true">{ @target[not(matches(.,'\s*\.\s*'))] ! ('/(' || . || ')')
+         }</xsl:variable>
+      <!-\- only handling relative paths on @target atm -\->
+      <xsl:variable name="target-match" select="($matching ! (. || $target-step)) => string-join(' | ')"/>-->
+      <xsl:variable name="count-expr" expand-text="true">mx:key-matches-among-items(.,$selected,'{$keyname}',{mx:key-value(.)},$within)</xsl:variable>
+      <xsl:variable name="assert" expand-text="true">count({$count-expr})=1</xsl:variable>
+      
+      <xsl:variable name="counting" select="@target"/>
+      <xsl:apply-templates select="." mode="make-key">
+         <xsl:with-param name="matching" as="xs:string*" select="$matching ! (. || '/(' || $counting || ')')"/>
+      </xsl:apply-templates>
+      <XSLT:template priority="{ ($constraint-count + 101) - number($priority) }" mode="constraint-cascade"
+         match="{ string-join($matching,'|') }">
+         <XSLT:variable name="within" select="."/>
+         <XSLT:variable name="selected" select="{ @target }"/>
+         <XSLT:for-each select="{ @target }">
+            <XSLT:call-template name="notice">
+               <XSLT:with-param name="cf">gix.651</XSLT:with-param>
+               <XSLT:with-param name="rule-id">{ @id }</XSLT:with-param>
+               <XSLT:with-param name="matching" as="xs:string">{  string-join($matching,'|')  }/({ @target})</XSLT:with-param>
+               <XSLT:with-param name="class">UNIQ uniqueness-violation</XSLT:with-param>
+               <XSLT:with-param name="testing" as="xs:string">not({$assert})</XSLT:with-param>
+               <XSLT:with-param name="condition" select="not({$assert})"/>
+               <XSLT:with-param name="msg" expand-text="true">With respect to its assigned <mx:gi>{ mx:key-value(.) }</mx:gi>, this <mx:gi>{{name(.)}}</mx:gi> instance of <mx:code>{ string-join($matching,'|')  }/({ @target})</mx:code> is expected to be unique within its <mx:gi>{{$within/name(.)}}</mx:gi>. {{count({$count-expr})}} items are found with the value{ key-field[2]/'s' } <mx:code>{{string-join(({mx:key-value(.)}),',')}}</mx:code>.</XSLT:with-param>
+            </XSLT:call-template>       
+         </XSLT:for-each>
+<!-- match context node, retrieve and test each of the target nodes with all the target nodes        -->
+         
+         <!--<xsl:variable name="test" as="xs:string" expand-text="true">{ @test }</xsl:variable>-->
+         <!-- test is not type-safe -->
+         
+      
+      </XSLT:template>
+   </xsl:template>
+   
+   <xsl:function name="mx:key-value" as="xs:string">
+      <xsl:param name="whose" as="element()"/>
+      <!-- delimit values with ',' emitting 'string()' for any key-field with no @target or @target=('.','value()') -->
+      <xsl:variable name="plural" select="exists($whose/key-field[2])"/>
+      <xsl:value-of>
+         <xsl:if test="$plural">(</xsl:if>
+         <xsl:value-of separator=",">
+            <xsl:sequence select="$whose/key-field/@target/(.[not(. = ('.', 'value()'))], 'string(.)')[1]"/>
+         </xsl:value-of>
+         <xsl:if test="$plural">)</xsl:if>
+      </xsl:value-of>
+   </xsl:function>
+   
+   
+   <xsl:template match="index | is-unique" mode="make-key">
+      <xsl:param name="matching" as="xs:string" required="true"/>
+      <xsl:variable name="keyname">
+         <xsl:apply-templates select="." mode="make-key-name"/>
+      </xsl:variable>
+      <XSLT:key name="{$keyname}" match="{$matching}" use="{mx:key-value(.)}">
+         <xsl:if test="count(key-field) gt 1">
+            <xsl:attribute name="composite">true</xsl:attribute>
+         </xsl:if>
+      </XSLT:key>
+   </xsl:template>
+   
+   <xsl:template mode="make-key-name" match="is-unique" as="xs:string">
+      <xsl:value-of>
+         <xsl:text>UNIQ_</xsl:text>
+         <xsl:number count="is-unique" level="any"/>
+      </xsl:value-of>
+   </xsl:template>
+   
+   <xsl:template mode="make-key-name" priority="10" match="is-unique[exists(@id)]">
+      <xsl:text expand-text="true">UNIQ_{ @id }</xsl:text>
+   </xsl:template>
    
    <xsl:template mode="require-for" match="define-flag" expand-text="true">
       <XSLT:template name="require-for-{ mx:definition-name(.) }-flag">

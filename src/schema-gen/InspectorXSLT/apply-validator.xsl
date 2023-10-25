@@ -311,7 +311,18 @@
       <xsl:param name="nominal-type" as="item()?"/>
       <xsl:sequence select="true()"/>
    </xsl:function>
-
+   
+<!-- given a node, a key name, value (sequence) and scope for evaluation, and a sequence of items,
+     returns those items that are returned by the key (in document order) -->
+   <xsl:function name="mx:key-matches-among-items" as="node()*">
+      <xsl:param name="item" as="item()"/>
+      <xsl:param name="items" as="item()+"/>
+      <xsl:param name="keyname" as="xs:string"/>
+      <xsl:param name="keyval" as="item()*"/>
+      <xsl:param name="keyscope" as="node()"/>      
+      <xsl:sequence select="$item!key($keyname,$keyval,$keyscope) intersect $items"/>
+   </xsl:function>
+   
    <!-- Mode grab-mx filters mx from its 'host' XML -->
 
    <xsl:mode name="grab-mx" on-no-match="shallow-skip"/>

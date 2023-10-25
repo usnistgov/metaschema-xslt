@@ -95,6 +95,12 @@ bare XPath is best for transparency
 
 ### Test coverage
 
+Working edges:
+  Wrapped and unwrapped markup-multiline
+  grouped and ungrouped elements and their siblings
+  absolute target paths
+  broken paths (graceful prevention?)
+  
 poll metaschema w/ reference to XSpecs
 
 for each constraint ensuring it has an @id locate all x:scenario//mx:report with that rule-id

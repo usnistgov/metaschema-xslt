@@ -372,7 +372,71 @@
       </x:scenario>
    </x:scenario>
    
-   <x:scenario label="'is-unique' UNIQ" pending="build">   </x:scenario>
+   <x:scenario label="'is-unique' UNIQ">
+      <x:scenario label="Since @sn 'serial number' values are expected to be distinctive">
+         <x:context mode="test" select="/c:computer">
+            <computer id="has.2x.a1">
+               <expansion-card sn="a1"/>
+               <expansion-card sn="a2"/>
+               <expansion-card sn="a3"/>
+               <expansion-card sn="a1"/>
+            </computer>
+         </x:context>
+         <x:expect label="a violation emits as many reports as there are occasions of use (of any repeated value) - here, two (2) reports">
+            <mx:report cf="..."
+               test="not(count(mx:key-matches-among-items(.,$selected,'UNIQ_unique-serial-numbers',@sn,$within))=1)"
+               class="UNIQ uniqueness-violation" xpath="/computer/expansion-card[1]"
+               level="ERROR" rule-id="unique-serial-numbers"
+               matching="computer/(descendant::*[exists(@sn)])">With respect to its assigned <mx:gi>@sn</mx:gi>, this <mx:gi>expansion-card</mx:gi> instance of <mx:code>computer/(descendant::*[exists(@sn)])</mx:code> is expected to be unique within its <mx:gi>computer</mx:gi>. 2 items are found with the value <mx:code>a1</mx:code>.</mx:report>
+            <mx:report  cf="..." test="not(count(mx:key-matches-among-items(.,$selected,'UNIQ_unique-serial-numbers',@sn,$within))=1)"
+               class="UNIQ uniqueness-violation" xpath="/computer/expansion-card[4]"
+               level="ERROR" rule-id="unique-serial-numbers"
+               matching="computer/(descendant::*[exists(@sn)])">With respect to its assigned <mx:gi>@sn</mx:gi>, this <mx:gi>expansion-card</mx:gi> instance of <mx:code>computer/(descendant::*[exists(@sn)])</mx:code> is expected to be unique within its <mx:gi>computer</mx:gi>. 2 items are found with the value <mx:code>a1</mx:code>.</mx:report>
+         </x:expect>
+      </x:scenario>
+      <x:scenario label="Since @sn 'serial number' values are expected to be distinctive">
+         <x:context mode="test" select="/c:computer">
+            <computer id="all-good">
+               <expansion-card sn="a1"/>
+               <expansion-card sn="a2"/>
+               <expansion-card sn="a3"/>
+               <expansion-card sn="a4"/>
+            </computer>
+         </x:context>
+         <x:expect label="nothing is reported when they are" select="()">
+            <mx:report cf="..."
+               test="not(count(mx:key-matches-among-items(.,$selected,'UNIQ_unique-serial-numbers',@sn,$within))=1)"
+               class="UNIQ uniqueness-violation" xpath="/computer/expansion-card[1]"
+               level="ERROR" rule-id="unique-serial-numbers"
+               matching="computer/(descendant::*[exists(@sn)])">With respect to its <mx:gi>@sn</mx:gi> value of <mx:code>a1</mx:code> within its <mx:gi>computer</mx:gi>, <mx:gi>expansion-card</mx:gi> is expected to be unique. 2 such items are found.</mx:report>
+            <mx:report  cf="..." test="not(count(mx:key-matches-among-items(.,$selected,'UNIQ_unique-serial-numbers',@sn,$within))=1)"
+               class="UNIQ uniqueness-violation" xpath="/computer/expansion-card[4]"
+               level="ERROR" rule-id="unique-serial-numbers"
+               matching="computer/(descendant::*[exists(@sn)])">With respect to its <mx:gi>@sn</mx:gi> value of <mx:code>a1</mx:code> within its <mx:gi>computer</mx:gi>, <mx:gi>expansion-card</mx:gi> is expected to be unique. 2 such items are found.</mx:report>
+         </x:expect>
+      </x:scenario>
+      <x:scenario label="This also works if the offending objects are not the same type, as long as they are all targets">
+         <x:context mode="test" select="/c:computer">
+            <computer id="another.has.2x.a1">
+               <memory sn="a1"/>
+               <expansion-card sn="a1"/>
+               <expansion-card sn="a2"/>
+               <expansion-card sn="a3"/>
+            </computer>
+         </x:context>
+         <x:expect label="two reports, each for a distince uniqueness violation">
+            <mx:report cf="..."
+               test="not(count(mx:key-matches-among-items(.,$selected,'UNIQ_unique-serial-numbers',@sn,$within))=1)"
+               class="UNIQ uniqueness-violation" xpath="/computer/memory"
+               level="ERROR" rule-id="unique-serial-numbers"
+               matching="computer/(descendant::*[exists(@sn)])">With respect to its assigned <mx:gi>@sn</mx:gi>, this <mx:gi>memory</mx:gi> instance of <mx:code>computer/(descendant::*[exists(@sn)])</mx:code> is expected to be unique within its <mx:gi>computer</mx:gi>. 2 items are found with the value <mx:code>a1</mx:code>.</mx:report>
+            <mx:report  cf="..." test="not(count(mx:key-matches-among-items(.,$selected,'UNIQ_unique-serial-numbers',@sn,$within))=1)"
+               class="UNIQ uniqueness-violation" xpath="/computer/expansion-card[1]"
+               level="ERROR" rule-id="unique-serial-numbers"
+               matching="computer/(descendant::*[exists(@sn)])">With respect to its assigned <mx:gi>@sn</mx:gi>, this <mx:gi>expansion-card</mx:gi> instance of <mx:code>computer/(descendant::*[exists(@sn)])</mx:code> is expected to be unique within its <mx:gi>computer</mx:gi>. 2 items are found with the value <mx:code>a1</mx:code>.</mx:report>
+         </x:expect>
+      </x:scenario>
+   </x:scenario>
    
    <!-- test index definition? -->
    <x:scenario label="'index-has-key' NXHK" pending="build">   </x:scenario>
