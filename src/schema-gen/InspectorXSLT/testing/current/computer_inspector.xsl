@@ -5,7 +5,7 @@
                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                version="3.0"
                xpath-default-namespace="http://example.com/ns/computer"
-               exclude-result-prefixes="#all"><!-- Generated 2023-10-25T16:12:21.47719-04:00 -->
+               exclude-result-prefixes="#all"><!-- Generated 2023-10-25T17:56:23.6153263-04:00 -->
    <xsl:mode on-no-match="fail"/>
    <xsl:mode name="test" on-no-match="shallow-skip"/>
    <!-- .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     . -->
@@ -59,7 +59,7 @@
       <xsl:apply-templates mode="html-to-md" select="$html-report/*"/>
    </xsl:template>
    <xsl:template match="/" mode="plaintext">
-      <xsl:call-template name="markdown"/>
+      <xsl:call-template name="plaintext"/>
    </xsl:template>
    <xsl:template name="plaintext">
       <xsl:variable name="html-report">

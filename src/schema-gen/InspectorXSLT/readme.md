@@ -54,13 +54,15 @@ At the same time, errors anywhere are of interest (see 'no need to quit'). Some 
 
 XSLT as validation language.
 
-This is a very different model of validation from what is usually (yet) practiced over data sets in exchange, even XML data except in some specialized circumstances. In considering the strengths, weaknesses and feature set of the tool, it may help to keep these differences in mind. What may be interesting is that this model - here called the <q>pull</q> model of validation - while very different from the usual historic model (<q>push</q>), is also very complimentary to it. A mature and capable system can have uses for both models in combination.
+This is a very different model of validation from what is usually (yet) practiced over data sets in exchange, even XML data except in some specialized circumstances. (There are noteworthy exceptions such as the NISO JATS, PMC and JATS4R technology cluster, or within DITA.) In considering the strengths, weaknesses and feature set of the tool, it may help to keep these differences in mind. What may be interesting is that this model - here called the <q>pull</q> model of validation - while very different from the usual historic model (<q>push</q>), is also very complimentary to it. A mature and capable system can have uses for both models in combination.
 
-Setting aside the question of what is the pull model and why called <q>pull</q> - this is *somewhat* analogous to push and pull parsing, two different techniques for building interpreters for character streams aka text processing - suffice it to say here that one aspect of pull is that conceptually, the data set under examination has already been parsed and is already available for inspection. This is not paradoxical if the 'push' model is also in place. Fortunately, the syntactic rules of XML well-formedness are sufficiently well-defined that this is feasible in reality.
+Setting aside the question of what should be meant by the pull model and why call it  <q>pull</q> - this is *somewhat* analogous to push and pull parsing, two different techniques for building interpreters for character streams aka text processing - suffice it to say here that one aspect of pull is that conceptually, the data set under examination has already been parsed and is already available for inspection. This is not paradoxical if the <p>push</p> model is also in place, as long as a document can be read well enough to push into memory once, where it can be pulled. Fortunately, the syntactic rules of XML well-formedness are sufficiently well-defined that this is feasible in reality.
 
-So in the field we work first by determining that an artifact purportedly and apparently XML is in fact XML - which we do, typically, with a neutral parse or 'well-formedness check'. (Indeed every day XML tools are doing this for their operators without their direct awareness.) While a low threshhold for interpretability - XML syntax assures nothing about an artifact other than its *potential* use *as XML* - which is to say, it is not zero. Indeed this small bit of information is both critical (it means much more than it seems to on the surface), and *actionable* - it means things for what we can do.
+So in the field we work first by determining that an artifact purportedly and apparently XML is in fact XML - which we do, typically, with a neutral parse or 'well-formedness check'. (Indeed every day XML tools are doing this for their operators without their direct awareness.) While a low threshhold for interpretability - XML syntax assures nothing about an artifact other than its *potential* use *as XML* - this is significantly more than zero. Indeed this small bit of information is both critical (it means much more than it seems to on the surface), and *actionable* - it is consequential knowledge the enables further steps.
 
-Traditional push-based validation such as XSD validation is defined in such a way that it can be conducted as a document is parsed for the first time - that is, without reference to any prior representation of anything in the document after the reading position. It is as if a human reader of a novel were required never to go back but more importantly never read again a book with any prior knowledge acquired in a first reading. Pull parsing assumes that reading and rereading are natural and cheap. In operation it proves this is a tenable assemption as long as document' sizes do not grow too large. A <q>read-once</q> parse is a powerful and enabling capability - helping to manage, among other things, the complexity of memory requirements for the parse relative to document size - yet this comes at a steep cost for expressibility. To validate truly arbitrary constraints up to and including so-called 'business rules', in which complexity of rules explodes and far-removed components within the document-space may be related, more or less requires that we do more. That is, any rules we wish to assert over documents that require or imply *random access* to document contents (both before and after the point under examination or enforcement), cannot be provided for by a bare grammar (which is what push parsers often depend on) without the fuller capabilities of a transformation language capable of querying, binding variables, caching and the rest.
+Traditional push-based validation such as XSD validation is defined in such a way that it can be conducted as a document is parsed for the first time - that is, without reference to any prior representation of anything in the document after the reading position. It is as if a human reader of a novel were required never to go back in the book, or skip ahead, and more importantly never read again a book with any prior knowledge acquired in a first reading. (All books must only be read once through for the first time.) A <q>read-once</q> parse is a powerful and enabling capability - helping to manage, among other things, the complexity of memory requirements for the parse relative to document size - yet this comes at a steep cost for expressibility.  Pull parsing assumes that once the book is available, reading and rereading are both natural and cheap. And in operation it proves indeed this is a tenable assemption as long as information sets do not grow too large and corpora too complex. (At that point other measures become necessary as well.)
+
+To validate truly arbitrary constraints up to and including so-called 'business rules', in which complexity of rules explodes and far-removed components within the document-space may be related, more or less requires that we do more. That is, any rules we wish to assert over documents that require or imply *random access* to document contents (both before and after the point under examination or enforcement), cannot be provided for by a bare grammar (which is what push parsers often depend on) without the fuller capabilities of a transformation language capable of querying, binding variables, caching and the rest.
 
 Interestingly, this different perspective on the rule set leads to different strengths and weaknesses in deployment between this application and standard approaches to document validation including XSD, RNG and DTD -- strengths and weaknesses that being opposite from the currently most common approach, also complement it. Indeed the successful use of Schematron, as another XSLT-transpiler, already shows this.
 
@@ -73,16 +75,17 @@ The tool is designed to be used standalone in an XSLT 3.0-capable processing env
 For convenience, in the testing directory are example scripts that run Saxon inside Maven to (a) produce an Inspector XSLT from a metaschema, then subsequently (b) apply this XSLT to an XML document to report issues detected in it, to delivering this report in HTML or Markdown format:
 
 - `testing/refresh-computer-inspector.sh` refreshes "computer metaschema" example XSLT
-- `testing/inspect-computer-md.sh` applies this XSLT to a 'computer' XML document returning Markdown
-- `testing/inspect-computer-html.sh` applies this XSLT to a 'computer' XML document returning HTML
+- `testing/inspect-computer.sh aComputerXML.xml -im:md` applies this XSLT to a 'computer' XML document returning Markdown
+- `testing/inspect-computer-html.sh aComputerXML.xml -im:html -o:report.html` applies this XSLT to a 'computer' XML document writing an HTML report to a file
+- with many more options - see script help or more info below
 
 These scripts demonstrate one way to invoke Saxon but there are many others suited to different operational contexts and systems, including other deployments of Saxon (Saxon-C or SaxonJS, just to name two). 
 
-The scripts also pass through arguments provided them to the receiving application, so that the flags and switches described below will also work, unless a script sets the same configuration itself.
+The scripts also pass through arguments provided them to the receiving application, so that the flags and switches described below will also work.
 
 ### To use generated XSLT directly
 
-If a script is not well-suited or easily adaptable, or for testing/experiment, Saxon can also be used directly. The following assumes that Saxon is set up to run from a command `saxon`. Arguments and command-line flags support functionalities beyond what is scripted, and can also be frequently be used *in combination* with the scripts. 
+If a script is not well-suited or easily adaptable, or for testing/experiment, Saxon can also be used directly, using the same syntax (which the scripts mainly pass through).
 
 #### Summary
 
@@ -123,13 +126,13 @@ TBD, to be considered:
 
 Saxon supports the excellent feature of processing an entire directory of inputs at a time, with the limitation that result files (validation reports in this application) are named after the source files from which they are produced.
 
-Especially when Markdown or HTML results are produced in batch with names matching the names of XML inputs, it can be useful to follow a directory-level operation with a global renaming of `.xml` to `-report.html` (or `-report.md` etc.). The many ways to do this including (in Linux systems) a bash script invoked inside a subshell:
+Especially when Markdown or HTML results are produced in batch with names matching the names of XML inputs, it can be useful to follow a directory-level operation with a global renaming of `.xml` to `-report.html` (or `-report.md` etc.). The many ways to do this include (in \*nix systems) a bash script invoked inside a subshell:
 
 ```
 (cd reports && for f in $(ls *.xml); do mv $f ${f%.*}-report.html; done)
 ```
 
-Write a series of one-line reports for a pile of documents in a folder called `valid`:
+It is possible to use this technique with a script as well:
 
 ```
 (cd valid && for f in $(ls *.xml); do ./inspect-computer-md.sh -s:$f form=one-line; done)

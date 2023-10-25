@@ -62,7 +62,7 @@
    </xsl:template>
 
    <xsl:template match="/" mode="plaintext">
-      <xsl:call-template name="markdown"/>
+      <xsl:call-template name="plaintext"/>
    </xsl:template>
 
    <xsl:template name="plaintext">
