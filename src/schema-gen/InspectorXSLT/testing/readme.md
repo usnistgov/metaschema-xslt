@@ -100,7 +100,8 @@ Working edges:
   grouped and ungrouped elements and their siblings
   absolute target paths
   broken paths (graceful prevention?)
-  
+  INFO and WARNING level tests
+  key scoping for index and is-unique
 poll metaschema w/ reference to XSpecs
 
 for each constraint ensuring it has an @id locate all x:scenario//mx:report with that rule-id

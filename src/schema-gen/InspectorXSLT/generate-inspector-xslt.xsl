@@ -570,6 +570,10 @@
 
    </xsl:template>
 
+   <xsl:template mode="generate-constraint-cascade" priority="10" match="constraint/index | constraint/index-has-key" expand-text="true">
+
+   </xsl:template>
+      
    <xsl:template mode="generate-constraint-cascade" priority="10" match="constraint/expect" expand-text="true">
       <xsl:param name="matching" as="xs:string+" required="true" tunnel="true"/>
       <xsl:variable name="priority">
@@ -657,12 +661,6 @@
                <XSLT:with-param name="msg" expand-text="true">With respect to its assigned <mx:gi>{ mx:key-value(.) }</mx:gi>, this <mx:gi>{{name(.)}}</mx:gi> instance of <mx:code>{ string-join($matching,'|')  }/({ @target})</mx:code> is expected to be unique within its <mx:gi>{{$within/name(.)}}</mx:gi>. {{count({$count-expr})}} items are found with the value{ key-field[2]/'s' } <mx:code>{{string-join(({mx:key-value(.)}),',')}}</mx:code>.</XSLT:with-param>
             </XSLT:call-template>       
          </XSLT:for-each>
-<!-- match context node, retrieve and test each of the target nodes with all the target nodes        -->
-         
-         <!--<xsl:variable name="test" as="xs:string" expand-text="true">{ @test }</xsl:variable>-->
-         <!-- test is not type-safe -->
-         
-      
       </XSLT:template>
    </xsl:template>
    

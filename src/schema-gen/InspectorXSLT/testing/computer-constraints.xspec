@@ -18,7 +18,7 @@
    <x:variable name="mx:MDCV-class" as="xs:string">MDCV datatype-match-fail</x:variable>
    <x:variable name="mx:XPKT-class" as="xs:string">XPKT expectation-violation</x:variable>
    <x:variable name="mx:HCCV-class" as="xs:string">HCCV cardinality-violation</x:variable>
-   <x:variable name="mx:UNIQ-class" as="xs:string">UNIQ uniqueness-constraint</x:variable>
+   <x:variable name="mx:UNIQ-class" as="xs:string">UNIQ uniqueness-violation</x:variable>
    
    <x:scenario label="allowed-values tests 'AVCV value-not-allowed' notices">
       <!-- /descendant::XSLT:call-template[@name='notice'][7]       -->
@@ -385,11 +385,11 @@
          <x:expect label="a violation emits as many reports as there are occasions of use (of any repeated value) - here, two (2) reports">
             <mx:report cf="..."
                test="not(count(mx:key-matches-among-items(.,$selected,'UNIQ_unique-serial-numbers',@sn,$within))=1)"
-               class="UNIQ uniqueness-violation" xpath="/computer/expansion-card[1]"
+               class="{$mx:UNIQ-class}" xpath="/computer/expansion-card[1]"
                level="ERROR" rule-id="unique-serial-numbers"
                matching="computer/(descendant::*[exists(@sn)])">With respect to its assigned <mx:gi>@sn</mx:gi>, this <mx:gi>expansion-card</mx:gi> instance of <mx:code>computer/(descendant::*[exists(@sn)])</mx:code> is expected to be unique within its <mx:gi>computer</mx:gi>. 2 items are found with the value <mx:code>a1</mx:code>.</mx:report>
             <mx:report  cf="..." test="not(count(mx:key-matches-among-items(.,$selected,'UNIQ_unique-serial-numbers',@sn,$within))=1)"
-               class="UNIQ uniqueness-violation" xpath="/computer/expansion-card[4]"
+               class="{$mx:UNIQ-class}" xpath="/computer/expansion-card[4]"
                level="ERROR" rule-id="unique-serial-numbers"
                matching="computer/(descendant::*[exists(@sn)])">With respect to its assigned <mx:gi>@sn</mx:gi>, this <mx:gi>expansion-card</mx:gi> instance of <mx:code>computer/(descendant::*[exists(@sn)])</mx:code> is expected to be unique within its <mx:gi>computer</mx:gi>. 2 items are found with the value <mx:code>a1</mx:code>.</mx:report>
          </x:expect>
@@ -406,11 +406,11 @@
          <x:expect label="nothing is reported when they are" select="()">
             <mx:report cf="..."
                test="not(count(mx:key-matches-among-items(.,$selected,'UNIQ_unique-serial-numbers',@sn,$within))=1)"
-               class="UNIQ uniqueness-violation" xpath="/computer/expansion-card[1]"
+               class="{$mx:UNIQ-class}" xpath="/computer/expansion-card[1]"
                level="ERROR" rule-id="unique-serial-numbers"
                matching="computer/(descendant::*[exists(@sn)])">With respect to its <mx:gi>@sn</mx:gi> value of <mx:code>a1</mx:code> within its <mx:gi>computer</mx:gi>, <mx:gi>expansion-card</mx:gi> is expected to be unique. 2 such items are found.</mx:report>
             <mx:report  cf="..." test="not(count(mx:key-matches-among-items(.,$selected,'UNIQ_unique-serial-numbers',@sn,$within))=1)"
-               class="UNIQ uniqueness-violation" xpath="/computer/expansion-card[4]"
+               class="{$mx:UNIQ-class}" xpath="/computer/expansion-card[4]"
                level="ERROR" rule-id="unique-serial-numbers"
                matching="computer/(descendant::*[exists(@sn)])">With respect to its <mx:gi>@sn</mx:gi> value of <mx:code>a1</mx:code> within its <mx:gi>computer</mx:gi>, <mx:gi>expansion-card</mx:gi> is expected to be unique. 2 such items are found.</mx:report>
          </x:expect>
@@ -427,11 +427,11 @@
          <x:expect label="two reports, each for a distince uniqueness violation">
             <mx:report cf="..."
                test="not(count(mx:key-matches-among-items(.,$selected,'UNIQ_unique-serial-numbers',@sn,$within))=1)"
-               class="UNIQ uniqueness-violation" xpath="/computer/memory"
+               class="{$mx:UNIQ-class}" xpath="/computer/memory"
                level="ERROR" rule-id="unique-serial-numbers"
                matching="computer/(descendant::*[exists(@sn)])">With respect to its assigned <mx:gi>@sn</mx:gi>, this <mx:gi>memory</mx:gi> instance of <mx:code>computer/(descendant::*[exists(@sn)])</mx:code> is expected to be unique within its <mx:gi>computer</mx:gi>. 2 items are found with the value <mx:code>a1</mx:code>.</mx:report>
             <mx:report  cf="..." test="not(count(mx:key-matches-among-items(.,$selected,'UNIQ_unique-serial-numbers',@sn,$within))=1)"
-               class="UNIQ uniqueness-violation" xpath="/computer/expansion-card[1]"
+               class="{$mx:UNIQ-class}" xpath="/computer/expansion-card[1]"
                level="ERROR" rule-id="unique-serial-numbers"
                matching="computer/(descendant::*[exists(@sn)])">With respect to its assigned <mx:gi>@sn</mx:gi>, this <mx:gi>expansion-card</mx:gi> instance of <mx:code>computer/(descendant::*[exists(@sn)])</mx:code> is expected to be unique within its <mx:gi>computer</mx:gi>. 2 items are found with the value <mx:code>a1</mx:code>.</mx:report>
          </x:expect>
