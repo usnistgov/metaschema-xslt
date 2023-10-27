@@ -4,38 +4,70 @@
    exclude-result-prefixes="#all" xmlns="http://www.w3.org/1999/xhtml">
 
    <xsl:output indent="true" encoding="us-ascii" omit-xml-declaration="true"/>
-
-   <xsl:param name="echo" as="xs:string">none</xsl:param>
-   <!-- echo = (none|invalid-docs|docs|info|warnings|all) - runtime messaging provided with grab-mx mode -->
+   
+   <xsl:param name="format" as="xs:string">inspected</xsl:param>
+   <!-- format = (plaintext|markdown|html|mx-report|inspected) -->
 
    <xsl:param name="form" as="xs:string">full</xsl:param>
-   <!-- form = (full|summary|one-line) - in mx-to-html mode -->
-   <!-- Use -it: for mx, html, markdown or plaintext results  -->
-   <!-- Use parameter 'form' - optionally reduce outputs to one-line or summary - whether writing to STDOUT or directing outputs using -o -->
-   <!-- Use parameter 'echo' - to produce secondary outputs via xsl:message - they usually go to STDERR and are seen on the console -->
+   <!-- form = (full|summary|one-line) -->
+   
+   <xsl:param name="echo" as="xs:string">none</xsl:param>
+   <!-- echo = (none|invalid-only|docs|info|warnings|all) - runtime messaging provided with grab-mx mode - does not work with format=inspected -->
+   
+   <!-- Entry points - or use initial-template or initial-mode in supporting processors  -->
 
-   <!-- returns annotated copy of input tree   -->
-   <xsl:template match="/" name="xsl:initial-template">
+   <xsl:template mode="#default" priority="101" name="xsl:initial-template" match="root()[$format='inspected']">
+      <xsl:call-template name="inspect"/>
+   </xsl:template>
+   
+   <xsl:template mode="#default" priority="101" match="root()[$format='mx-report']">
+      <xsl:call-template name="mx-report"/>
+   </xsl:template>
+   
+   <xsl:template mode="#default" priority="101" match="root()[$format='html']">
+      <xsl:call-template name="html"/>
+   </xsl:template>
+   
+   <xsl:template mode="#default" priority="101" match="root()[$format='markdown']">
+      <xsl:call-template name="markdown"/>
+   </xsl:template>
+   
+   <xsl:template mode="#default" priority="101" match="root()[$format='plaintext']">
+      <xsl:call-template name="plaintext"/>
+   </xsl:template>
+   
+   <!-- these modes are reserved for entry points matching "/" and should never match otherwise  -->
+   <xsl:mode name="inspect"   on-no-match="fail"/>
+   <xsl:mode name="mx-report" on-no-match="fail"/>
+   <xsl:mode name="mx"        on-no-match="fail"/>
+   <xsl:mode name="html"      on-no-match="fail"/>
+   <xsl:mode name="markdown"  on-no-match="fail"/>
+   <xsl:mode name="md"        on-no-match="fail"/>
+   <xsl:mode name="plaintext" on-no-match="fail"/>
+   
+   <!-- entering with no mode or 'inspect' mode, or by name 'inspect' returns an annotated copy of input tree   -->
+   <xsl:template match="/" name="inspect" mode="inspect">
       <mx:validation src="{ base-uri(.) }">
          <xsl:apply-templates select="." mode="metaschema-metadata"/>
+         <!-- initiates the actual validation traversal          -->
          <xsl:apply-templates mode="validate"/>
       </mx:validation>
    </xsl:template>
 
-   <xsl:template match="/" mode="mx-reports mx">
-      <xsl:call-template name="mx-reports"/>
+   <xsl:template match="/" mode="mx-report mx">
+      <xsl:call-template name="mx-report"/>
    </xsl:template>
 
    <!-- returns mx reports only, with a summary - can be parameterized to filter -->
-   <xsl:template name="mx-reports">
+   <xsl:template name="mx-report">
       <xsl:variable name="mx-validation">
-         <xsl:call-template name="xsl:initial-template"/>
+         <xsl:call-template name="inspect"/>
       </xsl:variable>
       <xsl:apply-templates mode="grab-mx" select="$mx-validation/*"/>
    </xsl:template>
 
    <xsl:template name="mx">
-      <xsl:call-template name="mx-reports"/>
+      <xsl:call-template name="mx-report"/>
    </xsl:template>
 
    <xsl:template match="/" mode="html">
@@ -45,7 +77,7 @@
    <xsl:template name="html">
       <xsl:variable name="mx-reports">
          <!-- reports has a summary along with any reports -->
-         <xsl:call-template name="mx-reports"/>
+         <xsl:call-template name="mx-report"/>
       </xsl:variable>
       <xsl:apply-templates mode="mx-to-html" select="$mx-reports/*"/>
    </xsl:template>
@@ -320,7 +352,7 @@
       <xsl:param name="keyname" as="xs:string"/>
       <xsl:param name="keyval" as="item()*"/>
       <xsl:param name="keyscope" as="node()"/>      
-      <xsl:sequence select="$item!key($keyname,$keyval,$keyscope) intersect $items"/>
+      <xsl:sequence select="$item!key($keyname,$keyval,$keyscope/root()) intersect $items"/>
    </xsl:function>
    
    <!-- Mode grab-mx filters mx from its 'host' XML -->
@@ -456,7 +488,7 @@ details p { margin: 0.2em 0em }
    </xsl:template>
 
    <xsl:template match="mx:metaschema" mode="mx-to-html" expand-text="true">
-      <p class="metadata">Checking against rules derived from <b>{ . }</b> metaschema (namespace <code>{ @namespace
+      <p class="metadata">Checking against the rules defined in metaschema <b>{ . }</b>{ @version ! (', version ' || .)} (namespace <code>{ @namespace
             }</code>)</p>
    </xsl:template>
 

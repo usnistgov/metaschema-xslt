@@ -11,6 +11,9 @@
          <m:schema-name>Computer Model</m:schema-name>
          <m:schema-version>0.0.5</m:schema-version>
          <m:short-name>computer</m:short-name>
+         <m:remarks>
+            <p>Derived from <a href="https://github.com/usnistgov/metaschema/blob/main/website/content/specification/computer-example.xml">Metaschema Repo Computer Example Metaschema</a> and modified for this demo.</p>
+         </m:remarks>
          <m:root>computer</m:root>
       </xs:appinfo>
    </xs:annotation>

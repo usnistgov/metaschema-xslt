@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+   <!--https://github.com/usnistgov/metaschema/blob/main/website/content/specification/computer-example.xml-->
     <schema-name>Computer Model</schema-name>
     <schema-version>0.0.5</schema-version>
     <short-name>computer</short-name>
     <namespace>http://example.com/ns/computer</namespace>
     <json-base-uri>http://example.com/ns/computer</json-base-uri>
+   <remarks>
+      <p>Derived from <a href="https://github.com/usnistgov/metaschema/blob/main/website/content/specification/computer-example.xml">Metaschema Repo Computer Example Metaschema</a> and modified for this demo.</p>
+   </remarks>
     <define-assembly name="vendor">
         <formal-name>Vendor Information</formal-name>
         <description>Information about a vendor of a computer part.</description>
@@ -145,8 +149,11 @@
                             </define-field>
                         </model>                       
                     </define-assembly>
-                    <assembly ref="cooling" min-occurs="0"/>
-                    <define-assembly name="expansion-card" min-occurs="0" max-occurs="unbounded">
+                   <assembly ref="cooling" min-occurs="0"/>
+                   <!--<assembly ref="monitor" min-occurs="0" max-occurs="4">
+                      <group-as name="monitors" in-xml="GROUPED" in-json="ARRAY"/>
+                   </assembly>-->
+                   <define-assembly name="expansion-card" min-occurs="0" max-occurs="unbounded">
                         <formal-name>Motherboard Expansion Card</formal-name>
                         <description>The model number of an expansion card connected to the motherboard of a computer.</description>
                         <group-as name="expansion-cards" in-json="ARRAY"/>
@@ -191,6 +198,9 @@
           <is-unique target="descendant::*[exists(@sn)]" id="unique-serial-numbers">
              <key-field target="@sn"/>
           </is-unique>
+          <!--<index name="monitor-plugs" target=".//motherboard | .//expansion-card">
+             <key-field target="@sn"/>
+          </index>-->
        </constraint>
     </define-assembly>
     
@@ -221,4 +231,36 @@
             </choice>
         </model>
     </define-assembly>
+   
+   <!--<define-assembly name="monitor">
+      <formal-name>Motherboard Assembly</formal-name>
+      <description>A container object for a motherboard in a computer and its sub-parts.</description>
+      <flag ref="serial-number"/>
+      <model>
+         <assembly ref="vendor"/>
+         <define-field name="model">
+            <formal-name>Monitor Model</formal-name>
+            <description>The monitor's model number or label.</description>
+         </define-field>
+         <define-assembly name="connection" max-occurs="4" min-occurs="1">
+            <formal-name>Monitor connection</formal-name>
+            <description>Describes the relation of a monitor with this computer. Only components on this computer should be listed as connections.</description>
+            <group-as name="connections" in-json="ARRAY"/>
+            <define-flag name="port-type" as-type="string">
+               <formal-name>Type of port</formal-name>
+               <description>Monitors come with any number of connector types.</description>
+            </define-flag>
+            <define-flag name="provider-SN">
+               <formal-name>Provider serial number</formal-name>
+               <description>Providing the monitor with its data feed.</description>
+            </define-flag>
+            <constraint>
+               <index-has-key target="." name="monitor-plugs">
+                  <key-field target="@provider-SN"/><!-\- monitor-plugs index lists components by SN to which monitors can be connected -\->
+               </index-has-key>
+            </constraint>
+         </define-assembly>
+      </model>
+   </define-assembly>-->
+   
 </METASCHEMA>

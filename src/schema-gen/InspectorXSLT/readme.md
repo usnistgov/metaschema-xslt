@@ -15,6 +15,31 @@ The [testing/current](testing/current) directory shows such an XSLT, which can b
 
 That is, it combines the effective functionality of XML schema and Schematron (XPath-based) validation.
 
+## Who is this for?
+
+A primary goal of this project is to serve as a complete and correct implementation of the [NIST Metaschema](https://pages.nist.gov/metaschema) Modeling Framework, in demonstration of its features, with the objective of helping to validate its approach to data modeling and governance.
+
+A secondary goal is to be fully transparent and traceable in operation and documented and tested fully enough to serve as a resource and template for future developers of Metaschema, XML/XSLT and other technologies.
+
+Neither *scalability* nor *performance* are primary goals, although considered valuable and worth working for.
+
+Given these considerations on balance, *correctness* comes first in order of priority, while *usability* and *testability* come second and third.
+
+Some possible usage scenarios include:
+
+* For new and occasional users and developers of Metaschema-based technologies
+  * MX aims to be easy to use and start using
+  * and complements workflows based on other tools
+* For developers and maintainers of Metaschema-based data modeling and proceesing stacks
+  * MX aims to be lightweight, easy to deploy, easy to adapt and useful
+  * Versatile (given its scope of application, namely validation)
+  * And to serve as a complement to other Metaschema tools and applications\*
+* For XML- and XSLT-focused developers of Metaschema and Metaschema-based technology
+  * MX is open and standards-based
+  * Fully and openly tested
+
+\* Applications to consider using along with InspectorXSLT include the schema and converter-stylesheet generators in this repository as well as tools from other developers. MX can even check against itself by validating documents with both the Inspector and its XSD - the same issues should be reported (insofar as the XSD is able to express them) using either tool.
+
 ## Feature set (for demo)
 
 - [x] Emit copy of source annotated with validation messages
@@ -35,48 +60,15 @@ That is, it combines the effective functionality of XML schema and Schematron (X
 - [ ] Run in browser / SaxonJS
 - [ ] MX->SVRL filter postprocess
 - [ ] other ideas below
-
-## Design goals and principles
-
-The tool should be both easy to use and verifiably correct.
-
-("Easy to use" being relative, possibly the goal is "easy to make easy to use", with one or two easy-to-use ways to use it.)
-
-No need to quit after first error; take advantage of the 'pull' process (random access to tree) to give a complete picture of a document's state vis-a-vis validation requirements.
-
-The aims of the reporting are clarity/ease of use; to be unambiguous; to be traceable. To be concise and economical is a secondary goal.
-
-Reporting can be parsimonious - no need to be exhaustive.
-
-At the same time, errors anywhere are of interest (see 'no need to quit'). Some amount of redundancy is okay if not too noisy.
-
-### Theoretical considerations
-
-XSLT as validation language.
-
-This is a very different model of validation from what is usually (yet) practiced over data sets in exchange, even XML data except in some specialized circumstances. (There are noteworthy exceptions such as the NISO JATS, PMC and JATS4R technology cluster, or within DITA.) In considering the strengths, weaknesses and feature set of the tool, it may help to keep these differences in mind. What may be interesting is that this model - here called the <q>pull</q> model of validation - while very different from the usual historic model (<q>push</q>), is also very complimentary to it. A mature and capable system can have uses for both models in combination.
-
-Setting aside the question of what should be meant by the pull model and why call it  <q>pull</q> - this is *somewhat* analogous to push and pull parsing, two different techniques for building interpreters for character streams aka text processing - suffice it to say here that one aspect of pull is that conceptually, the data set under examination has already been parsed and is already available for inspection. This is not paradoxical if the <p>push</p> model is also in place, as long as a document can be read well enough to push into memory once, where it can be pulled. Fortunately, the syntactic rules of XML well-formedness are sufficiently well-defined that this is feasible in reality.
-
-So in the field we work first by determining that an artifact purportedly and apparently XML is in fact XML - which we do, typically, with a neutral parse or 'well-formedness check'. (Indeed every day XML tools are doing this for their operators without their direct awareness.) While a low threshhold for interpretability - XML syntax assures nothing about an artifact other than its *potential* use *as XML* - this is significantly more than zero. Indeed this small bit of information is both critical (it means much more than it seems to on the surface), and *actionable* - it is consequential knowledge the enables further steps.
-
-Traditional push-based validation such as XSD validation is defined in such a way that it can be conducted as a document is parsed for the first time - that is, without reference to any prior representation of anything in the document after the reading position. It is as if a human reader of a novel were required never to go back in the book, or skip ahead, and more importantly never read again a book with any prior knowledge acquired in a first reading. (All books must only be read once through for the first time.) A <q>read-once</q> parse is a powerful and enabling capability - helping to manage, among other things, the complexity of memory requirements for the parse relative to document size - yet this comes at a steep cost for expressibility.  Pull parsing assumes that once the book is available, reading and rereading are both natural and cheap. And in operation it proves indeed this is a tenable assemption as long as information sets do not grow too large and corpora too complex. (At that point other measures become necessary as well.)
-
-To validate truly arbitrary constraints up to and including so-called 'business rules', in which complexity of rules explodes and far-removed components within the document-space may be related, more or less requires that we do more. That is, any rules we wish to assert over documents that require or imply *random access* to document contents (both before and after the point under examination or enforcement), cannot be provided for by a bare grammar (which is what push parsers often depend on) without the fuller capabilities of a transformation language capable of querying, binding variables, caching and the rest.
-
-Interestingly, this different perspective on the rule set leads to different strengths and weaknesses in deployment between this application and standard approaches to document validation including XSD, RNG and DTD -- strengths and weaknesses that being opposite from the currently most common approach, also complement it. Indeed the successful use of Schematron, as another XSLT-transpiler, already shows this.
-
-If any of this is true, the application will show.
-
 ## Interfaces - how to use
 
-The tool is designed to be used standalone in an XSLT 3.0-capable processing environment, or to be embedded. For testing, we use a command-line XSLT engine such as Saxon (v10 or later).
+The tool is designed to be used standalone in an XSLT 3.0-capable processing environment, or to be embedded. For testing, we use a command-line XSLT engine such as Saxon (v10 or later). We test with Saxon-HE in order to ensure this execution dependency remains available.
 
 For convenience, in the testing directory are example scripts that run Saxon inside Maven to (a) produce an Inspector XSLT from a metaschema, then subsequently (b) apply this XSLT to an XML document to report issues detected in it, to delivering this report in HTML or Markdown format:
 
 - `testing/refresh-computer-inspector.sh` refreshes "computer metaschema" example XSLT
 - `testing/inspect-computer.sh aComputerXML.xml -im:md` applies this XSLT to a 'computer' XML document returning Markdown
-- `testing/inspect-computer-html.sh aComputerXML.xml -im:html -o:report.html` applies this XSLT to a 'computer' XML document writing an HTML report to a file
+- `testing/inspect-computer.sh aComputerXML.xml -im:html -o:report.html` applies this XSLT to a 'computer' XML document, and writes an HTML report to a file
 - with many more options - see script help or more info below
 
 These scripts demonstrate one way to invoke Saxon but there are many others suited to different operational contexts and systems, including other deployments of Saxon (Saxon-C or SaxonJS, just to name two). 
@@ -97,7 +89,8 @@ Command line flags and options for using the InspectorXSLT with Saxon - note use
 - `-it:plaintext`, and `-im:plaintext` drop double line-feeds from the Markdown producing a plain text format
 - `-it:html` and `-im:html` produce (the same) HTML
 - `-it:mx-report`, `-it:mx`, `-im:mx-report`, and `-im:mx` all produce (the same) report in an MX XML format, suitable for further processing
-- Leaving out `-it` or `-im`, you should expect a copy of the document with its MX reports embedded close to the validation errors they report
+- `-it:verbose` and `im:verbose` return a copy of the input, with validation reports embedded
+- Leaving out `-it` or `-im` results in the `verbose` output
 - `-it` is short for `-initial-template` while `-im` is short for `-initial-mode`
 - If both `-it` and `-im` are given, expect `-it` to prevail
 
@@ -132,14 +125,15 @@ Especially when Markdown or HTML results are produced in batch with names matchi
 (cd reports && for f in $(ls *.xml); do mv $f ${f%.*}-report.html; done)
 ```
 
+`reports` being the path to the directory where the misnamed files can be found.
+
 It is possible to use this technique with a script as well:
 
 ```
-(cd valid && for f in $(ls *.xml); do ./inspect-computer-md.sh -s:$f form=one-line; done)
-
+(cd ready && for f in $(ls *.xml); do ./inspect-computer.sh -im:md -s:$f form=one-line; done)
 ```
 
-`reports` being the path to the directory where the misnamed files can be found.
+In this case, `*.xml` files in the `ready` folder are run through the Inspector with a one-line Markdown report offered back.
 
 Of course this also not the only way to automate the validation and reporting processes for efficiency over many inputs in one run.
 
@@ -358,6 +352,55 @@ Alas, can't get line numbers in Saxon HE.
 ### XSLT 1.0?
 
 We know that we can't do everything under XSLT 1.0 (such as regular expressions for lexical type checking) but we might be able to provide a significant subset, as a "sine qua non" first-cut validator.
+
+
+## Design goals and principles
+
+The tool should be both easy to use and verifiably correct.
+
+("Easy to use" being relative, possibly the goal is "easy to make easy to use", with one or two easy-to-use ways to use it.)
+
+No need to quit after first error; take advantage of the 'pull' process (random access to tree) to give a complete picture of a document's state vis-a-vis validation requirements.
+
+The aims of the reporting are clarity/ease of use; to be unambiguous; to be traceable. To be concise and economical is a secondary goal.
+
+Reporting can be parsimonious - no need to be exhaustive.
+
+At the same time, errors anywhere are of interest (see 'no need to quit'). Some amount of redundancy is okay if not too noisy.
+
+### Theoretical considerations
+
+XSLT as validation language.
+
+This is a very different model of validation from what is usually (yet) practiced over data sets in exchange, even XML data except in some specialized circumstances. (There are noteworthy exceptions such as the NISO JATS, PMC and JATS4R technology cluster, or within DITA.) In considering the strengths, weaknesses and feature set of the tool, it may help to keep these differences in mind. What may be interesting is that this model - here called the <q>pull</q> model of validation - while very different from the usual historic model (for which we are using the shorthand <q>push</q>), is also very complementary to it. A mature and capable system can have uses for both models in combination.
+
+Setting aside the question of what should be meant by the pull model and why call it  <q>pull</q> - this is *somewhat* analogous to push and pull parsing, two different techniques for building interpreters for character streams aka text processing - suffice it to say here that one aspect of pull is that conceptually, the data set under examination has already been parsed and is already available for inspection. This is not paradoxical if the <q>push</q> model is also in place, as long as a document can be read well enough to push into memory once, where it can be pulled. Fortunately, the syntactic rules of XML well-formedness are sufficiently well-defined that this is feasible.
+
+So in the field we work first by determining that an artifact purportedly and apparently XML is in fact XML - which we do, typically, with a neutral parse or 'well-formedness check'. (Indeed every day XML tools are doing this for their operators without their direct awareness.) While a low threshhold for interpretability - XML syntax assures nothing about an artifact other than its *potential* use *as XML* - this is significantly more than zero. Indeed this small bit of information is both critical (it means much more than it seems to on the surface), and *actionable* - it is consequential knowledge the enables further steps.
+
+Traditional push-based validation such as XSD validation is defined in such a way that it can be conducted as a document is parsed for the first time - that is, without reference to any prior representation of anything in the document after the reading position. It is as if a human reader of a novel were required never to go back in the book, or skip ahead, and more importantly never read again a book with any prior knowledge acquired in a first reading. (All books must only be read once through for the first time.) A <q>read-once</q> parse is a powerful and enabling capability - helping to manage, among other things, the complexity of memory requirements for the parse relative to document size - yet this comes at a steep cost for expressibility.  Pull parsing assumes that once the book is available, reading and rereading are both natural and cheap. And in operation it proves indeed this is a tenable assemption as long as information sets do not grow too large and corpora too complex. (At that point other measures become necessary as well.)
+
+To validate truly arbitrary constraints up to and including so-called 'business rules', in which complexity of rules explodes and far-removed components within the document-space may be related, more or less requires that we do more. That is, any rules we wish to assert over documents that require or imply *random access* to document contents (both before and after the point under examination or enforcement), cannot be provided for by a bare grammar (which is what push parsers often depend on) without the fuller capabilities of a transformation language capable of querying, binding variables, caching and the rest.
+
+Interestingly, this different perspective on the rule set leads to different strengths and weaknesses in deployment between this application and standard approaches to document validation including XSD, RNG and DTD -- strengths and weaknesses that being opposite from the currently most common approach, also complement it. Indeed the successful use of Schematron, as another XSLT-transpiler, already shows this.
+
+If any of this is true, the application will show.
+
+### Advantages
+
+- Open-endedness with respect to arbitrariness of rules including contingent and co-occurrent rules
+- Ease of post processing for presentation
+- Adaptable to different uses and workflows
+- Complementarity with other approaches (since two opinions are better than one and more than double when they're the same)
+- OSS platform (Saxon-HE)
+
+### Disadvantages
+
+- Doesn't do JSON - yet
+- Limits on input sizes - very large inputs must still be chunked
+- Potential performance tradeoffs for some tests
+- Does not instantiate metaschema-based objects but only examines their representation (lexical form as a serialization) - so it is not as easily extensible as an application framework
+
 
 ---
 
