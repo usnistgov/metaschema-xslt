@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<computer xmlns="http://example.com/ns/computer" id="A0" date-of-manufacture="2000-01-01">
+<computer xmlns="http://example.com/ns/computer" id="A0">
+   <build-date>2023-10-31T11:15:30.069033200-04:00</build-date>
     <motherboard>
         <vendor id="id3">
             <name>name0</name>
@@ -14,7 +15,7 @@
                 <website>http://pages.nist.gov/metaschema</website>
             </vendor>
             <product-name>product-name0</product-name>
-            <architecture>architecture0</architecture>
+           <architecture>x86</architecture>
             <speed>4.5GHz</speed>
         </cpu>
         <ata-socket>
@@ -24,7 +25,7 @@
                 <website>http://pages.nist.gov/metaschema</website>
             </vendor>
            <product-name>Socketeer I</product-name>
-            <type>type1</type>
+            <type>pata</type>
         </ata-socket>
         <memory>
             <product-name>product-name2</product-name>
@@ -52,7 +53,7 @@
                 <website>http://pages.nist.gov/metaschema</website>
             </vendor>
             <product-name>product-name4</product-name>
-            <type>type2</type>
+           <type>pci</type>
         </expansion-card>
         <expansion-card>
             <vendor id="id15">
@@ -61,7 +62,7 @@
                 <website>http://pages.nist.gov/metaschema</website>
             </vendor>
             <product-name>product-name5</product-name>
-            <type>type3</type>
+           <type>pcie</type>
         </expansion-card>
     </motherboard>
 </computer>

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../../../testing/xspec-assurance.sch"?>
+<x:description xmlns:mx="http://csrc.nist.gov/ns/csd/metaschema-xslt"
+   xmlns:mv="http://csrc.nist.gov/ns/csd/metaschema-xslt" xmlns="http://example.com/ns/computer"
+   xmlns:x="http://www.jenitennison.com/xslt/xspec" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+   stylesheet="../generate-inspector-xslt.xsl" xslt-version="3.0">
+
+   <!--<x:variable name="mx:datatypes-xsd-path" as="xs:string">--><!--</x:variable>-->
+
+   <x:scenario label="type-stack mode returns expected simpleTypes for a couple of known data types">
+      <x:context mode="type-stack" href="../../../../support/metaschema/schema/xml/metaschema-datatypes.xsd"/>
+      <x:scenario label="A simple extension">
+         <x:context select="/*/xs:simpleType[@name='Base64Datatype']"/>
+         <x:expect label="Base type of Base64Datatype is reported to be xs:base64Binary">
+            <xs:simpleType name="Base64Datatype">
+               <xs:annotation>...</xs:annotation>
+               <xs:restriction base="xs:base64Binary">
+                  <xs:pattern value="..."/>
+               </xs:restriction>
+            </xs:simpleType>
+         </x:expect>
+      </x:scenario>
+      <x:scenario label="A two-step extension">
+         <x:context  select="/*/xs:simpleType[@name='DateWithTimezoneDatatype']"/>
+         <x:expect label="brings back two simpleType elements">
+            <xs:simpleType name="DateWithTimezoneDatatype">
+               <xs:annotation>...</xs:annotation>
+               <xs:restriction base="DateDatatype">
+                  <xs:pattern value="..."/>
+               </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType name="DateDatatype">
+               <xs:annotation>...</xs:annotation>
+               <xs:restriction base="xs:date">
+                  <xs:pattern value="..."/>
+               </xs:restriction>
+            </xs:simpleType>
+         </x:expect>
+      </x:scenario>
+   </x:scenario>
+   
+   <x:scenario label="mode type-stack implements a type stack in the form of a template able to return a sequence of referenced types in a chain, assuming they do not loop">
+      <x:context>
+         <xs:simpleType name="A">
+            <xs:restriction base="B">
+               <xs:pattern value="A+"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType name="B">
+            <xs:restriction base="A">
+               <xs:pattern value="B+"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType name="C">
+            <xs:restriction base="xs:CCC">
+               <xs:pattern value="C+"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType name="D">
+            <xs:restriction base="C">
+               <xs:pattern value="D+"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType name="E">
+            <xs:restriction base="D">
+               <xs:pattern value="E+"/>
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType name="F">
+            <xs:restriction base="A">
+               <xs:pattern value="F+"/>
+            </xs:restriction>
+         </xs:simpleType>
+      </x:context>
+      <x:scenario label="calling a type calling a type that calls back (erroneously)">
+         <x:context mode="type-stack" select="xs:simpleType[@name='A']"/>
+         <x:expect label="A circular reference returns nothing" select="()"/>
+      </x:scenario>
+      <x:scenario label="calling a type that refers into such a loop">
+         <x:context mode="type-stack" select="xs:simpleType[@name='F']"/>
+         <x:expect label="An indirectly circular reference returns nothing" select="()"/>
+      </x:scenario>
+      <x:scenario label="when the chain has one link">
+         <x:context mode="type-stack" select="xs:simpleType[@name='C']"/>
+         <x:expect label="A working reference works">
+            <xs:simpleType name="C">
+               <xs:restriction base="xs:CCC">
+                  <xs:pattern value="C+"/>
+               </xs:restriction>
+            </xs:simpleType></x:expect>
+      </x:scenario>
+      <x:scenario label="when the chain terminates at the second">
+         <x:context mode="type-stack" select="xs:simpleType[@name='D']"/>
+         <x:expect label="A stack of two comes back">
+            <xs:simpleType name="D">
+               <xs:restriction base="C">
+                  <xs:pattern value="D+"/>
+               </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType name="C">
+               <xs:restriction base="xs:CCC"><xs:pattern value="C+"/></xs:restriction>
+            </xs:simpleType>
+         </x:expect>
+      </x:scenario>
+      <x:scenario label="and when it terminates at the third">
+         <x:context mode="type-stack" select="xs:simpleType[@name='E']"/>
+         <x:expect label="A stack of three comes back">
+            <xs:simpleType name="E">
+               <xs:restriction base="D">
+                  <xs:pattern value="E+"/>
+               </xs:restriction>
+            </xs:simpleType>         
+            <xs:simpleType name="D">
+               <xs:restriction base="C"><xs:pattern value="D+"/></xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType name="C">
+               <xs:restriction base="xs:CCC"><xs:pattern value="C+"/></xs:restriction>
+            </xs:simpleType>         
+         </x:expect>
+      </x:scenario>
+      
+   </x:scenario>
+   
+   <x:scenario label="Simple extended datatypes are processed recursively">
+   <x:scenario label="A simple extension">
+      <x:context href="../../../../support/metaschema/schema/xml/metaschema-datatypes.xsd" select="/*/xs:simpleType[@name='DateTimeDatatype']" mode="datatype-test">
+         <x:param name="as-type-name">DateTimeDatatype</x:param>
+      </x:context>
+      <x:expect label="tests castability and pattern" select="string(.)">string(.) castable as xs:dateTime and matches(.,'^(((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30)))T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\.[0-9]+)?(Z|(-((0[0-9]|1[0-2]):00|0[39]:30)|\+((0[0-9]|1[0-4]):00|(0[34569]|10):30|(0[58]|12):45)))?$')</x:expect>
+   </x:scenario>
+   <x:scenario label="A compound extension" pending="where we are Oct 31 2023">
+      <x:context href="../../../../support/metaschema/schema/xml/metaschema-datatypes.xsd" select="/*/xs:simpleType[@name='DateTimeWithTimezoneDatatype']" mode="datatype-test">
+         <x:param name="as-type-name">DateTimeWithTimezoneDatatype</x:param>
+      </x:context>
+      <x:expect label="tests castability for the base type, and all patterns" select="()"/>
+   </x:scenario>
+   <x:scenario label="A looping extension" pending="where we are Oct 31 2023">
+      <x:context mode="datatype-test">
+         <x:param name="as-type-name">DateTimeWithTimezoneDatatype</x:param>
+         <xs:simpleType name="A">
+            <xs:restriction base="B"/>
+            <xs:pattern value="A+"/>
+         </xs:simpleType>
+         <xs:simpleType name="B">
+            <xs:restriction base="A"/>
+            <xs:pattern value="B+"/>
+         </xs:simpleType>         
+      </x:context>
+      <x:expect label="should work up to but not including where it loops" select="()"/>
+   </x:scenario>
+</x:scenario>
+
+</x:description>

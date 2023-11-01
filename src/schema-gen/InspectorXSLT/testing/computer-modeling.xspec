@@ -105,8 +105,8 @@
             <x:context mode="test" select="/c:computer/c:motherboard/c:type[2]">
                 <computer id="A0">
                     <motherboard>
-                        <type/>
-                       <type>custom</type>
+                       <type>atx</type>
+                       <type>mini-itx</type>
                     </motherboard>
                 </computer>
             </x:context>
@@ -144,7 +144,7 @@
             <computer id="A0">
                <motherboard>
                   <cooling/>
-                  <type>custom</type>
+                  <type>mini-itx</type>
                </motherboard>
             </computer>
          </x:context>
@@ -167,9 +167,9 @@
             </computer>
          </x:context>
          <x:expect label="an error is reported">
-            <mx:report cf="..." test="not(.=('at','atx','mini-itx','custom'))"
-               rule-id="motherboard-type-rule_1" class="AVCV value-not-allowed"
-               matching="computer/motherboard/type" xpath="/computer/motherboard/type" level="ERROR">Value <mx:code>special</mx:code> does not appear among permissible (enumerated) values for this <mx:gi>type</mx:gi>: <mx:code>at|atx|mini-itx|custom</mx:code>.</mx:report>
+            <mx:report cf="..." test="not(.=('at','atx','mini-itx'))" class="AVCV value-not-allowed"
+               matching="computer/motherboard/type" xpath="/computer/motherboard/type"
+               level="WARNING">Value <mx:code>special</mx:code> does not appear among permissible (enumerated) values for this <mx:gi>type</mx:gi>: <mx:code>at|atx|mini-itx</mx:code>.</mx:report>
          </x:expect>
       </x:scenario>
       <x:scenario label="An empty field whose value must be enumerated">
@@ -181,9 +181,8 @@
             </computer>
          </x:context>
          <x:expect label="an error is reported, showing the empty string as '(empty)'">
-            <mx:report cf="..." test="not(.=('at','atx','mini-itx','custom'))"
-               rule-id="motherboard-type-rule_1" class="AVCV value-not-allowed" matching="computer/motherboard/type"
-               xpath="/computer/motherboard/type" level="ERROR">Value <mx:code/> (empty) does not appear among permissible (enumerated) values for this <mx:gi>type</mx:gi>: <mx:code>at|atx|mini-itx|custom</mx:code>.</mx:report>
+            <mx:report cf="..." test="not(.=('at','atx','mini-itx'))" class="AVCV value-not-allowed" matching="computer/motherboard/type"
+               xpath="/computer/motherboard/type" level="WARNING">Value <mx:code/> (empty) does not appear among permissible (enumerated) values for this <mx:gi>type</mx:gi>: <mx:code>at|atx|mini-itx</mx:code>.</mx:report>
          </x:expect>
       </x:scenario>
       <x:scenario label="A field with a value out of compliance with its enumeration - wrong CASE, so literally wrong">
@@ -195,30 +194,29 @@
             </computer>
          </x:context>
          <x:expect label="an error is reported">
-            <mx:report cf="..." test="not(.=('at','atx','mini-itx','custom'))"
-               rule-id="motherboard-type-rule_1" class="AVCV value-not-allowed" matching="computer/motherboard/type"
-               xpath="/computer/motherboard/type" level="ERROR">Value <mx:code>CUSTOM</mx:code> does not appear among permissible (enumerated) values for this <mx:gi>type</mx:gi>: <mx:code>at|atx|mini-itx|custom</mx:code>.</mx:report>
+            <mx:report cf="..." test="not(.=('at','atx','mini-itx'))" class="AVCV value-not-allowed" matching="computer/motherboard/type"
+               xpath="/computer/motherboard/type" level="WARNING">Value <mx:code>CUSTOM</mx:code> does not appear among permissible (enumerated) values for this <mx:gi>type</mx:gi>: <mx:code>at|atx|mini-itx</mx:code>.</mx:report>
          </x:expect>
       </x:scenario>
       <x:scenario label="A field with a value out of compliance with its enumeration - extra whitespace">
          <x:context mode="test" select="/c:computer/c:motherboard/c:type">
             <computer id="A0">
                <motherboard>
-                  <type>   custom   </type>
+                  <type>   mini-itx   </type>
                </motherboard>
             </computer>
          </x:context>
          <x:expect label="an error is reported">
-            <mx:report cf="..." test="not(.=('at','atx','mini-itx','custom'))" class="AVCV value-not-allowed" 
-               rule-id="motherboard-type-rule_1" matching="computer/motherboard/type" xpath="/computer/motherboard/type"
-               level="ERROR">Value <mx:code>   custom   </mx:code> does not appear among permissible (enumerated) values for this <mx:gi>type</mx:gi>: <mx:code>at|atx|mini-itx|custom</mx:code>.</mx:report>
+            <mx:report cf="..." test="not(.=('at','atx','mini-itx'))" class="AVCV value-not-allowed" 
+               matching="computer/motherboard/type" xpath="/computer/motherboard/type"
+               level="WARNING">Value <mx:code>   mini-itx   </mx:code> does not appear among permissible (enumerated) values for this <mx:gi>type</mx:gi>: <mx:code>at|atx|mini-itx</mx:code>.</mx:report>
          </x:expect>
       </x:scenario>
       <x:scenario label="A field with a value in compliance with its enumeration">
          <x:context mode="test" select="/c:computer/c:motherboard/c:type">
             <computer id="A0">
                <motherboard>
-                  <type>custom</type>
+                  <type>mini-itx</type>
                </motherboard>
             </computer>
          </x:context>

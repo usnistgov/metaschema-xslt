@@ -5,7 +5,7 @@ set -Eeuo pipefail
 
 usage() {
     cat <<EOF
-Usage: $(basename "${BASH_SOURCE[0]}") XML_SOURCE [ADDITIONAL_ARGS]
+Usage: $(basename "${BASH_SOURCE[0]}") XML_SOURCE [-o:RESULT] [ADDITIONAL_ARGS]
 
 Invokes current/computer_inspector.xsl to issue a validation report for XML_SOURCE.
 
@@ -15,7 +15,7 @@ The -s: flag is provided to your XML_SOURCE by the script. XML_SOURCE is require
 
 If XML_SOURCE is a directory, all XML files (i.e. all files that can be parsed) in the directory will be processed, -o must also indicate an existing directory for result reports, and file names will be mirrored.
 
-Use flag -o:aFileName to direct main results to file aFileName. (Or they can be piped by other means.) Suppress these results entirely with -o:/dev/null. If the -o flag is not given the results are on STDOUT, and should appear (unless otherwise redirected) in the command window.
+Use flag -o:aFileName.txt directly after XML_SOURCE to direct main results to file aFileName.txt. If the -o flag is not given the results are on STDOUT, and should appear (unless otherwise redirected) in the command window. Suppress these results entirely with -o:/dev/null.
 
 Using parameter syntax (param=value), additional arguments are also provided to SaxonHE - see the Inspector readme.md.
 
@@ -39,7 +39,7 @@ Use echo settings to direct information to the console/STDERR, useful especially
 
 echo=(none|invalid-only|docs|info|warnings|all) (falls back to 'none')
 
-Ranging from 'none' being quietest (silent) through to 'all', the noisiest (announce all findings). This parameter cannot be used for format=inspected since the results summarize its findings.
+Ranging from 'none' being quietest (silent) through to 'all', the noisiest (announce all findings). This parameter cannot be used `format=inspected` since in order to summarize the findings of inspection, it must run to the end first.
 
 Example: ./inspect-computer.sh computers/mycomputerXML.xml format=plaintext
 - Validates the file computers/mycomputerXML.xml and brings a plaintext report back to the console.
