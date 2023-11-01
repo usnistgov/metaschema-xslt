@@ -769,11 +769,69 @@
 
    <xsl:template match="*" mode="datatype-test" as="xs:string?"/>
 
+   <xsl:template match="xs:simpleType" mode="base-type" as="xs:string?">
+      <xsl:param name="so-far" select="()" as="xs:string*"/>
+      <xsl:variable name="sourced-definition" select="key('simpleType-by-name', xs:restriction/@base, root())"/>
+      <xsl:if test="not($sourced-definition/xs:restriction/@base = $so-far)"><!-- the sourced-type is okay, it doesn't point back into the chain -->
+         <xsl:choose>
+            <xsl:when test="empty($sourced-definition)" expand-text="true">{ xs:restriction/@base }</xsl:when>
+            <xsl:otherwise>
+               <xsl:apply-templates select="$sourced-definition" mode="#current">
+                  <xsl:with-param name="so-far" select="$so-far, string(@name)"/>
+               </xsl:apply-templates>
+            </xsl:otherwise>
+         </xsl:choose>
+      </xsl:if>
+   </xsl:template>
+   
+   <xsl:template match="xs:simpleType" mode="type-stack" as="element()*">
+      <xsl:param name="so-far" select="()" as="element()*"/>
+      <xsl:variable name="sourced-definition" select="key('simpleType-by-name', xs:restriction/@base, root())"/>
+      <xsl:if test="not($sourced-definition/xs:restriction/@base = $so-far/@name)"><!-- the sourced-type is okay, it doesn't point back into the chain -->
+         <xsl:choose>
+            <xsl:when test="empty($sourced-definition)">
+              <xsl:sequence select="$so-far"/>
+               <xsl:apply-templates select="." mode="graft-simple-type"/>
+            </xsl:when>
+            <xsl:otherwise>
+               <xsl:apply-templates select="$sourced-definition" mode="#current">
+                  <xsl:with-param name="so-far" as="element()*">
+                     <xsl:sequence select="$so-far"/>
+                     <xsl:apply-templates select="." mode="graft-simple-type"/>
+                  </xsl:with-param>
+               </xsl:apply-templates>
+            </xsl:otherwise>
+         </xsl:choose>
+      </xsl:if>
+   </xsl:template>
+   
+<!-- mode graft-simple-type cleans up elements in the xs: namespace  -->
+   <xsl:template match="xs:*" mode="graft-simple-type">
+      <xsl:copy copy-namespaces="no">
+         <xsl:copy-of select="@*"/>
+         <xsl:apply-templates select="child::*" mode="#current"/>
+      </xsl:copy>
+   </xsl:template>
+   
+   <xsl:template match="xs:simpleType" priority="101" mode="datatype-test" as="xs:string?">
+      <xsl:param name="as-type-name" as="xs:string"/>
+      <xsl:value-of>
+      <xsl:variable name="simple-types" as="element(xs:simpleType)*">
+         <xsl:apply-templates select="." mode="type-stack"/>
+      </xsl:variable>
+      <xsl:variable name="nominal-base-type" select="$simple-types/xs:restriction/@base[starts-with(.,'xs:')]"/>
+      <xsl:text expand-text="true">string(.) castable as { $nominal-base-type }</xsl:text>
+      <xsl:for-each-group select="$simple-types/xs:restriction/xs:pattern" group-by="@value">
+         <xsl:text expand-text="true"> and matches(.,'^{ current-grouping-key() }$')</xsl:text>
+      </xsl:for-each-group>
+      </xsl:value-of>
+   </xsl:template>
+   
    <xsl:template match="xs:simpleType" mode="datatype-test" as="xs:string?">
       <xsl:param name="as-type-name" as="xs:string" required="true"/>
       <xsl:text expand-text="true">string(.) castable as {(xs:restriction/@base,@name)[1]}</xsl:text>
    </xsl:template>
-
+   
    <xsl:template match="xs:simpleType[xs:restriction]" mode="datatype-test" as="xs:string?">
       <xsl:param name="as-type-name" as="xs:string" required="true"/>
       <xsl:variable name="extra">

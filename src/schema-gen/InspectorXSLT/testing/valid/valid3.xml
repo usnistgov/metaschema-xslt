@@ -9,7 +9,7 @@
             <address>address0</address>
             <website>http://pages.nist.gov/metaschema</website>
         </vendor>
-        <type>custom</type>
+        <type>mini-itx</type>
         <cpu>
             <vendor id="id5">
                 <name>name1</name>
@@ -17,7 +17,7 @@
                 <website>http://pages.nist.gov/metaschema</website>
             </vendor>
             <product-name>product-name0</product-name>
-            <architecture>architecture0</architecture>
+           <architecture>x86</architecture>
             <speed>10MHz</speed>
         </cpu>
         <ata-socket>
@@ -27,7 +27,7 @@
                 <website>http://pages.nist.gov/metaschema</website>
             </vendor>
            <product-name>SprocketSocket</product-name>
-            <type>type1</type>
+           <type>pata</type>
         </ata-socket>
        <memory>
           <vendor id="id9">
@@ -49,7 +49,7 @@
                 <website>http://pages.nist.gov/metaschema</website>
             </vendor>
             <product-name>product-name4</product-name>
-            <type>type2</type>
+            <type>pci</type>
         </expansion-card>
     </motherboard>
 </computer>

@@ -2,40 +2,69 @@
 
 'Emmex Eye' or just "Emmex" ('MX').
 
-A standalone XSLT can be produced by applying a stylesheet to a metaschema. Using the composition pipeline, it can apply to a top-level module of a modular metaschema.
+Check your XML with an XSLT to see if it is valid to the rules defined in a metaschema.
 
-The [testing/current](testing/current) directory shows such an XSLT, which can be applied to an instance or set of instances (documents) to be tested against the rules defined by its Metaschema - in this case the Computer Model metaschema example provided. This includes all rules regarding:
+## How this works
 
-* Structures and content models
+A standalone XSLT ("stylesheet" or transformation specification) can be produced by applying a stylesheet (an XSLT) to a metaschema. Using the composition pipeline, it can apply to a top-level module of a modular metaschema.
+
+The XSLT that is created this way can be used to test XML instances for errors in view of the rules defined by the metaschema definitions.
+
+* Element and attribute types, structures and content models
   * Occurrences and cardinalities of attributes and elements
-  * Detection of unknown inputs
-  * Detection of inputs out of place
+  * Detection of unrecognized tagging
+  * Detection of tagging out of place
 * Lexical data type (castability) checks
-* Constraints defined in the metaschema including compound/contingent, co-occurrence and key-based (referentiality) constraints
+* Constraints defined in the metaschema including compound and contingent constraints, co-occurrence, and key-based (referentiality) constraints
 
 That is, it combines the effective functionality of XML schema and Schematron (XPath-based) validation.
 
+## Demo
+
+The [testing/current](testing/current) directory shows such an XSLT, which can be applied to an instance or set of instances (documents) to be tested against the rules defined by its Metaschema - in this case the Computer Model metaschema example provided.
+
+Alternatively, follow the directions to build an XSLT reflecting the rules of any other metaschema, with which XML conforming to those rule sets may be validated.
+
+See the [Metaschema project site](https://pages.nist.gov/metaschema) for more information.
+
 ## Who is this for?
 
-A primary goal of this project is to serve as a complete and correct implementation of the [NIST Metaschema](https://pages.nist.gov/metaschema) Modeling Framework, in demonstration of its features, with the objective of helping to validate its approach to data modeling and governance.
+A primary goal of this project is to serve as a complete and correct implementation of the [NIST Metaschema Modeling Framework](https://pages.nist.gov/metaschema), in demonstration of its features, with the objective of helping to validate its approach to data modeling and governance.
 
-A secondary goal is to be fully transparent and traceable in operation and documented and tested fully enough to serve as a resource and template for future developers of Metaschema, XML/XSLT and other technologies.
+A secondary goal is to be fully transparent and traceable in operation and documented and tested fully, so as to serve as a resource and template for future developers of Metaschema, XML/XSLT and other technologies.
 
 Neither *scalability* nor *performance* are primary goals, although considered valuable and worth working for.
 
 Given these considerations on balance, *correctness* comes first in order of priority, while *usability* and *testability* come second and third.
 
-Some possible usage scenarios include:
+Some possible use scenarios include:
 
-* For new and occasional users and developers of Metaschema-based technologies
+Newbies who need to validate data
+Regular users of a metaschema or metaschema-based tech
+  who need to validate data
+  who need to confirm the correctness of others' validations
+Developers of metaschema-based applications
+  who wish to use or deploy easy services
+  who prefer to focus on implementing semantics not on modeling and validating to models - but who need to validate
+Developers of Metaschema
+  who wish to compare implementation strategies and approaches
+XSLT/XSpec students and devs
+  since the codebase aims to be transparent and traceable as well as useful in operation
+
+Use cases we have not catered to
+  Developers who wish to build metaschema-aware applications - this is more a black box - while at core this is a code generator, it is not designed to be easily extensible as such or produce a 'library' - you might prefer to reverse engineer it
+  Robots or 'lights out' automated processes (untested)
+
+* For new, regular and occasional users and developers of Metaschema-based technologies
   * MX aims to be easy to use and start using
-  * and complements workflows based on other tools
-* For developers and maintainers of Metaschema-based data modeling and proceesing stacks
-  * MX aims to be lightweight, easy to deploy, easy to adapt and useful
-  * Versatile (given its scope of application, namely validation)
+  * Correct and trustworthy in what it attempts to do
+  * And compatible with workflows using other conformant tools
+* For developers and maintainers of Metaschema-based data modeling and processing stacks, MX aims
+  * To be lightweight, easy to deploy, easy to adapt and useful,
+  * To be versatile (given its scope of application, namely validation)
   * And to serve as a complement to other Metaschema tools and applications\*
 * For XML- and XSLT-focused developers of Metaschema and Metaschema-based technology
-  * MX is open and standards-based
+  * MX is open, in the public domain, and standards-based
   * Fully and openly tested
 
 \* Applications to consider using along with InspectorXSLT include the schema and converter-stylesheet generators in this repository as well as tools from other developers. MX can even check against itself by validating documents with both the Inspector and its XSD - the same issues should be reported (insofar as the XSD is able to express them) using either tool.

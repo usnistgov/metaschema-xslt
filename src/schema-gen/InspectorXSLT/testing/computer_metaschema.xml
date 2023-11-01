@@ -1,42 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
-   <!--https://github.com/usnistgov/metaschema/blob/main/website/content/specification/computer-example.xml-->
+<METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
     <schema-name>Computer Model</schema-name>
     <schema-version>0.0.5</schema-version>
     <short-name>computer</short-name>
     <namespace>http://example.com/ns/computer</namespace>
     <json-base-uri>http://example.com/ns/computer</json-base-uri>
-   <remarks>
-      <p>Derived from <a href="https://github.com/usnistgov/metaschema/blob/main/website/content/specification/computer-example.xml">Metaschema Repo Computer Example Metaschema</a> and modified for this demo.</p>
-   </remarks>
-    <define-assembly name="vendor">
+
+   <define-assembly name="vendor">
         <formal-name>Vendor Information</formal-name>
         <description>Information about a vendor of a computer part.</description>
-       <define-flag name="id" as-type="string" required="yes">
-          <formal-name>Vendor Identifier</formal-name>
-          <description>An identifier for classifying a unique computer parts vendor.</description>
-       </define-flag>
-       <model>
-            <define-field name="name" min-occurs="1" max-occurs="1">
+        <define-flag name="id" required="yes">
+            <formal-name>Vendor Identifier</formal-name>
+            <description>An identifier for classifying a unique computer parts vendor.</description>
+        </define-flag>
+        <model>
+            <define-field name="name" min-occurs="1">
                 <formal-name>Vendor Name</formal-name>
                 <description>The registered company name of the vendor.</description>
             </define-field>
-            <define-field name="address" min-occurs="1" max-occurs="1">
+            <define-field name="address" min-occurs="1">
                 <formal-name>Vendor Address</formal-name>
                 <description>The physical address of an office location for the vendor.</description>
             </define-field>
-            <define-field name="website" as-type="uri" min-occurs="1" max-occurs="1">
+            <define-field name="website" as-type="uri" min-occurs="1">
                 <formal-name>Vendor Website</formal-name>
                 <description>A public website made by the vendor documenting their parts as used in the computer.</description>
             </define-field>
         </model>
     </define-assembly>
-   <define-flag name="date-of-manufacture" as-type="string">
-      <formal-name>Date of manufacture</formal-name>
-      <description>When the computer was manufactured.</description>
-      
-   </define-flag>
-    <define-field name="product-name" as-type="string">
+    <define-field name="product-name">
         <formal-name>Product Name</formal-name>
         <description>The product name from the vendor of the computer part.</description>
     </define-field>
@@ -44,59 +37,61 @@
         <formal-name>Computer Assembly</formal-name>
         <description>A container object for a computer, its parts, and its sub-parts.</description>
         <root-name>computer</root-name>
-       <flag ref="date-of-manufacture" required="no"/>
        <flag ref="serial-number"/>
-       
-       <define-flag name="id" as-type="string" required="yes">
+       <define-flag name="id" required="yes">
             <formal-name>Computer Identifier</formal-name>
             <description>An identifier for classifying a unique make and model of computer.</description>
-            <constraint>
-               <matches regex="\i\c*" id="id-naming-rule_1">
-                  <remarks>
-                     <p>Must match pattern for XML name.</p>
-                  </remarks>
-               </matches>
-            </constraint>
         </define-flag>
-       
         <model>
+            <define-field name="build-date" as-type="date-time-with-timezone">
+                <formal-name>Build Date and Time</formal-name>
+                <description>The date and time the computer build was completed.</description>
+            </define-field>
             <define-assembly name="motherboard">
                 <formal-name>Motherboard Assembly</formal-name>
                 <description>A container object for a motherboard in a computer and its sub-parts.</description>
-                <flag ref="serial-number"/>
-                <model>
+               <flag ref="serial-number"/>
+               <model>
                     <assembly ref="vendor"/>
-                    <define-field name="type" as-type="string" min-occurs="1" max-occurs="1">
+                    <define-field name="type" min-occurs="1">
                         <formal-name>Motherboard Type</formal-name>
                         <description>The type motherboard layout, <code>at</code>, <code>atx</code>, <code>mini-itx</code> or an alternative.</description>
-                       <constraint>
-                          <allowed-values target="." id="motherboard-type-rule_1">
-                             <enum value="at">AT</enum>
-                             <enum value="atx">ATX</enum>
-                             <enum value="mini-itx">Mini-ITX</enum>
-                             <enum value="custom">Custom</enum>
-                          </allowed-values>
-                       </constraint>
+                        <constraint>
+                            <allowed-values target="." allow-other="yes">
+                                <enum value="at">Advanced Technology Form Factor</enum>
+                                <enum value="atx">Advanced Technology Extended Form Factor</enum>
+                                <enum value="mini-itx">Mini Information Technology eXtended Form Factor</enum>
+                            </allowed-values>
+                        </constraint>
                     </define-field>
                     <define-assembly name="cpu">
                         <formal-name>Motherboard Central Processing Unit (CPU)</formal-name>
                         <description>The model number of the CPU on the motherboard of a computer.</description>
                         <model>
                             <assembly ref="vendor"/>
-                            <field ref="product-name" min-occurs="1" max-occurs="1"/>
-                            <define-field name="architecture" as-type="string" min-occurs="1" max-occurs="1">
+                            <field ref="product-name" min-occurs="1"/>
+                            <field ref="cost"/>
+                            <define-field name="architecture" min-occurs="1">
                                 <formal-name>CPU Architecture</formal-name>
                                 <description>The Instruction Set Architecture (ISA) of the processor, <code>x86</code>, <code>x86-64</code>, <code>arm</code>, or an alternative.</description>
+                                <constraint>
+                                    <allowed-values target="." allow-other="yes">
+                                        <enum value="x86">x86 32-bit</enum>
+                                        <enum value="x86-64">x86 64-bit</enum>
+                                        <enum value="arm">arm</enum>
+                                    </allowed-values>
+                                </constraint>
                             </define-field>
-                            <define-field name="speed" as-type="string" min-occurs="1" max-occurs="1">
+                            <define-field name="speed" min-occurs="1">
                                 <formal-name>CPU Speed</formal-name>
                                 <description>The clock speed of the CPU in megahertz or gigahertz.</description>
-                               <constraint>
-                                  <matches target="." regex="\d+(\.\d+)?(M|G)Hz" id="cpu-speed-rule_1"/>
-                               </constraint>
+                                <constraint>
+                                    <matches target="." regex="\d+(?:\.\d+)?(?:MHz|GHz)"></matches>
+                                </constraint>
                             </define-field>
+                            <assembly ref="property"/>
+                            <field ref="remarks" in-xml="UNWRAPPED"/>
                         </model>
-                       
                     </define-assembly>
                     <define-assembly name="ata-socket">
                         <formal-name>Motherboard Advanced Technology Attachment (ATA) Socket</formal-name>
@@ -104,33 +99,21 @@
                        <flag ref="serial-number"/>
                        <model>
                             <assembly ref="vendor"/>        
-                            <field ref="product-name" min-occurs="1" max-occurs="1"/>
-                            <define-field name="type" as-type="string" min-occurs="1" max-occurs="1">
+                            <field ref="product-name" min-occurs="1"/>
+                            <field ref="cost"/>
+                            <define-field name="type" min-occurs="1">
                                 <formal-name>ATA Socket Type</formal-name>
                                 <description>The type of ATA socket on the motherboard , <code>pata</code> (parallel ATA), <code>sata</code> (Serial ATA), or an alternative.</description>
+                                <constraint>
+                                    <allowed-values target="." allow-other="yes">
+                                        <enum value="pata">Parallel ATA</enum>
+                                        <enum value="sata">Serial ATA</enum>
+                                    </allowed-values>
+                                </constraint>
                             </define-field>
+                            <assembly ref="property"/>
+                            <field ref="remarks" in-xml="UNWRAPPED"/>
                         </model>
-                       <constraint>
-                          <allowed-values target="child::product-name" id="ata-socket-rule_1">
-                             <enum value="Socketeer I">Socketeer I</enum>
-                             <enum value="Socketeer II">Socketeer II</enum>
-                             <enum value="LampSocket socket">LampSocket socket</enum>
-                             <enum value="MiniSock Deux">MiniSock Deux</enum>
-                             <enum value="SprocketSocket">SprocketSocket 1000</enum>
-                             <enum value="[Unlisted Socket Product]">Unlisted</enum>
-                          </allowed-values>
-                          <allowed-values target="child::vendor/child::name" id="ata-socket-rule_2">
-                             <enum value="Socketeer">Socketeer</enum>
-                             <enum value="LampSocket">LampSocket</enum>
-                             <enum value="MiniSock">MiniSock</enum>
-                             <enum value="SprocketSocket">SprocketSocket</enum>
-                             <enum value="[Unlisted Socket Vendor]">Unlisted</enum>
-                          </allowed-values>
-                          <allowed-values target="self::*[vendor/name='Socketeer']/product-name"  id="ata-socket-rule_3"><!-- here we have a co-occurrence constraint -->
-                             <enum value="Socketeer I">Socketeer I</enum>
-                             <enum value="Socketeer II">Socketeer II</enum>
-                          </allowed-values>
-                       </constraint>
                     </define-assembly>
                     <define-assembly name="memory" min-occurs="1" max-occurs="unbounded">
                         <formal-name>Motherboard Random Access Memory (RAM) Module(s)</formal-name>
@@ -139,128 +122,179 @@
                        <flag ref="serial-number"/>
                        <model>
                             <assembly ref="vendor"/>
-                            <field ref="product-name" min-occurs="1" max-occurs="1"/>
-                            <define-field name="byte-size" as-type="positive-integer" min-occurs="1" max-occurs="1">
+                            <field ref="product-name" min-occurs="1"/>
+                            <field ref="cost"/>
+                            <define-field name="byte-size" as-type="positive-integer" min-occurs="1">
                                 <formal-name>Memory Module Size</formal-name>
                                 <description>Size of the memory module in binary, not SI base-10 units, meaning a kilobyte is 1024 bytes, not 1000 bytes.</description>
-                               <constraint>
-                                  <expect target="." test="(number(.) > 0) and not(. mod 256)" id="byte-size-test_1"/><!-- must be evenly divisible by 256 -->
-                               </constraint>
                             </define-field>
-                        </model>                       
+                            <assembly ref="property"/>
+                            <field ref="remarks" in-xml="UNWRAPPED"/>
+                        </model>
                     </define-assembly>
-                   <assembly ref="cooling" min-occurs="0"/>
-                   <!--<assembly ref="monitor" min-occurs="0" max-occurs="4">
-                      <group-as name="monitors" in-xml="GROUPED" in-json="ARRAY"/>
-                   </assembly>-->
-                   <define-assembly name="expansion-card" min-occurs="0" max-occurs="unbounded">
+                   <assembly ref="cooling" min-occurs="0"/> 
+                   <define-assembly name="expansion-card" max-occurs="unbounded">
                         <formal-name>Motherboard Expansion Card</formal-name>
                         <description>The model number of an expansion card connected to the motherboard of a computer.</description>
                         <group-as name="expansion-cards" in-json="ARRAY"/>
-                       <flag ref="serial-number"/>
-                       <define-flag name="state">
-                          <formal-name>Card state</formal-name>
-                          <description>If tested or prepackaged, the state of an expansion card may be known.</description>
-                          <constraint>
-                             <allowed-values id="expansion-card-state-rule_1">
-                                <enum value="new">New</enum>
-                                <enum value="refurb">Refurb</enum>
-                                <enum value="inoperative">Inoperative</enum>
-                             </allowed-values>                             
-                          </constraint>
-                       </define-flag>
-                        <model>
+                      <flag ref="serial-number"/>
+                      <model>
                             <assembly ref="vendor"/>
-                            <field ref="product-name" min-occurs="1" max-occurs="1"/>
-                            <define-field name="type" as-type="string" min-occurs="1" max-occurs="1">
+                            <field ref="product-name" min-occurs="1"/>
+                            <field ref="cost"/>
+                            <define-field name="type" min-occurs="1">
                                 <formal-name>Expansion Card Type</formal-name>
-                               <description>The type of expansion card on a motherboard of a computer, such as <code>pci</code> (PCI, e.g. Peripheral Component Interconnect), <code>pcie</code> (PCI Express), or an alternative.</description>
+                                <description>The type of expansion card on a motherboard of a computer, such as <code>pci</code> (PCI, e.g. Peripheral Component Interconnect), <code>pcie</code> (PCI Express), or an alternative.</description>
+                                <constraint>
+                                    <allowed-values target=".">
+                                        <enum value="pci">Peripheral Component Interconnect</enum>
+                                        <enum value="pcie">Peripheral Component Interconnect Express</enum>
+                                    </allowed-values>
+                                </constraint>
                             </define-field>
+                            <assembly ref="property"/>
+                            <field ref="remarks" in-xml="UNWRAPPED"/>
                         </model>
                     </define-assembly>
                 </model>
-               <constraint>
-                  <expect target="." test="not(memory/byte-size != memory/byte-size)" id="memory-rule_1"/>
-                  <expect target="." test="not(count(memory) mod 2)" id="memory-rule_2"/><!-- there must be an even number of memory units-->
-                  <has-cardinality target="memory" id="memory-rule_3" min-occurs="2" max-occurs="10"/>
-               </constraint>
             </define-assembly>
+            <define-assembly name="usb-device" max-occurs="unbounded">
+                <formal-name>Universal Serial Bus Device</formal-name>
+                <description>A USB expansion device.</description>
+                <json-key flag-ref="uuid"/>
+                <group-as name="usb-devices" in-json="BY_KEY"/>
+                <define-flag name="uuid" as-type="uuid">
+                    <formal-name>USB Device Universally Unique Identifier</formal-name>
+                    <description>An identifier, based on a type 4 UUID, for the USB device.</description>
+                </define-flag>
+                <model>
+                    <assembly ref="vendor"/>
+                    <field ref="product-name" min-occurs="1"/>
+                    <field ref="cost"/>
+                    <assembly ref="property"/>
+                    <field ref="remarks" in-xml="UNWRAPPED"/>
+                </model>
+            </define-assembly>
+            <assembly ref="property"/>
+            <field ref="remarks" in-xml="UNWRAPPED"/>
         </model>
-       <constraint>
-          <allowed-values allow-other="yes" id="manufacture-date-rule_1" target="self::*[starts-with(@id,'April')]/@date-of-manufacture">
-             <enum value="1980-04-01">Apr 1 1980</enum>
-             <enum value="1981-04-01">Apr 1 1981</enum>
-             <enum value="1982-04-01">Apr 1 1982</enum>
-          </allowed-values>
-          <expect id="manufacture-date-rule_2" target="@date-of-manufacture" test="not(. castable as xs:date) or (xs:date(.) >= xs:date('1950-01-01'))"/>
-          <matches  id="manufacture-date-rule_3" target="@date-of-manufacture" datatype="date" level="WARNING" />
-          <has-cardinality target="expansion-card" max-occurs="4" id="expansion-card-rule_1"/>
-          <is-unique target="descendant::*[exists(@sn)]" id="unique-serial-numbers">
-             <key-field target="@sn"/>
-          </is-unique>
-          <!--<index name="monitor-plugs" target=".//motherboard | .//expansion-card">
-             <key-field target="@sn"/>
-          </index>-->
-       </constraint>
+        <constraint>
+            <is-unique target="usb-device">
+                <formal-name>Unique USB Device UUID</formal-name>
+                <description>Ensures that each USB device has a unique UUID.</description>
+                <key-field target="@uuid"/>
+            </is-unique>
+            <allowed-values target="(motherboard|motherboard/cpu|motherboard/memory|motherboard/expansion-card|usb-device)/prop[not(@ns) or @ns=('http://example.com/ns/computer')]/@name">
+                <enum value="model">CPU model</enum>
+            </allowed-values>
+            <has-cardinality level="WARNING" target="(motherboard|motherboard/cpu|motherboard/memory|motherboard/expansion-card|usb-device)/prop[not(@ns) or @ns=('http://example.com/ns/computer')]" min-occurs="1">
+                <remarks>
+                    <p>Warn if a model is not provided.</p>
+                </remarks>
+            </has-cardinality>
+            <has-cardinality level="ERROR" target="(motherboard|motherboard/cpu|motherboard/memory|motherboard/expansion-card|usb-device)/prop[not(@ns) or @ns=('http://example.com/ns/computer')]" max-occurs="1">
+                <remarks>
+                    <p>It is invalid to provide multiple models.</p>
+                </remarks>
+            </has-cardinality>
+        </constraint>
     </define-assembly>
-    
-    <define-flag name="serial-number">
-       <formal-name>Serial Number</formal-name>
-       <description>A code for this item only.</description>
-       <use-name>sn</use-name>
-    </define-flag>
-   
-    <define-assembly name="cooling">
-        <formal-name>Cooling</formal-name>
-        <description>How the computer cools itself.</description>
-        <flag ref="serial-number"/>
+    <define-field name="cost" as-type="decimal">
+        <formal-name>Part Cost</formal-name>
+        <description>The price paid in the specified currency.</description>
+        <json-value-key>price</json-value-key>
+        <define-flag name="currency" required="yes">
+            <formal-name>Currency Type</formal-name>
+            <description>The type of currency.</description>
+        </define-flag>
+    </define-field>
+    <define-field name="remarks" as-type="markup-multiline">
+        <formal-name>Remarks</formal-name>
+        <description>Additional remarks related to the containing computer component.</description>
+    </define-field>
+    <define-assembly name="property">
+        <formal-name>Property</formal-name>
+        <description>An attribute, characteristic, or quality of the containing object expressed as a namespace qualified name/value pair.</description>
+        <use-name>prop</use-name>
+        <define-flag name="name" as-type="token" required="yes">
+            <formal-name>Property Name</formal-name>
+            <description>A textual label, within a namespace, that uniquely identifies a specific attribute, characteristic, or quality of the property's containing object.</description>
+        </define-flag>
+        <define-flag name="uuid" as-type="uuid">
+            <formal-name>Property Universally Unique Identifier</formal-name>
+            <!-- identifier declaration -->
+            <description>A unique identifier for a property.</description>
+        </define-flag>
+        <define-flag name="ns" as-type="uri" default="http://example.com/ns/computer">
+            <formal-name>Property Namespace</formal-name>
+            <description>A namespace qualifying the property's name. This allows different organizations to associate distinct semantics with the same name.</description>
+            <remarks>
+                <p>This value must be an <a href="https://datatracker.ietf.org/doc/html/rfc3986#section-4.3">absolute URI</a> that serves as a naming system identifier.</p>
+                <p>When a <code>ns</code> is not provided, its value should be assumed to be <code>http://example.com/ns/computer</code> and the name should be a name defined by this model.</p>
+            </remarks>
+        </define-flag>
+        <define-flag name="value" as-type="string" required="yes">
+            <formal-name>Property Value</formal-name>
+            <description>Indicates the value of the attribute, characteristic, or quality.</description>
+        </define-flag>
+        <define-flag name="class" as-type="token">
+            <formal-name>Property Class</formal-name>
+            <description>A textual label that provides a sub-type or characterization of the
+                property's <code>name</code>.</description>
+            <remarks>
+                <p>This can be used to further distinguish or discriminate between the semantics of multiple properties of the same object with the same <code>name</code> and <code>ns</code>, or to group properties into categories.</p>
+                <p>A <code>class</code> can be used in validation rules to express extra constraints over named items of a specific <code>class</code> value. It is available for grouping, but unlike <code>group</code> is not expected specifically to designate any group membership as such.</p>
+            </remarks>
+        </define-flag>
+        <define-flag name="group" as-type="token">
+            <formal-name>Property Group</formal-name>
+            <description>An identifier for relating distinct sets of properties.</description>
+            <remarks>
+                <p>Different sets of properties may relate to separate contexts. Declare a group on a property to associate it with one or more other properties in a given context.</p>
+            </remarks>
+        </define-flag>
         <model>
-            <choice><!-- modeled as a choice here: multiple fans, or water. -->
-                <define-assembly name="fan" min-occurs="2" max-occurs="12">
-                    <formal-name>Fan</formal-name>
-                   <description>A fan header for a single fan; at least two fans are required for adequate cooling.</description>                   
-                </define-assembly>
-                <define-assembly name="water" min-occurs="1" max-occurs="1">
-                    <formal-name>Water</formal-name>
-                    <description>A cooling system using water for thermal regulation.</description>                    
-                    <define-flag name="illuminated" as-type="boolean">
-                        <formal-name>Whether illuminated</formal-name>
-                        <description>The water system is illuminated for visual effect.</description>
-                    </define-flag>
-                </define-assembly>
-            </choice>
+            <field ref="remarks"/>
         </model>
+        <constraint>
+            <allowed-values target=".[not(@ns) or @ns=('http://example.com/ns/computer')]/@name">
+                <enum value="marking">A label or descriptor that is tied to a sensitivity or classification marking system. An optional class can be used to define the specific marking system used for the associated value.</enum>
+            </allowed-values>
+        </constraint>
+        <remarks>
+            <p>A property can be included for any purpose useful to an application or implementation. Typically, properties will be used to sort, filter, select, order, and arrange content objects, to relate objects to one another, or to associate an object to class hierarchies, taxonomies, or external authorities. Thus, the lexical composition of properties may be constrained by external processes to ensure consistency.</p>
+            <p>Property allows for associated remarks that describe why the specific property value was applied to the containing object, or the significance of the value in the context of the containing object.</p>
+        </remarks>
     </define-assembly>
+
+   <define-flag name="serial-number">
+      <formal-name>Serial Number</formal-name>
+      <description>A code for this item only.</description>
+   </define-flag>
    
-   <!--<define-assembly name="monitor">
-      <formal-name>Motherboard Assembly</formal-name>
-      <description>A container object for a motherboard in a computer and its sub-parts.</description>
+   
+
+   <define-assembly name="cooling">
+      <formal-name>Cooling</formal-name>
+      <description>How the computer cools itself.</description>
       <flag ref="serial-number"/>
       <model>
-         <assembly ref="vendor"/>
-         <define-field name="model">
-            <formal-name>Monitor Model</formal-name>
-            <description>The monitor's model number or label.</description>
-         </define-field>
-         <define-assembly name="connection" max-occurs="4" min-occurs="1">
-            <formal-name>Monitor connection</formal-name>
-            <description>Describes the relation of a monitor with this computer. Only components on this computer should be listed as connections.</description>
-            <group-as name="connections" in-json="ARRAY"/>
-            <define-flag name="port-type" as-type="string">
-               <formal-name>Type of port</formal-name>
-               <description>Monitors come with any number of connector types.</description>
-            </define-flag>
-            <define-flag name="provider-SN">
-               <formal-name>Provider serial number</formal-name>
-               <description>Providing the monitor with its data feed.</description>
-            </define-flag>
-            <constraint>
-               <index-has-key target="." name="monitor-plugs">
-                  <key-field target="@provider-SN"/><!-\- monitor-plugs index lists components by SN to which monitors can be connected -\->
-               </index-has-key>
-            </constraint>
-         </define-assembly>
+         <choice><!-- modeled as a choice here: multiple fans, or water. -->
+            <define-assembly name="fan" min-occurs="2" max-occurs="12">
+               <formal-name>Fan</formal-name>
+               <description>A fan header for a single fan; at least two fans are required for adequate cooling.</description>                   
+            </define-assembly>
+            <define-assembly name="water" min-occurs="1" max-occurs="1">
+               <formal-name>Water</formal-name>
+               <description>A cooling system using water for thermal regulation.</description>                    
+               <define-flag name="illuminated" as-type="boolean">
+                  <formal-name>Whether illuminated</formal-name>
+                  <description>The water system is illuminated for visual effect.</description>
+               </define-flag>
+            </define-assembly>
+         </choice>
       </model>
-   </define-assembly>-->
+   </define-assembly>
+   
    
 </METASCHEMA>

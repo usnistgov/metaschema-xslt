@@ -4,12 +4,12 @@
         <type>atx</type>
         <cpu>
             <product-name>product-name0</product-name>
-            <architecture>architecture0</architecture>
+           <architecture>x86</architecture>
             <speed>5GHz</speed>
         </cpu>
         <ata-socket>
            <product-name>SprocketSocket</product-name>
-            <type>type1</type>
+            <type>pata</type>
         </ata-socket>
         <memory>
             <product-name>product-name2</product-name>
@@ -24,11 +24,11 @@
         </cooling>
         <expansion-card>
             <product-name>product-name4</product-name>
-            <type>type2</type>
+            <type>pci</type>
         </expansion-card>
         <expansion-card>
             <product-name>product-name5</product-name>
-            <type>type3</type>
+            <type>pcie</type>
         </expansion-card>
     </motherboard>
 </computer>
