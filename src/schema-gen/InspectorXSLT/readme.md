@@ -37,29 +37,30 @@ Neither *scalability* nor *performance* are primary goals, although considered v
 
 Given these considerations on balance, *correctness* comes first in order of priority, while *usability* and *testability* come second and third.
 
-Some possible use scenarios include:
+### Some possible use scenarios
 
-Newbies who need to validate data
-Regular users of a metaschema or metaschema-based tech
-  who need to validate data
-  who need to confirm the correctness of others' validations
-Developers of metaschema-based applications
-  who wish to use or deploy easy services
-  who prefer to focus on implementing semantics not on modeling and validating to models - but who need to validate
-Developers of Metaschema
-  who wish to compare implementation strategies and approaches
-XSLT/XSpec students and devs
-  since the codebase aims to be transparent and traceable as well as useful in operation
+- Newbies who need to validate data
+- Regular users of a metaschema or metaschema-based tech
+  - who need to validate data
+  - who need to confirm the correctness of others' validations
+- Developers of metaschema-based applications
+  - who wish to use or deploy easy services
+  - who prefer to focus on implementing semantics not on modeling and validating to models - but who need to validate
+- Developers of Metaschema
+  - who wish to compare implementation strategies and approaches
+- XSLT/XSpec students and devs
+  - since the codebase aims to be transparent and traceable as well as useful in operation
 
-Use cases we have not catered to
-  Developers who wish to build metaschema-aware applications - this is more a black box - while at core this is a code generator, it is not designed to be easily extensible as such or produce a 'library' - you might prefer to reverse engineer it
-  Robots or 'lights out' automated processes (untested)
+### Aims
 
-* For new, regular and occasional users and developers of Metaschema-based technologies
+For new, regular and occasional users and developers of Metaschema-based technologies
+
   * MX aims to be easy to use and start using
   * Correct and trustworthy in what it attempts to do
   * And compatible with workflows using other conformant tools
-* For developers and maintainers of Metaschema-based data modeling and processing stacks, MX aims
+
+For developers and maintainers of Metaschema-based data modeling and processing stacks, MX aims
+
   * To be lightweight, easy to deploy, easy to adapt and useful,
   * To be versatile (given its scope of application, namely validation)
   * And to serve as a complement to other Metaschema tools and applications\*
@@ -68,6 +69,14 @@ Use cases we have not catered to
   * Fully and openly tested
 
 \* Applications to consider using along with InspectorXSLT include the schema and converter-stylesheet generators in this repository as well as tools from other developers. MX can even check against itself by validating documents with both the Inspector and its XSD - the same issues should be reported (insofar as the XSD is able to express them) using either tool.
+
+### Use cases we have not catered to
+
+- Developers who wish to build metaschema-aware applications
+  - this application is intended to be operated as a black box: while at core this is a code generator, it is not designed to be easily extensible as such or produce a 'library', so you might prefer to reverse engineer it than to extend it
+- Robots or 'lights out' automated processes (untested)
+  - The interfaces are designed to be flexible for interfacing but YMMV as to scale/throughput - experience will tell
+  - Our expectation is that performance will be good under normal loads but metaschemas will also vary considerably 
 
 ## Feature set (for demo)
 
@@ -85,10 +94,11 @@ Use cases we have not catered to
 - [x] Validate structures - names and cardinalities
 - [x] Validate lexical rules over datatypes
   - [ ] more testing 
-- [ ] Validate constraints
+- [x] Validate constraints
 - [ ] Run in browser / SaxonJS
 - [ ] MX->SVRL filter postprocess
 - [ ] other ideas below
+
 ## Interfaces - how to use
 
 The tool is designed to be used standalone in an XSLT 3.0-capable processing environment, or to be embedded. For testing, we use a command-line XSLT engine such as Saxon (v10 or later). We test with Saxon-HE in order to ensure this execution dependency remains available.
@@ -96,8 +106,8 @@ The tool is designed to be used standalone in an XSLT 3.0-capable processing env
 For convenience, in the testing directory are example scripts that run Saxon inside Maven to (a) produce an Inspector XSLT from a metaschema, then subsequently (b) apply this XSLT to an XML document to report issues detected in it, to delivering this report in HTML or Markdown format:
 
 - `testing/refresh-computer-inspector.sh` refreshes "computer metaschema" example XSLT
-- `testing/inspect-computer.sh aComputerXML.xml -im:md` applies this XSLT to a 'computer' XML document returning Markdown
-- `testing/inspect-computer.sh aComputerXML.xml -im:html -o:report.html` applies this XSLT to a 'computer' XML document, and writes an HTML report to a file
+- `testing/inspect-computer.sh aComputerXML.xml format=md` applies this XSLT to a 'computer' XML document returning Markdown
+- `testing/inspect-computer.sh aComputerXML.xml -o:report.html format=html` applies this XSLT to a 'computer' XML document, and writes an HTML report to a file called `report.html`
 - with many more options - see script help or more info below
 
 These scripts demonstrate one way to invoke Saxon but there are many others suited to different operational contexts and systems, including other deployments of Saxon (Saxon-C or SaxonJS, just to name two). 
@@ -110,20 +120,25 @@ If a script is not well-suited or easily adaptable, or for testing/experiment, S
 
 #### Summary
 
-Command line flags and options for using the InspectorXSLT with Saxon - note use of `:` and `=` and an ordering requirement, that all parameters (`param=`) be placed after all flags (`-flag:`), but the order of parameters or flags does not matter.
+Command line flags and options for using the InspectorXSLT with Saxon - note use of `:` and `=` and an ordering requirement, that all parameters (`param=`) be placed after all flags (`-flag:`), while the order of parameters or flags otherwise does not matter.
+
+##### Flags for source, output, alternative entry points
 
 - `-s` required flag indicates the source file or directory - if a directory, `-o` is also required
 - `-o` optional flag indicates where to write a report file; if omitted the report comes back to STDOUT; required when `-s` is a directory
-- `-it:markdown`, `-it:md`, `-im:markdown` and `-im:md` all produce Markdown
-- `-it:plaintext`, and `-im:plaintext` drop double line-feeds from the Markdown producing a plain text format
-- `-it:html` and `-im:html` produce (the same) HTML
-- `-it:mx-report`, `-it:mx`, `-im:mx-report`, and `-im:mx` all produce (the same) report in an MX XML format, suitable for further processing
-- `-it:verbose` and `im:verbose` return a copy of the input, with validation reports embedded
-- Leaving out `-it` or `-im` results in the `verbose` output
-- `-it` is short for `-initial-template` while `-im` is short for `-initial-mode`
-- If both `-it` and `-im` are given, expect `-it` to prevail
+- `-it` (or `-initial-template`) and `-im` (or `-initial-mode`) settings are supported as aliases of the `format` parameter (see below). If `format` is not given, either of these may be used with a format value to initiate the same behavior. This is mainly useful for debugging or to configure a different fallback behavior from the core default in deployment.
 
-Parameters further affect the results.
+##### Parameters
+
+Runtime parameters dictate the behavior of the transformation engine and the transformation results
+
+- `format=markdown` and `format=md` produce Markdown
+- `format=plaintext` drops double line-feeds from the Markdown producing a plain text format
+- `format=html` produce HTML
+- `format=mx-report` or `format=mx` produce (the same) report in an MX XML format, suitable for further processing
+- `format:reflect` returns a copy of the input, with validation reports embedded
+
+The fallback behavior, if no format is indicated via `format` (or an initial template or initial mode indicator for the format), is `reflect`, producing an annotated copy. This is also the simplest operation, which makes it easiest to debug.
 
 The `form` parameter provides for adjustments to be made to outputs (HTML, Markdown or plaintext):
 
@@ -186,7 +201,7 @@ saxon -xslt:computer-inspector.xsl -s:invalid10.xml
 
 
 ```bash
-saxon -it:mx -xslt:computer-inspector.xsl -s:invalid10.xml
+saxon -xslt:computer-inspector.xsl -s:invalid10.xml format=mx
 ```
 
 ---
@@ -195,7 +210,7 @@ saxon -it:mx -xslt:computer-inspector.xsl -s:invalid10.xml
 
 
 ```bash
-saxon -it:mx -xslt:computer-inspector.xsl -s:invalid10.xml -o:results.xml
+saxon -xslt:computer-inspector.xsl -s:invalid10.xml -o:results.xml format=mx
 ```
 
 This can be useful to capture MX reports for further processing.
@@ -206,7 +221,7 @@ This can be useful to capture MX reports for further processing.
 
 
 ```bash
-saxon -it:html -xslt:computer-inspector.xsl -s:invalid10.xml -o:results.html
+saxon -xslt:computer-inspector.xsl -s:invalid10.xml -o:results.html format=html
 ```
 
 
@@ -217,7 +232,7 @@ Note that HTML and Markdown results presuppose the MX filtering step - they do n
 To **write Markdown results to STDOUT**. (Note lack of `-o` argument.) This is the same as `-it:markdown`:
 
 ```bash
-saxon -it:md -xslt:computer-inspector.xsl -s:invalid10.xml
+saxon -xslt:computer-inspector.xsl -s:invalid10.xml format=md
 ```
 
 ---
@@ -225,7 +240,7 @@ saxon -it:md -xslt:computer-inspector.xsl -s:invalid10.xml
 To write **Markdown results to STDOUT except emit *one line only***. This uses the `form` parameter.:
 
 ```bash
-saxon -it:md -xslt:computer-inspector.xsl -s:invalid10.xml form=one-line
+saxon -xslt:computer-inspector.xsl -s:invalid10.xml form=one-line format=md
 ```
 
 ---
@@ -233,7 +248,7 @@ saxon -it:md -xslt:computer-inspector.xsl -s:invalid10.xml form=one-line
 And to **silence results entirely when a file is found to be valid**:
 
 ```bash
-saxon -it:md -xslt:computer-inspector.xsl -s:invalid10.xml -o:/dev/null echo=invalid-only
+saxon -xslt:computer-inspector.xsl -s:invalid10.xml -o:/dev/null echo=invalid-only
 ```
 
 ---
@@ -241,20 +256,20 @@ saxon -it:md -xslt:computer-inspector.xsl -s:invalid10.xml -o:/dev/null echo=inv
 Or instead to **echo warnings and info** (only) to the console but otherwise silence results:
 
 ```bash
-saxon -it:md -xslt:computer-inspector.xsl -s:invalid10.xml -o:/dev/null echo=warnings
+saxon -xslt:computer-inspector.xsl -s:invalid10.xml -o:/dev/null echo=warnings
 ```
 
 Why would you want to do this? Because you know of errors already but want an update regarding any warnings.
 
 ---
 
-To **run over a set of files** in a folder named `to-validate` and produce result (files) in a new folder, `reports`:
+To **run over a set of files** in a folder named `to-validate` and produce result (files) in a new folder, `reports` (with Markdown reports):
 
 ```bash
-saxon -xslt:computer-inspector.xsl -s:to-validate -o:reports
+saxon -xslt:computer-inspector.xsl -s:to-validate -o:reports format=md
 ```
 
-Note - results are written for all files, valid and invalid, irrespective of findings. So even when `mode=silent-when-valid`, empty files is produced for a valid instances. See above for hints.
+Note - results are written for all files, valid and invalid, irrespective of findings. Extra empty files can be fairly easily removed with a utility.
 
 ---
 
@@ -262,11 +277,11 @@ To **report as files are found to be valid or invalid** to STDOUT, *additional* 
 
 The `echo` feature is useful when using the `-o` argument to direct outputs (complete or summaries) to file or device. Additional to the primary outputs, `echo` produces a record and summary view to a secondary output, generally STDERR (via `xsl:message`).
 
-Use `echo` (see above) if you wish to see progress in the console even when directing results to file outputs. It will announce findings of both valid and invalid files, one line per file, in addition to other messages; so it can be similar to `mode=one-liner` except it supplements instead of replaces the production of complete reports (i.e., the primary result) - so progress can be monitored as well as results can be written out.
+Use `echo` (see above) if you wish to see progress in the console even when directing results to file outputs. It will announce findings of both valid and invalid files, one line per file, in addition to other messages; so it can be similar to `form=one-line` except it supplements instead of replaces the production of complete reports (i.e., the primary result) - so progress can be monitored in the same run as results are written out.
 
 `echo` and `form` can be used at the same time - `form` affecting how results look, and `echo` affecting what gets reported via messaging along with that production.
 
-This feature is designed to be especially useful when validating inputs in batches and writing results to files. Often an operator prefers to have some runtime notification of what is happening, even when the main interest is in 'side effects' such as files written to the system.
+The `echo` feature is designed to be useful when validating inputs in batches and writing results to files. Often an operator prefers to have some runtime notification of what is happening, even when the main interest is in 'side effects' such as files written to the system.
 
 ---
 
@@ -275,7 +290,7 @@ Alternatively, to **use bash to loop over one file at a time, collecting the out
 With `form=one-line` and Markdown or plaintext results, we get one line per file.
 
 ```bash
-(for f in $(ls collectionls /*.xml); do saxon -it:md -xslt:computer-inspector.xsl -s:$f mode=one-liner; done) 1> validated.txt
+(for f in $(ls collectionls /*.xml); do saxon -xslt:computer-inspector.xsl -s:$f format=md form=one-line; done) 1> validated.txt
 ```
 
 ---
@@ -284,7 +299,7 @@ Or running without `form=one-line` to **create a single Markdown report** (note 
 
 
 ```bash
-(for f in $(ls collection/*.xml); do saxon -it:md -xslt:computer-inspector.xsl -s:$f echo=all; done) 1> validation-report.md
+(for f in $(ls collection/*.xml); do saxon -xslt:computer-inspector.xsl -s:$f format=md echo=all; done) 1> validation-report.md
 ```
 
 This time, all results are written in Markdown into the file `validation-report.md`, while `echo=all` provides progress indicators echoed to the console. Use other `echo` settings for less noise.
@@ -323,21 +338,7 @@ In this sequence of transformations the target (result) XSLT is assembled dynami
 
 An example script calling the XSLT pipeline (thus requiring only Saxon, not XML Calabash) is given as [testing/mvn-refresh-computer-inspector.sh](testing/refresh-computer-inspector.sh).
 
-## If you have only JSON
-
-This tool is based on the XML stack and its support for JSON is nominal; however, one promise of Metaschema is that it provides a basis for bridging boundarites on the basis of discernable *commonalities* between data points in the respective formats - notably of course the *names* of elements (in XML) or properties (in JSON). So even though the Inspector cannot inspect your JSON since it can't 
-
-That being said, JSON is expressible as XDM maps and the application of metaschema-based constraints (or JSON-schema-based constraints?) over XDM maps is a ... fascinating proposition.
-
 ## Plans
-
-### Usability enhancements
-
-- [x] Report match pattern on constraints checking
-- [x] Carry constraint ID
-- [ ] filter results
-
-
 
 ### Functional enhancements
 
@@ -376,12 +377,11 @@ JSON could first be cast into an XDM map, so this operation conceivably could me
 
 ### Line numbers
 
-Alas, can't get line numbers in Saxon HE.
+Alas, can't get line numbers in Saxon-HE. We could provide optional line number echoing potentially in a version requiring licensed Saxon.
 
 ### XSLT 1.0?
 
 We know that we can't do everything under XSLT 1.0 (such as regular expressions for lexical type checking) but we might be able to provide a significant subset, as a "sine qua non" first-cut validator.
-
 
 ## Design goals and principles
 

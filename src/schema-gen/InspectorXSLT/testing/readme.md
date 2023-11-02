@@ -24,13 +24,14 @@ See the [Testing](../Testing.md) docs for more information.
 
 #### Next up
 
-Oct 23 - (not necessarily in priority order)
+Nov 2 - (not necessarily in priority order)
 
 - [ ] Complete constraints feature set
-   - [ ] `index`
-   - [ ] `index-has-key`
-   - [ ] `unique`
+   - [x] `index`
+   - [x] `index-has-key`
+   - [x] `is-unique`
    - [ ] align `allow-values` with current/best?
+     - [ ] develop an example 
      - [ ] XSpec the retrieval function returning (rule/value)*
    - [ ] check back, anything missed?
 - [ ] Test out other aspects
