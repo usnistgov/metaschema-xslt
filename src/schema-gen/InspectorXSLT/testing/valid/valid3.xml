@@ -3,53 +3,54 @@
  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xmlns="http://example.com/ns/computer"
  id="id1">
-    <motherboard>
-        <vendor id="id3">
-            <name>name0</name>
-            <address>address0</address>
+   <motherboard>
+      <vendor id="id3">
+         <name>name0</name>
+         <address>address0</address>
+         <website>http://pages.nist.gov/metaschema</website>
+      </vendor>
+      <type>mini-itx</type>
+      <cpu>
+         <vendor id="id5">
+            <name>name1</name>
+            <address>address1</address>
             <website>http://pages.nist.gov/metaschema</website>
-        </vendor>
-        <type>mini-itx</type>
-        <cpu>
-            <vendor id="id5">
-                <name>name1</name>
-                <address>address1</address>
-                <website>http://pages.nist.gov/metaschema</website>
-            </vendor>
-            <product-name>product-name0</product-name>
-           <architecture>x86</architecture>
-            <speed>10MHz</speed>
-        </cpu>
-        <ata-socket>
-            <vendor id="id7">
-               <name>SprocketSocket</name>
-                <address>address2</address>
-                <website>http://pages.nist.gov/metaschema</website>
-            </vendor>
-           <product-name>SprocketSocket</product-name>
-           <type>pata</type>
-        </ata-socket>
-       <memory>
-          <vendor id="id9">
-             <name>name3</name>
-             <address>address3</address>
-             <website>http://pages.nist.gov/metaschema</website>
-          </vendor>
-          <product-name>product-name2</product-name>
-          <byte-size>512</byte-size>
-       </memory>
-       <memory>
-          <product-name>product-name2</product-name>
-          <byte-size>512</byte-size>
-       </memory>
-       <expansion-card>
-            <vendor id="id13">
-                <name>name5</name>
-                <address>address5</address>
-                <website>http://pages.nist.gov/metaschema</website>
-            </vendor>
-            <product-name>product-name4</product-name>
-            <type>pci</type>
-        </expansion-card>
-    </motherboard>
+         </vendor>
+         <product-name>product-name0</product-name>
+         <architecture>x86</architecture>
+         <speed>10MHz</speed>
+      </cpu>
+      <ata-socket slot-no="0">
+         <vendor id="id7">
+            <name>SprocketSocket</name>
+            <address>address2</address>
+            <website>http://pages.nist.gov/metaschema</website>
+         </vendor>
+         <product-name>SprocketSocket</product-name>
+         <type>pata</type>
+      </ata-socket>
+      <memory>
+         <vendor id="id9">
+            <name>name3</name>
+            <address>address3</address>
+            <website>http://pages.nist.gov/metaschema</website>
+         </vendor>
+         <product-name>product-name2</product-name>
+         <byte-size>512</byte-size>
+      </memory>
+      <memory>
+         <product-name>product-name2</product-name>
+         <byte-size>512</byte-size>
+      </memory>
+      <expansion-card socket-no="0">
+         <vendor id="id13">
+            <name>name5</name>
+            <address>address5</address>
+            <website>http://pages.nist.gov/metaschema</website>
+         </vendor>
+         <product-name>product-name4</product-name>
+         <type>pci</type>
+      </expansion-card>
+   </motherboard>
+   <prop name="model" value="CompuMax 5000"/>
 </computer>

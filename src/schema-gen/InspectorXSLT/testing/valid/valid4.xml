@@ -1,34 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <computer xmlns="http://example.com/ns/computer" id="id1">
-    <motherboard>
-        <type>atx</type>
-        <cpu>
-            <product-name>product-name0</product-name>
-           <architecture>x86</architecture>
-            <speed>5GHz</speed>
-        </cpu>
-        <ata-socket>
-           <product-name>SprocketSocket</product-name>
-            <type>pata</type>
-        </ata-socket>
-        <memory>
-            <product-name>product-name2</product-name>
-            <byte-size>1024</byte-size>
-        </memory>
-        <memory>
-            <product-name>product-name3</product-name>
-            <byte-size>1024</byte-size>
-        </memory>
-        <cooling><!-- seven fans -->
-            <fan/><fan/><fan/><fan/><fan/><fan/><fan/>
-        </cooling>
-        <expansion-card>
-            <product-name>product-name4</product-name>
-            <type>pci</type>
-        </expansion-card>
-        <expansion-card>
-            <product-name>product-name5</product-name>
-            <type>pcie</type>
-        </expansion-card>
-    </motherboard>
+   <motherboard>
+      <type>atx</type>
+      <cpu>
+         <product-name>product-name0</product-name>
+         <architecture>x86</architecture>
+         <speed>5GHz</speed>
+      </cpu>
+      <ata-socket slot-no="0">
+         <product-name>SprocketSocket</product-name>
+         <type>pata</type>
+      </ata-socket>
+      <ata-socket slot-no="1">
+         <product-name>SprocketSocket</product-name>
+         <type>pata</type>
+      </ata-socket>
+      <memory>
+         <product-name>product-name2</product-name>
+         <byte-size>1024</byte-size>
+      </memory>
+      <memory>
+         <product-name>product-name3</product-name>
+         <byte-size>1024</byte-size>
+      </memory>
+      <cooling>
+         <!-- seven fans -->
+         <fan/>
+         <fan/>
+         <fan/>
+         <fan/>
+         <fan/>
+         <fan/>
+         <fan/>
+      </cooling>
+      <expansion-card socket-no="0">
+         <product-name>product-name4</product-name>
+         <type>pci</type>
+      </expansion-card>
+      <expansion-card socket-no="1">
+         <product-name>product-name5</product-name>
+         <type>pcie</type>
+      </expansion-card>
+   </motherboard>
+   <prop name="model" value="CompuMax 5000"/>
 </computer>

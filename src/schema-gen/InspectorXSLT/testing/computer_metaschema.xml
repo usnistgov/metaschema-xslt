@@ -93,9 +93,10 @@
                             <field ref="remarks" in-xml="UNWRAPPED"/>
                         </model>
                     </define-assembly>
-                    <define-assembly name="ata-socket">
+                    <define-assembly name="ata-socket" max-occurs="8">
                         <formal-name>Motherboard Advanced Technology Attachment (ATA) Socket</formal-name>
                         <description>The model number of ATA socket on the motherboard of a computer. There will only be one socket on any motherboard.</description>
+                       <group-as name="ata-sockets"/>
                        <flag ref="serial-number"/>
                        <define-flag name="slot-no" as-type="non-negative-integer" required="yes">
                           <formal-name>Slot number</formal-name>
