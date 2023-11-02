@@ -57,7 +57,9 @@
     <x:scenario label="'AOOP attribute-out-of-place' notices">
         <x:scenario label="For an attribute with a known name, but out of place">
             <x:context mode="test" select="/c:computer">
-                <computer illuminated="true" id="A0"/>
+                <computer illuminated="true" id="A0">
+                   <prop name="model">CompuTek I</prop>
+                </computer>
             </x:context>
             <x:expect label="an error is reported">
                 <mx:report cf="..." test="exists(.)"
@@ -245,7 +247,9 @@
     <x:scenario label="'MRQA missing-required-attribute' notices">
         <x:scenario label="For an attribute required but missing">
             <x:context mode="test" select="/c:computer">
-                <computer/>
+               <computer>
+                  <prop name="model">CompuTek I</prop>
+               </computer>
             </x:context>
             <x:expect label="an error is reported">
                 <mx:report cf="..." test="empty(@id)"
@@ -272,7 +276,9 @@
     <x:scenario label="'UA unmatched-attribute' notices">
         <x:scenario label="For an unknown attribute">
             <x:context mode="test" select="/c:computer">
-                <computer id="A0" networkID="hal"/>
+                <computer id="A0" networkID="hal">
+                   <prop name="model">CompuTek I</prop>
+                </computer>
             </x:context>
             <x:expect label="an error is reported">
                 <mx:report cf="..." test="exists(.)" xpath="/computer/@networkID" class="_UA unmatched-attribute"
