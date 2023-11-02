@@ -97,6 +97,10 @@
                         <formal-name>Motherboard Advanced Technology Attachment (ATA) Socket</formal-name>
                         <description>The model number of ATA socket on the motherboard of a computer. There will only be one socket on any motherboard.</description>
                        <flag ref="serial-number"/>
+                       <define-flag name="slot-no" as-type="non-negative-integer" required="yes">
+                          <formal-name>Slot number</formal-name>
+                          <description>Must be distinctive among ata-sockets, and must be a value between zero (0) and the total number of slots.</description> 
+                       </define-flag>
                        <model>
                             <assembly ref="vendor"/>        
                             <field ref="product-name" min-occurs="1"/>
@@ -138,6 +142,10 @@
                         <description>The model number of an expansion card connected to the motherboard of a computer.</description>
                         <group-as name="expansion-cards" in-json="ARRAY"/>
                       <flag ref="serial-number"/>
+                      <define-flag name="socket-no" required="yes">
+                         <formal-name>Socket Slot No</formal-name>
+                         <description>Identifies the expansion card's socket by its slot number. Note this should be a non-negative integer between 0 and the count of sockets, but this is not formally defined except on the target.</description>
+                      </define-flag>
                       <model>
                             <assembly ref="vendor"/>
                             <field ref="product-name" min-occurs="1"/>
@@ -156,7 +164,22 @@
                             <field ref="remarks" in-xml="UNWRAPPED"/>
                         </model>
                     </define-assembly>
-                </model>
+                  
+               </model>
+               <constraint>
+                  <!-- this constraint uses the parent axis - w/o variables it's difficult to express from above -->
+                  <expect target="ata-socket/@slot-no" test=". = (0 to count(../../ata-socket))"/>
+                  <is-unique target="ata-socket">
+                     <key-field target="@slot-no"/>
+                  </is-unique>
+                  <index target="ata-socket" name="socket-by-slot">
+                     <key-field target="@slot-no"/>
+                  </index>
+                  <index-has-key target="expansion-card" name="socket-by-slot"> 
+                     <key-field target="@socket-no"/>
+                  </index-has-key>
+                  </constraint>
+               
             </define-assembly>
             <define-assembly name="usb-device" max-occurs="unbounded">
                 <formal-name>Universal Serial Bus Device</formal-name>
@@ -178,26 +201,41 @@
             <assembly ref="property"/>
             <field ref="remarks" in-xml="UNWRAPPED"/>
         </model>
-        <constraint>
-            <is-unique target="usb-device">
-                <formal-name>Unique USB Device UUID</formal-name>
-                <description>Ensures that each USB device has a unique UUID.</description>
-                <key-field target="@uuid"/>
-            </is-unique>
-            <allowed-values target="(motherboard|motherboard/cpu|motherboard/memory|motherboard/expansion-card|usb-device)/prop[not(@ns) or @ns=('http://example.com/ns/computer')]/@name">
-                <enum value="model">CPU model</enum>
-            </allowed-values>
-            <has-cardinality level="WARNING" target="(motherboard|motherboard/cpu|motherboard/memory|motherboard/expansion-card|usb-device)/prop[not(@ns) or @ns=('http://example.com/ns/computer')]" min-occurs="1">
-                <remarks>
-                    <p>Warn if a model is not provided.</p>
-                </remarks>
-            </has-cardinality>
-            <has-cardinality level="ERROR" target="(motherboard|motherboard/cpu|motherboard/memory|motherboard/expansion-card|usb-device)/prop[not(@ns) or @ns=('http://example.com/ns/computer')]" max-occurs="1">
-                <remarks>
-                    <p>It is invalid to provide multiple models.</p>
-                </remarks>
-            </has-cardinality>
-        </constraint>
+      <constraint>
+         <is-unique target="usb-device">
+            <formal-name>Unique USB Device UUID</formal-name>
+            <description>Ensures that each USB device has a unique UUID.</description>
+            <key-field target="@uuid"/>
+         </is-unique>
+         <allowed-values
+            target=".//prop[not(@ns) or @ns=('http://example.com/ns/computer')]/@name">
+            <enum value="model">CPU model</enum>
+         </allowed-values>
+         <has-cardinality level="WARNING"
+            target=".//prop[not(@ns) or @ns=('http://example.com/ns/computer')]"
+            min-occurs="1">
+            <!-- as given, this restricts us to one 'model' prop among all these descendants, not one for each - a unit test is called for -->
+            <remarks>
+               <p>Warn if a model is not provided.</p>
+            </remarks>
+         </has-cardinality>
+         <has-cardinality level="ERROR"
+            target=".//prop[not(@ns) or @ns=('http://example.com/ns/computer')]"
+            max-occurs="1">
+            <!-- same - there is a scoping question here -->
+            <remarks>
+               <p>It is invalid to provide multiple models.</p>
+            </remarks>
+         </has-cardinality>
+         <index target="descendant::*[exists(@id|@uuid)]" name="internal-links">
+            <key-field target="@id|@uuid"/>
+         </index>
+         <index-has-key target="//a" name="internal-links">
+            <!-- all anchors anywhere must point to an internal component -->
+            <key-field target="@href" pattern="#(.+)"/>
+         </index-has-key>
+      </constraint>
+       
     </define-assembly>
     <define-field name="cost" as-type="decimal">
         <formal-name>Part Cost</formal-name>
@@ -269,7 +307,10 @@
 
    <define-flag name="serial-number">
       <formal-name>Serial Number</formal-name>
-      <description>A code for this item only.</description>
+      <description>A code for this item only. No spaces are permitted.</description>
+      <constraint>
+         <matches regex="^\S+$"/>
+      </constraint>
    </define-flag>
    
    

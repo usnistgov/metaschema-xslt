@@ -241,10 +241,20 @@
                            <xs:annotation>
                               <xs:appinfo>
                                  <m:formal-name>Serial Number</m:formal-name>
-                                 <m:description>A code for this item only.</m:description>
+                                 <m:description>A code for this item only. No spaces are permitted.</m:description>
                               </xs:appinfo>
                               <xs:documentation>
-                                 <b>Serial Number</b>: A code for this item only.</xs:documentation>
+                                 <b>Serial Number</b>: A code for this item only. No spaces are permitted.</xs:documentation>
+                           </xs:annotation>
+                        </xs:attribute>
+                        <xs:attribute name="slot-no" type="NonNegativeIntegerDatatype">
+                           <xs:annotation>
+                              <xs:appinfo>
+                                 <m:formal-name>Slot number</m:formal-name>
+                                 <m:description>Must be distinctive among ata-sockets, and must be a value between zero (0) and the total number of slots.</m:description>
+                              </xs:appinfo>
+                              <xs:documentation>
+                                 <b>Slot number</b>: Must be distinctive among ata-sockets, and must be a value between zero (0) and the total number of slots.</xs:documentation>
                            </xs:annotation>
                         </xs:attribute>
                      </xs:complexType>
@@ -295,10 +305,10 @@
                            <xs:annotation>
                               <xs:appinfo>
                                  <m:formal-name>Serial Number</m:formal-name>
-                                 <m:description>A code for this item only.</m:description>
+                                 <m:description>A code for this item only. No spaces are permitted.</m:description>
                               </xs:appinfo>
                               <xs:documentation>
-                                 <b>Serial Number</b>: A code for this item only.</xs:documentation>
+                                 <b>Serial Number</b>: A code for this item only. No spaces are permitted.</xs:documentation>
                            </xs:annotation>
                         </xs:attribute>
                      </xs:complexType>
@@ -353,10 +363,20 @@
                            <xs:annotation>
                               <xs:appinfo>
                                  <m:formal-name>Serial Number</m:formal-name>
-                                 <m:description>A code for this item only.</m:description>
+                                 <m:description>A code for this item only. No spaces are permitted.</m:description>
                               </xs:appinfo>
                               <xs:documentation>
-                                 <b>Serial Number</b>: A code for this item only.</xs:documentation>
+                                 <b>Serial Number</b>: A code for this item only. No spaces are permitted.</xs:documentation>
+                           </xs:annotation>
+                        </xs:attribute>
+                        <xs:attribute name="socket-no" type="StringDatatype">
+                           <xs:annotation>
+                              <xs:appinfo>
+                                 <m:formal-name>Socket Slot No</m:formal-name>
+                                 <m:description>Identifies the expansion card's socket by its slot number. Note this should be a non-negative integer between 0 and the count of sockets, but this is not formally defined except on the target.</m:description>
+                              </xs:appinfo>
+                              <xs:documentation>
+                                 <b>Socket Slot No</b>: Identifies the expansion card's socket by its slot number. Note this should be a non-negative integer between 0 and the count of sockets, but this is not formally defined except on the target.</xs:documentation>
                            </xs:annotation>
                         </xs:attribute>
                      </xs:complexType>
@@ -366,10 +386,10 @@
                   <xs:annotation>
                      <xs:appinfo>
                         <m:formal-name>Serial Number</m:formal-name>
-                        <m:description>A code for this item only.</m:description>
+                        <m:description>A code for this item only. No spaces are permitted.</m:description>
                      </xs:appinfo>
                      <xs:documentation>
-                        <b>Serial Number</b>: A code for this item only.</xs:documentation>
+                        <b>Serial Number</b>: A code for this item only. No spaces are permitted.</xs:documentation>
                   </xs:annotation>
                </xs:attribute>
             </xs:complexType>
@@ -425,10 +445,10 @@
          <xs:annotation>
             <xs:appinfo>
                <m:formal-name>Serial Number</m:formal-name>
-               <m:description>A code for this item only.</m:description>
+               <m:description>A code for this item only. No spaces are permitted.</m:description>
             </xs:appinfo>
             <xs:documentation>
-               <b>Serial Number</b>: A code for this item only.</xs:documentation>
+               <b>Serial Number</b>: A code for this item only. No spaces are permitted.</xs:documentation>
          </xs:annotation>
       </xs:attribute>
       <xs:attribute name="id" use="required" type="StringDatatype">
@@ -615,10 +635,10 @@
          <xs:annotation>
             <xs:appinfo>
                <m:formal-name>Serial Number</m:formal-name>
-               <m:description>A code for this item only.</m:description>
+               <m:description>A code for this item only. No spaces are permitted.</m:description>
             </xs:appinfo>
             <xs:documentation>
-               <b>Serial Number</b>: A code for this item only.</xs:documentation>
+               <b>Serial Number</b>: A code for this item only. No spaces are permitted.</xs:documentation>
          </xs:annotation>
       </xs:attribute>
    </xs:complexType>
@@ -827,6 +847,20 @@
 				separated by a period.</xs:documentation>
       </xs:annotation>
       <xs:restriction base="xs:decimal">
+         <xs:pattern value="\S(.*\S)?">
+            <xs:annotation>
+               <xs:documentation>This pattern ensures that leading and trailing whitespace is
+						disallowed. This helps to even the user experience between implementations
+						related to whitespace.</xs:documentation>
+            </xs:annotation>
+         </xs:pattern>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="NonNegativeIntegerDatatype">
+      <xs:annotation>
+         <xs:documentation>An integer value that is equal to or greater than 0.</xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:nonNegativeInteger">
          <xs:pattern value="\S(.*\S)?">
             <xs:annotation>
                <xs:documentation>This pattern ensures that leading and trailing whitespace is
