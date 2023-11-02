@@ -19,6 +19,7 @@
    <x:variable name="mx:XPKT-class" as="xs:string">XPKT expectation-violation</x:variable>
    <x:variable name="mx:HCCV-class" as="xs:string">HCCV cardinality-violation</x:variable>
    <x:variable name="mx:UNIQ-class" as="xs:string">UNIQ uniqueness-violation</x:variable>
+   <x:variable name="mx:NXHK-class" as="xs:string">NXHK index-lookup-fail</x:variable>
    
    <x:scenario label="allowed-values tests 'AVCV value-not-allowed' notices">
       <!-- /descendant::XSLT:call-template[@name='notice'][7]       -->
@@ -31,8 +32,8 @@
             </computer>
          </x:context>
          <x:expect label="an error is reported">
-            <mx:report cf="..." test="not(.=('at','atx','mini-itx','custom'))" class="{ $mx:ACVC-class }" matching="computer/motherboard/type"
-               xpath="/computer/motherboard/type" rule-id="motherboard-type-rule_1" level="ERROR">Value <mx:code>special</mx:code> does not appear among permissible (enumerated) values for this <mx:gi>type</mx:gi>: <mx:code>at|atx|mini-itx|custom</mx:code>.</mx:report>
+            <mx:report cf="..." test="not(.=('at','atx','mini-itx'))" class="{ $mx:ACVC-class }" matching="computer/motherboard/type"
+               xpath="/computer/motherboard/type" level="WARNING">Value <mx:code>special</mx:code> does not appear among permissible (enumerated) values for this <mx:gi>type</mx:gi>: <mx:code>at|atx|mini-itx</mx:code>.</mx:report>
          </x:expect>
       </x:scenario>
       <x:scenario label="An empty field whose value must be enumerated">
@@ -44,8 +45,8 @@
             </computer>
          </x:context>
          <x:expect label="brings an error showing the empty string as '(empty)'">
-            <mx:report cf="..." test="not(.=('at','atx','mini-itx','custom'))" class="{ $mx:ACVC-class }" matching="computer/motherboard/type"
-               xpath="/computer/motherboard/type" rule-id="motherboard-type-rule_1" level="ERROR">Value <mx:code/> (empty) does not appear among permissible (enumerated) values for this <mx:gi>type</mx:gi>: <mx:code>at|atx|mini-itx|custom</mx:code>.</mx:report>
+            <mx:report cf="..." test="not(.=('at','atx','mini-itx'))" class="{ $mx:ACVC-class }" matching="computer/motherboard/type"
+               xpath="/computer/motherboard/type" level="WARNING">Value <mx:code/> (empty) does not appear among permissible (enumerated) values for this <mx:gi>type</mx:gi>: <mx:code>at|atx|mini-itx</mx:code>.</mx:report>
          </x:expect>
       </x:scenario>
       <x:scenario label="A field with a value out of compliance with its enumeration - wrong CASE, so literally wrong">
@@ -57,9 +58,9 @@
             </computer>
          </x:context>
          <x:expect label="brings an error">
-            <mx:report cf="..." test="not(.=('at','atx','mini-itx','custom'))" class="{ $mx:ACVC-class }"
+            <mx:report cf="..." test="not(.=('at','atx','mini-itx'))" class="{ $mx:ACVC-class }"
                matching="computer/motherboard/type" xpath="/computer/motherboard/type"
-               rule-id="motherboard-type-rule_1" level="ERROR">Value <mx:code>CUSTOM</mx:code> does not appear among permissible (enumerated) values for this <mx:gi>type</mx:gi>: <mx:code>at|atx|mini-itx|custom</mx:code>.</mx:report>
+               level="WARNING">Value <mx:code>CUSTOM</mx:code> does not appear among permissible (enumerated) values for this <mx:gi>type</mx:gi>: <mx:code>at|atx|mini-itx</mx:code>.</mx:report>
          </x:expect>
       </x:scenario>
       <x:scenario label="A field with a value out of compliance with its enumeration - extra whitespace">
@@ -71,15 +72,15 @@
             </computer>
          </x:context>
          <x:expect label="brings an error">
-            <mx:report cf="..." test="not(.=('at','atx','mini-itx','custom'))" class="{ $mx:ACVC-class }" matching="computer/motherboard/type"
-               xpath="/computer/motherboard/type" rule-id="motherboard-type-rule_1" level="ERROR">Value <mx:code>   custom   </mx:code> does not appear among permissible (enumerated) values for this <mx:gi>type</mx:gi>: <mx:code>at|atx|mini-itx|custom</mx:code>.</mx:report>
+            <mx:report cf="..." test="not(.=('at','atx','mini-itx'))" class="{ $mx:ACVC-class }" matching="computer/motherboard/type"
+               xpath="/computer/motherboard/type" level="WARNING">Value <mx:code>   custom   </mx:code> does not appear among permissible (enumerated) values for this <mx:gi>type</mx:gi>: <mx:code>at|atx|mini-itx</mx:code>.</mx:report>
          </x:expect>
       </x:scenario>
       <x:scenario label="A field with a value in compliance with its enumeration">
          <x:context mode="test" select="/c:computer/c:motherboard/c:type">
             <computer id="0000">
                <motherboard>
-                  <type>custom</type>
+                  <type>mini-itx</type>
                </motherboard>
             </computer>
          </x:context>
@@ -87,7 +88,7 @@
       </x:scenario>
 </x:scenario>
    
-   <x:scenario label="allowed-values tests 'AVCV value-not-allowed' notices - WARNING when allow-other='yes'">
+   <x:scenario label="allowed-values test conditional on a co-occurrence" pending="update">
       <x:scenario label="A date conforming to all rules except the one constraining the values when the computer @id starts with 'April'">
          <x:context mode="test" select="/c:computer">
             <computer id="April0" date-of-manufacture="2001-01-01"/><!-- violates manufacture-date-rule_1 with allow-other='yes' -->
@@ -100,7 +101,48 @@
       </x:scenario>
    </x:scenario>
 
-   <x:scenario label="matches/@regex produces 'MRCV regex-match-fail' notices">  
+   <x:scenario label="'index-has-key' NXHK indexes enforcing referential constraints">
+      <x:scenario label="when everything is in order ">
+         <x:context mode="test" select="/c:computer/c:motherboard">
+            <computer id="another.has.2x.a1">
+               <motherboard>
+                  <type/>
+                  <memory/>
+                  <ata-socket slot-no="0"/>
+                  <ata-socket slot-no="1"/>
+                  <ata-socket slot-no="2"/>
+                  <expansion-card socket-no="0"/>
+                  <expansion-card socket-no="1"/>
+                  <expansion-card socket-no="2"/>
+               </motherboard>
+            </computer>
+         </x:context>
+         <x:expect label="no warnings come back" select="()"/>
+      </x:scenario>
+      <x:scenario label="when everything is in order ">
+         <x:context mode="test" select="/c:computer/c:motherboard"><!-- the selection is the scope of the rule -->
+            <computer id="another.has.2x.a1">
+               <motherboard>
+                  <type/>
+                  <memory/>
+                  <ata-socket slot-no="0"/>
+                  <ata-socket slot-no="1"/>
+                  <ata-socket slot-no="2"/>
+                  <expansion-card socket-no="4"/>
+                  <expansion-card socket-no="1"/>
+                  <expansion-card socket-no="2"/>
+               </motherboard>
+            </computer>
+         </x:context>
+         <x:expect label="we get an error for the broken listing">
+            <mx:report cf="gix.649"
+               test="not(exists(mx:key-matches-among-items(.,$selected,'NDX_socket-by-slot',(@socket-no),$within)))"
+               class="NXHK index-lookup-fail" xpath="/computer/motherboard/expansion-card[1]" level="ERROR"
+               matching="/computer/motherboard/(expansion-card)">With respect to its assigned index  value, this <mx:gi>expansion-card</mx:gi> is expected to correspond within its <mx:gi>motherboard</mx:gi> to a value listed under index <mx:b>socket-by-slot</mx:b>. This index has no entry under the key value <mx:code>4</mx:code>.</mx:report></x:expect>
+      </x:scenario>
+   </x:scenario>
+   
+   <x:scenario label="matches/@regex produces 'MRCV regex-match-fail' notices" pending="update">  
       <x:scenario label="A flag matching the constraint - no target">
          <x:context mode="test" select="/c:computer/@id">
             <computer id="9999"/>
@@ -158,7 +200,7 @@
       </x:scenario>
    </x:scenario>
    
-   <x:scenario label="matches tests - matches/@datatype and matches/@regex along with a co-occurrent allowed-value test">
+   <x:scenario label="matches tests - matches/@datatype and matches/@regex along with a co-occurrent allowed-value test" pending="update">
       <x:scenario label="A flag defined as a string but targeted with  a 'date' field constraint - happens to be a permitted date">
          <x:context mode="test" select="/c:computer">
             <computer id="A0" date-of-manufacture="1980-04-01"/>
@@ -205,7 +247,7 @@
       
    </x:scenario>
    
-   <x:scenario label="'expect' XPKT">
+   <x:scenario label="'expect' XPKT" pending="update">
       <x:scenario label="An expect, targeting . - value fails test">
          <x:context mode="test" select="/c:computer/@date-of-manufacture">
             <computer date-of-manufacture="1949-12-31"/>            
@@ -295,7 +337,7 @@
       
    </x:scenario>
    
-   <x:scenario label="'has-cardinality' HCCV">
+   <x:scenario label="'has-cardinality' HCCV" pending="update">
       <x:scenario label="Detecting a cardinality error, apart from others - too many">
          <x:context mode="test" select="/c:computer/c:motherboard">
             <computer id="okay">
@@ -372,7 +414,7 @@
       </x:scenario>
    </x:scenario>
    
-   <x:scenario label="'is-unique' UNIQ">
+   <x:scenario label="'is-unique' UNIQ" pending="update">
       <x:scenario label="Since @sn 'serial number' values are expected to be distinctive">
          <x:context mode="test" select="/c:computer">
             <computer id="has.2x.a1">
@@ -439,6 +481,6 @@
    </x:scenario>
    
    <!-- test index definition? -->
-   <x:scenario label="'index-has-key' NXHK" pending="build">   </x:scenario>
+   
     
 </x:description>

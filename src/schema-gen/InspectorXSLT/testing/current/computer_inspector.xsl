@@ -5,7 +5,7 @@
                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                version="3.0"
                xpath-default-namespace="http://example.com/ns/computer"
-               exclude-result-prefixes="#all"><!-- Generated 2023-11-01T17:10:03.4922718-04:00 -->
+               exclude-result-prefixes="#all"><!-- Generated 2023-11-02T17:08:21.5400742-04:00 -->
    <xsl:mode on-no-match="fail"/>
    <xsl:mode name="test" on-no-match="shallow-skip"/>
    <!-- .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     . -->
@@ -602,8 +602,8 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="require-for-computer-assembly"/>
       <xsl:apply-templates select="." mode="constraint-cascade"/>
    </xsl:template>
-   <xsl:key name="UNIQ_1" match="computer/(usb-device)" use="@uuid"/>
-   <xsl:template priority="105" mode="constraint-cascade" match="computer">
+   <xsl:key name="UNQ_3" match="computer/(usb-device)" use="(@uuid)"/>
+   <xsl:template priority="108" mode="constraint-cascade" match="computer">
       <xsl:variable name="within" select="."/>
       <xsl:variable name="selected" select="usb-device"/>
       <xsl:for-each select="usb-device">
@@ -612,18 +612,21 @@ details p { margin: 0.2em 0em }
             <xsl:with-param name="rule-id"/>
             <xsl:with-param name="matching" as="xs:string">computer/(usb-device)</xsl:with-param>
             <xsl:with-param name="class">UNIQ uniqueness-violation</xsl:with-param>
-            <xsl:with-param name="testing" as="xs:string">not(count(mx:key-matches-among-items(.,$selected,'UNIQ_1',@uuid,$within))=1)</xsl:with-param>
+            <xsl:with-param name="testing" as="xs:string">not(count(mx:key-matches-among-items(.,$selected,'UNQ_3',(@uuid),$within))=1)</xsl:with-param>
             <xsl:with-param name="condition"
-                            select="not(count(mx:key-matches-among-items(.,$selected,'UNIQ_1',@uuid,$within))=1)"/>
-            <xsl:with-param name="msg" expand-text="true">With respect to its assigned <mx:gi>@uuid</mx:gi>, this <mx:gi>{name(.)}</mx:gi> instance of <mx:code>computer/(usb-device)</mx:code> is expected to be unique within its <mx:gi>{$within/name(.)}</mx:gi>. {count(mx:key-matches-among-items(.,$selected,'UNIQ_1',@uuid,$within))} items are found with the value <mx:code>{string-join((@uuid),',')}</mx:code>.</xsl:with-param>
+                            select="not(count(mx:key-matches-among-items(.,$selected,'UNQ_3',(@uuid),$within))=1)"/>
+            <xsl:with-param name="msg" expand-text="true">With respect to its assigned <mx:gi>(@uuid)</mx:gi>, this <mx:gi>{name(.)}</mx:gi> instance of <mx:code>computer/(usb-device)</mx:code> is expected to be unique within its <mx:gi>{$within/name(.)}</mx:gi>. {count(mx:key-matches-among-items(.,$selected,'UNQ_3',(@uuid),$within))} items are found with the value <mx:code>{string-join(((@uuid)),',')}</mx:code>.</xsl:with-param>
          </xsl:call-template>
       </xsl:for-each>
+      <xsl:next-match/>
    </xsl:template>
-   <xsl:template priority="104" mode="constraint-cascade" match="computer">
+   <xsl:template priority="107"
+                 mode="constraint-cascade"
+                 match="computer/(.//prop[not(@ns) or @ns=('http://example.com/ns/computer')]/@name)">
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.526</xsl:with-param>
          <xsl:with-param name="rule-id"/>
-         <xsl:with-param name="matching" as="xs:string">computer</xsl:with-param>
+         <xsl:with-param name="matching" as="xs:string">computer/(.//prop[not(@ns) or @ns=('http://example.com/ns/computer')]/@name)</xsl:with-param>
          <xsl:with-param name="class">AVCV value-not-allowed</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">not(.=('model'))</xsl:with-param>
          <xsl:with-param name="condition" select="not(.=('model'))"/>
@@ -632,30 +635,50 @@ details p { margin: 0.2em 0em }
       </xsl:call-template>
       <xsl:next-match/>
    </xsl:template>
-   <xsl:template priority="103" mode="constraint-cascade" match="computer">
+   <xsl:template priority="106" mode="constraint-cascade" match="computer">
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.617</xsl:with-param>
          <xsl:with-param name="rule-id"/>
          <xsl:with-param name="matching" as="xs:string">computer</xsl:with-param>
          <xsl:with-param name="class">HCCV cardinality-violation</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">not(count((motherboard|motherboard/cpu|motherboard/memory|motherboard/expansion-card|usb-device)/prop[not(@ns) or @ns=('http://example.com/ns/computer')]) ge 1 and true())</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">not(count(.//prop[not(@ns) or @ns=('http://example.com/ns/computer')]) ge 1 and true())</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="not(count((motherboard|motherboard/cpu|motherboard/memory|motherboard/expansion-card|usb-device)/prop[not(@ns) or @ns=('http://example.com/ns/computer')]) ge 1 and true())"/>
-         <xsl:with-param name="msg" expand-text="true">Counting <mx:gi>(motherboard|motherboard/cpu|motherboard/memory|motherboard/expansion-card|usb-device)/prop[not(@ns) or @ns=('http://example.com/ns/computer')]</mx:gi> under <mx:code>computer</mx:code> finds {count((motherboard|motherboard/cpu|motherboard/memory|motherboard/expansion-card|usb-device)/prop[not(@ns) or @ns=('http://example.com/ns/computer')])} - expecting at least 1.</xsl:with-param>
+                         select="not(count(.//prop[not(@ns) or @ns=('http://example.com/ns/computer')]) ge 1 and true())"/>
+         <xsl:with-param name="msg" expand-text="true">Counting <mx:gi>.//prop[not(@ns) or @ns=('http://example.com/ns/computer')]</mx:gi> under <mx:code>computer</mx:code> finds {count(.//prop[not(@ns) or @ns=('http://example.com/ns/computer')])} - expecting at least 1.</xsl:with-param>
       </xsl:call-template>
       <xsl:next-match/>
    </xsl:template>
-   <xsl:template priority="102" mode="constraint-cascade" match="computer">
+   <xsl:template priority="105" mode="constraint-cascade" match="computer">
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.617</xsl:with-param>
          <xsl:with-param name="rule-id"/>
          <xsl:with-param name="matching" as="xs:string">computer</xsl:with-param>
          <xsl:with-param name="class">HCCV cardinality-violation</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">not(true() and count((motherboard|motherboard/cpu|motherboard/memory|motherboard/expansion-card|usb-device)/prop[not(@ns) or @ns=('http://example.com/ns/computer')]) le 1)</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">not(true() and count(.//prop[not(@ns) or @ns=('http://example.com/ns/computer')]) le 1)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="not(true() and count((motherboard|motherboard/cpu|motherboard/memory|motherboard/expansion-card|usb-device)/prop[not(@ns) or @ns=('http://example.com/ns/computer')]) le 1)"/>
-         <xsl:with-param name="msg" expand-text="true">Counting <mx:gi>(motherboard|motherboard/cpu|motherboard/memory|motherboard/expansion-card|usb-device)/prop[not(@ns) or @ns=('http://example.com/ns/computer')]</mx:gi> under <mx:code>computer</mx:code> finds {count((motherboard|motherboard/cpu|motherboard/memory|motherboard/expansion-card|usb-device)/prop[not(@ns) or @ns=('http://example.com/ns/computer')])} - expecting no more than 1.</xsl:with-param>
+                         select="not(true() and count(.//prop[not(@ns) or @ns=('http://example.com/ns/computer')]) le 1)"/>
+         <xsl:with-param name="msg" expand-text="true">Counting <mx:gi>.//prop[not(@ns) or @ns=('http://example.com/ns/computer')]</mx:gi> under <mx:code>computer</mx:code> finds {count(.//prop[not(@ns) or @ns=('http://example.com/ns/computer')])} - expecting no more than 1.</xsl:with-param>
       </xsl:call-template>
+      <xsl:next-match/>
+   </xsl:template>
+   <xsl:key name="NDX_internal-links"
+            match="computer/(descendant::*[exists(@id|@uuid)])"
+            use="(@id|@uuid)"/>
+   <xsl:template priority="103" mode="constraint-cascade" match="computer">
+      <xsl:variable name="within" select="."/>
+      <xsl:variable name="selected" select="//computer/descendant::*[exists(@id|@uuid)]"/>
+      <xsl:for-each select="//a">
+         <xsl:call-template name="notice">
+            <xsl:with-param name="cf">gix.649</xsl:with-param>
+            <xsl:with-param name="rule-id"/>
+            <xsl:with-param name="matching" as="xs:string">computer/(//a)</xsl:with-param>
+            <xsl:with-param name="class">NXHK index-lookup-fail</xsl:with-param>
+            <xsl:with-param name="testing" as="xs:string">not(exists(mx:key-matches-among-items(.,$selected,'NDX_internal-links',(@href)[matches(.,'^#(.+)$')] ! replace(.,'^#(.+)$','$1'),$within)))</xsl:with-param>
+            <xsl:with-param name="condition"
+                            select="not(exists(mx:key-matches-among-items(.,$selected,'NDX_internal-links',(@href)[matches(.,'^#(.+)$')] ! replace(.,'^#(.+)$','$1'),$within)))"/>
+            <xsl:with-param name="msg" expand-text="true">With respect to its assigned index  value, this <mx:gi>{name(.)}</mx:gi> is expected to correspond within its <mx:gi>{$within/name(.)}</mx:gi> to a value listed under index <mx:b>internal-links</mx:b>. This index has no entry under the key value <mx:code>{string-join(((@href)[matches(.,'^#(.+)$')] ! replace(.,'^#(.+)$','$1')),',')}</mx:code>.</xsl:with-param>
+         </xsl:call-template>
+      </xsl:for-each>
       <xsl:next-match/>
    </xsl:template>
    <!-- .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     . -->
@@ -934,6 +957,64 @@ details p { margin: 0.2em 0em }
       </xsl:call-template>
       <xsl:call-template name="require-for-computer_..._motherboard-assembly"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
+   </xsl:template>
+   <xsl:template priority="112"
+                 mode="constraint-cascade"
+                 match="/computer/motherboard/(ata-socket/@slot-no)">
+      <xsl:call-template name="notice">
+         <xsl:with-param name="cf">gix.591</xsl:with-param>
+         <xsl:with-param name="rule-id"/>
+         <xsl:with-param name="matching" as="xs:string">/computer/motherboard/(ata-socket/@slot-no)</xsl:with-param>
+         <xsl:with-param name="class">XPKT expectation-violation</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">not(. = (0 to count(../../ata-socket)))</xsl:with-param>
+         <xsl:with-param name="condition" select="not(. = (0 to count(../../ata-socket)))"/>
+         <xsl:with-param name="msg" expand-text="true">Expression result for <mx:gi>/computer/motherboard/(ata-socket/@slot-no)</mx:gi> does not conform to expectation <mx:code>. = (0 to count(../../ata-socket))</mx:code>.</xsl:with-param>
+      </xsl:call-template>
+      <xsl:next-match/>
+   </xsl:template>
+   <xsl:key name="UNQ_1"
+            match="/computer/motherboard/(ata-socket)"
+            use="(@slot-no)"/>
+   <xsl:template priority="111"
+                 mode="constraint-cascade"
+                 match="/computer/motherboard">
+      <xsl:variable name="within" select="."/>
+      <xsl:variable name="selected" select="ata-socket"/>
+      <xsl:for-each select="ata-socket">
+         <xsl:call-template name="notice">
+            <xsl:with-param name="cf">gix.651</xsl:with-param>
+            <xsl:with-param name="rule-id"/>
+            <xsl:with-param name="matching" as="xs:string">/computer/motherboard/(ata-socket)</xsl:with-param>
+            <xsl:with-param name="class">UNIQ uniqueness-violation</xsl:with-param>
+            <xsl:with-param name="testing" as="xs:string">not(count(mx:key-matches-among-items(.,$selected,'UNQ_1',(@slot-no),$within))=1)</xsl:with-param>
+            <xsl:with-param name="condition"
+                            select="not(count(mx:key-matches-among-items(.,$selected,'UNQ_1',(@slot-no),$within))=1)"/>
+            <xsl:with-param name="msg" expand-text="true">With respect to its assigned <mx:gi>(@slot-no)</mx:gi>, this <mx:gi>{name(.)}</mx:gi> instance of <mx:code>/computer/motherboard/(ata-socket)</mx:code> is expected to be unique within its <mx:gi>{$within/name(.)}</mx:gi>. {count(mx:key-matches-among-items(.,$selected,'UNQ_1',(@slot-no),$within))} items are found with the value <mx:code>{string-join(((@slot-no)),',')}</mx:code>.</xsl:with-param>
+         </xsl:call-template>
+      </xsl:for-each>
+      <xsl:next-match/>
+   </xsl:template>
+   <xsl:key name="NDX_socket-by-slot"
+            match="/computer/motherboard/(ata-socket)"
+            use="(@slot-no)"/>
+   <xsl:template priority="109"
+                 mode="constraint-cascade"
+                 match="/computer/motherboard">
+      <xsl:variable name="within" select="."/>
+      <xsl:variable name="selected" select="//motherboard/ata-socket"/>
+      <xsl:for-each select="expansion-card">
+         <xsl:call-template name="notice">
+            <xsl:with-param name="cf">gix.649</xsl:with-param>
+            <xsl:with-param name="rule-id"/>
+            <xsl:with-param name="matching" as="xs:string">/computer/motherboard/(expansion-card)</xsl:with-param>
+            <xsl:with-param name="class">NXHK index-lookup-fail</xsl:with-param>
+            <xsl:with-param name="testing" as="xs:string">not(exists(mx:key-matches-among-items(.,$selected,'NDX_socket-by-slot',(@socket-no),$within)))</xsl:with-param>
+            <xsl:with-param name="condition"
+                            select="not(exists(mx:key-matches-among-items(.,$selected,'NDX_socket-by-slot',(@socket-no),$within)))"/>
+            <xsl:with-param name="msg" expand-text="true">With respect to its assigned index  value, this <mx:gi>{name(.)}</mx:gi> is expected to correspond within its <mx:gi>{$within/name(.)}</mx:gi> to a value listed under index <mx:b>socket-by-slot</mx:b>. This index has no entry under the key value <mx:code>{string-join(((@socket-no)),',')}</mx:code>.</xsl:with-param>
+         </xsl:call-template>
+      </xsl:for-each>
+      <xsl:next-match/>
    </xsl:template>
    <xsl:template priority="5" match="computer/motherboard/cpu" mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
@@ -1396,7 +1477,7 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="require-for-computer_..._motherboard_..._type-field"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
-   <xsl:template priority="110"
+   <xsl:template priority="117"
                  mode="constraint-cascade"
                  match="computer/motherboard/type">
       <xsl:call-template name="notice">
@@ -1433,7 +1514,7 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="require-for-computer_..._motherboard_..._cpu_..._architecture-field"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
-   <xsl:template priority="109"
+   <xsl:template priority="116"
                  mode="constraint-cascade"
                  match="motherboard/cpu/architecture">
       <xsl:call-template name="notice">
@@ -1469,7 +1550,7 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="require-for-computer_..._motherboard_..._cpu_..._speed-field"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
-   <xsl:template priority="108"
+   <xsl:template priority="115"
                  mode="constraint-cascade"
                  match="motherboard/cpu/speed">
       <xsl:call-template name="notice">
@@ -1505,7 +1586,7 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="require-for-computer_..._motherboard_..._ata-socket_..._type-field"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
-   <xsl:template priority="107"
+   <xsl:template priority="114"
                  mode="constraint-cascade"
                  match="motherboard/ata-socket/type">
       <xsl:call-template name="notice">
@@ -1562,7 +1643,7 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="require-for-computer_..._motherboard_..._expansion-card_..._type-field"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
-   <xsl:template priority="106"
+   <xsl:template priority="113"
                  mode="constraint-cascade"
                  match="motherboard/expansion-card/type">
       <xsl:call-template name="notice">
@@ -1581,25 +1662,115 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="require-for-serial-number-flag"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
+   <xsl:template priority="101"
+                 mode="constraint-cascade"
+                 match="/computer/@serial-number">
+      <xsl:call-template name="notice">
+         <xsl:with-param name="cf">gix.561</xsl:with-param>
+         <xsl:with-param name="rule-id"/>
+         <xsl:with-param name="matching" as="xs:string">/computer/@serial-number</xsl:with-param>
+         <xsl:with-param name="class">MRCV regex-match-fail</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">not(matches(., '^^\S+$$'))</xsl:with-param>
+         <xsl:with-param name="condition" select="not(matches(., '^^\S+$$'))"/>
+         <xsl:with-param name="msg" expand-text="true">
+            <mx:code>{ string(.) }</mx:code>{ string(.)[not(.)] ! ' (empty)' } does not match the regular expression defined for this <mx:gi>{ name() }</mx:gi>: <mx:code>^\S+$</mx:code>.</xsl:with-param>
+      </xsl:call-template>
+      <xsl:next-match/>
+   </xsl:template>
    <xsl:template match="computer/motherboard/@serial-number" mode="test">
       <xsl:call-template name="require-for-serial-number-flag"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
+   </xsl:template>
+   <xsl:template priority="101"
+                 mode="constraint-cascade"
+                 match="computer/motherboard/@serial-number">
+      <xsl:call-template name="notice">
+         <xsl:with-param name="cf">gix.561</xsl:with-param>
+         <xsl:with-param name="rule-id"/>
+         <xsl:with-param name="matching" as="xs:string">computer/motherboard/@serial-number</xsl:with-param>
+         <xsl:with-param name="class">MRCV regex-match-fail</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">not(matches(., '^^\S+$$'))</xsl:with-param>
+         <xsl:with-param name="condition" select="not(matches(., '^^\S+$$'))"/>
+         <xsl:with-param name="msg" expand-text="true">
+            <mx:code>{ string(.) }</mx:code>{ string(.)[not(.)] ! ' (empty)' } does not match the regular expression defined for this <mx:gi>{ name() }</mx:gi>: <mx:code>^\S+$</mx:code>.</xsl:with-param>
+      </xsl:call-template>
+      <xsl:next-match/>
    </xsl:template>
    <xsl:template match="motherboard/ata-socket/@serial-number" mode="test">
       <xsl:call-template name="require-for-serial-number-flag"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
+   <xsl:template priority="101"
+                 mode="constraint-cascade"
+                 match="motherboard/ata-socket/@serial-number">
+      <xsl:call-template name="notice">
+         <xsl:with-param name="cf">gix.561</xsl:with-param>
+         <xsl:with-param name="rule-id"/>
+         <xsl:with-param name="matching" as="xs:string">motherboard/ata-socket/@serial-number</xsl:with-param>
+         <xsl:with-param name="class">MRCV regex-match-fail</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">not(matches(., '^^\S+$$'))</xsl:with-param>
+         <xsl:with-param name="condition" select="not(matches(., '^^\S+$$'))"/>
+         <xsl:with-param name="msg" expand-text="true">
+            <mx:code>{ string(.) }</mx:code>{ string(.)[not(.)] ! ' (empty)' } does not match the regular expression defined for this <mx:gi>{ name() }</mx:gi>: <mx:code>^\S+$</mx:code>.</xsl:with-param>
+      </xsl:call-template>
+      <xsl:next-match/>
+   </xsl:template>
    <xsl:template match="motherboard/memory/@serial-number" mode="test">
       <xsl:call-template name="require-for-serial-number-flag"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
+   </xsl:template>
+   <xsl:template priority="101"
+                 mode="constraint-cascade"
+                 match="motherboard/memory/@serial-number">
+      <xsl:call-template name="notice">
+         <xsl:with-param name="cf">gix.561</xsl:with-param>
+         <xsl:with-param name="rule-id"/>
+         <xsl:with-param name="matching" as="xs:string">motherboard/memory/@serial-number</xsl:with-param>
+         <xsl:with-param name="class">MRCV regex-match-fail</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">not(matches(., '^^\S+$$'))</xsl:with-param>
+         <xsl:with-param name="condition" select="not(matches(., '^^\S+$$'))"/>
+         <xsl:with-param name="msg" expand-text="true">
+            <mx:code>{ string(.) }</mx:code>{ string(.)[not(.)] ! ' (empty)' } does not match the regular expression defined for this <mx:gi>{ name() }</mx:gi>: <mx:code>^\S+$</mx:code>.</xsl:with-param>
+      </xsl:call-template>
+      <xsl:next-match/>
    </xsl:template>
    <xsl:template match="motherboard/expansion-card/@serial-number" mode="test">
       <xsl:call-template name="require-for-serial-number-flag"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
+   <xsl:template priority="101"
+                 mode="constraint-cascade"
+                 match="motherboard/expansion-card/@serial-number">
+      <xsl:call-template name="notice">
+         <xsl:with-param name="cf">gix.561</xsl:with-param>
+         <xsl:with-param name="rule-id"/>
+         <xsl:with-param name="matching" as="xs:string">motherboard/expansion-card/@serial-number</xsl:with-param>
+         <xsl:with-param name="class">MRCV regex-match-fail</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">not(matches(., '^^\S+$$'))</xsl:with-param>
+         <xsl:with-param name="condition" select="not(matches(., '^^\S+$$'))"/>
+         <xsl:with-param name="msg" expand-text="true">
+            <mx:code>{ string(.) }</mx:code>{ string(.)[not(.)] ! ' (empty)' } does not match the regular expression defined for this <mx:gi>{ name() }</mx:gi>: <mx:code>^\S+$</mx:code>.</xsl:with-param>
+      </xsl:call-template>
+      <xsl:next-match/>
+   </xsl:template>
    <xsl:template match="motherboard/cooling/@serial-number" mode="test">
       <xsl:call-template name="require-for-serial-number-flag"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
+   </xsl:template>
+   <xsl:template priority="101"
+                 mode="constraint-cascade"
+                 match="motherboard/cooling/@serial-number">
+      <xsl:call-template name="notice">
+         <xsl:with-param name="cf">gix.561</xsl:with-param>
+         <xsl:with-param name="rule-id"/>
+         <xsl:with-param name="matching" as="xs:string">motherboard/cooling/@serial-number</xsl:with-param>
+         <xsl:with-param name="class">MRCV regex-match-fail</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">not(matches(., '^^\S+$$'))</xsl:with-param>
+         <xsl:with-param name="condition" select="not(matches(., '^^\S+$$'))"/>
+         <xsl:with-param name="msg" expand-text="true">
+            <mx:code>{ string(.) }</mx:code>{ string(.)[not(.)] ! ' (empty)' } does not match the regular expression defined for this <mx:gi>{ name() }</mx:gi>: <mx:code>^\S+$</mx:code>.</xsl:with-param>
+      </xsl:call-template>
+      <xsl:next-match/>
    </xsl:template>
    <xsl:template match="motherboard/vendor/@id | cpu/vendor/@id | ata-socket/vendor/@id | memory/vendor/@id | expansion-card/vendor/@id | usb-device/vendor/@id"
                  mode="test">
@@ -1608,6 +1779,14 @@ details p { margin: 0.2em 0em }
    </xsl:template>
    <xsl:template match="/computer/@id" mode="test">
       <xsl:call-template name="require-for-computer_..._id-flag"/>
+      <xsl:apply-templates mode="constraint-cascade" select="."/>
+   </xsl:template>
+   <xsl:template match="motherboard/ata-socket/@slot-no" mode="test">
+      <xsl:call-template name="require-for-computer_..._motherboard_..._ata-socket_..._slot-no-flag"/>
+      <xsl:apply-templates mode="constraint-cascade" select="."/>
+   </xsl:template>
+   <xsl:template match="motherboard/expansion-card/@socket-no" mode="test">
+      <xsl:call-template name="require-for-computer_..._motherboard_..._expansion-card_..._socket-no-flag"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
    <xsl:template match="computer/usb-device/@uuid" mode="test">
@@ -1666,7 +1845,7 @@ details p { margin: 0.2em 0em }
       </xsl:call-template>
    </xsl:template>
    <xsl:template mode="test"
-                 match="@id | @serial-number | @uuid | @currency | @name | @ns | @value | @class | @group | @illuminated">
+                 match="@id | @serial-number | @slot-no | @socket-no | @uuid | @currency | @name | @ns | @value | @class | @group | @illuminated">
       <xsl:call-template name="notice">
          <xsl:with-param name="cf" as="xs:string">gix.90</xsl:with-param>
          <xsl:with-param name="class">AOOP attribute-out-of-place</xsl:with-param>
@@ -1770,6 +1949,13 @@ details p { margin: 0.2em 0em }
    <xsl:template name="require-for-computer_..._motherboard_..._cpu_..._speed-field"/>
    <xsl:template name="require-for-computer_..._motherboard_..._ata-socket-assembly">
       <xsl:call-template name="notice">
+         <xsl:with-param name="cf">gix.646</xsl:with-param>
+         <xsl:with-param name="class">MRQA missing-required-attribute</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">empty(@slot-no)</xsl:with-param>
+         <xsl:with-param name="condition" select="empty(@slot-no)"/>
+         <xsl:with-param name="msg" expand-text="true">Element <mx:gi>{ name() }</mx:gi> requires attribute <mx:gi>@slot-no</mx:gi>.</xsl:with-param>
+      </xsl:call-template>
+      <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.419</xsl:with-param>
          <xsl:with-param name="class">MRQC missing-required-contents</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">empty(product-name)</xsl:with-param>
@@ -1783,6 +1969,9 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="condition" select="empty(type)"/>
          <xsl:with-param name="msg" expand-text="true">Element <mx:gi>{ name() }</mx:gi> requires element <mx:gi>type</mx:gi>.</xsl:with-param>
       </xsl:call-template>
+   </xsl:template>
+   <xsl:template name="require-for-computer_..._motherboard_..._ata-socket_..._slot-no-flag">
+      <xsl:call-template name="check-non-negative-integer-datatype"/>
    </xsl:template>
    <xsl:template name="require-for-computer_..._motherboard_..._ata-socket_..._type-field"/>
    <xsl:template name="require-for-computer_..._motherboard_..._memory-assembly">
@@ -1806,6 +1995,13 @@ details p { margin: 0.2em 0em }
    </xsl:template>
    <xsl:template name="require-for-computer_..._motherboard_..._expansion-card-assembly">
       <xsl:call-template name="notice">
+         <xsl:with-param name="cf">gix.646</xsl:with-param>
+         <xsl:with-param name="class">MRQA missing-required-attribute</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">empty(@socket-no)</xsl:with-param>
+         <xsl:with-param name="condition" select="empty(@socket-no)"/>
+         <xsl:with-param name="msg" expand-text="true">Element <mx:gi>{ name() }</mx:gi> requires attribute <mx:gi>@socket-no</mx:gi>.</xsl:with-param>
+      </xsl:call-template>
+      <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.419</xsl:with-param>
          <xsl:with-param name="class">MRQC missing-required-contents</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">empty(product-name)</xsl:with-param>
@@ -1820,6 +2016,7 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="msg" expand-text="true">Element <mx:gi>{ name() }</mx:gi> requires element <mx:gi>type</mx:gi>.</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
+   <xsl:template name="require-for-computer_..._motherboard_..._expansion-card_..._socket-no-flag"/>
    <xsl:template name="require-for-computer_..._motherboard_..._expansion-card_..._type-field"/>
    <xsl:template name="require-for-computer_..._usb-device-assembly">
       <xsl:call-template name="notice">
@@ -1949,6 +2146,23 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="condition"
                          select="not(string(.) castable as xs:dateTime and matches(.,'^(((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30)))T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\.[0-9]+)?(Z|(-((0[0-9]|1[0-2]):00|0[39]:30)|\+((0[0-9]|1[0-4]):00|(0[34569]|10):30|(0[58]|12):45)))$') and matches(.,'^(((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30)))T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\.[0-9]+)?(Z|(-((0[0-9]|1[0-2]):00|0[39]:30)|\+((0[0-9]|1[0-4]):00|(0[34569]|10):30|(0[58]|12):45)))?$'))"/>
          <xsl:with-param name="msg" expand-text="true">Value <mx:code>{ string(.) }</mx:code> of { if (self::element()) then 'element' else 'attribute' } <mx:gi>{ self::attribute()/'@' }{ name(.) }</mx:gi> does not conform to <mx:code>date-time-with-timezone</mx:code> datatype.</xsl:with-param>
+      </xsl:call-template>
+   </xsl:template>
+   <xsl:template name="check-non-negative-integer-datatype">
+      <xsl:param name="rule-id" as="xs:string*" select="()"/>
+      <xsl:param name="class" as="xs:string">VDSX violates-datatype-syntax</xsl:param>
+      <xsl:param name="matching" as="xs:string?" select="()"/>
+      <xsl:call-template name="notice">
+         <xsl:with-param name="cf" as="xs:string">gix.121</xsl:with-param>
+         <xsl:with-param name="rule-id" as="xs:string*" select="$rule-id"/>
+         <xsl:with-param name="matching"
+                         as="xs:string"
+                         select="($matching[matches(.,'\S')],'*')[1]"/>
+         <xsl:with-param name="class" as="xs:string" expand-text="true">{ $class }</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">not(string(.) castable as xs:nonNegativeInteger and matches(.,'^\S(.*\S)?$'))</xsl:with-param>
+         <xsl:with-param name="condition"
+                         select="not(string(.) castable as xs:nonNegativeInteger and matches(.,'^\S(.*\S)?$'))"/>
+         <xsl:with-param name="msg" expand-text="true">Value <mx:code>{ string(.) }</mx:code> of { if (self::element()) then 'element' else 'attribute' } <mx:gi>{ self::attribute()/'@' }{ name(.) }</mx:gi> does not conform to <mx:code>non-negative-integer</mx:code> datatype.</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
    <xsl:template name="check-positive-integer-datatype">

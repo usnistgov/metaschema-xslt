@@ -22,6 +22,9 @@
    
    <xsl:variable name="type-definitions" select="document($atomictype-modules)"/>
    
+   <xsl:variable name="xsd-ns-prefix" as="xs:string">xs:</xsl:variable>
+   <!-- because we cannot assume a schema aware processor we look for a literal prefix for native XSD types -->
+   
    <xsl:template match="/*">
       <XSLT:transform version="3.0" xpath-default-namespace="{ /METASCHEMA/namespace }" exclude-result-prefixes="#all">
 
@@ -510,7 +513,7 @@
       <xsl:variable name="priority">
          <xsl:number count="constraint/*" level="any" format="10001"/>
       </xsl:variable>
-      <xsl:variable name="target-step" expand-text="true">{ @target[not(matches(.,'\s*\.\s*'))] ! ('/(' || . || ')')
+      <xsl:variable name="target-step" expand-text="true">{ @target[not(matches(.,'^\s*\.\s*$'))] ! ('/(' || . || ')')
          }</xsl:variable>
       <xsl:variable name="target-match" select="($matching ! (. || $target-step)) => string-join(' | ')"/>
       <XSLT:template priority="{ ($constraint-count + 101) - number($priority) }" mode="constraint-cascade"
@@ -567,13 +570,8 @@
          </xsl:for-each>
          <XSLT:next-match/>
       </XSLT:template>
-
    </xsl:template>
 
-   <xsl:template mode="generate-constraint-cascade" priority="10" match="constraint/index | constraint/index-has-key" expand-text="true">
-
-   </xsl:template>
-      
    <xsl:template mode="generate-constraint-cascade" priority="10" match="constraint/expect" expand-text="true">
       <xsl:param name="matching" as="xs:string+" required="true" tunnel="true"/>
       <xsl:variable name="priority">
@@ -625,7 +623,59 @@
          <XSLT:next-match/>
       </XSLT:template>
    </xsl:template>
+   <xsl:key name="index-by-name" match="index" use="@name"/>
    
+   <xsl:template mode="generate-constraint-cascade" priority="10" match="constraint/index-has-key" expand-text="true">
+      <xsl:param name="matching" as="xs:string+" required="true" tunnel="true"/>
+      <xsl:variable name="key-definition" select="key('index-by-name',@name)"/>
+      <xsl:variable name="priority">
+         <xsl:number count="constraint/*" level="any" format="10001"/>
+      </xsl:variable>
+      <xsl:variable name="keyname" as="xs:string">
+         <xsl:apply-templates select="." mode="make-key-name"/>
+      </xsl:variable>
+      <!-- <xsl:variable name="target-step" expand-text="true">{ @target[not(matches(.,'\s*\.\s*'))] ! ('/(' || . || ')')
+         }</xsl:variable>
+      <!-\- only handling relative paths on @target atm -\->
+      <xsl:variable name="target-match" select="($matching ! (. || $target-step)) => string-join(' | ')"/>-->
+      <xsl:variable name="count-expr" expand-text="true">mx:key-matches-among-items(.,$selected,'{$keyname}',{mx:key-value(.)},$within)</xsl:variable>
+      <xsl:variable name="assert" expand-text="true">exists({$count-expr})</xsl:variable>
+      
+      <XSLT:template priority="{ ($constraint-count + 101) - number($priority) }" mode="constraint-cascade"
+         match="{ string-join($matching,'|') }">
+         <XSLT:variable name="within" select="."/>
+         <XSLT:variable name="selected" select="//{ mx:match-name($key-definition/parent::constraint/parent::*) || $key-definition/('/' || @target) }"/>
+         <XSLT:for-each select="{ @target }">
+            <XSLT:call-template name="notice">
+               <XSLT:with-param name="cf">gix.649</XSLT:with-param>
+               <XSLT:with-param name="rule-id">{ @id }</XSLT:with-param>
+               <XSLT:with-param name="matching" as="xs:string">{ string-join($matching,'|')  }/({ @target})</XSLT:with-param>
+               <XSLT:with-param name="class">NXHK index-lookup-fail</XSLT:with-param>
+               <XSLT:with-param name="testing" as="xs:string">not({$assert})</XSLT:with-param>
+               <XSLT:with-param name="condition" select="not({$assert})"/>
+               <XSLT:with-param name="msg" expand-text="true">With respect to its assigned index { key-field[2]/'(compound) ' } value, this <mx:gi>{{name(.)}}</mx:gi> is expected to correspond within its <mx:gi>{{$within/name(.)}}</mx:gi> to a value listed under index <mx:b>{ @name }</mx:b>. This index has no entry under the key value{ key-field[2]/'s' } <mx:code>{{string-join(({mx:key-value(.)}),',')}}</mx:code>.</XSLT:with-param>
+            </XSLT:call-template>       
+         </XSLT:for-each>
+         <XSLT:next-match/>
+      </XSLT:template>
+   </xsl:template>
+   
+   <xsl:template mode="generate-constraint-cascade" priority="10" match="constraint/index" expand-text="true">
+      <xsl:param name="matching" as="xs:string+" required="true" tunnel="true"/>
+      <xsl:variable name="priority">
+         <xsl:number count="constraint/*" level="any" format="10001"/>
+      </xsl:variable>
+      <xsl:variable name="keyname" as="xs:string">
+         <xsl:apply-templates select="." mode="make-key-name"/>
+      </xsl:variable>
+      <xsl:variable name="counting" select="@target"/>
+      <xsl:apply-templates select="." mode="make-key">
+         <xsl:with-param name="matching" as="xs:string*" select="$matching ! (. || '/(' || $counting || ')')"/>
+      </xsl:apply-templates>
+   </xsl:template>
+   
+   
+
    
    <xsl:template mode="generate-constraint-cascade" priority="10" match="constraint/is-unique" expand-text="true">
       <xsl:param name="matching" as="xs:string+" required="true" tunnel="true"/>
@@ -661,20 +711,31 @@
                <XSLT:with-param name="msg" expand-text="true">With respect to its assigned <mx:gi>{ mx:key-value(.) }</mx:gi>, this <mx:gi>{{name(.)}}</mx:gi> instance of <mx:code>{ string-join($matching,'|')  }/({ @target})</mx:code> is expected to be unique within its <mx:gi>{{$within/name(.)}}</mx:gi>. {{count({$count-expr})}} items are found with the value{ key-field[2]/'s' } <mx:code>{{string-join(({mx:key-value(.)}),',')}}</mx:code>.</XSLT:with-param>
             </XSLT:call-template>       
          </XSLT:for-each>
+         <XSLT:next-match/>
       </XSLT:template>
    </xsl:template>
    
    <xsl:function name="mx:key-value" as="xs:string">
       <xsl:param name="whose" as="element()"/>
       <!-- delimit values with ',' emitting 'string()' for any key-field with no @target or @target=('.','value()') -->
-      <xsl:variable name="plural" select="exists($whose/key-field[2])"/>
+      <!--<xsl:variable name="plural" select="exists($whose/key-field[2])"/>
       <xsl:value-of>
          <xsl:if test="$plural">(</xsl:if>
          <xsl:value-of separator=",">
             <xsl:sequence select="$whose/key-field/@target/(.[not(. = ('.', 'value()'))], 'string(.)')[1]"/>
          </xsl:value-of>
          <xsl:if test="$plural">)</xsl:if>
+      </xsl:value-of>-->
+      <xsl:value-of>
+      <xsl:iterate select="$whose/key-field">
+         <xsl:if test="position() gt 1">,</xsl:if>
+         <!--<xsl:if test="count(../*) gt 1">(</xsl:if>-->
+         <xsl:text expand-text="true">({ @target//(.[not(. = ('.', 'value()'))], 'string(.)')[1] })</xsl:text>
+         <xsl:for-each select="@pattern" expand-text="true">[matches(.,'^{.}$')] ! replace(.,'^{.}$','$1')</xsl:for-each>
+         <!--<xsl:if test="count(../*) gt 1">)</xsl:if>-->
+      </xsl:iterate>
       </xsl:value-of>
+      
    </xsl:function>
    
    
@@ -689,13 +750,23 @@
          </xsl:if>
       </XSLT:key>
    </xsl:template>
+
+   <xsl:template mode="make-key-name" match="index | index-has-key" as="xs:string">
+      <xsl:value-of>
+         <xsl:text>NDX_</xsl:text>
+         <xsl:number count="index | is-unique" level="any"/>
+      </xsl:value-of>
+   </xsl:template>
    
    <xsl:template mode="make-key-name" match="is-unique" as="xs:string">
       <xsl:value-of>
-         <xsl:text>UNIQ_</xsl:text>
-         <xsl:number count="is-unique" level="any"/>
+         <xsl:text>UNQ_</xsl:text>
+         <xsl:number count="index | is-unique" level="any"/>
       </xsl:value-of>
    </xsl:template>
+   
+   <xsl:template mode="make-key-name" priority="10"
+      match="index[matches(@name,'\S')] | index-has-key[matches(@name,'\S')]" expand-text="true">NDX_{@name}</xsl:template>
    
    <xsl:template mode="make-key-name" priority="10" match="is-unique[exists(@id)]">
       <xsl:text expand-text="true">UNIQ_{ @id }</xsl:text>
@@ -819,7 +890,7 @@
       <xsl:variable name="simple-types" as="element(xs:simpleType)*">
          <xsl:apply-templates select="." mode="type-stack"/>
       </xsl:variable>
-      <xsl:variable name="nominal-base-type" select="$simple-types/xs:restriction/@base[starts-with(.,'xs:')]"/>
+         <xsl:variable name="nominal-base-type" select="$simple-types/xs:restriction/@base[starts-with(.,$xsd-ns-prefix)]"/><!-- assuming the processor cannot process the QName as such for the namespace -->
       <xsl:text expand-text="true">string(.) castable as { $nominal-base-type }</xsl:text>
       <xsl:for-each-group select="$simple-types/xs:restriction/xs:pattern" group-by="@value">
          <xsl:text expand-text="true"> and matches(.,'^{ current-grouping-key() }$')</xsl:text>

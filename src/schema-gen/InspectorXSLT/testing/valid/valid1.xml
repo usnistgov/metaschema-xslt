@@ -18,7 +18,7 @@
            <architecture>x86</architecture>
             <speed>4.5GHz</speed>
         </cpu>
-        <ata-socket>
+        <ata-socket slot-no="0">
             <vendor id="id7">
                <name>Socketeer</name>
                 <address>address2</address>
@@ -46,7 +46,7 @@
         <cooling>
             <water illuminated="true"/>
         </cooling>
-        <expansion-card>
+        <expansion-card socket-no="0">
             <vendor id="id13">
                 <name>name5</name>
                 <address>address5</address>
@@ -55,14 +55,6 @@
             <product-name>product-name4</product-name>
            <type>pci</type>
         </expansion-card>
-        <expansion-card>
-            <vendor id="id15">
-                <name>name6</name>
-                <address>address6</address>
-                <website>http://pages.nist.gov/metaschema</website>
-            </vendor>
-            <product-name>product-name5</product-name>
-           <type>pcie</type>
-        </expansion-card>
     </motherboard>
+   <prop name="model" value="CompuMax 5000"/>
 </computer>
