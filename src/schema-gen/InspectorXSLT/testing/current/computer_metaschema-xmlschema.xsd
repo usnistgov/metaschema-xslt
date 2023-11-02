@@ -195,7 +195,7 @@
                         </xs:sequence>
                      </xs:complexType>
                   </xs:element>
-                  <xs:element name="ata-socket" minOccurs="0" maxOccurs="1">
+                  <xs:element name="ata-socket" minOccurs="0" maxOccurs="8">
                      <xs:complexType>
                         <xs:annotation>
                            <xs:appinfo>
@@ -247,7 +247,7 @@
                                  <b>Serial Number</b>: A code for this item only. No spaces are permitted.</xs:documentation>
                            </xs:annotation>
                         </xs:attribute>
-                        <xs:attribute name="slot-no" type="NonNegativeIntegerDatatype">
+                        <xs:attribute name="slot-no" use="required" type="NonNegativeIntegerDatatype">
                            <xs:annotation>
                               <xs:appinfo>
                                  <m:formal-name>Slot number</m:formal-name>
@@ -369,7 +369,7 @@
                                  <b>Serial Number</b>: A code for this item only. No spaces are permitted.</xs:documentation>
                            </xs:annotation>
                         </xs:attribute>
-                        <xs:attribute name="socket-no" type="StringDatatype">
+                        <xs:attribute name="socket-no" use="required" type="StringDatatype">
                            <xs:annotation>
                               <xs:appinfo>
                                  <m:formal-name>Socket Slot No</m:formal-name>

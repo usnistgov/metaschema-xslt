@@ -5,7 +5,7 @@
                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                version="3.0"
                xpath-default-namespace="http://example.com/ns/computer"
-               exclude-result-prefixes="#all"><!-- Generated 2023-11-02T17:08:21.5400742-04:00 -->
+               exclude-result-prefixes="#all"><!-- Generated 2023-11-02T17:24:25.5312931-04:00 -->
    <xsl:mode on-no-match="fail"/>
    <xsl:mode name="test" on-no-match="shallow-skip"/>
    <!-- .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     . -->
@@ -1041,9 +1041,9 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.309</xsl:with-param>
          <xsl:with-param name="class">EATO element-appears-too-often</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::ata-socket) gt 1</xsl:with-param>
-         <xsl:with-param name="condition" select="count(. | preceding-sibling::ata-socket) gt 1"/>
-         <xsl:with-param name="msg">Element <mx:gi>ata-socket</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::ata-socket) gt 8</xsl:with-param>
+         <xsl:with-param name="condition" select="count(. | preceding-sibling::ata-socket) gt 8"/>
+         <xsl:with-param name="msg">Element <mx:gi>ata-socket</mx:gi> appears too many times: 8 maximum are permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.352</xsl:with-param>
