@@ -5,7 +5,7 @@
                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                version="3.0"
                xpath-default-namespace="http://example.com/ns/computer"
-               exclude-result-prefixes="#all"><!-- Generated 2023-11-02T17:24:25.5312931-04:00 -->
+               exclude-result-prefixes="#all"><!-- Generated 2023-11-06T17:44:52.6393751-05:00 -->
    <xsl:mode on-no-match="fail"/>
    <xsl:mode name="test" on-no-match="shallow-skip"/>
    <!-- .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     . -->
@@ -603,7 +603,7 @@ details p { margin: 0.2em 0em }
       <xsl:apply-templates select="." mode="constraint-cascade"/>
    </xsl:template>
    <xsl:key name="UNQ_3" match="computer/(usb-device)" use="(@uuid)"/>
-   <xsl:template priority="108" mode="constraint-cascade" match="computer">
+   <xsl:template priority="109" mode="constraint-cascade" match="computer">
       <xsl:variable name="within" select="."/>
       <xsl:variable name="selected" select="usb-device"/>
       <xsl:for-each select="usb-device">
@@ -616,6 +616,26 @@ details p { margin: 0.2em 0em }
             <xsl:with-param name="condition"
                             select="not(count(mx:key-matches-among-items(.,$selected,'UNQ_3',(@uuid),$within))=1)"/>
             <xsl:with-param name="msg" expand-text="true">With respect to its assigned <mx:gi>(@uuid)</mx:gi>, this <mx:gi>{name(.)}</mx:gi> instance of <mx:code>computer/(usb-device)</mx:code> is expected to be unique within its <mx:gi>{$within/name(.)}</mx:gi>. {count(mx:key-matches-among-items(.,$selected,'UNQ_3',(@uuid),$within))} items are found with the value <mx:code>{string-join(((@uuid)),',')}</mx:code>.</xsl:with-param>
+         </xsl:call-template>
+      </xsl:for-each>
+      <xsl:next-match/>
+   </xsl:template>
+   <xsl:key name="UNQ_4"
+            match="computer/(descendant::*[exists(@serial-number)])"
+            use="(@serial-number)"/>
+   <xsl:template priority="108" mode="constraint-cascade" match="computer">
+      <xsl:variable name="within" select="."/>
+      <xsl:variable name="selected" select="descendant::*[exists(@serial-number)]"/>
+      <xsl:for-each select="descendant::*[exists(@serial-number)]">
+         <xsl:call-template name="notice">
+            <xsl:with-param name="cf">gix.651</xsl:with-param>
+            <xsl:with-param name="rule-id"/>
+            <xsl:with-param name="matching" as="xs:string">computer/(descendant::*[exists(@serial-number)])</xsl:with-param>
+            <xsl:with-param name="class">UNIQ uniqueness-violation</xsl:with-param>
+            <xsl:with-param name="testing" as="xs:string">not(count(mx:key-matches-among-items(.,$selected,'UNQ_4',(@serial-number),$within))=1)</xsl:with-param>
+            <xsl:with-param name="condition"
+                            select="not(count(mx:key-matches-among-items(.,$selected,'UNQ_4',(@serial-number),$within))=1)"/>
+            <xsl:with-param name="msg" expand-text="true">With respect to its assigned <mx:gi>(@serial-number)</mx:gi>, this <mx:gi>{name(.)}</mx:gi> instance of <mx:code>computer/(descendant::*[exists(@serial-number)])</mx:code> is expected to be unique within its <mx:gi>{$within/name(.)}</mx:gi>. {count(mx:key-matches-among-items(.,$selected,'UNQ_4',(@serial-number),$within))} items are found with the value <mx:code>{string-join(((@serial-number)),',')}</mx:code>.</xsl:with-param>
          </xsl:call-template>
       </xsl:for-each>
       <xsl:next-match/>
@@ -958,7 +978,7 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="require-for-computer_..._motherboard-assembly"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
-   <xsl:template priority="112"
+   <xsl:template priority="115"
                  mode="constraint-cascade"
                  match="/computer/motherboard/(ata-socket/@slot-no)">
       <xsl:call-template name="notice">
@@ -975,7 +995,7 @@ details p { margin: 0.2em 0em }
    <xsl:key name="UNQ_1"
             match="/computer/motherboard/(ata-socket)"
             use="(@slot-no)"/>
-   <xsl:template priority="111"
+   <xsl:template priority="114"
                  mode="constraint-cascade"
                  match="/computer/motherboard">
       <xsl:variable name="within" select="."/>
@@ -997,7 +1017,7 @@ details p { margin: 0.2em 0em }
    <xsl:key name="NDX_socket-by-slot"
             match="/computer/motherboard/(ata-socket)"
             use="(@slot-no)"/>
-   <xsl:template priority="109"
+   <xsl:template priority="112"
                  mode="constraint-cascade"
                  match="/computer/motherboard">
       <xsl:variable name="within" select="."/>
@@ -1014,6 +1034,35 @@ details p { margin: 0.2em 0em }
             <xsl:with-param name="msg" expand-text="true">With respect to its assigned index  value, this <mx:gi>{name(.)}</mx:gi> is expected to correspond within its <mx:gi>{$within/name(.)}</mx:gi> to a value listed under index <mx:b>socket-by-slot</mx:b>. This index has no entry under the key value <mx:code>{string-join(((@socket-no)),',')}</mx:code>.</xsl:with-param>
          </xsl:call-template>
       </xsl:for-each>
+      <xsl:next-match/>
+   </xsl:template>
+   <xsl:template priority="111"
+                 mode="constraint-cascade"
+                 match="/computer/motherboard">
+      <xsl:call-template name="notice">
+         <xsl:with-param name="cf">gix.617</xsl:with-param>
+         <xsl:with-param name="rule-id"/>
+         <xsl:with-param name="matching" as="xs:string">/computer/motherboard</xsl:with-param>
+         <xsl:with-param name="class">HCCV cardinality-violation</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">not(count(memory) ge 2 and count(memory) le 12)</xsl:with-param>
+         <xsl:with-param name="condition"
+                         select="not(count(memory) ge 2 and count(memory) le 12)"/>
+         <xsl:with-param name="msg" expand-text="true">Counting <mx:gi>memory</mx:gi> under <mx:code>/computer/motherboard</mx:code> finds {count(memory)} - expecting at least 2, no more than 12.</xsl:with-param>
+      </xsl:call-template>
+      <xsl:next-match/>
+   </xsl:template>
+   <xsl:template priority="110"
+                 mode="constraint-cascade"
+                 match="/computer/motherboard">
+      <xsl:call-template name="notice">
+         <xsl:with-param name="cf">gix.591</xsl:with-param>
+         <xsl:with-param name="rule-id"/>
+         <xsl:with-param name="matching" as="xs:string">/computer/motherboard</xsl:with-param>
+         <xsl:with-param name="class">XPKT expectation-violation</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">not(not(count(child::memory) mod 2))</xsl:with-param>
+         <xsl:with-param name="condition" select="not(not(count(child::memory) mod 2))"/>
+         <xsl:with-param name="msg" expand-text="true">Expression result for <mx:gi>/computer/motherboard</mx:gi> does not conform to expectation <mx:code>not(count(child::memory) mod 2)</mx:code>.</xsl:with-param>
+      </xsl:call-template>
       <xsl:next-match/>
    </xsl:template>
    <xsl:template priority="5" match="computer/motherboard/cpu" mode="test">
@@ -1456,6 +1505,21 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="require-for-computer_..._build-date-field"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
+   <xsl:template priority="121"
+                 mode="constraint-cascade"
+                 match="/computer/build-date">
+      <xsl:call-template name="notice">
+         <xsl:with-param name="cf">gix.591</xsl:with-param>
+         <xsl:with-param name="rule-id"/>
+         <xsl:with-param name="matching" as="xs:string">/computer/build-date</xsl:with-param>
+         <xsl:with-param name="class">XPKT expectation-violation</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">not(not(. castable as xs:dateTime) or not(xs:dateTime('1970-01-01T00:00:00-05:00') &gt; xs:dateTime(.)))</xsl:with-param>
+         <xsl:with-param name="condition"
+                         select="not(not(. castable as xs:dateTime) or not(xs:dateTime('1970-01-01T00:00:00-05:00') &gt; xs:dateTime(.)))"/>
+         <xsl:with-param name="msg" expand-text="true">Expression result for <mx:gi>/computer/build-date</mx:gi> does not conform to expectation <mx:code>not(. castable as xs:dateTime) or not(xs:dateTime('1970-01-01T00:00:00-05:00') &gt; xs:dateTime(.))</mx:code>.</xsl:with-param>
+      </xsl:call-template>
+      <xsl:next-match/>
+   </xsl:template>
    <xsl:template match="computer/motherboard/type/text()" mode="test"/>
    <xsl:template priority="5" match="computer/motherboard/type" mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
@@ -1477,7 +1541,7 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="require-for-computer_..._motherboard_..._type-field"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
-   <xsl:template priority="117"
+   <xsl:template priority="120"
                  mode="constraint-cascade"
                  match="computer/motherboard/type">
       <xsl:call-template name="notice">
@@ -1514,7 +1578,7 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="require-for-computer_..._motherboard_..._cpu_..._architecture-field"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
-   <xsl:template priority="116"
+   <xsl:template priority="119"
                  mode="constraint-cascade"
                  match="motherboard/cpu/architecture">
       <xsl:call-template name="notice">
@@ -1550,7 +1614,7 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="require-for-computer_..._motherboard_..._cpu_..._speed-field"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
-   <xsl:template priority="115"
+   <xsl:template priority="118"
                  mode="constraint-cascade"
                  match="motherboard/cpu/speed">
       <xsl:call-template name="notice">
@@ -1586,7 +1650,7 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="require-for-computer_..._motherboard_..._ata-socket_..._type-field"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
-   <xsl:template priority="114"
+   <xsl:template priority="117"
                  mode="constraint-cascade"
                  match="motherboard/ata-socket/type">
       <xsl:call-template name="notice">
@@ -1643,7 +1707,7 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="require-for-computer_..._motherboard_..._expansion-card_..._type-field"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
-   <xsl:template priority="113"
+   <xsl:template priority="116"
                  mode="constraint-cascade"
                  match="motherboard/expansion-card/type">
       <xsl:call-template name="notice">

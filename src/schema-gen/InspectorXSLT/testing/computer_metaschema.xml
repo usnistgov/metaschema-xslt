@@ -46,6 +46,9 @@
             <define-field name="build-date" as-type="date-time-with-timezone">
                 <formal-name>Build Date and Time</formal-name>
                 <description>The date and time the computer build was completed.</description>
+               <constraint>
+                  <expect target="." test="not(. castable as xs:dateTime) or not(xs:dateTime('1970-01-01T00:00:00-05:00') > xs:dateTime(.))"/>
+               </constraint>
             </define-field>
             <define-assembly name="motherboard">
                 <formal-name>Motherboard Assembly</formal-name>
@@ -179,6 +182,8 @@
                   <index-has-key target="expansion-card" name="socket-by-slot"> 
                      <key-field target="@socket-no"/>
                   </index-has-key>
+                  <has-cardinality target="memory" max-occurs="12" min-occurs="2"/>
+                  <expect target="." test="not(count(child::memory) mod 2)"/><!-- expecting an even count of 'memory' -->
                   </constraint>
                
             </define-assembly>
@@ -207,6 +212,11 @@
             <formal-name>Unique USB Device UUID</formal-name>
             <description>Ensures that each USB device has a unique UUID.</description>
             <key-field target="@uuid"/>
+         </is-unique>
+         <is-unique target="descendant::*[exists(@serial-number)]">
+            <formal-name>Unique Serial Number</formal-name>
+            <description>Ensures that any device given a serial number have a distinct number.</description>
+            <key-field target="@serial-number"/>
          </is-unique>
          <allowed-values
             target=".//prop[not(@ns) or @ns=('http://example.com/ns/computer')]/@name">

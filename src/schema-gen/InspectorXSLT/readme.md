@@ -21,7 +21,7 @@ That is, it combines the effective functionality of XML schema and Schematron (X
 
 ## Demo
 
-The [testing/current](testing/current) directory shows such an XSLT, which can be applied to an instance or set of instances (documents) to be tested against the rules defined by its Metaschema - in this case the Computer Model metaschema example provided.
+The [testing/current](testing/current) directory shows such an XSLT, which can be applied to an instance or set of instances (documents) to be tested against the rules defined by its metaschema - in this case the Computer Model metaschema example provided.
 
 Alternatively, follow the directions to build an XSLT reflecting the rules of any other metaschema, with which XML conforming to those rule sets may be validated.
 
@@ -39,36 +39,40 @@ Given these considerations on balance, *correctness* comes first in order of pri
 
 ### Some possible use scenarios
 
-- Newbies who need to validate data
+- New, occasional, or intermittent users of a metaschema-based tech, who need to validate data
 - Regular users of a metaschema or metaschema-based tech
   - who need to validate data
   - who need to confirm the correctness of others' validations
 - Developers of metaschema-based applications
-  - who wish to use or deploy easy services
-  - who prefer to focus on implementing semantics not on modeling and validating to models - but who need to validate
+  - who wish to use or deploy an easy validation service
+  - who prefer to focus on implementing semantics, not on modeling and validating to models - but who need to provide for data validation and support others in doing so
 - Developers of Metaschema
-  - who wish to compare implementation strategies and approaches
-- XSLT/XSpec students and devs
+  - who want more tools,
+  - who need and expect diversity in a healthy standards ecosystem
+  - and who wish to compare implementation strategies and approaches
+- XSLT/XSpec students and developers
   - since the codebase aims to be transparent and traceable as well as useful in operation
 
 ### Aims
 
 For new, regular and occasional users and developers of Metaschema-based technologies
 
-  * MX aims to be easy to use and start using
-  * Correct and trustworthy in what it attempts to do
-  * And compatible with workflows using other conformant tools
+* MX aims to be easy to use and start using
+* Correct and trustworthy in what it attempts to do
+* And compatible with workflows using other conformant tools
 
 For developers and maintainers of Metaschema-based data modeling and processing stacks, MX aims
 
-  * To be lightweight, easy to deploy, easy to adapt and useful,
-  * To be versatile (given its scope of application, namely validation)
-  * And to serve as a complement to other Metaschema tools and applications\*
-* For XML- and XSLT-focused developers of Metaschema and Metaschema-based technology
-  * MX is open, in the public domain, and standards-based
-  * Fully and openly tested
+* To be lightweight, easy to deploy, easy to adapt and useful,
+* To be versatile (given its scope of application, namely validation)
+* And to serve as a complement to other Metaschema tools and applications\*
 
-\* Applications to consider using along with InspectorXSLT include the schema and converter-stylesheet generators in this repository as well as tools from other developers. MX can even check against itself by validating documents with both the Inspector and its XSD - the same issues should be reported (insofar as the XSD is able to express them) using either tool.
+For XML- and XSLT-focused developers of Metaschema and Metaschema-based technology
+
+* MX is open, in the public domain, and standards-based
+* And aims to be fully and openly tested
+
+\* Applications to consider using along with InspectorXSLT include the schema and converter-stylesheet generators in this repository as well as tools from other developers. MX can even check against itself by validating documents with both the Inspector and its XSD - the same issues should be reported over invalid data (insofar as the XSD is able to express them) using either tool.
 
 ### Use cases we have not catered to
 
@@ -419,15 +423,16 @@ If any of this is true, the application will show.
 
 - Open-endedness with respect to arbitrariness of rules including contingent and co-occurrent rules
 - Ease of post processing for presentation
-- Adaptable to different uses and workflows
+- Flexible deployment, adaptable to different uses and workflows
 - Complementarity with other approaches (since two opinions are better than one and more than double when they're the same)
-- OSS platform (Saxon-HE)
+- OSS platform (Saxon-HE) on Java, NodeJS, C/.NET/Python
+- Tested and testable
 
 ### Disadvantages
 
 - Doesn't do JSON - yet
 - Limits on input sizes - very large inputs must still be chunked
-- Potential performance tradeoffs for some tests
+- Potential performance tradeoffs for some kinds of rules
 - Does not instantiate metaschema-based objects but only examines their representation (lexical form as a serialization) - so it is not as easily extensible as an application framework
 
 
