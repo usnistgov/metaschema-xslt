@@ -28,37 +28,37 @@ Modes to test:
       select="function($v as item()) as xs:boolean { $v castable as xs:date }"/>
 
    <!-- Just testing XPath in this processor -->
-   <x:scenario label="[A] A. ### 'castable as' operation works on a few edge cases">
-      <x:scenario label="[A.1] A.1. ### For April 0">
+   <x:scenario label="[A] 'castable as' operation works on a few edge cases">
+      <x:scenario label="[A.1] For April 0">
          <x:call function="true"/><!-- required to call something -->         
          <!-- ... with a test independent of context ... -->
          <x:expect label="0th day is not castable" test="not($mx:makes-a-date('2023-04-00'))"/>
       </x:scenario>
-      <x:scenario label="[A.2] A.2. ### For April 1">
+      <x:scenario label="[A.2] For April 1">
          <x:call function="true"/>
          <x:expect label="1st day is castable" test="$mx:makes-a-date('2023-04-01')"/>
       </x:scenario>
-      <x:scenario label="[A.3] A.3. ### For April 31">
+      <x:scenario label="[A.3] For April 31">
          <x:call function="true"/>
          <x:expect label="31st is not castable" test="not($mx:makes-a-date('2023-04-31'))"/>
       </x:scenario>
-      <x:scenario label="[A.4] A.4. ### 13 13?">
+      <x:scenario label="[A.4] 13 13?">
          <x:call function="true"/>
          <x:expect label="13th month is not castable" test="not($mx:makes-a-date('2023-13-13'))"/>
       </x:scenario>
-      <x:scenario label="[A.5] A.5. ### A Leap Day">
+      <x:scenario label="[A.5] A Leap Day">
          <x:call function="true"/>
          <x:expect label="is castable" test="$mx:makes-a-date('2024-02-29')"/>
       </x:scenario>
-      <x:scenario label="[A.6] A.6. ### A fake Leap Day">
+      <x:scenario label="[A.6] A fake Leap Day">
          <x:call function="true"/>
          <x:expect label="is not castable" test="not($mx:makes-a-date('2023-02-29'))"/>
       </x:scenario>
    </x:scenario>
 
-   <x:scenario label="[B] B. ### A simple but valid document (element) copies through">
+   <x:scenario label="[B] A simple but valid document (element) copies through">
       <x:variable name="valid-file" select="document('../valid/valid1.xml')"/>
-      <x:scenario label="[B.1] B.1. ### - A 'computer' document">
+      <x:scenario label="[B.1] - A 'computer' document">
          <!--  selecting '/' passes the root of the tree in as wanted, instead of the element alone. -->
          <x:context select="/">
             <computer id="abc">
@@ -75,7 +75,7 @@ Modes to test:
             </mx:validation>
          </x:expect>
       </x:scenario>
-      <x:scenario label="[B.2] B.2. ### A 'computer' document in 'validate' mode">
+      <x:scenario label="[B.2] A 'computer' document in 'validate' mode">
          <x:context mode="validate">
             <computer id="abc">
                <prop name="model" value="Hal9000"/></computer>
@@ -85,24 +85,24 @@ Modes to test:
                <prop name="model" value="Hal9000"/></computer>
          </x:expect>
       </x:scenario>
-      <x:scenario label="[B.3] B.3. ### A valid file instance in no mode">
+      <x:scenario label="[B.3] A valid file instance in no mode">
          <x:context href="valid/valid1.xml"/>
          <x:expect label="shows it has been validated" test="exists($x:result/self::mx:validation)"/>
       </x:scenario>
-      <x:scenario label="[B.4] B.4. ### A valid file instance in no mode">
+      <x:scenario label="[B.4] A valid file instance in no mode">
          <x:context href="valid/valid1.xml"/>
          <x:expect label="brings its copy with its validation"
             test="deep-equal($x:result/self::mx:validation/(child::* except mx:*),$valid-file/child::*)"/>
       </x:scenario>
-      <x:scenario label="[B.5] B.5. ### A valid instance in 'validate' mode">
+      <x:scenario label="[B.5] A valid instance in 'validate' mode">
          <x:context mode="validate" href="valid/valid1.xml"/>
          <!-- https://github.com/xspec/xspec/wiki/Writing-Scenarios#describing-an-xsboolean-xpath-expression -->
          <x:expect label="comes through as a (clean) copy of itself" test="deep-equal($x:result,$valid-file)"/>
       </x:scenario>
    </x:scenario>
 
-   <x:scenario label="[C] C. ### Haphazard unknown inputs are intercepted and reported">
-      <x:scenario label="[C.1] C.1. ### An unknown element">
+   <x:scenario label="[C] Haphazard unknown inputs are intercepted and reported">
+      <x:scenario label="[C.1] An unknown element">
          <x:context mode="validate">
             <e/>
          </x:context>
@@ -113,7 +113,7 @@ Modes to test:
             </e>
          </x:expect>
       </x:scenario>
-      <x:scenario label="[C.2] C.2. ### An unknown attribute on a known element">
+      <x:scenario label="[C.2] An unknown attribute on a known element">
          <x:context mode="validate">
             <computer id="c" nope="x">
                <prop name="model" value="Hal9000"/>
@@ -129,20 +129,20 @@ Modes to test:
       </x:scenario>
    </x:scenario>
 
-   <x:scenario label="[D] D. ### Comments are copied and PIs are dropped">
-      <x:scenario label="[D.1] D.1. ### Comment">
+   <x:scenario label="[D] Comments are copied and PIs are dropped">
+      <x:scenario label="[D.1] Comment">
          <x:variable name="mv:a-comment"><!--comment--></x:variable>
          <x:context select="$mv:a-comment" mode="validate"/>
          <x:expect label="is copied" select="$mv:a-comment"/>
       </x:scenario>
-      <x:scenario label="[D.2] D.2. ### Processing instruction">
+      <x:scenario label="[D.2] Processing instruction">
          <x:context mode="validate"><?pi type="sample" href="file.css"?></x:context>
          <x:expect label="is dropped" select="()"/>
       </x:scenario>
    </x:scenario>
 
-   <x:scenario label="[E] E. ### A cleaning-up post-process returns only the reports, not a copy">
-      <x:scenario label="[E.1] E.1. ### For an unknown element">
+   <x:scenario label="[E] A cleaning-up post-process returns only the reports, not a copy">
+      <x:scenario label="[E.1] For an unknown element">
          <x:context mode="validate">
             <nil/>
          </x:context>
@@ -153,12 +153,12 @@ Modes to test:
       </x:scenario>
    </x:scenario>
 
-   <x:scenario label="[F] F. ### Both inline and externally stored instances can be loaded and checked">
-      <x:scenario label="[F.1] F.1. ### A valid file">
+   <x:scenario label="[F] Both inline and externally stored instances can be loaded and checked">
+      <x:scenario label="[F.1] A valid file">
          <x:context href="valid/valid1.xml" mode="validate"/>
          <x:expect label="gets no reports" test="empty($x:result//mx:report)"/>
       </x:scenario>
-      <x:scenario label="[F.2] F.2. ### Given as a literal, an invalid instance">
+      <x:scenario label="[F.2] Given as a literal, an invalid instance">
          <x:context mode="validate">
             <computer id="id1">
                <motherboard>
@@ -173,7 +173,7 @@ Modes to test:
          </x:context>
          <x:expect label="produces at least one report" test="exists($x:result//mx:report)"/>
       </x:scenario>
-      <x:scenario label="[F.3] F.3. ### An invalid file on the file system">
+      <x:scenario label="[F.3] An invalid file on the file system">
          <x:context href="invalid/invalid1.xml" mode="validate"/>
          <x:expect label="likewise produces at least one report" test="exists($x:result//mx:report)"/>
       </x:scenario>

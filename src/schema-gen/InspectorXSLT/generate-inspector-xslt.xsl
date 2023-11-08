@@ -434,19 +434,19 @@
       <xsl:if test="$has-unwrapped-markup-multiline">
          <xsl:variable name="matches" select="mx:contextualized-matches(.)" as="xs:string+"/>
          <xsl:variable name="children"
-            select="model//(field | assembly | define-field | define-assembly)[not(@in-xml = 'UNWRAPPED')]/mx:match-name(.)"/>
-         <xsl:variable name="matched-children" as="xs:string*">
+            select="model/(.|choice)/(field | assembly | define-field | define-assembly)[not(@in-xml = 'UNWRAPPED')]/mx:select-name(.)"/>
+         <xsl:variable name="expected" as="xs:string*">
             <xsl:for-each select="$children">
                <xsl:variable name="c" select="."/>
                <xsl:sequence select="$matches ! (. || '/' || $c)"/>
             </xsl:for-each>
          </xsl:variable>
-         <xsl:if test="exists($matched-children)">
-            <XSLT:template match="{ $matched-children => string-join(' | ') }" mode="validate-markup-multiline"/>
+         <xsl:if test="exists($expected)">
+            <XSLT:template match="{ $expected => string-join(' | ') }" mode="validate-markup-multiline"/>
          </xsl:if>
 
          <xsl:variable name="matched-multiline" as="xs:string*">
-            <xsl:for-each select="tokenize($markup-elements, ' \| ')">
+            <xsl:for-each select="tokenize($markup-multiline-paragraph-level-elements, ' \| ')">
                <xsl:variable name="e" select="."/>
                <xsl:for-each select="$matches" expand-text="true">{ . || '/' || $e }</xsl:for-each>
             </xsl:for-each>
@@ -455,7 +455,7 @@
       </xsl:if>
    </xsl:template>
 
-   <xsl:variable name="markup-elements" select="'p | ul | ol | table | pre | h1 | h2 | h3 | h4 | h5 | h6'"/>
+   <xsl:variable name="markup-multiline-paragraph-level-elements" select="'p | ul | ol | table | pre | h1 | h2 | h3 | h4 | h5 | h6'"/>
 
    <xsl:template mode="require-for" match="define-field" expand-text="true">
       <!-- intercept markup descendants of these fields -->
@@ -986,10 +986,26 @@
       <xsl:apply-templates mode="#current" select="key('flag-references', @_key-name)"/>
    </xsl:template>
 
+   <!--for a grouped element, returns the element in its group, e.g. 'notes/note'-->
    <xsl:function name="mx:match-name" as="xs:string?">
       <xsl:param name="who" as="element()"/>
       <xsl:text expand-text="true">{ $who/group-as[@in-xml='GROUPED']/@name ! (. || '/') }{ mx:use-name($who) }</xsl:text>
    </xsl:function>
+   
+   <!--for a grouped element, returns the group, e.g. 'notes' for notes/note, but 'note' if the grouping is not explicit @in-xml='GROUPED'-->
+   
+   <xsl:function name="mx:select-name" as="xs:string?">
+      <xsl:param name="who" as="element()"/>
+      <xsl:text expand-text="true">{ ($who/group-as[@in-xml='GROUPED']/@name, mx:use-name($who))[1] }</xsl:text>
+   </xsl:function>
+   
+   <xsl:mode name="select-name" on-no-match="fail"/>
+   
+   <xsl:template mode="select-name" as="xs:string" expand-text="true"
+      match="field | assembly | define-field | define-assembly">{ mx:use-name(.) }</xsl:template>
+
+   <xsl:template mode="select-name" as="xs:string" expand-text="true"
+      priority="101" match="*[group-as/@in-xml='GROUPED']">{ group-as/@name }[exists({ mx:use-name(.) })]</xsl:template>
 
    <xsl:function name="mx:match-name-with-parent" as="xs:string?">
       <xsl:param name="who" as="element()"/>

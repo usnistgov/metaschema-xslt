@@ -288,9 +288,39 @@
         <!-- /descendant::XSLT:call-template[@name='notice'][2]       -->
     </x:scenario>
     
-    <x:scenario label="[M] SANDBOX">
-        
-        <!-- /descendant::XSLT:call-template[@name='notice'][2]       -->
+    <x:scenario label="[M] Mixed content">
+       <x:scenario label="[M.1] Some okay mixed content">
+          <x:context mode="validate" select="/c:computer/c:prop"><!-- selecting the prop in mode 'validate' to copy it -->
+            <computer>
+               <prop name="model" value="PC1">
+                  <remarks>
+                     <p>Here is some good <b>bold</b> stuff.</p>
+                  </remarks>
+               </prop>
+            </computer>
+          </x:context>
+          <x:expect label="copies through unmessed-with">
+                <prop name="model" value="PC1">
+                   <remarks>
+                      <p>Here is some good <b>bold</b> stuff.</p>
+                   </remarks>
+                </prop>
+          </x:expect>
+       </x:scenario>
+       
+<!-- some broken mixed content
+          p-level
+            unexpected element 'boo' (unknown)
+            unexpected element 'memory' (permitted elsewhere)
+            unexpected element 'remarks/i'
+            misplaced text (between p-levels)
+          inline
+            unexpected element 'p/p' or 'i/p' (mixed up mixed content)
+          -->
+       
+<!--some mixed content appearing where it shouldn't
+       broken
+       correct but misplaced -->
     </x:scenario>
     
 </x:description>
