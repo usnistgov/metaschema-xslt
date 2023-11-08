@@ -323,8 +323,6 @@
          <matches regex="^\S+$"/>
       </constraint>
    </define-flag>
-   
-   
 
    <define-assembly name="cooling">
       <formal-name>Cooling</formal-name>

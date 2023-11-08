@@ -5,7 +5,7 @@
     xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
     xmlns:x="http://www.jenitennison.com/xslt/xspec"
     xmlns:XSLT="http://www.w3.org/1999/XSL/Transform"
-    stylesheet="../generate-inspector-xslt.xsl" run-as="import"
+    stylesheet="../generate-inspector-xslt.xsl" run-as="external"
     xslt-version="3.0">
 
     <!-- Using run-as='import' for now -->
@@ -45,30 +45,23 @@
             </x:expect>
         </x:scenario>
             
-        <x:scenario label="Basic external">
-            <x:context href="computer_metaschema.xml"
-                select="/m:METASCHEMA"/>
-            <x:expect label="XSLT transform element with correct attributes">
-                <xsl:transform
-                    version="3.0"
-                    xpath-default-namespace="http://example.com/ns/computer"
-                    exclude-result-prefixes="#all">...</xsl:transform>
-            </x:expect>
-            <!--<x:expect test="/XSLT:stylesheet/node()">
-                <x:label>XSLT strip-space, comments, global variable, and hard-coded line breaks</x:label>
-                <XSLT:strip-space elements=""/>
-                <!-\- METASCHEMA conversion stylesheet supports XML -> METASCHEMA/SUPERMODEL conversion -\->
-                <x:text>&#xA;</x:text>
-                <!-\- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -\->
-                <x:text>&#xA;</x:text>
-                <!-\- METASCHEMA: Computer Build (version 1.0) in namespace "http://csrc.nist.gov/ns/oscal/1.0"-\->
-                <x:text>&#xA;</x:text>
-                <XSLT:variable as="xs:string" name="metaschema-namespace"
-                    >http://csrc.nist.gov/ns/oscal/1.0</XSLT:variable>
-                <x:text>&#xA;</x:text>
-            </x:expect>
-            <x:expect label="Schema name and version appear in comment (confirm fix for #62)"
-                test="exists($x:result//comment()[contains(.,'Computer Build (version 1.0)')])"/>-->
-        </x:scenario>
-    </x:scenario>
+      <x:scenario label="Basic external - Computer metaschema">
+         <x:context href="computer_metaschema.xml"/><!-- XXX why does this one work while Tiny requires the composition? -->
+         <x:expect label="XSLT transform element with correct attributes">
+            <xsl:transform
+               version="3.0"
+               xpath-default-namespace="http://example.com/ns/computer"
+               exclude-result-prefixes="#all">...</xsl:transform>
+         </x:expect>
+      </x:scenario>
+      <x:scenario label="Basic external - Tiny metaschema">
+         <x:context href="current/tiny_metaschema_COMPOSED-metaschema.xml"/>
+         <x:expect label="XSLT transform element with correct attributes">
+            <xsl:transform
+               version="3.0"
+               xpath-default-namespace="http://example.com/ns/tinydata"
+               exclude-result-prefixes="#all">...</xsl:transform>
+         </x:expect>
+      </x:scenario>
+   </x:scenario>
 </x:description>
