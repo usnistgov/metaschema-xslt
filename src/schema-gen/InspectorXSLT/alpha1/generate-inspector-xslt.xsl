@@ -14,7 +14,7 @@
    <!-- Maintaining the boilerplate out of line makes it easier to test and lint. -->
    <xsl:variable name="XSLT-template" as="document-node()" select="document('apply-validator.xsl')"/>
 
-   <xsl:variable name="metaschema-repository" as="xs:string">../../../support/metaschema</xsl:variable>
+   <xsl:variable name="metaschema-repository" as="xs:string">../../../../support/metaschema</xsl:variable>
    
    <xsl:variable name="atomictype-modules" as="element()*" expand-text="true">
       <module>{$metaschema-repository}/schema/xml/metaschema-datatypes.xsd</module>

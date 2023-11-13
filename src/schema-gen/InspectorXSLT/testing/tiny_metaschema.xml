@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+   <schema-name>Computer Model</schema-name>
+   <schema-version>0.0.5</schema-version>
+   <short-name>computer</short-name>
+   <namespace>http://example.com/ns/tinydata</namespace>
+   <json-base-uri>http://example.com/ns/tinydata</json-base-uri>
+
+   <!--
+   Test metaschema for exercising some features not illustrated or easily found in computer-metaschema.xml:
+
+   markup-line and markup-multiline
+   wrapped and unwrapped markup-multiline
+   grouped sequences (e.g. TINY/notes/note)
+   recursive nesting to arbitrary depths
+   Aiming to be very simple while testing these particular features
+
+   multiple roots - bug repair
+   Rules imposed on insert/@type and insert/@id-ref (the only constraints)
+   
+-->
+   <remarks>
+      <h1>Tiny Metaschema</h1>
+      <p>A metaschema can be small and yet deep.</p>
+   </remarks>
+
+   <define-assembly name="TINY">
+      <formal-name>Tiny Data</formal-name>
+      <description>A minimally described data set.</description>
+      <root-name>TINY</root-name>
+      <define-flag name="id" required="yes">
+         <formal-name>Tiny ID</formal-name>
+         <description>An identifier.</description>
+      </define-flag>
+      <model>
+         <field ref="title" min-occurs="1" max-occurs="1"/>
+         <field ref="term"  min-occurs="0" max-occurs="unbounded">
+            <group-as name="terminology"/>
+         </field>
+         <define-field name="stuff" min-occurs="0" max-occurs="1" in-xml="UNWRAPPED" as-type="markup-multiline">
+            <formal-name>Stuff</formal-name>
+            <description>Some amount of tiny stuff.</description>
+         </define-field>
+         <assembly ref="part" min-occurs="0" max-occurs="unbounded">
+            <group-as name="parts"/>
+         </assembly>
+         <field ref="note" max-occurs="unbounded" in-xml="WRAPPED">
+            <group-as name="notes" in-xml="GROUPED"/>
+         </field>
+      </model>
+   </define-assembly>
+
+   <define-field name="title" as-type="markup-line">
+      <formal-name>Title</formal-name>
+      <description>markup-line example.</description>
+   </define-field>
+   
+   <define-field name="term" as-type="string">
+      <formal-name>Term</formal-name>
+      <description>Simple string value example.</description>
+      <define-flag required="yes" name="id"      as-type="token">
+         <formal-name>Term identifier</formal-name>
+         <description>A token identifying this term uniquely within the document.</description>
+      </define-flag>
+   </define-field>
+   
+   <define-field name="note" as-type="markup-multiline">
+      <formal-name>Note</formal-name>
+      <description>Wrapped markup-multiline example.</description>
+   </define-field>
+
+   <define-assembly name="part">
+      <formal-name>Tiny part</formal-name>
+      <description>A bit of tiny data.</description>
+      <model>
+         <field ref="title" min-occurs="1" max-occurs="1"/>
+         <field ref="term"  min-occurs="0" max-occurs="unbounded">
+            <group-as name="terminology"/>
+         </field>
+         <define-field name="stuff" min-occurs="0" max-occurs="1" in-xml="UNWRAPPED" as-type="markup-multiline">
+            <formal-name>Stuff</formal-name>
+            <description>Some amount of tiny stuff.</description>
+         </define-field>
+         <assembly ref="part" min-occurs="0" max-occurs="unbounded">
+            <group-as name="parts"/>
+         </assembly>
+         <field ref="note" max-occurs="1" in-xml="WRAPPED"/>
+      </model>
+   </define-assembly>
+
+   <!--<define-assembly name="tiny-collection">
+      <formal-name>Tiny Collection</formal-name>
+      <description>Things can get complicated even when they are tiny.</description>
+      <root-name>TINIES</root-name>
+      <model>
+         <assembly ref="TINY" min-occurs="1" max-occurs="unbounded"/>
+      </model>
+   </define-assembly>-->
+</METASCHEMA>

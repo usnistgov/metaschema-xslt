@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../../../testing/xspec-assurance.sch"?>
+<x:description xmlns:mx="http://csrc.nist.gov/ns/csd/metaschema-xslt"
+    xmlns="http://example.com/ns/computer"
+    xmlns:x="http://www.jenitennison.com/xslt/xspec" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    stylesheet="current/tiny_inspector.xsl" xslt-version="3.0">
+
+    <!-- Purpose: Testing support for markup-line and markup-multiline data types in
+       the InspectorXSLT validator.
+       
+     Schematron ../../../testing/xspec-assurance.sch can be used to validate
+       are referenced files in place?
+     
+    -->
+
+
+   <!--
+     NEXT UP:
+       x wire Generator with new apply-validator
+         - set up XSpec testing bigbadtiny.xml under Tiny (alpha2)
+         - remove old generator support for markup-line and markup-multiline (comment out)
+       - extend generator with new logic addressing markup datatypes
+         - consult schema for completeness
+       - make new Generator A2 work on Tiny (build tests)
+         - including bigbadtiny.xml
+         - get crazy
+         - capture cases as tests
+       - make work on Computer Model (run all tests)
+       - defenestrate clutter and comments, reorganize generator
+       - stress test both
+         - give Tiny two roots! (and try removing / from paths to root)
+       - develop unit testing for generation - functional testing?
+       - defenestrate and reorganize Inspector (under testing)
+    -->
+   
+    <x:variable name="mx:makes-reports" as="function(*)"
+        select="function($d as node()) as xs:boolean { exists($d/descendant-or-self::mx:report) }"/>
+
+    <x:scenario label="[A] Reports are made for all files given as invalid" pending="make invalid example">
+        <x:scenario label="[A.1] invalid1.xml">
+            <x:context href="invalid/invalid1.xml" mode="validate"/>
+            <x:expect label="appears not to be valid" test="$x:result => $mx:makes-reports()"/>
+        </x:scenario>
+    </x:scenario>
+
+    <x:scenario label="[B] No reports are made for any files given as valid">
+        <x:scenario label="[B.1] valid1.xml">
+            <x:context href="tinydata/bigbadtiny.xml" select="/*" mode="validate"/>
+            <!--<x:expect label="appears to be valid" test="$x:result => $mx:makes-reports() => not()"/>-->
+            <x:expect select="()"/>
+        </x:scenario>
+    </x:scenario>
+
+</x:description>
