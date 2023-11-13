@@ -158,7 +158,11 @@ The `echo` parameter can be used to supplement output reports with messages to t
   - `echo=info` reports the valid/invalid finding plus info messages
   - `echo=warnings` reports the valid/invalid finding plus warnings and info messages
   - `echo=all` (or any `echo` other than `none`) reports the finding plus all errors, warnings and info messages
-  
+
+When producing HTML reports, a file name reference to an out-of-line CSS resource can be provided. It will drop from HTML outputs the inlined CSS, and instead provide a link to the named resource. Provide a CSS file with that name to control all the styling of the reports.
+
+  - `css=cssfile.css` replaces CSS in your HTML header with `\<link rel="stylesheet" href="cssfile.css">`.
+
 TBD, to be considered:
 
   - filters to remove messages by level, code or matched node (XPath)

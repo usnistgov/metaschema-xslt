@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    
+    xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+    xmlns:mx="http://csrc.nist.gov/ns/csd/metaschema-xslt"
+    xmlns:x="http://www.jenitennison.com/xslt/xspec"
+    xmlns:XSLT="http://www.w3.org/1999/XSL/Transform"
+    stylesheet="../boilerplate-testing.xsl" run-as="external"
+    xslt-version="3.0">
+
+    <!-- This XSpec is for validating the operations of Inspector boilerplate templates. -->
+    
+   <!-- .     .     .     .     .     .     .     .     .     .     .     .     .     .     . -->
+   
+   <x:scenario label="Simple pass through">
+      <x:scenario label="Basic inline">
+         <x:context mode="validate" select="/*">
+            <TINY/>
+         </x:context>
+         <x:expect label="comes through">
+            <TINY/>
+         </x:expect>
+      </x:scenario>
+
+      <x:scenario label="With some markup-multiline">
+         <x:context mode="validate" select="/*">
+            <TINY>
+               <part>
+                  <title>A title</title>
+                  <p>A paragraph.</p>
+               </part>
+            </TINY>
+         </x:context>
+         <x:expect label="also comes through">
+            <TINY>
+               <part>
+                  <title>A title</title>
+                  <p>A paragraph.</p>
+               </part>
+            </TINY>
+         </x:expect>
+      </x:scenario>
+      
+   </x:scenario>
+   
+   <x:scenario label="Detecting markup-line issues">
+      <x:scenario label="Clean stuff">
+         <x:context mode="validate" select="/*">
+            <title>A title</title>
+         </x:context>
+         <x:expect label="comes through cleanly">
+            <title>A title</title>
+         </x:expect>
+      </x:scenario>
+      <x:scenario label="Messy stuff">
+         <x:context mode="validate" select="/*">
+            <title>A title <a href="boo.html">with a link</a> and <b>extra</b>.</title>
+         </x:context>
+         <x:expect label="comes through cleanly">
+            <title>A title <a href="boo.html">with a link</a> and <b>extra</b>.</title>
+         </x:expect>
+      </x:scenario>
+      <x:scenario label="Messy broken stuff">
+         <x:context mode="validate" select="/*">
+            <title>A title <a HREF="boo.html">with a link</a> and <B/>.</title>
+         </x:context>
+         <x:expect label="is found to be broken">
+            <title>A title <a HREF="boo.html">
+                  <mx:report cf="..." test="exists(.)" class="_UA unmatched-attribute" xpath="/title/a/@HREF"
+                     level="ERROR">Unrecognized attribute <mx:gi>@HREF</mx:gi> on element <mx:gi>a</mx:gi>.</mx:report>with a link</a> and <B>
+                  <mx:report cf="..." test="exists(.)" class="_UE unmatched-element" xpath="/title/B"
+                     level="ERROR">Unrecognized element <mx:gi>B</mx:gi>.</mx:report>
+               </B>.</title>
+         </x:expect>
+      </x:scenario>
+   </x:scenario>
+</x:description>
