@@ -3,12 +3,12 @@
 <x:description xmlns:mx="http://csrc.nist.gov/ns/csd/metaschema-xslt"
    xmlns:mv="http://csrc.nist.gov/ns/csd/metaschema-xslt" xmlns="http://example.com/ns/computer"
    xmlns:x="http://www.jenitennison.com/xslt/xspec" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-   stylesheet="../generate-inspector-xslt.xsl" xslt-version="3.0">
+   stylesheet="../../../alpha2/generate-inspector-xslt.xsl" xslt-version="3.0">
 
    <!--<x:variable name="mx:datatypes-xsd-path" as="xs:string">--><!--</x:variable>-->
 
    <x:scenario label="[A]  type-stack mode returns expected simpleTypes for a couple of known data types">
-      <x:context mode="type-stack" href="../../../../support/metaschema/schema/xml/metaschema-datatypes.xsd"/>
+      <x:context mode="type-stack" href="../../../../../../support/metaschema/schema/xml/metaschema-datatypes.xsd"/>
       <x:scenario label="[A.1]  A simple extension">
          <x:context select="/*/xs:simpleType[@name='Base64Datatype']"/>
          <x:expect label="Base type of Base64Datatype is reported to be xs:base64Binary">
@@ -123,13 +123,13 @@
    
    <x:scenario label="[C]  Simple extended datatypes are processed recursively">
    <x:scenario label="[C.1]  A simple extension">
-      <x:context href="../../../../support/metaschema/schema/xml/metaschema-datatypes.xsd" select="/*/xs:simpleType[@name='DateTimeDatatype']" mode="datatype-test">
+      <x:context href="../../../../../../support/metaschema/schema/xml/metaschema-datatypes.xsd" select="/*/xs:simpleType[@name='DateTimeDatatype']" mode="datatype-test">
          <x:param name="as-type-name">DateTimeDatatype</x:param>
       </x:context>
       <x:expect label="tests castability and pattern" select="string(.)">string(.) castable as xs:dateTime and matches(.,'^(((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30)))T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\.[0-9]+)?(Z|(-((0[0-9]|1[0-2]):00|0[39]:30)|\+((0[0-9]|1[0-4]):00|(0[34569]|10):30|(0[58]|12):45)))?$')</x:expect>
    </x:scenario>
    <x:scenario label="[C.2]  A compound extension" pending="where we are Oct 31 2023">
-      <x:context href="../../../../support/metaschema/schema/xml/metaschema-datatypes.xsd" select="/*/xs:simpleType[@name='DateTimeWithTimezoneDatatype']" mode="datatype-test">
+      <x:context href="../../../../../../support/metaschema/schema/xml/metaschema-datatypes.xsd" select="/*/xs:simpleType[@name='DateTimeWithTimezoneDatatype']" mode="datatype-test">
          <x:param name="as-type-name">DateTimeWithTimezoneDatatype</x:param>
       </x:context>
       <x:expect label="tests castability for the base type, and all patterns" select="()"/>

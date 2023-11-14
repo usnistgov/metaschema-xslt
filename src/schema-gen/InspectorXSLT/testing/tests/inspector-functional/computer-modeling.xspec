@@ -3,7 +3,7 @@
 <x:description xmlns:mx="http://csrc.nist.gov/ns/csd/metaschema-xslt"
     xmlns:mv="http://csrc.nist.gov/ns/csd/metaschema-xslt" xmlns="http://example.com/ns/computer"
     xmlns:c="http://example.com/ns/computer" xmlns:x="http://www.jenitennison.com/xslt/xspec"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema" stylesheet="current/computer_inspector.xsl"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" stylesheet="../../current/computer_inspector.xsl"
     xslt-version="3.0">
 
     <!-- COME BACK TO / HELP WANTED
@@ -182,7 +182,10 @@
                </motherboard>
             </computer>
          </x:context>
-         <x:expect label="an error is reported, showing the empty string as '(empty)'">
+         <x:expect label="an error is reported, showing the empty string as '(empty)', along with another error based on a data typing constraint">
+            <mx:report cf="..." test="not(string(.) castable as xs:string and matches(.,'^\S(.*\S)?$'))"
+               class="VDSX violates-datatype-syntax" xpath="/computer/motherboard/type"
+               level="ERROR">Value <mx:code /> of element <mx:gi>type</mx:gi> does not conform to <mx:code>string</mx:code> datatype.</mx:report>
             <mx:report cf="..." test="not(.=('at','atx','mini-itx'))" class="AVCV value-not-allowed" matching="computer/motherboard/type"
                xpath="/computer/motherboard/type" level="WARNING">Value <mx:code/> (empty) does not appear among permissible (enumerated) values for this <mx:gi>type</mx:gi>: <mx:code>at|atx|mini-itx</mx:code>.</mx:report>
          </x:expect>
@@ -204,14 +207,14 @@
          <x:context mode="test" select="/c:computer/c:motherboard/c:type">
             <computer id="A0">
                <motherboard>
-                  <type>   mini-itx   </type>
+                  <type>mini - itx</type>
                </motherboard>
             </computer>
          </x:context>
          <x:expect label="an error is reported">
             <mx:report cf="..." test="not(.=('at','atx','mini-itx'))" class="AVCV value-not-allowed" 
                matching="computer/motherboard/type" xpath="/computer/motherboard/type"
-               level="WARNING">Value <mx:code>   mini-itx   </mx:code> does not appear among permissible (enumerated) values for this <mx:gi>type</mx:gi>: <mx:code>at|atx|mini-itx</mx:code>.</mx:report>
+               level="WARNING">Value <mx:code>mini - itx</mx:code> does not appear among permissible (enumerated) values for this <mx:gi>type</mx:gi>: <mx:code>at|atx|mini-itx</mx:code>.</mx:report>
          </x:expect>
       </x:scenario>
       <x:scenario label="[H.5] A field with a value in compliance with its enumeration">

@@ -6,7 +6,7 @@
     xmlns:mx="http://csrc.nist.gov/ns/csd/metaschema-xslt"
     xmlns:x="http://www.jenitennison.com/xslt/xspec"
     xmlns:XSLT="http://www.w3.org/1999/XSL/Transform"
-    stylesheet="../boilerplate-testing.xsl" run-as="external"
+    stylesheet="boilerplate-testing.xsl" run-as="external"
     xslt-version="3.0">
 
     <!-- This XSpec is for validating the operations of Inspector boilerplate templates. -->
