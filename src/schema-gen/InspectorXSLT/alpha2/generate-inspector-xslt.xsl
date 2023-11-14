@@ -139,17 +139,33 @@
          </xsl:for-each-group>
          
          
-<!-- Where unwrapped markup-multiline fields are included, their parents are         -->
+<!-- Selecting inline definitions and references marked as UNWRAPPED - these are all markup-multiline -->
          <xsl:for-each-group
-            select="/descendant::*[@as-type='markup-multiline'][@in-xml='UNWRAPPED']/key('using-name',mx:use-name(.))/ancestor::model[1]/parent::*" group-by="mx:match-name-with-parent(.)">
+            select="/descendant::model//*[mx:is-markup-multiline(.)][@in-xml='UNWRAPPED']" group-by="mx:match-name-with-parent(ancestor::model[1]/parent::*)">
 <!-- matching elements containing unwrapped markup-multiline where it appears - there should only be one          -->
-            <xsl:variable name="unwrapped" select="current-group()/model/*[@in-xml='UNWRAPPED']"/>
             <xsl:variable name="matches" select="$markup-multiline-paragraph-level-elements ! ( current-grouping-key() || '/' || .) => string-join('|')"/>
-            <xsl:for-each select="$unwrapped">
             <XSLT:template mode="test" match="{$matches }">
                <xsl:call-template name="test-order"/>
             </XSLT:template>
-            </xsl:for-each>
+         </xsl:for-each-group>
+         
+<!-- And producing templates for wrapped markup-multiline as well        -->
+         
+         <xsl:for-each-group
+            select="/descendant::model//*[mx:is-markup-multiline(.)][not(@in-xml='UNWRAPPED')]" group-by="mx:match-name-with-parent(.)">            
+            <xsl:variable name="matches" select="$markup-multiline-paragraph-level-elements ! ( current-grouping-key() || '/' || .) => string-join('|')"/>
+            <XSLT:template mode="test" match="{$matches }">
+               <xsl:call-template name="test-order"/>
+            </XSLT:template>
+         </xsl:for-each-group>
+
+         <xsl:for-each-group
+            select="/descendant::model//*[mx:is-markup-line(.)]" group-by="mx:match-name-with-parent(.)">
+            <!-- matching elements containing unwrapped markup-multiline where it appears - there should only be one          -->
+            <xsl:variable name="matches" select="$markup-inline-elements ! ( current-grouping-key() || '/' || .) => string-join('|')"/>
+            <XSLT:template mode="test" match="{$matches }">
+               <xsl:call-template name="test-order"/>
+            </XSLT:template>
          </xsl:for-each-group>
          
          <xsl:iterate select="$markup-inline-elements">
@@ -162,6 +178,17 @@
       </XSLT:transform>
    </xsl:template>
 
+   <xsl:function name="mx:is-markup-multiline" as="xs:boolean">
+      <xsl:param name="who" as="node()"/>
+      <xsl:sequence select="$who/(. | key('field-definitions',$who/@_key-ref))/@as-type='markup-multiline'"/>
+   </xsl:function>
+   
+   <xsl:function name="mx:is-markup-line" as="xs:boolean">
+      <xsl:param name="who" as="node()"/>
+      <xsl:sequence select="$who/(. | key('field-definitions',$who/@_key-ref))/@as-type='markup-line'"/>
+   </xsl:function>
+   
+   
    <xsl:key name="simpleType-by-name" match="xs:simpleType" use="@name"/>
 
    <xsl:template match="/*/*" priority="0.25"/>
@@ -330,16 +357,16 @@
       <xsl:param name="expected-followers" select="
             (following-sibling::field | following-sibling::assembly |
             following-sibling::define-field | following-sibling::define-assembly | following-sibling::choice/child::*) except (parent::choice/*)"/>
-      <xsl:if test="exists($expected-followers)" expand-text="true">
-         <!--<XSLT:variable name="interlopers" select="{ ($followers ! mx:use-name(.)) ! ('preceding-sibling::' || .) => string-join(' | ') }"/>-->
-         <xsl:variable name="test" as="xs:string">exists({ ($expected-followers ! mx:select-name(.)) ! ('preceding-sibling::' ||
-            .) => string-join(' | ') })</xsl:variable>
+      <xsl:variable name="okay-followers" as="xs:string*" select="$expected-followers[not(@in-xml='UNWRAPPED')]/mx:select-name(.), $markup-multiline-paragraph-level-elements[$expected-followers/@in-xml='UNWRAPPED']"/>
+      <xsl:if test="exists($okay-followers)" expand-text="true">
+         <xsl:variable name="interlopers" select="$okay-followers ! ('preceding-sibling::' || .) => string-join(' | ')"/>
+         <xsl:variable name="test" as="xs:string">exists({$interlopers})</xsl:variable>
          <XSLT:call-template name="notice">
             <XSLT:with-param name="cf">gix.352</XSLT:with-param>
             <XSLT:with-param name="class">EOOO element-out-of-order</XSLT:with-param>
             <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
             <XSLT:with-param name="condition" select="{$test}"/>
-            <XSLT:with-param name="msg">Element <mx:gi>{{ name(.) }}</mx:gi>
+            <XSLT:with-param name="msg">Element <mx:gi>{ mx:use-name(.) }</mx:gi>
                <xsl:text> is unexpected following </xsl:text>
                <xsl:call-template name="punctuate-or-code-sequence">
                   <xsl:with-param name="items" select="$expected-followers"/>
@@ -440,10 +467,10 @@
       </xsl:if>-->
    </xsl:template>
 
-   <xsl:variable name="markup-multiline-paragraph-level-elements" select="'p ul ol table pre h1 h2 h3 h4 h5 h6' ! tokenize(.,' ')"/>
+   <xsl:variable name="markup-multiline-paragraph-level-elements" select="'p ul ol table pre h1 h2 h3 h4 h5 h6 blockquote img' ! tokenize(.,' ')"/>
    
    <xsl:variable name="markup-inline-elements"
-      select="'em i strong b insert a q code sup sub' ! tokenize(.,' ')"/>
+      select="'em i strong b insert a q code sup sub img' ! tokenize(.,' ')"/>
    
    <!--<xsl:template mode="require-for" match="define-field" expand-text="true">
       <!-\- intercept markup descendants of these fields -\->
@@ -662,9 +689,6 @@
       </xsl:apply-templates>
    </xsl:template>
    
-   
-
-   
    <xsl:template mode="generate-constraint-cascade" priority="10" match="constraint/is-unique" expand-text="true">
       <xsl:param name="matching" as="xs:string+" required="true" tunnel="true"/>
       <xsl:variable name="priority">
@@ -764,7 +788,7 @@
       <XSLT:template name="require-for-{ mx:definition-name(.) }-flag">
          <!--<XSLT:param tunnel="true" name="matching" as="xs:string">{ (use-name,@name)[1] }</XSLT:param>-->
 
-         <xsl:for-each select="@as-type[. != 'string']">
+         <xsl:for-each select="@as-type">
             <XSLT:call-template name="check-{ . }-datatype"/>
          </xsl:for-each>
       </XSLT:template>

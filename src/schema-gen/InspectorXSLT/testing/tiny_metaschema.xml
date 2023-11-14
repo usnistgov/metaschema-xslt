@@ -62,6 +62,11 @@
          <formal-name>Term identifier</formal-name>
          <description>A token identifying this term uniquely within the document.</description>
       </define-flag>
+      <remarks>
+         <p>For a more extensive model supporting definitions, acronyms etc. build this out into an assembly.
+            As a field, this supports some control over the vocabulary and formatting without heavier embedded metadata.</p>
+         <p>Of course you could always make a structured glossary out of regular and controlled parts for your terminology, and use this inside it, potentially with title/insert.</p>
+      </remarks>
    </define-field>
    
    <define-field name="note" as-type="markup-multiline">

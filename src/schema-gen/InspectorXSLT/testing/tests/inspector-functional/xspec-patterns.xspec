@@ -3,7 +3,7 @@
 <x:description xmlns:mx="http://csrc.nist.gov/ns/csd/metaschema-xslt"
    xmlns:mv="http://csrc.nist.gov/ns/csd/metaschema-xslt" xmlns="http://example.com/ns/computer"
    xmlns:x="http://www.jenitennison.com/xslt/xspec" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-   stylesheet="current/computer_inspector.xsl" xslt-version="3.0">
+   stylesheet="../../current/computer_inspector.xsl" xslt-version="3.0">
 
    <!-- This XSpec does two things:
 
@@ -22,7 +22,7 @@ Modes to test:
   
 -->
 
-   <x:helper stylesheet="../mx-reporter.xsl"/>
+   <x:helper stylesheet="../../../mx-reporter.xsl"/>
 
    <x:variable name="mx:makes-a-date" as="function(*)"
       select="function($v as item()) as xs:boolean { $v castable as xs:date }"/>
@@ -57,7 +57,7 @@ Modes to test:
    </x:scenario>
 
    <x:scenario label="[B] A simple but valid document (element) copies through">
-      <x:variable name="valid-file" select="document('../valid/valid1.xml')"/>
+      <x:variable name="valid-file" select="document('../../../valid/valid1.xml')"/>
       <x:scenario label="[B.1] - A 'computer' document">
          <!--  selecting '/' passes the root of the tree in as wanted, instead of the element alone. -->
          <x:context select="/">
@@ -86,16 +86,16 @@ Modes to test:
          </x:expect>
       </x:scenario>
       <x:scenario label="[B.3] A valid file instance in no mode">
-         <x:context href="valid/valid1.xml"/>
+         <x:context href="../../valid/valid1.xml"/>
          <x:expect label="shows it has been validated" test="exists($x:result/self::mx:validation)"/>
       </x:scenario>
       <x:scenario label="[B.4] A valid file instance in no mode">
-         <x:context href="valid/valid1.xml"/>
+         <x:context href="../../valid/valid1.xml"/>
          <x:expect label="brings its copy with its validation"
             test="deep-equal($x:result/self::mx:validation/(child::* except mx:*),$valid-file/child::*)"/>
       </x:scenario>
       <x:scenario label="[B.5] A valid instance in 'validate' mode">
-         <x:context mode="validate" href="valid/valid1.xml"/>
+         <x:context mode="validate" href="../../valid/valid1.xml"/>
          <!-- https://github.com/xspec/xspec/wiki/Writing-Scenarios#describing-an-xsboolean-xpath-expression -->
          <x:expect label="comes through as a (clean) copy of itself" test="deep-equal($x:result,$valid-file)"/>
       </x:scenario>
@@ -155,7 +155,7 @@ Modes to test:
 
    <x:scenario label="[F] Both inline and externally stored instances can be loaded and checked">
       <x:scenario label="[F.1] A valid file">
-         <x:context href="valid/valid1.xml" mode="validate"/>
+         <x:context href="../../valid/valid1.xml" mode="validate"/>
          <x:expect label="gets no reports" test="empty($x:result//mx:report)"/>
       </x:scenario>
       <x:scenario label="[F.2] Given as a literal, an invalid instance">
@@ -174,7 +174,7 @@ Modes to test:
          <x:expect label="produces at least one report" test="exists($x:result//mx:report)"/>
       </x:scenario>
       <x:scenario label="[F.3] An invalid file on the file system">
-         <x:context href="invalid/invalid1.xml" mode="validate"/>
+         <x:context href="../../invalid/invalid1.xml" mode="validate"/>
          <x:expect label="likewise produces at least one report" test="exists($x:result//mx:report)"/>
       </x:scenario>
    </x:scenario>

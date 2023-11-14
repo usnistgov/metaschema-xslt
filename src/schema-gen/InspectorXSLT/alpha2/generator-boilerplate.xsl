@@ -14,7 +14,7 @@
    <xsl:param name="echo" as="xs:string">none</xsl:param>
    <!-- echo = (none|invalid-only|docs|info|warnings|all) - runtime messaging provided with grab-mx mode - does not work with format=inspected -->
    
-   <xsl:param name="css" as="xs:string"/>
+   <xsl:param name="css" as="xs:string" select="''"/>
    
    <!-- Entry points - or use initial-template or initial-mode in supporting processors  -->
 
@@ -128,7 +128,6 @@
          <!--<xsl:namespace name="mx">http://csrc.nist.gov/ns/csd/metaschema-xslt</xsl:namespace>-->
          <xsl:copy-of select="@*"/>
          <xsl:apply-templates select="." mode="test"/>
-         <xsl:apply-templates select="@*" mode="test"/>
          <xsl:apply-templates mode="validate"/>
       </xsl:copy>
    </xsl:template>
@@ -166,15 +165,18 @@
    
    <xsl:template mode="test" match="table/tr | tr/td | tr/th"/>
    
-   <xsl:template mode="test" match="a/@href | a/@title | img/@alt-text | img/@src (: other legal attributes :)"/>
+   <xsl:template mode="test" match="a/@href | a/@title | img/@alt | img/@src | img/@title | code/@class |
+      insert/@id-ref | insert/@type (: other legal attributes :)"/>
 
    <xsl:template mode="test" match="p/br | li/br | h1/br | h2/br | h3/br | h4/br | h5/br | h6/br | pre/br | tr/br | td/br"/>
    
    <!-- XXX cover all text in mixed content -->
    <xsl:template mode="test"
-      match="p/text() | li/text() | h1/text() | h2/text() | h3/text() | h4/text() | h5/text() | h6/text() | pre/text() | tr/text() | td/text()"/>
+      match="p/text() | li/text() | h1/text() | h2/text() | h3/text() | h4/text() | h5/text() | h6/text() |
+      pre/text() | blockquote/text() | th/text() | td/text()"/>
+   
    <xsl:template mode="test"
-      match="em/text() | i/text() | strong/text() | b/text() | u/text() | q/text() | code/text() | a/text()"/>
+      match="em/text() | i/text() | strong/text() | b/text() | u/text() | q/text() | code/text() | a/text() | sub/text() | sup/text()"/>
 
    <xsl:template match="text()" mode="test">
       <!-- report if not recognized -->
@@ -349,14 +351,12 @@
       </xsl:choose>
    </xsl:function>
 
-   <xsl:template name="check-markup-line-datatype">
-      <xsl:comment>clean me up</xsl:comment>
-      <!--<xsl:apply-templates mode="validate-markup-line"/>-->
-   </xsl:template>
 
-   <xsl:template name="check-markup-multiline-datatype">
-      <xsl:comment>clean me up</xsl:comment>
-   </xsl:template>
+   <!-- Null templates handle datatype checking for markup types -->
+   
+   <xsl:template name="check-markup-line-datatype"/>
+   
+   <xsl:template name="check-markup-multiline-datatype"/>
 
    <!-- stub to be replaced with results from produce-datatype-functions.xsl  -->
    <!--<xsl:function name="mx:datatype-validate" as="xs:boolean">

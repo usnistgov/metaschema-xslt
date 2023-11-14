@@ -3,7 +3,7 @@
 <x:description xmlns:mx="http://csrc.nist.gov/ns/csd/metaschema-xslt"
     xmlns:mv="http://csrc.nist.gov/ns/csd/metaschema-xslt" xmlns="http://example.com/ns/computer"
     xmlns:c="http://example.com/ns/computer" xmlns:x="http://www.jenitennison.com/xslt/xspec"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema" stylesheet="current/computer_inspector.xsl"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" stylesheet="../../current/computer_inspector.xsl"
     xslt-version="3.0">
 
    <!-- testing constraints expressed in computer_metaschema.xml -->
@@ -44,7 +44,10 @@
                </motherboard>
             </computer>
          </x:context>
-         <x:expect label="brings an error showing the empty string as '(empty)'">
+         <x:expect label="brings an error showing the empty string as '(empty)', along with a data type constraint error">
+            <mx:report cf="..." test="not(string(.) castable as xs:string and matches(.,'^\S(.*\S)?$'))"
+               class="VDSX violates-datatype-syntax" xpath="/computer/motherboard/type"
+               level="ERROR">Value <mx:code /> of element <mx:gi>type</mx:gi> does not conform to <mx:code>string</mx:code> datatype.</mx:report>
             <mx:report cf="..." test="not(.=('at','atx','mini-itx'))" class="{ $mx:ACVC-class }" matching="computer/motherboard/type"
                xpath="/computer/motherboard/type" level="WARNING">Value <mx:code/> (empty) does not appear among permissible (enumerated) values for this <mx:gi>type</mx:gi>: <mx:code>at|atx|mini-itx</mx:code>.</mx:report>
          </x:expect>
@@ -71,9 +74,13 @@
                </motherboard>
             </computer>
          </x:context>
-         <x:expect label="brings an error">
-            <mx:report cf="..." test="not(.=('at','atx','mini-itx'))" class="{ $mx:ACVC-class }" matching="computer/motherboard/type"
-               xpath="/computer/motherboard/type" level="WARNING">Value <mx:code>   custom   </mx:code> does not appear among permissible (enumerated) values for this <mx:gi>type</mx:gi>: <mx:code>at|atx|mini-itx</mx:code>.</mx:report>
+         <x:expect label="brings two errors">
+            <mx:report cf="..." test="not(string(.) castable as xs:string and matches(.,'^\S(.*\S)?$'))"
+               class="VDSX violates-datatype-syntax" xpath="/computer/motherboard/type"
+               level="ERROR">Value <mx:code>   custom   </mx:code> of element <mx:gi>type</mx:gi> does not conform to <mx:code>string</mx:code> datatype.</mx:report>
+            <mx:report cf="..." test="not(.=('at','atx','mini-itx'))"
+               class="AVCV value-not-allowed" xpath="/computer/motherboard/type"
+               level="WARNING" matching="computer/motherboard/type">Value <mx:code>   custom   </mx:code> does not appear among permissible (enumerated) values for this <mx:gi>type</mx:gi>: <mx:code>at|atx|mini-itx</mx:code>.</mx:report>
          </x:expect>
       </x:scenario>
       <x:scenario label="[A.5] A field with a value in compliance with its enumeration">
@@ -230,7 +237,11 @@
                </motherboard>
             </computer>
          </x:context>
-         <x:expect label="throws an error">
+         <x:expect label="throws an error along with the annoying datatype error">
+            <mx:report cf="..." test="not(string(.) castable as xs:string and matches(.,'^\S(.*\S)?$'))"
+               class="VDSX violates-datatype-syntax"
+               xpath="/computer/motherboard/cpu/speed"
+               level="ERROR">Value <mx:code /> of element <mx:gi>speed</mx:gi> does not conform to <mx:code>string</mx:code> datatype.</mx:report>
             <mx:report cf="..." test="not(matches(., '^\d+(?:\.\d+)?(?:MHz|GHz)$'))"
                class="MRCV regex-match-fail" xpath="/computer/motherboard/cpu/speed"
                level="ERROR" matching="motherboard/cpu/speed">
