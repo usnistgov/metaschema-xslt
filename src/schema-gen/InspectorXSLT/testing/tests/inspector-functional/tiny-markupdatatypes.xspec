@@ -43,7 +43,7 @@
 
     <x:scenario label="[A] Reports are made for all files given as invalid">
         <x:scenario label="[A.1] invalid1.xml is not even TINY data, so egregriously invalid, and">
-            <x:context href="../../invalid/invalid1.xml" mode="validate"/>
+            <x:context href="../../computer-invalid/invalid1.xml" mode="validate"/>
             <x:expect label="appears not to be valid" test="$x:result => $mx:makes-reports()"/>
         </x:scenario>
     </x:scenario>

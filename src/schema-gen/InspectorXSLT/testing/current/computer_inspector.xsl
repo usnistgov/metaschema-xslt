@@ -5,7 +5,7 @@
                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                version="3.0"
                xpath-default-namespace="http://example.com/ns/computer"
-               exclude-result-prefixes="#all"><!-- Generated 2023-11-14T17:23:18.0763342-05:00 -->
+               exclude-result-prefixes="#all"><!-- Generated 2023-11-15T17:57:53.8125053-05:00 -->
    <xsl:mode on-no-match="fail"/>
    <xsl:mode name="test" on-no-match="shallow-skip"/>
    <!-- .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     . -->
@@ -754,9 +754,9 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.352</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::product-name | preceding-sibling::cost | preceding-sibling::architecture | preceding-sibling::speed | preceding-sibling::prop | preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::product-name | preceding-sibling::cost | preceding-sibling::architecture | preceding-sibling::speed | preceding-sibling::prop | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists(preceding-sibling::product-name | preceding-sibling::cost | preceding-sibling::architecture | preceding-sibling::speed | preceding-sibling::prop | preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)"/>
+                         select="exists(preceding-sibling::product-name | preceding-sibling::cost | preceding-sibling::architecture | preceding-sibling::speed | preceding-sibling::prop | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)"/>
          <xsl:with-param name="msg">Element <mx:gi>vendor</mx:gi> is unexpected following <mx:gi>product-name</mx:gi>, <mx:gi>cost</mx:gi>, <mx:gi>architecture</mx:gi>, <mx:gi>speed</mx:gi>, <mx:gi>prop</mx:gi>, or <mx:gi>remarks</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-vendor-assembly"/>
@@ -774,9 +774,9 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.352</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists(preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)"/>
+                         select="exists(preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)"/>
          <xsl:with-param name="msg">Element <mx:gi>prop</mx:gi> is unexpected following <mx:gi>remarks</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-property-assembly"/>
@@ -794,9 +794,9 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.352</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::product-name | preceding-sibling::cost | preceding-sibling::type | preceding-sibling::prop | preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::product-name | preceding-sibling::cost | preceding-sibling::type | preceding-sibling::prop | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists(preceding-sibling::product-name | preceding-sibling::cost | preceding-sibling::type | preceding-sibling::prop | preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)"/>
+                         select="exists(preceding-sibling::product-name | preceding-sibling::cost | preceding-sibling::type | preceding-sibling::prop | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)"/>
          <xsl:with-param name="msg">Element <mx:gi>vendor</mx:gi> is unexpected following <mx:gi>product-name</mx:gi>, <mx:gi>cost</mx:gi>, <mx:gi>type</mx:gi>, <mx:gi>prop</mx:gi>, or <mx:gi>remarks</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-vendor-assembly"/>
@@ -814,9 +814,9 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.352</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists(preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)"/>
+                         select="exists(preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)"/>
          <xsl:with-param name="msg">Element <mx:gi>prop</mx:gi> is unexpected following <mx:gi>remarks</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-property-assembly"/>
@@ -834,9 +834,9 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.352</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::product-name | preceding-sibling::cost | preceding-sibling::byte-size | preceding-sibling::prop | preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::product-name | preceding-sibling::cost | preceding-sibling::byte-size | preceding-sibling::prop | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists(preceding-sibling::product-name | preceding-sibling::cost | preceding-sibling::byte-size | preceding-sibling::prop | preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)"/>
+                         select="exists(preceding-sibling::product-name | preceding-sibling::cost | preceding-sibling::byte-size | preceding-sibling::prop | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)"/>
          <xsl:with-param name="msg">Element <mx:gi>vendor</mx:gi> is unexpected following <mx:gi>product-name</mx:gi>, <mx:gi>cost</mx:gi>, <mx:gi>byte-size</mx:gi>, <mx:gi>prop</mx:gi>, or <mx:gi>remarks</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-vendor-assembly"/>
@@ -854,9 +854,9 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.352</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists(preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)"/>
+                         select="exists(preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)"/>
          <xsl:with-param name="msg">Element <mx:gi>prop</mx:gi> is unexpected following <mx:gi>remarks</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-property-assembly"/>
@@ -893,9 +893,9 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.352</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::product-name | preceding-sibling::cost | preceding-sibling::type | preceding-sibling::prop | preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::product-name | preceding-sibling::cost | preceding-sibling::type | preceding-sibling::prop | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists(preceding-sibling::product-name | preceding-sibling::cost | preceding-sibling::type | preceding-sibling::prop | preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)"/>
+                         select="exists(preceding-sibling::product-name | preceding-sibling::cost | preceding-sibling::type | preceding-sibling::prop | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)"/>
          <xsl:with-param name="msg">Element <mx:gi>vendor</mx:gi> is unexpected following <mx:gi>product-name</mx:gi>, <mx:gi>cost</mx:gi>, <mx:gi>type</mx:gi>, <mx:gi>prop</mx:gi>, or <mx:gi>remarks</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-vendor-assembly"/>
@@ -913,9 +913,9 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.352</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists(preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)"/>
+                         select="exists(preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)"/>
          <xsl:with-param name="msg">Element <mx:gi>prop</mx:gi> is unexpected following <mx:gi>remarks</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-property-assembly"/>
@@ -933,9 +933,9 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.352</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::product-name | preceding-sibling::cost | preceding-sibling::prop | preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::product-name | preceding-sibling::cost | preceding-sibling::prop | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists(preceding-sibling::product-name | preceding-sibling::cost | preceding-sibling::prop | preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)"/>
+                         select="exists(preceding-sibling::product-name | preceding-sibling::cost | preceding-sibling::prop | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)"/>
          <xsl:with-param name="msg">Element <mx:gi>vendor</mx:gi> is unexpected following <mx:gi>product-name</mx:gi>, <mx:gi>cost</mx:gi>, <mx:gi>prop</mx:gi>, or <mx:gi>remarks</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-vendor-assembly"/>
@@ -953,9 +953,9 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.352</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists(preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)"/>
+                         select="exists(preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)"/>
          <xsl:with-param name="msg">Element <mx:gi>prop</mx:gi> is unexpected following <mx:gi>remarks</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-property-assembly"/>
@@ -973,9 +973,9 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.352</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists(preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)"/>
+                         select="exists(preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)"/>
          <xsl:with-param name="msg">Element <mx:gi>prop</mx:gi> is unexpected following <mx:gi>remarks</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-property-assembly"/>
@@ -994,9 +994,9 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.352</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::usb-device | preceding-sibling::prop | preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::usb-device | preceding-sibling::prop | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists(preceding-sibling::usb-device | preceding-sibling::prop | preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)"/>
+                         select="exists(preceding-sibling::usb-device | preceding-sibling::prop | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)"/>
          <xsl:with-param name="msg">Element <mx:gi>motherboard</mx:gi> is unexpected following <mx:gi>usb-device</mx:gi>, <mx:gi>prop</mx:gi>, or <mx:gi>remarks</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-computer_..._motherboard-assembly"/>
@@ -1154,9 +1154,9 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.352</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::prop | preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::prop | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists(preceding-sibling::prop | preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)"/>
+                         select="exists(preceding-sibling::prop | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)"/>
          <xsl:with-param name="msg">Element <mx:gi>usb-device</mx:gi> is unexpected following <mx:gi>prop</mx:gi> or <mx:gi>remarks</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-computer_..._usb-device-assembly"/>
@@ -1224,9 +1224,9 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.352</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::cost | preceding-sibling::architecture | preceding-sibling::speed | preceding-sibling::prop | preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::cost | preceding-sibling::architecture | preceding-sibling::speed | preceding-sibling::prop | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists(preceding-sibling::cost | preceding-sibling::architecture | preceding-sibling::speed | preceding-sibling::prop | preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)"/>
+                         select="exists(preceding-sibling::cost | preceding-sibling::architecture | preceding-sibling::speed | preceding-sibling::prop | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)"/>
          <xsl:with-param name="msg">Element <mx:gi>product-name</mx:gi> is unexpected following <mx:gi>cost</mx:gi>, <mx:gi>architecture</mx:gi>, <mx:gi>speed</mx:gi>, <mx:gi>prop</mx:gi>, or <mx:gi>remarks</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-product-name-field"/>
@@ -1245,9 +1245,9 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.352</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::architecture | preceding-sibling::speed | preceding-sibling::prop | preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::architecture | preceding-sibling::speed | preceding-sibling::prop | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists(preceding-sibling::architecture | preceding-sibling::speed | preceding-sibling::prop | preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)"/>
+                         select="exists(preceding-sibling::architecture | preceding-sibling::speed | preceding-sibling::prop | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)"/>
          <xsl:with-param name="msg">Element <mx:gi>cost</mx:gi> is unexpected following <mx:gi>architecture</mx:gi>, <mx:gi>speed</mx:gi>, <mx:gi>prop</mx:gi>, or <mx:gi>remarks</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-cost-field"/>
@@ -1269,9 +1269,9 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.352</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::cost | preceding-sibling::type | preceding-sibling::prop | preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::cost | preceding-sibling::type | preceding-sibling::prop | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists(preceding-sibling::cost | preceding-sibling::type | preceding-sibling::prop | preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)"/>
+                         select="exists(preceding-sibling::cost | preceding-sibling::type | preceding-sibling::prop | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)"/>
          <xsl:with-param name="msg">Element <mx:gi>product-name</mx:gi> is unexpected following <mx:gi>cost</mx:gi>, <mx:gi>type</mx:gi>, <mx:gi>prop</mx:gi>, or <mx:gi>remarks</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-product-name-field"/>
@@ -1290,9 +1290,9 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.352</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::type | preceding-sibling::prop | preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::type | preceding-sibling::prop | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists(preceding-sibling::type | preceding-sibling::prop | preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)"/>
+                         select="exists(preceding-sibling::type | preceding-sibling::prop | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)"/>
          <xsl:with-param name="msg">Element <mx:gi>cost</mx:gi> is unexpected following <mx:gi>type</mx:gi>, <mx:gi>prop</mx:gi>, or <mx:gi>remarks</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-cost-field"/>
@@ -1312,9 +1312,9 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.352</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::cost | preceding-sibling::byte-size | preceding-sibling::prop | preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::cost | preceding-sibling::byte-size | preceding-sibling::prop | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists(preceding-sibling::cost | preceding-sibling::byte-size | preceding-sibling::prop | preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)"/>
+                         select="exists(preceding-sibling::cost | preceding-sibling::byte-size | preceding-sibling::prop | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)"/>
          <xsl:with-param name="msg">Element <mx:gi>product-name</mx:gi> is unexpected following <mx:gi>cost</mx:gi>, <mx:gi>byte-size</mx:gi>, <mx:gi>prop</mx:gi>, or <mx:gi>remarks</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-product-name-field"/>
@@ -1333,9 +1333,9 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.352</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::byte-size | preceding-sibling::prop | preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::byte-size | preceding-sibling::prop | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists(preceding-sibling::byte-size | preceding-sibling::prop | preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)"/>
+                         select="exists(preceding-sibling::byte-size | preceding-sibling::prop | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)"/>
          <xsl:with-param name="msg">Element <mx:gi>cost</mx:gi> is unexpected following <mx:gi>byte-size</mx:gi>, <mx:gi>prop</mx:gi>, or <mx:gi>remarks</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-cost-field"/>
@@ -1357,9 +1357,9 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.352</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::cost | preceding-sibling::type | preceding-sibling::prop | preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::cost | preceding-sibling::type | preceding-sibling::prop | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists(preceding-sibling::cost | preceding-sibling::type | preceding-sibling::prop | preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)"/>
+                         select="exists(preceding-sibling::cost | preceding-sibling::type | preceding-sibling::prop | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)"/>
          <xsl:with-param name="msg">Element <mx:gi>product-name</mx:gi> is unexpected following <mx:gi>cost</mx:gi>, <mx:gi>type</mx:gi>, <mx:gi>prop</mx:gi>, or <mx:gi>remarks</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-product-name-field"/>
@@ -1378,9 +1378,9 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.352</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::type | preceding-sibling::prop | preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::type | preceding-sibling::prop | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists(preceding-sibling::type | preceding-sibling::prop | preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)"/>
+                         select="exists(preceding-sibling::type | preceding-sibling::prop | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)"/>
          <xsl:with-param name="msg">Element <mx:gi>cost</mx:gi> is unexpected following <mx:gi>type</mx:gi>, <mx:gi>prop</mx:gi>, or <mx:gi>remarks</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-cost-field"/>
@@ -1400,9 +1400,9 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.352</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::cost | preceding-sibling::prop | preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::cost | preceding-sibling::prop | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists(preceding-sibling::cost | preceding-sibling::prop | preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)"/>
+                         select="exists(preceding-sibling::cost | preceding-sibling::prop | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)"/>
          <xsl:with-param name="msg">Element <mx:gi>product-name</mx:gi> is unexpected following <mx:gi>cost</mx:gi>, <mx:gi>prop</mx:gi>, or <mx:gi>remarks</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-product-name-field"/>
@@ -1421,9 +1421,9 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.352</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::prop | preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::prop | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists(preceding-sibling::prop | preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)"/>
+                         select="exists(preceding-sibling::prop | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)"/>
          <xsl:with-param name="msg">Element <mx:gi>cost</mx:gi> is unexpected following <mx:gi>prop</mx:gi> or <mx:gi>remarks</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-cost-field"/>
@@ -1521,9 +1521,9 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.352</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::motherboard | preceding-sibling::usb-device | preceding-sibling::prop | preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::motherboard | preceding-sibling::usb-device | preceding-sibling::prop | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists(preceding-sibling::motherboard | preceding-sibling::usb-device | preceding-sibling::prop | preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)"/>
+                         select="exists(preceding-sibling::motherboard | preceding-sibling::usb-device | preceding-sibling::prop | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)"/>
          <xsl:with-param name="msg">Element <mx:gi>build-date</mx:gi> is unexpected following <mx:gi>motherboard</mx:gi>, <mx:gi>usb-device</mx:gi>, <mx:gi>prop</mx:gi>, or <mx:gi>remarks</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-computer_..._build-date-field"/>
@@ -1594,9 +1594,9 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.352</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::speed | preceding-sibling::prop | preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::speed | preceding-sibling::prop | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists(preceding-sibling::speed | preceding-sibling::prop | preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)"/>
+                         select="exists(preceding-sibling::speed | preceding-sibling::prop | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)"/>
          <xsl:with-param name="msg">Element <mx:gi>architecture</mx:gi> is unexpected following <mx:gi>speed</mx:gi>, <mx:gi>prop</mx:gi>, or <mx:gi>remarks</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-computer_..._motherboard_..._cpu_..._architecture-field"/>
@@ -1630,9 +1630,9 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.352</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::prop | preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::prop | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists(preceding-sibling::prop | preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)"/>
+                         select="exists(preceding-sibling::prop | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)"/>
          <xsl:with-param name="msg">Element <mx:gi>speed</mx:gi> is unexpected following <mx:gi>prop</mx:gi> or <mx:gi>remarks</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-computer_..._motherboard_..._cpu_..._speed-field"/>
@@ -1666,9 +1666,9 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.352</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::prop | preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::prop | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists(preceding-sibling::prop | preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)"/>
+                         select="exists(preceding-sibling::prop | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)"/>
          <xsl:with-param name="msg">Element <mx:gi>type</mx:gi> is unexpected following <mx:gi>prop</mx:gi> or <mx:gi>remarks</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-computer_..._motherboard_..._ata-socket_..._type-field"/>
@@ -1702,9 +1702,9 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.352</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::prop | preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::prop | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists(preceding-sibling::prop | preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)"/>
+                         select="exists(preceding-sibling::prop | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)"/>
          <xsl:with-param name="msg">Element <mx:gi>byte-size</mx:gi> is unexpected following <mx:gi>prop</mx:gi> or <mx:gi>remarks</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-computer_..._motherboard_..._memory_..._byte-size-field"/>
@@ -1723,9 +1723,9 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.352</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::prop | preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)</xsl:with-param>
+         <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::prop | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists(preceding-sibling::prop | preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::blockquote | preceding-sibling::img)"/>
+                         select="exists(preceding-sibling::prop | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)"/>
          <xsl:with-param name="msg">Element <mx:gi>type</mx:gi> is unexpected following <mx:gi>prop</mx:gi> or <mx:gi>remarks</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-computer_..._motherboard_..._expansion-card_..._type-field"/>
@@ -2364,61 +2364,65 @@ details p { margin: 0.2em 0em }
       </xsl:call-template>
    </xsl:template>
    <xsl:template mode="test"
-                 match="motherboard/cpu/p|motherboard/cpu/ul|motherboard/cpu/ol|motherboard/cpu/table|motherboard/cpu/pre|motherboard/cpu/h1|motherboard/cpu/h2|motherboard/cpu/h3|motherboard/cpu/h4|motherboard/cpu/h5|motherboard/cpu/h6|motherboard/cpu/blockquote|motherboard/cpu/img"/>
+                 match="motherboard/cpu/h1|motherboard/cpu/h2|motherboard/cpu/h3|motherboard/cpu/h4|motherboard/cpu/h5|motherboard/cpu/h6|motherboard/cpu/table|motherboard/cpu/img|motherboard/cpu/pre|motherboard/cpu/hr|motherboard/cpu/blockquote|motherboard/cpu/ul|motherboard/cpu/ol|motherboard/cpu/p"/>
    <xsl:template mode="test"
-                 match="motherboard/ata-socket/p|motherboard/ata-socket/ul|motherboard/ata-socket/ol|motherboard/ata-socket/table|motherboard/ata-socket/pre|motherboard/ata-socket/h1|motherboard/ata-socket/h2|motherboard/ata-socket/h3|motherboard/ata-socket/h4|motherboard/ata-socket/h5|motherboard/ata-socket/h6|motherboard/ata-socket/blockquote|motherboard/ata-socket/img"/>
+                 match="motherboard/ata-socket/h1|motherboard/ata-socket/h2|motherboard/ata-socket/h3|motherboard/ata-socket/h4|motherboard/ata-socket/h5|motherboard/ata-socket/h6|motherboard/ata-socket/table|motherboard/ata-socket/img|motherboard/ata-socket/pre|motherboard/ata-socket/hr|motherboard/ata-socket/blockquote|motherboard/ata-socket/ul|motherboard/ata-socket/ol|motherboard/ata-socket/p"/>
    <xsl:template mode="test"
-                 match="motherboard/memory/p|motherboard/memory/ul|motherboard/memory/ol|motherboard/memory/table|motherboard/memory/pre|motherboard/memory/h1|motherboard/memory/h2|motherboard/memory/h3|motherboard/memory/h4|motherboard/memory/h5|motherboard/memory/h6|motherboard/memory/blockquote|motherboard/memory/img"/>
+                 match="motherboard/memory/h1|motherboard/memory/h2|motherboard/memory/h3|motherboard/memory/h4|motherboard/memory/h5|motherboard/memory/h6|motherboard/memory/table|motherboard/memory/img|motherboard/memory/pre|motherboard/memory/hr|motherboard/memory/blockquote|motherboard/memory/ul|motherboard/memory/ol|motherboard/memory/p"/>
    <xsl:template mode="test"
-                 match="motherboard/expansion-card/p|motherboard/expansion-card/ul|motherboard/expansion-card/ol|motherboard/expansion-card/table|motherboard/expansion-card/pre|motherboard/expansion-card/h1|motherboard/expansion-card/h2|motherboard/expansion-card/h3|motherboard/expansion-card/h4|motherboard/expansion-card/h5|motherboard/expansion-card/h6|motherboard/expansion-card/blockquote|motherboard/expansion-card/img"/>
+                 match="motherboard/expansion-card/h1|motherboard/expansion-card/h2|motherboard/expansion-card/h3|motherboard/expansion-card/h4|motherboard/expansion-card/h5|motherboard/expansion-card/h6|motherboard/expansion-card/table|motherboard/expansion-card/img|motherboard/expansion-card/pre|motherboard/expansion-card/hr|motherboard/expansion-card/blockquote|motherboard/expansion-card/ul|motherboard/expansion-card/ol|motherboard/expansion-card/p"/>
    <xsl:template mode="test"
-                 match="computer/usb-device/p|computer/usb-device/ul|computer/usb-device/ol|computer/usb-device/table|computer/usb-device/pre|computer/usb-device/h1|computer/usb-device/h2|computer/usb-device/h3|computer/usb-device/h4|computer/usb-device/h5|computer/usb-device/h6|computer/usb-device/blockquote|computer/usb-device/img"/>
+                 match="computer/usb-device/h1|computer/usb-device/h2|computer/usb-device/h3|computer/usb-device/h4|computer/usb-device/h5|computer/usb-device/h6|computer/usb-device/table|computer/usb-device/img|computer/usb-device/pre|computer/usb-device/hr|computer/usb-device/blockquote|computer/usb-device/ul|computer/usb-device/ol|computer/usb-device/p"/>
    <xsl:template mode="test"
-                 match="computer/p|computer/ul|computer/ol|computer/table|computer/pre|computer/h1|computer/h2|computer/h3|computer/h4|computer/h5|computer/h6|computer/blockquote|computer/img"/>
+                 match="computer/h1|computer/h2|computer/h3|computer/h4|computer/h5|computer/h6|computer/table|computer/img|computer/pre|computer/hr|computer/blockquote|computer/ul|computer/ol|computer/p"/>
    <xsl:template mode="test"
-                 match="prop/remarks/p|prop/remarks/ul|prop/remarks/ol|prop/remarks/table|prop/remarks/pre|prop/remarks/h1|prop/remarks/h2|prop/remarks/h3|prop/remarks/h4|prop/remarks/h5|prop/remarks/h6|prop/remarks/blockquote|prop/remarks/img"/>
+                 match="prop/remarks/h1|prop/remarks/h2|prop/remarks/h3|prop/remarks/h4|prop/remarks/h5|prop/remarks/h6|prop/remarks/table|prop/remarks/img|prop/remarks/pre|prop/remarks/hr|prop/remarks/blockquote|prop/remarks/ul|prop/remarks/ol|prop/remarks/p"/>
    <xsl:template mode="test"
-                 match="p/em|ul/em|ol/em|table/em|pre/em|h1/em|h2/em|h3/em|h4/em|h5/em|h6/em|blockquote/em|img/em"/>
+                 match="h1/a|h2/a|h3/a|h4/a|h5/a|h6/a|table/a|pre/a|blockquote/a|ul/a|ol/a|p/a"/>
    <xsl:template mode="test"
-                 match="em/em|i/em|strong/em|b/em|insert/em|a/em|q/em|code/em|sup/em|sub/em|img/em"/>
+                 match="a/a|insert/a|code/a|em/a|i/a|b/a|strong/a|sub/a|sup/a|q/a"/>
    <xsl:template mode="test"
-                 match="p/i|ul/i|ol/i|table/i|pre/i|h1/i|h2/i|h3/i|h4/i|h5/i|h6/i|blockquote/i|img/i"/>
+                 match="h1/insert|h2/insert|h3/insert|h4/insert|h5/insert|h6/insert|table/insert|pre/insert|blockquote/insert|ul/insert|ol/insert|p/insert"/>
    <xsl:template mode="test"
-                 match="em/i|i/i|strong/i|b/i|insert/i|a/i|q/i|code/i|sup/i|sub/i|img/i"/>
+                 match="a/insert|insert/insert|code/insert|em/insert|i/insert|b/insert|strong/insert|sub/insert|sup/insert|q/insert"/>
    <xsl:template mode="test"
-                 match="p/strong|ul/strong|ol/strong|table/strong|pre/strong|h1/strong|h2/strong|h3/strong|h4/strong|h5/strong|h6/strong|blockquote/strong|img/strong"/>
+                 match="h1/br|h2/br|h3/br|h4/br|h5/br|h6/br|table/br|pre/br|blockquote/br|ul/br|ol/br|p/br"/>
    <xsl:template mode="test"
-                 match="em/strong|i/strong|strong/strong|b/strong|insert/strong|a/strong|q/strong|code/strong|sup/strong|sub/strong|img/strong"/>
+                 match="a/br|insert/br|code/br|em/br|i/br|b/br|strong/br|sub/br|sup/br|q/br"/>
    <xsl:template mode="test"
-                 match="p/b|ul/b|ol/b|table/b|pre/b|h1/b|h2/b|h3/b|h4/b|h5/b|h6/b|blockquote/b|img/b"/>
+                 match="h1/code|h2/code|h3/code|h4/code|h5/code|h6/code|table/code|pre/code|blockquote/code|ul/code|ol/code|p/code"/>
    <xsl:template mode="test"
-                 match="em/b|i/b|strong/b|b/b|insert/b|a/b|q/b|code/b|sup/b|sub/b|img/b"/>
+                 match="a/code|insert/code|code/code|em/code|i/code|b/code|strong/code|sub/code|sup/code|q/code"/>
    <xsl:template mode="test"
-                 match="p/insert|ul/insert|ol/insert|table/insert|pre/insert|h1/insert|h2/insert|h3/insert|h4/insert|h5/insert|h6/insert|blockquote/insert|img/insert"/>
+                 match="h1/em|h2/em|h3/em|h4/em|h5/em|h6/em|table/em|pre/em|blockquote/em|ul/em|ol/em|p/em"/>
    <xsl:template mode="test"
-                 match="em/insert|i/insert|strong/insert|b/insert|insert/insert|a/insert|q/insert|code/insert|sup/insert|sub/insert|img/insert"/>
+                 match="a/em|insert/em|code/em|em/em|i/em|b/em|strong/em|sub/em|sup/em|q/em"/>
    <xsl:template mode="test"
-                 match="p/a|ul/a|ol/a|table/a|pre/a|h1/a|h2/a|h3/a|h4/a|h5/a|h6/a|blockquote/a|img/a"/>
+                 match="h1/i|h2/i|h3/i|h4/i|h5/i|h6/i|table/i|pre/i|blockquote/i|ul/i|ol/i|p/i"/>
    <xsl:template mode="test"
-                 match="em/a|i/a|strong/a|b/a|insert/a|a/a|q/a|code/a|sup/a|sub/a|img/a"/>
+                 match="a/i|insert/i|code/i|em/i|i/i|b/i|strong/i|sub/i|sup/i|q/i"/>
    <xsl:template mode="test"
-                 match="p/q|ul/q|ol/q|table/q|pre/q|h1/q|h2/q|h3/q|h4/q|h5/q|h6/q|blockquote/q|img/q"/>
+                 match="h1/b|h2/b|h3/b|h4/b|h5/b|h6/b|table/b|pre/b|blockquote/b|ul/b|ol/b|p/b"/>
    <xsl:template mode="test"
-                 match="em/q|i/q|strong/q|b/q|insert/q|a/q|q/q|code/q|sup/q|sub/q|img/q"/>
+                 match="a/b|insert/b|code/b|em/b|i/b|b/b|strong/b|sub/b|sup/b|q/b"/>
    <xsl:template mode="test"
-                 match="p/code|ul/code|ol/code|table/code|pre/code|h1/code|h2/code|h3/code|h4/code|h5/code|h6/code|blockquote/code|img/code"/>
+                 match="h1/strong|h2/strong|h3/strong|h4/strong|h5/strong|h6/strong|table/strong|pre/strong|blockquote/strong|ul/strong|ol/strong|p/strong"/>
    <xsl:template mode="test"
-                 match="em/code|i/code|strong/code|b/code|insert/code|a/code|q/code|code/code|sup/code|sub/code|img/code"/>
+                 match="a/strong|insert/strong|code/strong|em/strong|i/strong|b/strong|strong/strong|sub/strong|sup/strong|q/strong"/>
    <xsl:template mode="test"
-                 match="p/sup|ul/sup|ol/sup|table/sup|pre/sup|h1/sup|h2/sup|h3/sup|h4/sup|h5/sup|h6/sup|blockquote/sup|img/sup"/>
+                 match="h1/sub|h2/sub|h3/sub|h4/sub|h5/sub|h6/sub|table/sub|pre/sub|blockquote/sub|ul/sub|ol/sub|p/sub"/>
    <xsl:template mode="test"
-                 match="em/sup|i/sup|strong/sup|b/sup|insert/sup|a/sup|q/sup|code/sup|sup/sup|sub/sup|img/sup"/>
+                 match="a/sub|insert/sub|code/sub|em/sub|i/sub|b/sub|strong/sub|sub/sub|sup/sub|q/sub"/>
    <xsl:template mode="test"
-                 match="p/sub|ul/sub|ol/sub|table/sub|pre/sub|h1/sub|h2/sub|h3/sub|h4/sub|h5/sub|h6/sub|blockquote/sub|img/sub"/>
+                 match="h1/sup|h2/sup|h3/sup|h4/sup|h5/sup|h6/sup|table/sup|pre/sup|blockquote/sup|ul/sup|ol/sup|p/sup"/>
    <xsl:template mode="test"
-                 match="em/sub|i/sub|strong/sub|b/sub|insert/sub|a/sub|q/sub|code/sub|sup/sub|sub/sub|img/sub"/>
+                 match="a/sup|insert/sup|code/sup|em/sup|i/sup|b/sup|strong/sup|sub/sup|sup/sup|q/sup"/>
    <xsl:template mode="test"
-                 match="p/img|ul/img|ol/img|table/img|pre/img|h1/img|h2/img|h3/img|h4/img|h5/img|h6/img|blockquote/img|img/img"/>
+                 match="h1/q|h2/q|h3/q|h4/q|h5/q|h6/q|table/q|pre/q|blockquote/q|ul/q|ol/q|p/q"/>
    <xsl:template mode="test"
-                 match="em/img|i/img|strong/img|b/img|insert/img|a/img|q/img|code/img|sup/img|sub/img|img/img"/>
+                 match="a/q|insert/q|code/q|em/q|i/q|b/q|strong/q|sub/q|sup/q|q/q"/>
+   <xsl:template mode="test"
+                 match="h1/img|h2/img|h3/img|h4/img|h5/img|h6/img|table/img|pre/img|blockquote/img|ul/img|ol/img|p/img"/>
+   <xsl:template mode="test"
+                 match="a/img|insert/img|code/img|em/img|i/img|b/img|strong/img|sub/img|sup/img|q/img"/>
 </xsl:transform>
