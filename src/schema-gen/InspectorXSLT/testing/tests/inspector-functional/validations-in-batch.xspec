@@ -25,62 +25,62 @@
 
     <x:scenario label="[A] Reports are made for all files given as invalid">
         <x:scenario label="[A.1] invalid1.xml">
-            <x:context href="../../invalid/invalid1.xml" mode="validate"/>
+            <x:context href="../../computer-invalid/invalid1.xml" mode="validate"/>
             <x:expect label="appears not to be valid" test="$x:result => $mx:makes-reports()"/>
         </x:scenario>
         <x:scenario label="[A.2] invalid2.xml">
-            <x:context href="../../invalid/invalid2.xml" mode="validate"/>
+            <x:context href="../../computer-invalid/invalid2.xml" mode="validate"/>
             <x:expect label="appears not to be valid" test="$x:result => $mx:makes-reports()"/>
         </x:scenario>
         <x:scenario label="[A.3] invalid3.xml">
-            <x:context href="../../invalid/invalid3.xml" mode="validate"/>
+            <x:context href="../../computer-invalid/invalid3.xml" mode="validate"/>
             <x:expect label="appears not to be valid" test="$x:result => $mx:makes-reports()"/>
         </x:scenario>
         <x:scenario label="[A.4] invalid4.xml">
-            <x:context href="../../invalid/invalid4.xml" mode="validate"/>
+            <x:context href="../../computer-invalid/invalid4.xml" mode="validate"/>
             <x:expect label="appears not to be valid" test="$x:result => $mx:makes-reports()"/>
         </x:scenario>
         <x:scenario label="[A.5] invalid5.xml">
-            <x:context href="../../invalid/invalid5.xml" mode="validate"/>
+            <x:context href="../../computer-invalid/invalid5.xml" mode="validate"/>
             <x:expect label="appears not to be valid" test="$x:result => $mx:makes-reports()"/>
         </x:scenario>
         <x:scenario label="[A.6] invalid6.xml">
-            <x:context href="../../invalid/invalid6.xml" mode="validate"/>
+            <x:context href="../../computer-invalid/invalid6.xml" mode="validate"/>
             <x:expect label="appears not to be valid" test="$x:result => $mx:makes-reports()"/>
         </x:scenario>
         <x:scenario label="[A.7] invalid7.xml">
-            <x:context href="../../invalid/invalid7.xml" mode="validate"/>
+            <x:context href="../../computer-invalid/invalid7.xml" mode="validate"/>
             <x:expect label="appears not to be valid" test="$x:result => $mx:makes-reports()"/>
         </x:scenario>
         <x:scenario label="[A.8] invalid8.xml">
-            <x:context href="../../invalid/invalid8.xml" mode="validate"/>
+            <x:context href="../../computer-invalid/invalid8.xml" mode="validate"/>
             <x:expect label="appears not to be valid" test="$x:result => $mx:makes-reports()"/>
         </x:scenario>
         <x:scenario label="[A.9] invalid9.xml">
-            <x:context href="../../invalid/invalid9.xml" mode="validate"/>
+            <x:context href="../../computer-invalid/invalid9.xml" mode="validate"/>
             <x:expect label="appears not to be valid" test="$x:result => $mx:makes-reports()"/>
         </x:scenario>
         <x:scenario label="[A.10] invalid10.xml">
-            <x:context href="../../invalid/invalid10.xml" mode="validate"/>
+            <x:context href="../../computer-invalid/invalid10.xml" mode="validate"/>
             <x:expect label="appears not to be valid" test="$x:result => $mx:makes-reports()"/>
         </x:scenario>
     </x:scenario>
 
     <x:scenario label="[B] No reports are made for any files given as valid">
         <x:scenario label="[B.1] valid1.xml">
-            <x:context href="../../valid/valid1.xml" select="/*" mode="validate"/>
+            <x:context href="../../computer-valid/valid1.xml" select="/*" mode="validate"/>
             <x:expect label="appears to be valid" test="$x:result => $mx:makes-reports() => not()"/>
         </x:scenario>
         <x:scenario label="[B.2] valid2.xml">
-            <x:context href="../../valid/valid2.xml" select="/*" mode="validate"/>
+            <x:context href="../../computer-valid/valid2.xml" select="/*" mode="validate"/>
             <x:expect label="appears to be valid" test="$x:result => $mx:makes-reports() => not()"/>
         </x:scenario>
         <x:scenario label="[B.3] valid3.xml">
-            <x:context href="../../valid/valid3.xml" select="/*" mode="validate"/>
+            <x:context href="../../computer-valid/valid3.xml" select="/*" mode="validate"/>
             <x:expect label="appears to be valid" test="$x:result => $mx:makes-reports() => not()"/>
         </x:scenario>
         <x:scenario label="[B.4] valid4.xml">
-            <x:context href="../../valid/valid4.xml" select="/*" mode="validate"/>
+            <x:context href="../../computer-valid/valid4.xml" select="/*" mode="validate"/>
             <x:expect label="appears to be valid" test="$x:result => $mx:makes-reports() => not()"/>
         </x:scenario>
     </x:scenario>

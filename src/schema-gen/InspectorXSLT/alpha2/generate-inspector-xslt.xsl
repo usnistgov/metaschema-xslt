@@ -21,7 +21,31 @@
    </xsl:variable>
    
    <xsl:variable name="type-definitions" select="document($atomictype-modules)"/>
+
+   <!-- XSD definitions for the markup multiline types are here:
+
+../../../../support/metaschema/schema/xml/metaschema-markup-multiline.xsd
+../../../../support/metaschema/schema/xml/metaschema-markup-line.xsd
+
+This XSLT needs to know of two categories:
+  top-level markup-multiline i.e. headers and paragraphs
+  inline markup-line i.e. inline elements permitted inside p-level elements
+  
+  intermediate and special cases such as ul, ol and table have handling in generator-boilerplate.xsl
+  
+-->
    
+   <!-- markup multiline elements are
+      //xs:element/@name => string-join(' ') from ../../../../support/metaschema/schema/xml/metaschema-markup-multiline.xsd
+      h1 h2 h3 h4 h5 h6 p table img pre hr blockquote li ul ol p tr td th
+      minus elements not permitted at the top, namely li, tr, td, th -->
+   
+   <xsl:variable name="markup-multiline-elements" select="'h1 h2 h3 h4 h5 h6 table img pre hr blockquote ul ol p' ! tokenize(.,' ')"/>
+   
+   <!-- //xs:element/@name => string-join(' ') from ../../../../support/metaschema/schema/xml/metaschema-prose-base.xsd -->
+   <xsl:variable name="markup-inline-elements"
+      select="'a insert br code em i b strong sub sup q img' ! tokenize(.,' ')"/>
+
    <xsl:variable name="xsd-ns-prefix" as="xs:string">xs:</xsl:variable>
    <!-- because we cannot assume a schema aware processor we look for a literal prefix for native XSD types -->
    
@@ -143,7 +167,7 @@
          <xsl:for-each-group
             select="/descendant::model//*[mx:is-markup-multiline(.)][@in-xml='UNWRAPPED']" group-by="mx:match-name-with-parent(ancestor::model[1]/parent::*)">
 <!-- matching elements containing unwrapped markup-multiline where it appears - there should only be one          -->
-            <xsl:variable name="matches" select="$markup-multiline-paragraph-level-elements ! ( current-grouping-key() || '/' || .) => string-join('|')"/>
+            <xsl:variable name="matches" select="$markup-multiline-elements ! ( current-grouping-key() || '/' || .) => string-join('|')"/>
             <XSLT:template mode="test" match="{$matches }">
                <xsl:call-template name="test-order"/>
             </XSLT:template>
@@ -153,7 +177,7 @@
          
          <xsl:for-each-group
             select="/descendant::model//*[mx:is-markup-multiline(.)][not(@in-xml='UNWRAPPED')]" group-by="mx:match-name-with-parent(.)">            
-            <xsl:variable name="matches" select="$markup-multiline-paragraph-level-elements ! ( current-grouping-key() || '/' || .) => string-join('|')"/>
+            <xsl:variable name="matches" select="$markup-multiline-elements ! ( current-grouping-key() || '/' || .) => string-join('|')"/>
             <XSLT:template mode="test" match="{$matches }">
                <xsl:call-template name="test-order"/>
             </XSLT:template>
@@ -171,8 +195,9 @@
          <xsl:iterate select="$markup-inline-elements">
             <xsl:variable name="e" select="."/>
             <xsl:variable name="pattern-splice" as="function(*)" select="function($p as xs:string, $e as xs:string) as xs:string { $p || '/' || $e }"/>
-            <XSLT:template mode="test" match="{ $markup-multiline-paragraph-level-elements ! $pattern-splice( .,$e) => string-join('|') }"/>
-            <XSLT:template mode="test" match="{ $markup-inline-elements ! $pattern-splice( .,$e) => string-join('|') }"/>
+            <xsl:variable name="empties" select="'img','hr','br'"/>
+            <XSLT:template mode="test" match="{ $markup-multiline-elements[not(.=$empties)] ! $pattern-splice( .,$e) => string-join('|') }"/>
+            <XSLT:template mode="test" match="{ $markup-inline-elements[not(.=$empties)] ! $pattern-splice( .,$e) => string-join('|') }"/>
          </xsl:iterate>
          
       </XSLT:transform>
@@ -357,7 +382,7 @@
       <xsl:param name="expected-followers" select="
             (following-sibling::field | following-sibling::assembly |
             following-sibling::define-field | following-sibling::define-assembly | following-sibling::choice/child::*) except (parent::choice/*)"/>
-      <xsl:variable name="okay-followers" as="xs:string*" select="$expected-followers[not(@in-xml='UNWRAPPED')]/mx:select-name(.), $markup-multiline-paragraph-level-elements[$expected-followers/@in-xml='UNWRAPPED']"/>
+      <xsl:variable name="okay-followers" as="xs:string*" select="$expected-followers[not(@in-xml='UNWRAPPED')]/mx:select-name(.), $markup-multiline-elements[$expected-followers/@in-xml='UNWRAPPED']"/>
       <xsl:if test="exists($okay-followers)" expand-text="true">
          <xsl:variable name="interlopers" select="$okay-followers ! ('preceding-sibling::' || .) => string-join(' | ')"/>
          <xsl:variable name="test" as="xs:string">exists({$interlopers})</xsl:variable>
@@ -466,11 +491,6 @@
          </XSLT:template>
       </xsl:if>-->
    </xsl:template>
-
-   <xsl:variable name="markup-multiline-paragraph-level-elements" select="'p ul ol table pre h1 h2 h3 h4 h5 h6 blockquote img' ! tokenize(.,' ')"/>
-   
-   <xsl:variable name="markup-inline-elements"
-      select="'em i strong b insert a q code sup sub img' ! tokenize(.,' ')"/>
    
    <!--<xsl:template mode="require-for" match="define-field" expand-text="true">
       <!-\- intercept markup descendants of these fields -\->
