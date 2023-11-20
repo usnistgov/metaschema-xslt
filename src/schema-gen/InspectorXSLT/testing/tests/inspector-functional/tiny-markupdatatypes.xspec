@@ -26,11 +26,11 @@
          - remove old generator support for markup-line and markup-multiline (comment out)
        - extend generator with new logic addressing markup datatypes
          - consult schema for completeness
-       - make new Generator A2 work on Tiny (build tests)
+       x make new Generator A2 work on Tiny (build tests)
          - including bigbadtiny.xml
-         - get crazy
+         o get crazy
          - capture cases as tests
-       - make work on Computer Model (run all tests)
+       x make work on Computer Model (run all tests)
        - defenestrate clutter and comments, reorganize generator
        - stress test both
          - give Tiny two roots! (and try removing / from paths to root)

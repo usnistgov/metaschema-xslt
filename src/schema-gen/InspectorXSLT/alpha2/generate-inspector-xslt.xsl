@@ -105,7 +105,7 @@ This XSLT needs to know of two categories:
             select="(/*/*/root-name/parent::define-assembly | //model//define-assembly | //model//define-field | //assembly | //field)[not(@in-xml = 'UNWRAPPED')]/mx:use-name(.) => distinct-values()"/>
          <XSLT:template mode="test" match="{ $known-elements => string-join(' | ') }">
             <XSLT:call-template name="notice">
-               <XSLT:with-param name="cf" as="xs:string">gix.81</XSLT:with-param>
+               <XSLT:with-param name="cf" as="xs:string">gix.108</XSLT:with-param>
                <XSLT:with-param name="class">EOOP element-out-of-place</XSLT:with-param>
                <XSLT:with-param name="msg" expand-text="true">Element <mx:gi>{ name() }</mx:gi> is not permitted here.</XSLT:with-param>
             </XSLT:call-template>
@@ -114,7 +114,7 @@ This XSLT needs to know of two categories:
             select="((//flag | //define-assembly/define-flag | define-field/define-flag)/mx:use-name(.) => distinct-values()) ! ('@' || .)"/>
          <XSLT:template mode="test" match="{ $known-attributes => string-join(' | ') }">
             <XSLT:call-template name="notice">
-               <XSLT:with-param name="cf" as="xs:string">gix.90</XSLT:with-param>
+               <XSLT:with-param name="cf" as="xs:string">gix.117</XSLT:with-param>
                <XSLT:with-param name="class">AOOP attribute-out-of-place</XSLT:with-param>
                <XSLT:with-param name="msg" expand-text="true">Attribute <mx:gi>@{ name() }</mx:gi> is not permitted here.</XSLT:with-param>
             </XSLT:call-template>
@@ -145,7 +145,7 @@ This XSLT needs to know of two categories:
                   </xsl:apply-templates>
                </xsl:variable>
                <XSLT:call-template name="notice">
-                  <XSLT:with-param name="cf" as="xs:string">gix.121</XSLT:with-param>
+                  <XSLT:with-param name="cf" as="xs:string">gix.148</XSLT:with-param>
                   <XSLT:with-param name="rule-id" as="xs:string*" select="$rule-id"/>
                   <XSLT:with-param name="matching" as="xs:string" select="($matching[matches(.,'\S')],'*')[1]"/>
                   <XSLT:with-param name="class" as="xs:string" expand-text="true">{{ $class }}</XSLT:with-param>
@@ -333,7 +333,7 @@ This XSLT needs to know of two categories:
          <xsl:variable name="test" as="xs:string">empty(following-sibling::{$using-name}) and (count(. | preceding-sibling::{$using-name}) lt {$min})</xsl:variable>
          <!--empty(following-sibling::fan) and (count(. | preceding-sibling::fan) lt 2)-->
          <XSLT:call-template name="notice">
-            <XSLT:with-param name="cf">gix.298</XSLT:with-param>
+            <XSLT:with-param name="cf">gix.336</XSLT:with-param>
             <XSLT:with-param name="class">EATI element-appears-too-infrequently</XSLT:with-param>
             <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
             <XSLT:with-param name="condition" select="{$test}"/>
@@ -344,7 +344,7 @@ This XSLT needs to know of two categories:
          <xsl:variable name="max" select="(@max-occurs ! number(), 1)[1]"/>
          <xsl:variable name="test" as="xs:string">count(. | preceding-sibling::{$using-name}) gt {$max}</xsl:variable>
          <XSLT:call-template name="notice">
-            <XSLT:with-param name="cf">gix.309</XSLT:with-param>
+            <XSLT:with-param name="cf">gix.347</XSLT:with-param>
             <XSLT:with-param name="class">EATO element-appears-too-often</XSLT:with-param>
             <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
             <XSLT:with-param name="condition" select="{$test}"/>
@@ -359,7 +359,7 @@ This XSLT needs to know of two categories:
          <xsl:variable name="test" as="xs:string">empty(preceding-sibling::{$using-name}) and exists(../({
             ($alternatives ! mx:use-name(.)) => string-join(' | ') }))</xsl:variable>
          <XSLT:call-template name="notice">
-            <XSLT:with-param name="cf">gix.324</XSLT:with-param>
+            <XSLT:with-param name="cf">gix.362</XSLT:with-param>
             <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
             <XSLT:with-param name="condition" select="{$test}"/>
             <XSLT:with-param name="class">VEXC violates-exclusive-choice</XSLT:with-param>
@@ -387,7 +387,7 @@ This XSLT needs to know of two categories:
          <xsl:variable name="interlopers" select="$okay-followers ! ('preceding-sibling::' || .) => string-join(' | ')"/>
          <xsl:variable name="test" as="xs:string">exists({$interlopers})</xsl:variable>
          <XSLT:call-template name="notice">
-            <XSLT:with-param name="cf">gix.352</XSLT:with-param>
+            <XSLT:with-param name="cf">gix.390</XSLT:with-param>
             <XSLT:with-param name="class">EOOO element-out-of-order</XSLT:with-param>
             <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
             <XSLT:with-param name="condition" select="{$test}"/>
@@ -421,21 +421,9 @@ This XSLT needs to know of two categories:
       <!--<xsl:variable name="has-unwrapped-markup-multiline" as="xs:boolean"
          select="exists((model/field | model/define-field | model/choice/field | model/choice/define-field)[@as-type = 'markup-multiline'][@in-xml = 'UNWRAPPED'])"/>-->
       <XSLT:template name="require-for-{ mx:definition-name(.) }-assembly">
-         <!--<XSLT:param tunnel="true" name="matching" as="xs:string">{ (use-name,root-name,@name)[1] }</XSLT:param>-->
+         
          <xsl:call-template name="require-attributes"/>
-         <!-- for each required element ... -->
-         <!--<xsl:for-each select="model/(* | choice/*)[@min-occurs ! (number() ge 1)][not(@in-xml='UNWRAPPED')]" expand-text="true">
-        <!-\- XXX extend $requiring here to produce choices for choice -\->
-        <xsl:variable name="requiring" select="mx:match-name(.)"/>
-        <xsl:variable name="test" as="xs:string">empty({$requiring})</xsl:variable>
-        <XSLT:call-template name="notice">
-          <XSLT:with-param name="cf">gix.337</XSLT:with-param>
-          <XSLT:with-param name="class">required contents</XSLT:with-param>
-          <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
-          <XSLT:with-param name="condition" select="{$test}"/>
-          <XSLT:with-param name="msg" expand-text="true"><mx:gi>{{ name() }}</mx:gi> requires <mx:gi>{ $requiring }</mx:gi>.</XSLT:with-param>
-        </XSLT:call-template>
-      </xsl:for-each>-->
+
          <xsl:for-each
             select="model/*[@min-occurs ! (number() ge 1)][not(@in-xml = 'UNWRAPPED')] | model/choice[empty(*[@min-occurs ! (number() eq 0)] | *[@in-xml = 'UNWRAPPED'])]"
             expand-text="true">
@@ -454,7 +442,7 @@ This XSLT needs to know of two categories:
             </xsl:variable>
             <xsl:variable name="test" as="xs:string">empty({$requiring})</xsl:variable>
             <XSLT:call-template name="notice">
-               <XSLT:with-param name="cf">gix.419</XSLT:with-param>
+               <XSLT:with-param name="cf">gix.445</XSLT:with-param>
                <XSLT:with-param name="class">MRQC missing-required-contents</XSLT:with-param>
                <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
                <XSLT:with-param name="condition" select="{$test}"/>
@@ -466,67 +454,18 @@ This XSLT needs to know of two categories:
             <XSLT:apply-templates mode="validate-markup-multiline"/>
          </xsl:if>-->
       </XSLT:template>
-      <!--<xsl:if test="$has-unwrapped-markup-multiline">
-         <xsl:variable name="matches" select="mx:contextualized-matches(.)" as="xs:string+"/>
-         <!-\-<xsl:variable name="children"
-            select="model/(.|choice)/(field | assembly | define-field | define-assembly)[not(@in-xml = 'UNWRAPPED')]/mx:select-name(.)"/>-\->
-         <!-\-<xsl:variable name="expected" as="xs:string*">
-            <xsl:for-each select="$children">
-               <xsl:variable name="c" select="."/>
-               <xsl:sequence select="$matches ! (. || '/' || $c)"/>
-            </xsl:for-each>
-         </xsl:variable>
-         <xsl:if test="exists($expected)">
-            <XSLT:template match="{ $expected => string-join(' | ') }" mode="validate-markup-multiline"/>
-         </xsl:if>-\->
-
-         <xsl:variable name="matched-multiline" as="xs:string*">
-            <xsl:for-each select="tokenize($markup-multiline-paragraph-level-elements, ' \| ')">
-               <xsl:variable name="e" select="."/>
-               <xsl:for-each select="$matches" expand-text="true">{ . || '/' || $e }</xsl:for-each>
-            </xsl:for-each>
-         </xsl:variable>
-         <XSLT:template match="{ $matched-multiline => string-join(' | ') }" mode="validate">
-            <XSLT:call-template name="go-ahead"/>
-         </XSLT:template>
-      </xsl:if>-->
+      
    </xsl:template>
    
-   <!--<xsl:template mode="require-for" match="define-field" expand-text="true">
-      <!-\- intercept markup descendants of these fields -\->
-      <xsl:if test="@as-type = ('markup-line', 'markup-multiline') and not(@in-xml = 'UNWRAPPED')">
-         <xsl:variable name="mine" select="mx:contextualized-matches(.) ! (. || '/node()')"/>
-         <XSLT:template match="{ $mine => string-join(' | ') }" priority="5" mode="validate">
-            <!-\-<XSLT:apply-templates mode="value-only"/>-\->
-         </XSLT:template>
-      </xsl:if>
-      <xsl:call-template name="require-for-field"/>
-   </xsl:template>
-
-   <xsl:template mode="require-for" match="model//define-field" expand-text="true">
-      <!-\- intercept markup descendants of these fields -\->
-      <xsl:if test="@as-type = ('markup-line', 'markup-multiline') and not(@in-xml = 'UNWRAPPED')">
-         <xsl:variable name="mine" select="mx:match-name(.) || '/node()'"/>
-         <XSLT:template
-            match="{ (ancestor::define-assembly[1]/mx:contextualized-matches(.) ! (. || '/' ||  $mine)) => string-join(' | ') }"
-            priority="5" mode="validate">
-            <!-\-<XSLT:apply-templates mode="value-only"/>-\->
-         </XSLT:template>
-      </xsl:if>
-      <xsl:call-template name="require-for-field"/>
-   </xsl:template>
--->
+   
    <xsl:template mode="require-for" match="define-field">
       <XSLT:template name="require-for-{ mx:definition-name(.) }-field">
-         <!-- parameter is called by instructions in `require-attributes` logic -->
-         <!--<XSLT:param tunnel="true" name="matching" as="xs:string">{ (use-name,@name)[1] }</XSLT:param>-->
          <xsl:call-template name="require-attributes"/>
          <xsl:for-each select="@as-type[. != ('string','markup-line','markup-multiline')]">
             <XSLT:call-template name="check-{ . }-datatype"/>
          </xsl:for-each>
       </XSLT:template>
    </xsl:template>
-
 
    <!--mode generate-constraint-cascade produces a template cascade effectuated by xsl:next-match -->
 
@@ -560,7 +499,7 @@ This XSLT needs to know of two categories:
          <!-- test is not type-safe -->
          <xsl:variable name="allowing-others" select="@allow-other = 'yes'"/>
          <XSLT:call-template name="notice">
-            <XSLT:with-param name="cf">gix.526</XSLT:with-param>
+            <XSLT:with-param name="cf">gix.502</XSLT:with-param>
             <XSLT:with-param name="rule-id">{ @id }</XSLT:with-param>
             <XSLT:with-param name="matching" as="xs:string">{ $target-match }</XSLT:with-param>
             <XSLT:with-param name="class">AVCV value-not-allowed</XSLT:with-param>
@@ -594,7 +533,7 @@ This XSLT needs to know of two categories:
          <xsl:for-each select="@regex">
             <xsl:variable name="assert" expand-text="true">matches(., '^{.}$')</xsl:variable>
             <XSLT:call-template name="notice">
-               <XSLT:with-param name="cf">gix.561</XSLT:with-param>
+               <XSLT:with-param name="cf">gix.536</XSLT:with-param>
                <XSLT:with-param name="rule-id">{ parent::matches/@id }</XSLT:with-param>
                <XSLT:with-param name="matching" as="xs:string">{ $target-match }</XSLT:with-param>
                <XSLT:with-param name="class">MRCV regex-match-fail</XSLT:with-param>
@@ -622,7 +561,7 @@ This XSLT needs to know of two categories:
          <!--<xsl:variable name="test" as="xs:string" expand-text="true">{ @test }</xsl:variable>-->
          <!-- test is not type-safe -->
          <XSLT:call-template name="notice">
-            <XSLT:with-param name="cf">gix.591</XSLT:with-param>
+            <XSLT:with-param name="cf">gix.564</XSLT:with-param>
             <XSLT:with-param name="rule-id">{ @id }</XSLT:with-param>
             <XSLT:with-param name="matching" as="xs:string">{ $target-match }</XSLT:with-param>
             <XSLT:with-param name="class">XPKT expectation-violation</XSLT:with-param>
@@ -647,7 +586,7 @@ This XSLT needs to know of two categories:
          match="{ $matching }">
          <!-- test is not type-safe -->
          <XSLT:call-template name="notice">
-            <XSLT:with-param name="cf">gix.617</XSLT:with-param>
+            <XSLT:with-param name="cf">gix.589</XSLT:with-param>
             <XSLT:with-param name="rule-id">{ @id }</XSLT:with-param>
             <XSLT:with-param name="matching" as="xs:string">{ $matching }</XSLT:with-param>
             <XSLT:with-param name="class">HCCV cardinality-violation</XSLT:with-param>
@@ -669,10 +608,7 @@ This XSLT needs to know of two categories:
       <xsl:variable name="keyname" as="xs:string">
          <xsl:apply-templates select="." mode="make-key-name"/>
       </xsl:variable>
-      <!-- <xsl:variable name="target-step" expand-text="true">{ @target[not(matches(.,'\s*\.\s*'))] ! ('/(' || . || ')')
-         }</xsl:variable>
-      <!-\- only handling relative paths on @target atm -\->
-      <xsl:variable name="target-match" select="($matching ! (. || $target-step)) => string-join(' | ')"/>-->
+      
       <xsl:variable name="count-expr" expand-text="true">mx:key-matches-among-items(.,$selected,'{$keyname}',{mx:key-value(.)},$within)</xsl:variable>
       <xsl:variable name="assert" expand-text="true">exists({$count-expr})</xsl:variable>
       
@@ -682,7 +618,7 @@ This XSLT needs to know of two categories:
          <XSLT:variable name="selected" select="//{ mx:match-name($key-definition/parent::constraint/parent::*) || $key-definition/('/' || @target) }"/>
          <XSLT:for-each select="{ @target }">
             <XSLT:call-template name="notice">
-               <XSLT:with-param name="cf">gix.649</XSLT:with-param>
+               <XSLT:with-param name="cf">gix.621</XSLT:with-param>
                <XSLT:with-param name="rule-id">{ @id }</XSLT:with-param>
                <XSLT:with-param name="matching" as="xs:string">{ string-join($matching,'|')  }/({ @target})</XSLT:with-param>
                <XSLT:with-param name="class">NXHK index-lookup-fail</XSLT:with-param>
@@ -717,10 +653,7 @@ This XSLT needs to know of two categories:
       <xsl:variable name="keyname" as="xs:string">
          <xsl:apply-templates select="." mode="make-key-name"/>
       </xsl:variable>
-     <!-- <xsl:variable name="target-step" expand-text="true">{ @target[not(matches(.,'\s*\.\s*'))] ! ('/(' || . || ')')
-         }</xsl:variable>
-      <!-\- only handling relative paths on @target atm -\->
-      <xsl:variable name="target-match" select="($matching ! (. || $target-step)) => string-join(' | ')"/>-->
+     
       <xsl:variable name="count-expr" expand-text="true">mx:key-matches-among-items(.,$selected,'{$keyname}',{mx:key-value(.)},$within)</xsl:variable>
       <xsl:variable name="assert" expand-text="true">count({$count-expr})=1</xsl:variable>
       
@@ -734,7 +667,7 @@ This XSLT needs to know of two categories:
          <XSLT:variable name="selected" select="{ @target }"/>
          <XSLT:for-each select="{ @target }">
             <XSLT:call-template name="notice">
-               <XSLT:with-param name="cf">gix.651</XSLT:with-param>
+               <XSLT:with-param name="cf">gix.670</XSLT:with-param>
                <XSLT:with-param name="rule-id">{ @id }</XSLT:with-param>
                <XSLT:with-param name="matching" as="xs:string">{  string-join($matching,'|')  }/({ @target})</XSLT:with-param>
                <XSLT:with-param name="class">UNIQ uniqueness-violation</XSLT:with-param>
@@ -749,23 +682,15 @@ This XSLT needs to know of two categories:
    
    <xsl:function name="mx:key-value" as="xs:string">
       <xsl:param name="whose" as="element()"/>
-      <!-- delimit values with ',' emitting 'string()' for any key-field with no @target or @target=('.','value()') -->
-      <!--<xsl:variable name="plural" select="exists($whose/key-field[2])"/>
+      <!-- delimit values with ',' emitting 'string(/)' for any key-field with no @target or @target=('.','value()') -->
       <xsl:value-of>
-         <xsl:if test="$plural">(</xsl:if>
-         <xsl:value-of separator=",">
-            <xsl:sequence select="$whose/key-field/@target/(.[not(. = ('.', 'value()'))], 'string(.)')[1]"/>
-         </xsl:value-of>
-         <xsl:if test="$plural">)</xsl:if>
-      </xsl:value-of>-->
-      <xsl:value-of>
-      <xsl:iterate select="$whose/key-field">
-         <xsl:if test="position() gt 1">,</xsl:if>
-         <!--<xsl:if test="count(../*) gt 1">(</xsl:if>-->
-         <xsl:text expand-text="true">({ @target//(.[not(. = ('.', 'value()'))], 'string(.)')[1] })</xsl:text>
-         <xsl:for-each select="@pattern" expand-text="true">[matches(.,'^{.}$')] ! replace(.,'^{.}$','$1')</xsl:for-each>
-         <!--<xsl:if test="count(../*) gt 1">)</xsl:if>-->
-      </xsl:iterate>
+         <xsl:iterate select="$whose/key-field">
+            <xsl:if test="position() gt 1">,</xsl:if>
+            <!--<xsl:if test="count(../*) gt 1">(</xsl:if>-->
+            <xsl:text expand-text="true">({ @target//(.[not(. = ('.', 'value()'))], 'string(.)')[1] })</xsl:text>
+            <xsl:for-each select="@pattern" expand-text="true">[matches(.,'^{.}$')] ! replace(.,'^{.}$','$1')</xsl:for-each>
+            <!--<xsl:if test="count(../*) gt 1">)</xsl:if>-->
+         </xsl:iterate>
       </xsl:value-of>
       
    </xsl:function>
@@ -820,7 +745,7 @@ This XSLT needs to know of two categories:
          <xsl:variable name="requiring" select="mx:use-name(.)"/>
          <xsl:variable name="test" as="xs:string">empty(@{$requiring})</xsl:variable>
          <XSLT:call-template name="notice">
-            <XSLT:with-param name="cf">gix.779</XSLT:with-param>
+            <XSLT:with-param name="cf">gix.748</XSLT:with-param>
             <XSLT:with-param name="class">MRQA missing-required-attribute</XSLT:with-param>
             <XSLT:with-param name="testing" as="xs:string">{$test}</XSLT:with-param>
             <XSLT:with-param name="condition" select="{$test}"/>

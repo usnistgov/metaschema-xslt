@@ -6,7 +6,7 @@
    <xsl:output indent="true" encoding="us-ascii" omit-xml-declaration="true"/>
    
    <xsl:param name="format" as="xs:string">inspected</xsl:param>
-   <!-- format = (plaintext|markdown|html|mx-report|inspected) -->
+   <!-- format = (plaintext|markdown|html|mx|mx-report|inspected) -->
 
    <xsl:param name="form" as="xs:string">full</xsl:param>
    <!-- form = (full|summary|one-line) -->
@@ -18,46 +18,33 @@
    
    <!-- Entry points - or use initial-template or initial-mode in supporting processors  -->
 
-   <xsl:template mode="#default" priority="101" name="xsl:initial-template" match="root()[$format='inspected']">
+   <xsl:template mode="#default" priority="100" name="xsl:initial-template" match="root()">
       <xsl:call-template name="inspect"/>
    </xsl:template>
    
-   <xsl:template mode="#default" priority="101" match="root()[$format='mx-report']">
+   <xsl:template mode="#default" priority="101" match="root()[$format=('mx','mx-report')]">
       <xsl:call-template name="mx-report"/>
    </xsl:template>
    
-   <xsl:template mode="#default" priority="101" match="root()[$format='html']">
+   <xsl:template mode="#default" priority="101" match="root()[$format=('html','webpage')]">
       <xsl:call-template name="html"/>
    </xsl:template>
    
-   <xsl:template mode="#default" priority="101" match="root()[$format='markdown']">
+   <xsl:template mode="#default" priority="101" match="root()[$format=('md','markdown')]">
       <xsl:call-template name="markdown"/>
    </xsl:template>
    
-   <xsl:template mode="#default" priority="101" match="root()[$format='plaintext']">
+   <xsl:template mode="#default" priority="101" match="root()[$format=('plaintext','plain','text')]">
       <xsl:call-template name="plaintext"/>
    </xsl:template>
    
-   <!-- these modes are reserved for entry points matching "/" and should never match otherwise  -->
-   <xsl:mode name="inspect"   on-no-match="fail"/>
-   <xsl:mode name="mx-report" on-no-match="fail"/>
-   <xsl:mode name="mx"        on-no-match="fail"/>
-   <xsl:mode name="html"      on-no-match="fail"/>
-   <xsl:mode name="markdown"  on-no-match="fail"/>
-   <xsl:mode name="md"        on-no-match="fail"/>
-   <xsl:mode name="plaintext" on-no-match="fail"/>
-   
    <!-- entering with no mode or 'inspect' mode, or by name 'inspect' returns an annotated copy of input tree   -->
-   <xsl:template match="/" name="inspect" mode="inspect">
+   <xsl:template match="/" name="inspect">
       <mx:validation src="{ base-uri(.) }">
          <xsl:apply-templates select="." mode="metaschema-metadata"/>
          <!-- initiates the actual validation traversal          -->
          <xsl:apply-templates mode="validate"/>
       </mx:validation>
-   </xsl:template>
-
-   <xsl:template match="/" mode="mx-report mx">
-      <xsl:call-template name="mx-report"/>
    </xsl:template>
 
    <!-- returns mx reports only, with a summary - can be parameterized to filter -->
@@ -72,20 +59,12 @@
       <xsl:call-template name="mx-report"/>
    </xsl:template>
 
-   <xsl:template match="/" mode="html">
-      <xsl:call-template name="html"/>
-   </xsl:template>
-
    <xsl:template name="html">
       <xsl:variable name="mx-reports">
          <!-- reports has a summary along with any reports -->
          <xsl:call-template name="mx-report"/>
       </xsl:variable>
       <xsl:apply-templates mode="mx-to-html" select="$mx-reports/*"/>
-   </xsl:template>
-
-   <xsl:template match="/" mode="markdown md">
-      <xsl:call-template name="markdown"/>
    </xsl:template>
 
    <xsl:template name="markdown">
@@ -144,16 +123,12 @@
       <xsl:apply-templates select="." mode="test"/>
       <xsl:copy-of select="."/>
    </xsl:template>
-
    
-<!--   -->
-   
-   <!-- wrapper template for testing on each node, to be overridden
-         and extended for known elements -->
+   <!-- wrapper template for testing on each node, to be overridden and extended for known elements -->
    <xsl:template match="*" mode="test">
       <!-- report if not recognized -->
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">av.157</xsl:with-param>
+         <xsl:with-param name="cf">av.152</xsl:with-param>
          <xsl:with-param name="class">_UE unmatched-element</xsl:with-param>
          <xsl:with-param name="msg" expand-text="true">Unrecognized element <mx:gi>{ name() }</mx:gi>.</xsl:with-param>
       </xsl:call-template>
@@ -181,70 +156,20 @@
    <xsl:template match="text()" mode="test">
       <!-- report if not recognized -->
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">av.182</xsl:with-param>
+         <xsl:with-param name="cf">av.180</xsl:with-param>
          <xsl:with-param name="class">_UT unexpected-text</xsl:with-param>
          <xsl:with-param name="msg" expand-text="true">Errant text content.</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
 
-   <!-- report if not recognized -->
-   <!--<xsl:template match="*" mode="validate-markup-multiline" name="notice-multiline">
-      <xsl:call-template name="notice">
-         <xsl:with-param name="cf">av.138</xsl:with-param>
-         <xsl:with-param name="class">_UMM unmatched-markup-multiline</xsl:with-param>
-         <xsl:with-param name="msg" expand-text="true">Unrecognized element <mx:gi>{ name() }</mx:gi> in multiline
-            markup.</xsl:with-param>
-      </xsl:call-template>
-   </xsl:template>-->
-
    <xsl:variable name="markup-multline-blocks" select="
          'p', 'pre', 'ul', 'ol', 'table',
          'h1', 'h2', 'h3', 'h4', 'h5'"/>
 
-   <!--<xsl:template match="p | pre | h1 | h2 | h3 | h5 | h5 | h6 | li | td" mode="validate-markup-multiline">
-        <xsl:apply-templates mode="validate-markup-line"/>
-    </xsl:template>
-    
-    <xsl:template match="ul | ol" mode="validate-markup-multiline">
-        <xsl:apply-templates select="li" mode="validate-markup-multiline"/>
-        <xsl:for-each select="* except li">
-            <xsl:call-template name="notice-multiline"/>
-        </xsl:for-each>
-    </xsl:template>
-    
-    <xsl:template match="table" mode="validate-markup-multiline">
-        <xsl:apply-templates select="tr" mode="validate-markup-multiline"/>
-        <xsl:for-each select="* except tr">
-            <xsl:call-template name="notice-multiline"/>
-        </xsl:for-each>
-    </xsl:template>
-    
-    <xsl:template match="tr" mode="validate-markup-multiline">
-        <xsl:apply-templates select="td" mode="validate-markup-multiline"/>
-        <xsl:for-each select="* except td">
-            <xsl:call-template name="notice-multiline"/>
-        </xsl:for-each>
-    </xsl:template>
-    
-    <xsl:template match="em | strong | i | b | sub | sup | q | a | insert" mode="validate-markup-line">
-        <xsl:apply-templates mode="validate-markup-line"/>
-    </xsl:template>
-    
-    <xsl:template match="text()" mode="validate-markup-line"/>-->
-
-   <!--<xsl:template match="*" mode="validate-markup-line">
-      <!-\- report if not recognized -\->
-      <xsl:call-template name="notice">
-         <xsl:with-param name="cf">av.181</xsl:with-param>
-         <xsl:with-param name="class">_UM unmatched-markup</xsl:with-param>
-         <xsl:with-param name="msg" expand-text="true">Unrecognized element <mx:gi>{ name() }</mx:gi>.</xsl:with-param>
-      </xsl:call-template>
-   </xsl:template>-->
-
    <!-- ... and attributes ...  -->
-   <xsl:template match="@*" mode="test"> <!-- validate-markup-line validate-markup-multiline -->
+   <xsl:template match="@*" mode="test">
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">av.245</xsl:with-param>
+         <xsl:with-param name="cf">av.193</xsl:with-param>
          <xsl:with-param name="class">_UA unmatched-attribute</xsl:with-param>
          <xsl:with-param name="msg"
             expand-text="true">Unrecognized attribute <mx:gi>@{ name() }</mx:gi> on element <mx:gi>{ name(..) }</mx:gi>.</xsl:with-param>
@@ -254,7 +179,7 @@
    <xsl:template mode="test" match="@xsi:*" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
 
    <xsl:template name="notice">
-      <xsl:param name="cf" as="xs:string" select="AV.255"/>
+      <xsl:param name="cf" as="xs:string" select="AV.203"/>
       <!-- default expecting override -->
       <xsl:param name="rule-id" as="xs:string*" select="()"/>
       <!-- rule-id may be multiple -->
@@ -329,12 +254,6 @@
       <xsl:text expand-text="true">/text(){ (count($kin)[. gt 1]) ! $place }</xsl:text>
    </xsl:template>
 
-   <!--<xsl:template name="check-datatype">
-      <xsl:apply-templates select="." mode="test-datatype"/>
-   </xsl:template>-->
-
-   <!--<xsl:template mode="test-datatype" match="*"/>-->
-
    <xsl:function name="mx:element-position">
       <xsl:param name="for" as="element()"/>
       <xsl:variable name="qname" select="node-name($for)"/>
@@ -358,15 +277,9 @@
    
    <xsl:template name="check-markup-multiline-datatype"/>
 
-   <!-- stub to be replaced with results from produce-datatype-functions.xsl  -->
-   <!--<xsl:function name="mx:datatype-validate" as="xs:boolean">
-      <xsl:param name="value" as="item()"/>
-      <xsl:param name="nominal-type" as="item()?"/>
-      <xsl:sequence select="true()"/>
-   </xsl:function>-->
    
-<!-- given a node, a key name, value (sequence) and scope for evaluation, and a sequence of items,
-     returns those items that are returned by the key (in document order) -->
+   <!-- given a node, a key name, value (sequence) and scope for evaluation, and a sequence of items,
+        this eturns those items that are returned by the key (in document order) -->
    <xsl:function name="mx:key-matches-among-items" as="node()*">
       <xsl:param name="item" as="item()"/>
       <xsl:param name="items" as="item()+"/>
@@ -624,7 +537,7 @@ details p { margin: 0.2em 0em }
       <xsl:apply-templates mode="#current"/>
       <xsl:text>**</xsl:text>
    </xsl:template>
-   <xsl:template mode="html-to-md" match="i | p/*" xpath-default-namespace="http://www.w3.org/1999/xhtml">
+   <xsl:template mode="html-to-md" match="i" xpath-default-namespace="http://www.w3.org/1999/xhtml">
       <xsl:text>*</xsl:text>
       <xsl:apply-templates mode="#current"/>
       <xsl:text>*</xsl:text>
