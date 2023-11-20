@@ -5,7 +5,7 @@
                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                version="3.0"
                xpath-default-namespace="http://example.com/ns/tinydata"
-               exclude-result-prefixes="#all"><!-- Generated 2023-11-15T17:58:00.1494042-05:00 -->
+               exclude-result-prefixes="#all"><!-- Generated 2023-11-20T16:21:53.9170108-05:00 -->
    <xsl:mode on-no-match="fail"/>
    <xsl:mode name="test" on-no-match="shallow-skip"/>
    <!-- .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     . -->
@@ -13,7 +13,7 @@
    <!-- .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     . -->
    <xsl:output indent="true" encoding="us-ascii" omit-xml-declaration="true"/>
    <xsl:param name="format" as="xs:string">inspected</xsl:param>
-   <!-- format = (plaintext|markdown|html|mx-report|inspected) -->
+   <!-- format = (plaintext|markdown|html|mx|mx-report|inspected) -->
    <xsl:param name="form" as="xs:string">full</xsl:param>
    <!-- form = (full|summary|one-line) -->
    <xsl:param name="echo" as="xs:string">none</xsl:param>
@@ -21,41 +21,38 @@
    <xsl:param name="css" as="xs:string" select="''"/>
    <!-- Entry points - or use initial-template or initial-mode in supporting processors  -->
    <xsl:template mode="#default"
-                 priority="101"
+                 priority="100"
                  name="xsl:initial-template"
-                 match="root()[$format='inspected']">
+                 match="root()">
       <xsl:call-template name="inspect"/>
    </xsl:template>
-   <xsl:template mode="#default" priority="101" match="root()[$format='mx-report']">
+   <xsl:template mode="#default"
+                 priority="101"
+                 match="root()[$format=('mx','mx-report')]">
       <xsl:call-template name="mx-report"/>
    </xsl:template>
-   <xsl:template mode="#default" priority="101" match="root()[$format='html']">
+   <xsl:template mode="#default"
+                 priority="101"
+                 match="root()[$format=('html','webpage')]">
       <xsl:call-template name="html"/>
    </xsl:template>
-   <xsl:template mode="#default" priority="101" match="root()[$format='markdown']">
+   <xsl:template mode="#default"
+                 priority="101"
+                 match="root()[$format=('md','markdown')]">
       <xsl:call-template name="markdown"/>
    </xsl:template>
-   <xsl:template mode="#default" priority="101" match="root()[$format='plaintext']">
+   <xsl:template mode="#default"
+                 priority="101"
+                 match="root()[$format=('plaintext','plain','text')]">
       <xsl:call-template name="plaintext"/>
    </xsl:template>
-   <!-- these modes are reserved for entry points matching "/" and should never match otherwise  -->
-   <xsl:mode name="inspect" on-no-match="fail"/>
-   <xsl:mode name="mx-report" on-no-match="fail"/>
-   <xsl:mode name="mx" on-no-match="fail"/>
-   <xsl:mode name="html" on-no-match="fail"/>
-   <xsl:mode name="markdown" on-no-match="fail"/>
-   <xsl:mode name="md" on-no-match="fail"/>
-   <xsl:mode name="plaintext" on-no-match="fail"/>
    <!-- entering with no mode or 'inspect' mode, or by name 'inspect' returns an annotated copy of input tree   -->
-   <xsl:template match="/" name="inspect" mode="inspect">
+   <xsl:template match="/" name="inspect">
       <mx:validation src="{ base-uri(.) }">
          <xsl:apply-templates select="." mode="metaschema-metadata"/>
          <!-- initiates the actual validation traversal          -->
          <xsl:apply-templates mode="validate"/>
       </mx:validation>
-   </xsl:template>
-   <xsl:template match="/" mode="mx-report mx">
-      <xsl:call-template name="mx-report"/>
    </xsl:template>
    <!-- returns mx reports only, with a summary - can be parameterized to filter -->
    <xsl:template name="mx-report">
@@ -67,18 +64,12 @@
    <xsl:template name="mx">
       <xsl:call-template name="mx-report"/>
    </xsl:template>
-   <xsl:template match="/" mode="html">
-      <xsl:call-template name="html"/>
-   </xsl:template>
    <xsl:template name="html">
       <xsl:variable name="mx-reports">
          <!-- reports has a summary along with any reports -->
          <xsl:call-template name="mx-report"/>
       </xsl:variable>
       <xsl:apply-templates mode="mx-to-html" select="$mx-reports/*"/>
-   </xsl:template>
-   <xsl:template match="/" mode="markdown md">
-      <xsl:call-template name="markdown"/>
    </xsl:template>
    <xsl:template name="markdown">
       <xsl:variable name="html-report">
@@ -130,13 +121,11 @@
       <xsl:apply-templates select="." mode="test"/>
       <xsl:copy-of select="."/>
    </xsl:template>
-   <!--   -->
-   <!-- wrapper template for testing on each node, to be overridden
-         and extended for known elements -->
+   <!-- wrapper template for testing on each node, to be overridden and extended for known elements -->
    <xsl:template match="*" mode="test">
       <!-- report if not recognized -->
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">av.157</xsl:with-param>
+         <xsl:with-param name="cf">av.152</xsl:with-param>
          <xsl:with-param name="class">_UE unmatched-element</xsl:with-param>
          <xsl:with-param name="msg" expand-text="true">Unrecognized element <mx:gi>{ name() }</mx:gi>.</xsl:with-param>
       </xsl:call-template>
@@ -156,64 +145,17 @@
    <xsl:template match="text()" mode="test">
       <!-- report if not recognized -->
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">av.182</xsl:with-param>
+         <xsl:with-param name="cf">av.180</xsl:with-param>
          <xsl:with-param name="class">_UT unexpected-text</xsl:with-param>
          <xsl:with-param name="msg" expand-text="true">Errant text content.</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
-   <!-- report if not recognized -->
-   <!--<xsl:template match="*" mode="validate-markup-multiline" name="notice-multiline">
-      <xsl:call-template name="notice">
-         <xsl:with-param name="cf">av.138</xsl:with-param>
-         <xsl:with-param name="class">_UMM unmatched-markup-multiline</xsl:with-param>
-         <xsl:with-param name="msg" expand-text="true">Unrecognized element <mx:gi>{ name() }</mx:gi> in multiline
-            markup.</xsl:with-param>
-      </xsl:call-template>
-   </xsl:template>-->
    <xsl:variable name="markup-multline-blocks"
                  select="          'p', 'pre', 'ul', 'ol', 'table',          'h1', 'h2', 'h3', 'h4', 'h5'"/>
-   <!--<xsl:template match="p | pre | h1 | h2 | h3 | h5 | h5 | h6 | li | td" mode="validate-markup-multiline">
-        <xsl:apply-templates mode="validate-markup-line"/>
-    </xsl:template>
-    
-    <xsl:template match="ul | ol" mode="validate-markup-multiline">
-        <xsl:apply-templates select="li" mode="validate-markup-multiline"/>
-        <xsl:for-each select="* except li">
-            <xsl:call-template name="notice-multiline"/>
-        </xsl:for-each>
-    </xsl:template>
-    
-    <xsl:template match="table" mode="validate-markup-multiline">
-        <xsl:apply-templates select="tr" mode="validate-markup-multiline"/>
-        <xsl:for-each select="* except tr">
-            <xsl:call-template name="notice-multiline"/>
-        </xsl:for-each>
-    </xsl:template>
-    
-    <xsl:template match="tr" mode="validate-markup-multiline">
-        <xsl:apply-templates select="td" mode="validate-markup-multiline"/>
-        <xsl:for-each select="* except td">
-            <xsl:call-template name="notice-multiline"/>
-        </xsl:for-each>
-    </xsl:template>
-    
-    <xsl:template match="em | strong | i | b | sub | sup | q | a | insert" mode="validate-markup-line">
-        <xsl:apply-templates mode="validate-markup-line"/>
-    </xsl:template>
-    
-    <xsl:template match="text()" mode="validate-markup-line"/>-->
-   <!--<xsl:template match="*" mode="validate-markup-line">
-      <!-\- report if not recognized -\->
-      <xsl:call-template name="notice">
-         <xsl:with-param name="cf">av.181</xsl:with-param>
-         <xsl:with-param name="class">_UM unmatched-markup</xsl:with-param>
-         <xsl:with-param name="msg" expand-text="true">Unrecognized element <mx:gi>{ name() }</mx:gi>.</xsl:with-param>
-      </xsl:call-template>
-   </xsl:template>-->
    <!-- ... and attributes ...  -->
-   <xsl:template match="@*" mode="test"> <!-- validate-markup-line validate-markup-multiline -->
+   <xsl:template match="@*" mode="test">
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">av.245</xsl:with-param>
+         <xsl:with-param name="cf">av.193</xsl:with-param>
          <xsl:with-param name="class">_UA unmatched-attribute</xsl:with-param>
          <xsl:with-param name="msg" expand-text="true">Unrecognized attribute <mx:gi>@{ name() }</mx:gi> on element <mx:gi>{ name(..) }</mx:gi>.</xsl:with-param>
       </xsl:call-template>
@@ -222,7 +164,7 @@
                  mode="test"
                  match="@xsi:*"/>
    <xsl:template name="notice">
-      <xsl:param name="cf" as="xs:string" select="AV.255"/>
+      <xsl:param name="cf" as="xs:string" select="AV.203"/>
       <!-- default expecting override -->
       <xsl:param name="rule-id" as="xs:string*" select="()"/>
       <!-- rule-id may be multiple -->
@@ -294,10 +236,6 @@
          }]</xsl:variable>
       <xsl:text expand-text="true">/text(){ (count($kin)[. gt 1]) ! $place }</xsl:text>
    </xsl:template>
-   <!--<xsl:template name="check-datatype">
-      <xsl:apply-templates select="." mode="test-datatype"/>
-   </xsl:template>-->
-   <!--<xsl:template mode="test-datatype" match="*"/>-->
    <xsl:function name="mx:element-position">
       <xsl:param name="for" as="element()"/>
       <xsl:variable name="qname" select="node-name($for)"/>
@@ -315,14 +253,8 @@
    <!-- Null templates handle datatype checking for markup types -->
    <xsl:template name="check-markup-line-datatype"/>
    <xsl:template name="check-markup-multiline-datatype"/>
-   <!-- stub to be replaced with results from produce-datatype-functions.xsl  -->
-   <!--<xsl:function name="mx:datatype-validate" as="xs:boolean">
-      <xsl:param name="value" as="item()"/>
-      <xsl:param name="nominal-type" as="item()?"/>
-      <xsl:sequence select="true()"/>
-   </xsl:function>-->
    <!-- given a node, a key name, value (sequence) and scope for evaluation, and a sequence of items,
-     returns those items that are returned by the key (in document order) -->
+        this eturns those items that are returned by the key (in document order) -->
    <xsl:function name="mx:key-matches-among-items" as="node()*">
       <xsl:param name="item" as="item()"/>
       <xsl:param name="items" as="item()+"/>
@@ -590,7 +522,7 @@ details p { margin: 0.2em 0em }
       <xsl:text>**</xsl:text>
    </xsl:template>
    <xsl:template mode="html-to-md"
-                 match="i | p/*"
+                 match="i"
                  xpath-default-namespace="http://www.w3.org/1999/xhtml">
       <xsl:text>*</xsl:text>
       <xsl:apply-templates mode="#current"/>
@@ -626,7 +558,7 @@ details p { margin: 0.2em 0em }
    <xsl:template priority="5" match="/TINY/part" mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.352</xsl:with-param>
+         <xsl:with-param name="cf">gix.390</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::notes)</xsl:with-param>
          <xsl:with-param name="condition" select="exists(preceding-sibling::notes)"/>
@@ -638,7 +570,7 @@ details p { margin: 0.2em 0em }
    <xsl:template priority="5" match="TINY/part/part | part/part/part" mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.352</xsl:with-param>
+         <xsl:with-param name="cf">gix.390</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::note)</xsl:with-param>
          <xsl:with-param name="condition" select="exists(preceding-sibling::note)"/>
@@ -651,14 +583,14 @@ details p { margin: 0.2em 0em }
    <xsl:template priority="5" match="/TINY/title" mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.309</xsl:with-param>
+         <xsl:with-param name="cf">gix.347</xsl:with-param>
          <xsl:with-param name="class">EATO element-appears-too-often</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::title) gt 1</xsl:with-param>
          <xsl:with-param name="condition" select="count(. | preceding-sibling::title) gt 1"/>
          <xsl:with-param name="msg">Element <mx:gi>title</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.352</xsl:with-param>
+         <xsl:with-param name="cf">gix.390</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::term | preceding-sibling::part | preceding-sibling::notes | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)</xsl:with-param>
          <xsl:with-param name="condition"
@@ -672,7 +604,7 @@ details p { margin: 0.2em 0em }
    <xsl:template priority="5" match="/TINY/term" mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.352</xsl:with-param>
+         <xsl:with-param name="cf">gix.390</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::part | preceding-sibling::notes | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)</xsl:with-param>
          <xsl:with-param name="condition"
@@ -693,14 +625,14 @@ details p { margin: 0.2em 0em }
    <xsl:template priority="5" match="TINY/part/title | part/part/title" mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.309</xsl:with-param>
+         <xsl:with-param name="cf">gix.347</xsl:with-param>
          <xsl:with-param name="class">EATO element-appears-too-often</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::title) gt 1</xsl:with-param>
          <xsl:with-param name="condition" select="count(. | preceding-sibling::title) gt 1"/>
          <xsl:with-param name="msg">Element <mx:gi>title</mx:gi> appears too many times: 1 maximum is permitted.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.352</xsl:with-param>
+         <xsl:with-param name="cf">gix.390</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::term | preceding-sibling::part | preceding-sibling::note | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)</xsl:with-param>
          <xsl:with-param name="condition"
@@ -714,7 +646,7 @@ details p { margin: 0.2em 0em }
    <xsl:template priority="5" match="TINY/part/term | part/part/term" mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.352</xsl:with-param>
+         <xsl:with-param name="cf">gix.390</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::part | preceding-sibling::note | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)</xsl:with-param>
          <xsl:with-param name="condition"
@@ -728,7 +660,7 @@ details p { margin: 0.2em 0em }
    <xsl:template priority="5" match="TINY/part/note | part/part/note" mode="test">
       <xsl:apply-templates select="@*" mode="test"/>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.309</xsl:with-param>
+         <xsl:with-param name="cf">gix.347</xsl:with-param>
          <xsl:with-param name="class">EATO element-appears-too-often</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">count(. | preceding-sibling::note) gt 1</xsl:with-param>
          <xsl:with-param name="condition" select="count(. | preceding-sibling::note) gt 1"/>
@@ -751,14 +683,14 @@ details p { margin: 0.2em 0em }
    <!-- .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     . -->
    <xsl:template mode="test" match="TINY | title | term | part | note">
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf" as="xs:string">gix.81</xsl:with-param>
+         <xsl:with-param name="cf" as="xs:string">gix.108</xsl:with-param>
          <xsl:with-param name="class">EOOP element-out-of-place</xsl:with-param>
          <xsl:with-param name="msg" expand-text="true">Element <mx:gi>{ name() }</mx:gi> is not permitted here.</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
    <xsl:template mode="test" match="@id">
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf" as="xs:string">gix.90</xsl:with-param>
+         <xsl:with-param name="cf" as="xs:string">gix.117</xsl:with-param>
          <xsl:with-param name="class">AOOP attribute-out-of-place</xsl:with-param>
          <xsl:with-param name="msg" expand-text="true">Attribute <mx:gi>@{ name() }</mx:gi> is not permitted here.</xsl:with-param>
       </xsl:call-template>
@@ -768,14 +700,14 @@ details p { margin: 0.2em 0em }
    <!-- .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     . -->
    <xsl:template name="require-for-TINY-assembly">
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.779</xsl:with-param>
+         <xsl:with-param name="cf">gix.748</xsl:with-param>
          <xsl:with-param name="class">MRQA missing-required-attribute</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">empty(@id)</xsl:with-param>
          <xsl:with-param name="condition" select="empty(@id)"/>
          <xsl:with-param name="msg" expand-text="true">Element <mx:gi>{ name() }</mx:gi> requires attribute <mx:gi>@id</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.419</xsl:with-param>
+         <xsl:with-param name="cf">gix.445</xsl:with-param>
          <xsl:with-param name="class">MRQC missing-required-contents</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">empty(title)</xsl:with-param>
          <xsl:with-param name="condition" select="empty(title)"/>
@@ -793,7 +725,7 @@ details p { margin: 0.2em 0em }
    </xsl:template>
    <xsl:template name="require-for-term-field">
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.779</xsl:with-param>
+         <xsl:with-param name="cf">gix.748</xsl:with-param>
          <xsl:with-param name="class">MRQA missing-required-attribute</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">empty(@id)</xsl:with-param>
          <xsl:with-param name="condition" select="empty(@id)"/>
@@ -809,7 +741,7 @@ details p { margin: 0.2em 0em }
    </xsl:template>
    <xsl:template name="require-for-part-assembly">
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.419</xsl:with-param>
+         <xsl:with-param name="cf">gix.445</xsl:with-param>
          <xsl:with-param name="class">MRQC missing-required-contents</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">empty(title)</xsl:with-param>
          <xsl:with-param name="condition" select="empty(title)"/>
@@ -827,7 +759,7 @@ details p { margin: 0.2em 0em }
       <xsl:param name="class" as="xs:string">VDSX violates-datatype-syntax</xsl:param>
       <xsl:param name="matching" as="xs:string?" select="()"/>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf" as="xs:string">gix.121</xsl:with-param>
+         <xsl:with-param name="cf" as="xs:string">gix.148</xsl:with-param>
          <xsl:with-param name="rule-id" as="xs:string*" select="$rule-id"/>
          <xsl:with-param name="matching"
                          as="xs:string"
@@ -844,7 +776,7 @@ details p { margin: 0.2em 0em }
       <xsl:param name="class" as="xs:string">VDSX violates-datatype-syntax</xsl:param>
       <xsl:param name="matching" as="xs:string?" select="()"/>
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf" as="xs:string">gix.121</xsl:with-param>
+         <xsl:with-param name="cf" as="xs:string">gix.148</xsl:with-param>
          <xsl:with-param name="rule-id" as="xs:string*" select="$rule-id"/>
          <xsl:with-param name="matching"
                          as="xs:string"
@@ -861,7 +793,7 @@ details p { margin: 0.2em 0em }
    <xsl:template mode="test"
                  match="TINY/h1|TINY/h2|TINY/h3|TINY/h4|TINY/h5|TINY/h6|TINY/table|TINY/img|TINY/pre|TINY/hr|TINY/blockquote|TINY/ul|TINY/ol|TINY/p">
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.352</xsl:with-param>
+         <xsl:with-param name="cf">gix.390</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::part | preceding-sibling::notes)</xsl:with-param>
          <xsl:with-param name="condition"
@@ -872,7 +804,7 @@ details p { margin: 0.2em 0em }
    <xsl:template mode="test"
                  match="part/h1|part/h2|part/h3|part/h4|part/h5|part/h6|part/table|part/img|part/pre|part/hr|part/blockquote|part/ul|part/ol|part/p">
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.352</xsl:with-param>
+         <xsl:with-param name="cf">gix.390</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::part | preceding-sibling::note)</xsl:with-param>
          <xsl:with-param name="condition"
@@ -887,7 +819,7 @@ details p { margin: 0.2em 0em }
    <xsl:template mode="test"
                  match="TINY/title/a|TINY/title/insert|TINY/title/br|TINY/title/code|TINY/title/em|TINY/title/i|TINY/title/b|TINY/title/strong|TINY/title/sub|TINY/title/sup|TINY/title/q|TINY/title/img">
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.352</xsl:with-param>
+         <xsl:with-param name="cf">gix.390</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::term | preceding-sibling::part | preceding-sibling::notes | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)</xsl:with-param>
          <xsl:with-param name="condition"
@@ -898,7 +830,7 @@ details p { margin: 0.2em 0em }
    <xsl:template mode="test"
                  match="part/title/a|part/title/insert|part/title/br|part/title/code|part/title/em|part/title/i|part/title/b|part/title/strong|part/title/sub|part/title/sup|part/title/q|part/title/img">
       <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.352</xsl:with-param>
+         <xsl:with-param name="cf">gix.390</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::term | preceding-sibling::part | preceding-sibling::note | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)</xsl:with-param>
          <xsl:with-param name="condition"

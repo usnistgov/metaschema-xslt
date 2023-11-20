@@ -130,19 +130,19 @@ Command line flags and options for using the InspectorXSLT with Saxon - note use
 
 - `-s` required flag indicates the source file or directory - if a directory, `-o` is also required
 - `-o` optional flag indicates where to write a report file; if omitted the report comes back to STDOUT; required when `-s` is a directory
-- `-it` (or `-initial-template`) and `-im` (or `-initial-mode`) settings are supported as aliases of the `format` parameter (see below). If `format` is not given, either of these may be used with a format value to initiate the same behavior. This is mainly useful for debugging or to configure a different fallback behavior from the core default in deployment.
+- `-it` (or `-initial-template`) settings are supported as aliases of the `format` parameter (see below). If `format` is not given, a template can be called by name to initiate the same behavior. This is mainly useful for debugging or to configure a different fallback behavior from the core default in deployment.
 
 ##### Parameters
 
 Runtime parameters dictate the behavior of the transformation engine and the transformation results
 
 - `format=markdown` and `format=md` produce Markdown
-- `format=plaintext` drops double line-feeds from the Markdown producing a plain text format
-- `format=html` produce HTML
+- `format=plaintext` drops double line-feeds from the Markdown producing a plain text format (or `format=plain` or `format=text`)
+- `format=html` produces HTML (or `webpage` in case you are guessing)
 - `format=mx-report` or `format=mx` produce (the same) report in an MX XML format, suitable for further processing
-- `format:reflect` returns a copy of the input, with validation reports embedded
+-  `format=inspected` returns a copy of the input with metadata regarding the validation and validation reports embedded
 
-The fallback behavior, if no format is indicated via `format` (or an initial template or initial mode indicator for the format), is `reflect`, producing an annotated copy. This is also the simplest operation, which makes it easiest to debug.
+The fallback behavior, if no format is indicated via `format` (or an initial template), is `inspected`, producing an annotated copy. This is also the simplest operation, which makes it easiest to debug.
 
 The `form` parameter provides for adjustments to be made to outputs (HTML, Markdown or plaintext):
 

@@ -74,6 +74,6 @@ mvn \
     -f "$POM_FILE" \
     exec:java \
     -Dexec.mainClass="$MAIN_CLASS" \
-    -Dexec.args="-im:plaintext -xsl:${SCRIPT_DIR}/current/computer_inspector.xsl -s:\"$XML_SOURCE\" $ADDITIONAL_ARGS"
+    -Dexec.args="-xsl:${SCRIPT_DIR}/current/computer_inspector.xsl -s:\"$XML_SOURCE\" $ADDITIONAL_ARGS"
 
 echo
