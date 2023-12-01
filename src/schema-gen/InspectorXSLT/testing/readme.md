@@ -1,6 +1,6 @@
 # Testing Metaschema XSLT Inspector XSLT
 
-See the [Testing](../Testing.md) docs for Inspector XSLT for explanation of how these resources can be used.
+See the [TESTING](../TESTING.md) docs for Inspector XSLT for explanation of how to test the application using these resources.
 
 ## Apologies to the XML-averse (for now)
 
