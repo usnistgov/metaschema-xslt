@@ -11,7 +11,7 @@
             <xsl:apply-templates select="." mode="test"/>
          </xsl:variable>
          <sch:assert test="empty($tested/*)">
-            <sch:value-of select="$tested/string(.)"/>
+            <sch:value-of select="$tested/*/((@level, @class, string(.))=>string-join(':') ) => string-join(' # ')"/>
          </sch:assert>
       </sch:rule>
    </sch:pattern>
