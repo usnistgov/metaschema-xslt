@@ -32,13 +32,13 @@ This suite uses an extended variant of the 'computer metaschema' model by AJ Ste
 
 The Inspector XSLT feature set can be tested by generating XSLT and schemas and creating instances (e.g. `valid` and `invalid` instances) from this metaschema, which exercise its feature set.
 
-See the original and other examples in [the specification's repository](https://github.com/usnistgov/metaschema/blob/develop/examples/).
+See the original in [the specification's repository](https://github.com/usnistgov/metaschema/blob/develop/examples/).
 
 #### Refresh the 'computer model' XSD
 
 Use a script such as [../mvn-xsd-schema-xsl.sh](../mvn-xsd-schema-xsl.sh) or the XSLT [../nist-metaschema-MAKE-XSD.xsl](../nist-metaschema-MAKE-XSD.xsl) to produce an XSD file for the [testing/computer_metaschema.xml](testing/computer_metaschema.xml).
 
-This XSD should validate the same set of rules as the Inspector (excluding Metaschema query constraints) and can be used to cross check functionality. Note that this XSD is also dynamically generated and might itself have bugs or issues. Irrespective of this question, the requirements are that both processes (schema validation and Inspector-XSLT validation) are effectively congruent, compatible and "the same" inasmuch as they detect all the same problems in data.
+This XSD should validate the same set of rules as the Inspector (excluding Metaschema query constraints) and can be used to cross check functionality. Note that this XSD is also dynamically generated and might itself have bugs or issues. (If only in principle. In reality, the schema generators are also tested both in the lab and the field.) Irrespective of this question, the requirements are that both processes (schema validation and Inspector-XSLT validation) are effectively congruent, compatible and "the same" inasmuch as they detect all the same problems in data.
 
 A copy of the current-best schema is also here, to be refreshed as necessary): [testing/current/computer_metaschema-xmlschema.xsd](testing/current/computer_metaschema-xmlschema.xsd)
 

@@ -88,8 +88,6 @@ Alas, can't get line numbers in Saxon-HE. We could provide optional line number 
 
 We know that we can't do everything under XSLT 1.0 (such as regular expressions for lexical type checking) but we might be able to provide a significant subset, as a "sine qua non" first-cut validator.
 
-
-
 ---
 
 notes - combinatorial allowed-values implementation
