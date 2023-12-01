@@ -22,7 +22,7 @@
    <!--
      NEXT UP:
        x wire Generator with new apply-validator
-         - set up XSpec testing bigbadtiny.xml under Tiny (alpha2)
+         - set up XSpec testing bigbadtiny.xml under Tiny (generator)
          - remove old generator support for markup-line and markup-multiline (comment out)
        - extend generator with new logic addressing markup datatypes
          - consult schema for completeness

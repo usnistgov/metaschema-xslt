@@ -1,8 +1,8 @@
 # Metaschema XSLT Inspector
 
-'Emmex Eye' or just "Emmex" ('MX').
-
 Check your XML with an XSLT to see if it is valid to the rules defined in a metaschema.
+
+Developers are urged to review this file in outline before reading it in detail. For experienced XSLT developers, it explains the interfaces. For beginners, it should tell you what you need to know. Any sections not of immediate interest can be skipped for later.
 
 ## How this works
 
@@ -27,9 +27,11 @@ Alternatively, follow the directions to build an XSLT reflecting the rules of an
 
 See the [Metaschema project site](https://pages.nist.gov/metaschema) for more information.
 
-## Who is this for?
+## Project purposes
 
-A primary goal of this project is to serve as a complete and correct implementation of the [NIST Metaschema Modeling Framework](https://pages.nist.gov/metaschema), in demonstration of its features, with the objective of helping to validate its approach to data modeling and governance.
+While this project offers a tool that may be useful (for data validation) its ultimate focus is not the data validation as such, but to demonstrate principles of verifiable and trustworthy data validation.
+
+A primary goal of this project is to serve as a complete and correct implementation of the [NIST Metaschema Modeling Framework](https://pages.nist.gov/metaschema), in demonstration of its features, with the objective of helping to confirm, by testing, its approach to data modeling and governance.
 
 A secondary goal is to be fully transparent and traceable in operation and documented and tested fully, so as to serve as a resource and template for future developers of Metaschema, XML/XSLT and other technologies.
 
@@ -37,13 +39,13 @@ Neither *scalability* nor *performance* are primary goals, although considered v
 
 Given these considerations on balance, *correctness* comes first in order of priority, while *usability* and *testability* come second and third.
 
-### Some possible use scenarios
+### Who are you? some possible use scenarios
 
-- New, occasional, or intermittent users of a metaschema-based tech, who need to validate data
-- Regular users of a metaschema or metaschema-based tech
+- New, occasional, or intermittent users of a Metaschema-based tech, who need to validate data
+- Regular users of a metaschema or Metaschema-based tech
   - who need to validate data
   - who need to confirm the correctness of others' validations
-- Developers of metaschema-based applications
+- Developers of Metaschema-based applications
   - who wish to use or deploy an easy validation service
   - who prefer to focus on implementing semantics, not on modeling and validating to models - but who need to provide for data validation and support others in doing so
 - Developers of Metaschema
@@ -57,11 +59,11 @@ Given these considerations on balance, *correctness* comes first in order of pri
 
 For new, regular and occasional users and developers of Metaschema-based technologies
 
-* MX aims to be easy to use and start using
+* InspectorXSLT and MX\* aim to be easy to use and start using
 * Correct and trustworthy in what it attempts to do
 * And compatible with workflows using other conformant tools
 
-For developers and maintainers of Metaschema-based data modeling and processing stacks, MX aims
+For developers and maintainers of Metaschema-based data modeling and processing stacks, this tool (and all tools in the repo) aspires
 
 * To be lightweight, easy to deploy, easy to adapt and useful,
 * To be versatile (given its scope of application, namely validation)
@@ -77,31 +79,28 @@ For XML- and XSLT-focused developers of Metaschema and Metaschema-based technolo
 ### Use cases we have not catered to
 
 - Developers who wish to build metaschema-aware applications
-  - this application is intended to be operated as a black box: while at core this is a code generator, it is not designed to be easily extensible as such or produce a 'library', so you might prefer to reverse engineer it than to extend it
+  - This application is intended to be operated as a black box: while at core this is a code generator, it is not designed to be easily extensible as such or produce a 'library', so you might prefer to reverse engineer it than to extend it
 - Robots or 'lights out' automated processes (untested)
   - The interfaces are designed to be flexible for interfacing but YMMV as to scale/throughput - experience will tell
   - Our expectation is that performance will be good under normal loads but metaschemas will also vary considerably 
 
 ## Feature set (for demo)
 
-- [x] Emit copy of source annotated with validation messages
-- [x] Emit reports to STDOUT
-- [x] Write reports to file system (lower ASCII, escaped HTML for emoji)
-- [x] Emit reports in native (MX) format, HTML, Markdown or plain text (compacted Markdown)
-- [x] Supports full, summary or one-line results per instance
-- [x] Can echo progress as it writes
-- [x] Run in batch
-  - [x] Using Saxon feature (writing files)
-  - [x] Using shell
-  - [ ] Using XProc 
-  - [ ] make post-process XSLT digesting a sequence of MX results
-- [x] Validate structures - names and cardinalities
-- [x] Validate lexical rules over datatypes
-  - [ ] more testing 
-- [x] Validate constraints
-- [ ] Run in browser / SaxonJS
-- [ ] MX->SVRL filter postprocess
-- [ ] other ideas below
+- Emit copy of source annotated with validation messages
+- Emit reports to STDOUT
+- Write reports to file system (lower ASCII, escaped HTML for emoji)
+- Emit reports in native (MX) format, HTML, Markdown or plain text (compacted Markdown)
+- Supports full, summary or one-line results per instance
+- Can echo progress as it writes
+- Run in batch
+  - Using Saxon feature (writing files)
+  - Using shell
+  - (tbd) Using XProc 
+  - (tbd) make post-process XSLT digesting a sequence of MX results
+- Validate structures - names and cardinalities
+- Validate lexical rules over datatypes
+- Validate constraints as defined by Metaschema
+  - allowed values; string matching; referential integrity; arbitrary queries (assertions)
 
 ## Interfaces - how to use
 
@@ -316,26 +315,7 @@ This time, all results are written in Markdown into the file `validation-report.
 
 There is much else that can be done to produce **batched and grouped reports** including analytical summaries, etc., by aggregating and post-processing MX, HTML or Markdown outputs. 
 
-### To do: further work on scripting
-
-Instrument to run from the CL, inferring the mode from the result filename and hard wiring the `computer-inspector.xsl` stylesheet:
-
-```
-computerInspectorXSLT data.xml results.html
-computerInspectorXSLT data.xml results.md
-computerInspectorXSLT data.xml results.xml
-
-computerInspectorXSLT -md data.xml (writes results to STDOUT)
-computerInspectorXSLT -mx data.xml (writes results to STDOUT)
-computerInspectorXSLT -html data.xml (writes results to STDOUT)
-computerInspectorXSLT -md data.xml mode=one-liner
-```
-
-This all ought to be doable in `make`, no?
-
-Alternatively, note that *these scripts as well* might be generated from Metaschema source as they are mostly boilerplate. So to the extent they can be produced on the basis of  `/METASCHEMA/short-name` etc. we should consider doing that.
-
-### To generate the XSLT
+### To generate an Inspector XSLT
 
 A fresh and complete Inspector XSLT for any metaschema (any valid and workable instance of [Metaschema](https://pages.nist.gov/metaschema/)) can be produced using an XProc pipeline or an XSLT that emulates this pipeline.
 
@@ -345,51 +325,6 @@ A fresh and complete Inspector XSLT for any metaschema (any valid and workable i
 In this sequence of transformations the target (result) XSLT is assembled dynamically, by combining templates produced from a metaschema source with static boilerplate and infrastructure.
 
 An example script calling the XSLT pipeline (thus requiring only Saxon, not XML Calabash) is given as [testing/mvn-refresh-computer-inspector.sh](testing/refresh-computer-inspector.sh).
-
-## Plans
-
-### Functional enhancements
-
-- Filters to sort, sift?
-- HTML aggregation layer? over collections
-- CSS customization (CSS-based filtering?)
-- or all this could be done dynamically (CSX)
-
-### Under NodeJS
-
-It could also be compiled into SEF for SaxonJS and delivered as a NodeJS command line application or library
-
-### In the browser - CSX (client-side XSLT)
-
-Another SEF with interface and SVRL rendering templates could provide this functionality under SaxonJS in the browser.
-
-See https://pages.nist.gov/oscal-tools/demos/csx/validator/ for prior work/PoC.
-
-### XProc / XML Calabash
-
-For batching and post-processing validations using an XSLT, the sky is the limit.
-
-### Python runtime?
-
-How hard can it be?
-
-### OSCAL application
-
-Should go into oscal-xslt repository
-
-### JSON support?
-
-One approach could be to produce templates not to match XML (that is or is not conformant to expectations) but JSON (that is or is not conformant to the metaschema-analogous expectations).
-
-JSON could first be cast into an XDM map, so this operation conceivably could mean an XSLT generator whose output XSLT would match not nodes but objects (properties) in this map - checking to see whether they resolve to maps, arrays and values as planned - and whose templates indeed would perform a 'map traversal'.
-
-### Line numbers
-
-Alas, can't get line numbers in Saxon-HE. We could provide optional line number echoing potentially in a version requiring licensed Saxon.
-
-### XSLT 1.0?
-
-We know that we can't do everything under XSLT 1.0 (such as regular expressions for lexical type checking) but we might be able to provide a significant subset, as a "sine qua non" first-cut validator.
 
 ## Design goals and principles
 
@@ -439,14 +374,4 @@ If any of this is true, the application will show.
 - Potential performance tradeoffs for some kinds of rules
 - Does not instantiate metaschema-based objects but only examines their representation (lexical form as a serialization) - so it is not as easily extensible as an application framework
 
-
 ---
-
-notes - combinatorial allowed-values implementation
-
-inspector XSLT carries a template cascade
-- it reports back both values and IDs
-- the cascade overloads priority="100" for competing `allowed-values`
-  mode has on-multiple-match="use-last" so that they can be made (purposefully) to compete (last wins)
-  - these must all be identical so an effective no-op when redundant
-  - any/each of which (only one of them being used under use-last) pulls the entire collection of values/IDs matching this node

@@ -53,7 +53,7 @@
    
   <p:xslt name="produce-inspector">
     <p:input port="stylesheet">
-      <p:document href="InspectorXSLT/alpha2/generate-inspector-xslt.xsl"/>
+      <p:document href="InspectorXSLT/generator/generate-inspector-xslt.xsl"/>
        <!--<p:document href="../common/no-op.xsl"/>-->
     </p:input>
   </p:xslt>
