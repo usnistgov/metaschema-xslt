@@ -62,7 +62,7 @@ Use it and test with it the same way as the Computer metaschema.
 
 ## Testing the Inspector XSLT
 
-Question: *Is the XSLT produced from a metaschema instance capable of  addressing its functional requirements?*
+Question: *Is the XSLT produced from a metaschema instance capable of addressing its functional requirements?*
 
 To address this question, functional requirements can be isolated and illustrated both in standalone complete documents, and in document fragments maintained as XSpec test suites.
 
@@ -74,11 +74,9 @@ Within `testing`, `computers-valid` contains Computer Model instances expected t
 
 Examples within `computers-invalid` when tested by the Computer MOdel Inspector (or any validator) are expected to return appropriate warnings and errors. They may be commented with notes indicating their lapses.
 
-These can be tested in batch with XSD validation and/or Inspector XSLT, producing the same results.
+For testing the InspectorXSLT transformation, the XSpec file [testing/validations-in-batch.xspec](testing/validations-in-batch.xspec) runs both valid and invalid sets through the Inspector and ensures results are correct - reports for the invalid cases, no reports for the valid cases.
 
-The XSpec file [testing/validations-in-batch.xspec](testing/validations-in-batch.xspec) runs both Valid and Invalid sets through the Inspector and ensures results are correct - reports for the invalid cases, no reports for the valid cases.
-
-[An XSD schema ](testing/computer_metaschema-xmlschema.xsd) can be used to confirm validity or failure to validate for sets of examples, as given. Any other metaschema-based validator, or a metaschema-derived validation that supports XML, can also be used, such as a validator produced using [metaschema-java](https://github.com/usnistgov/metaschema-java).
+[An XSD schema ](testing/computer_metaschema-xmlschema.xsd) can also be used to confirm validity or failure to validate for sets of examples, as given. Any other metaschema-based validator, or a metaschema-derived validation that supports XML, can also be used, such as a validator produced using [metaschema-java](https://github.com/usnistgov/metaschema-java).
 
 Also, examples within `tinydata` may be valid or invalid to the Tiny metaschema, as indicated.
 
@@ -100,7 +98,7 @@ However, a target for this transformation - generation of XSLT from correct Meta
 
 The [Inspector XSLT Generator Pipeline](../METASCHEMA-INSPECTOR-XSLT.xpl) includes a step that applies the generated XSLT and reports a finding of `OKAY` or `ERROR` as a pipeline result (on output port `OUT_xslt-prooftest`), as a convenience.
 
-## Testing the "costuming" post-processing pipelines
+## Testing the <q>costuming</q> post-processing pipelines
 
 Inspector XSLT first produces MX outputs. These are further processed, first by being filtered, then into HTML and Markdown results.
 
