@@ -28,9 +28,11 @@ Within these artifacts, initial comments should give information regarding date 
 
 ### "Computer Model" metaschema
 
-This suite uses an extension of AJ Stein's 'computer metaschema' model for testing, maintained here as [testing/computer_metaschema.xml](testing/computer_metaschema.xml).
+This suite uses an extended variant of the 'computer metaschema' model by AJ Stein and team for testing, maintained here as [testing/computer_metaschema.xml](testing/computer_metaschema.xml).
 
 The Inspector XSLT feature set can be tested by generating XSLT and schemas and creating instances (e.g. `valid` and `invalid` instances) from this metaschema, which exercise its feature set.
+
+See the original and other examples in [the specification's repository](https://github.com/usnistgov/metaschema/blob/develop/examples/).
 
 #### Refresh the 'computer model' XSD
 
