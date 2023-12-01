@@ -284,11 +284,11 @@ To **report as files are found to be valid or invalid** to STDOUT, *additional* 
 
 The `echo` feature is useful when using the `-o` argument to direct outputs (complete or summaries) to file or device. Additional to the primary outputs, `echo` produces a record and summary view to a secondary output, generally STDERR (via `xsl:message`).
 
-Use `echo` (see above) if you wish to see progress in the console even when directing results to file outputs. It will announce findings of both valid and invalid files, one line per file, in addition to other messages; so it can be similar to `form=one-line` except it supplements instead of replaces the production of complete reports (i.e., the primary result) - so progress can be monitored in the same run as results are written out.
+This can be helpful when validating inputs in batches and writing results to files. Often an operator prefers to have some runtime notification of what is happening, even when the main interest is in 'side effects' such as files written to the system.
+
+Use `echo` if you wish to see progress in the console even when directing results to file outputs. It will announce findings of both valid and invalid files, one line per file, in addition to other messages; so it can be similar to `form=one-line` except it supplements instead of replaces the production of complete reports (i.e., the primary result) - so progress can be monitored in the same run as results are written out.
 
 `echo` and `form` can be used at the same time - `form` affecting how results look, and `echo` affecting what gets reported via messaging along with that production.
-
-The `echo` feature is designed to be useful when validating inputs in batches and writing results to files. Often an operator prefers to have some runtime notification of what is happening, even when the main interest is in 'side effects' such as files written to the system.
 
 ---
 
