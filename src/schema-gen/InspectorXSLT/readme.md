@@ -104,6 +104,14 @@ For XML- and XSLT-focused developers of Metaschema and Metaschema-based technolo
 
 ## Interfaces - how to use
 
+### Schematron harness
+
+InspectorXSLT was engineered to be used as a standalone XSLT, for maximum usability. Of course this means it can be also be embedded. And since Schematron is commonly deployed as an XSLT application, a full-fledged Schematron-based implementation is feasible as a possible follow-on application.
+
+A simple <q>wrapper</q> Schematron that calls the InspectorXSLT for you and delivers its messages in a Schematron process, is even easier to engineer, and [one has been included](testing/computer-testing.sch) here in the [`testing`](testing/) folder.
+
+### Shell scripts
+
 The tool is designed to be used standalone in an XSLT 3.0-capable processing environment, or to be embedded. For testing, we use a command-line XSLT engine such as Saxon (v10 or later). We test with Saxon-HE in order to ensure this execution dependency remains available.
 
 For convenience, in the testing directory are example scripts that run Saxon inside Maven to (a) produce an Inspector XSLT from a metaschema, then subsequently (b) apply this XSLT to an XML document to report issues detected in it, to delivering this report in HTML or Markdown format:
@@ -117,7 +125,7 @@ These scripts demonstrate one way to invoke Saxon but there are many others suit
 
 The scripts also pass through arguments provided them to the receiving application, so that the flags and switches described below will also work.
 
-### To use generated XSLT directly
+### Command-line XSLT execution
 
 If a script is not well-suited or easily adaptable, or for testing/experiment, Saxon can also be used directly, using the same syntax (which the scripts mainly pass through).
 
@@ -162,7 +170,7 @@ When producing HTML reports, a file name reference to an out-of-line CSS resourc
 
   - `css=cssfile.css` replaces CSS in your HTML header with `\<link rel="stylesheet" href="cssfile.css">`.
 
-TBD, to be considered:
+TBD, to be considered (let us know):
 
   - filters to remove messages by level, code or matched node (XPath)
 
@@ -188,11 +196,15 @@ In this case, `*.xml` files in the `ready` folder are run through the Inspector 
 
 Of course this also not the only way to automate the validation and reporting processes for efficiency over many inputs in one run.
 
-#### Scenarios calling Saxon
+#### Example scenarios calling Saxon
 
 Various different command-line options can modify operations, either using Saxon and runtime parameters directly, or through scripting.
 
-The XSLT initial template feature, XSLT runtime parameters, and redirecting processing results together provide a range of capabilities. Having produced the XSLT `computer-inspector.xsl` for inspecting `computer` XML documents: **to validate a file** `invalid10.xml` ...
+The XSLT initial template feature, XSLT runtime parameters, and redirecting processing results together provide a range of capabilities.
+
+In the examples below, syntax for many of these is shown. This assumes `saxon` is available as an executable, such as a script that calls Saxon in Java or Maven: adjust as needed.
+
+Having produced the XSLT `computer-inspector.xsl` for inspecting `computer` XML documents: **to validate a file** `invalid10.xml` ...
 
 ---
 
