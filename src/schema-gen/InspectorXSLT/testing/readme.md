@@ -28,4 +28,4 @@ An Inspector can be generated from a metaschema such as `computer_model.xml` and
 
 Exercising these tests, a number of XSpec files in this folder calling `current/computer_inspector.xsl` should all complete successfully and report "all green" -- no warnings, no errors, no unexpected 'pending' sections.
 
-See the [Testing](../Testing.md) docs for more information.
+See the [TESTING](../TESTING.md) docs for more information.
