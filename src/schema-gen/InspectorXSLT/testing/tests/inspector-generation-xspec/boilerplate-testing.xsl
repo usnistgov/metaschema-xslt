@@ -5,7 +5,7 @@
    exclude-result-prefixes="xs math"
    version="3.0">
    
-   <xsl:include href="../../../alpha2/generator-boilerplate.xsl"/>
+   <xsl:include href="../../../generator/generator-boilerplate.xsl"/>
    
    <!--holding for integration into boilerplate: -->
    <!-- XXX cross check against schema  -->

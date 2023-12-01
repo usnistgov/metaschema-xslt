@@ -6,7 +6,7 @@ See the [Testing](../Testing.md) docs for Inspector XSLT for explanation of how 
 
 Keep in mind when considering testing that Inspector XSLT currently only supports XML-based formats defined by a metaschema. Your JSON can be inspected only if you convert it to XML first - a conversion that is dependable only if the data was already valid to begin with.
 
-Running a metaschema-configured conversion, comparing results, and running a conversion again - even apart from applying the Inspector - is however quite a good way in general of determining metaschema-validity of non-XML formats based on Metaschema.
+(Running a metaschema-configured conversion, comparing results, and running a conversion again - even apart from applying the Inspector - is however quite a good way in general of determining metaschema-validity of non-XML formats based on Metaschema.)
 
 ## If you have a metaschema that you wish to use
 
@@ -29,46 +29,3 @@ An Inspector can be generated from a metaschema such as `computer_model.xml` and
 Exercising these tests, a number of XSpec files in this folder calling `current/computer_inspector.xsl` should all complete successfully and report "all green" -- no warnings, no errors, no unexpected 'pending' sections.
 
 See the [Testing](../Testing.md) docs for more information.
-
-#### Next up
-
-Nov 14 - (not necessarily in priority order)
-
-- [ ] Revisit allowed-values semantics?
-   - [ ] isolate an example (OSCAL?)
-   - [ ] XSpec a retrieval function returning (rule/value)*
-   - [ ] check back, anything missed?
-- [ ] More assertively test all constraints
-- [ ] More assertively test markup-line and markup-multiline
-- [ ] Test out other aspects
-   - [ ] interesting assembly/field settings, use-name etc
-   - [ ] XSpec MX to HTML to Markdown? functions?
-   - [ ] Build out TINY to include constraints on insert (note-ref and term-ref)
-- [ ] Review specs with eye to contributions
-- [ ] OSCAL implementation
-   - [ ] Publishing considerations
-   - [ ] Pages / platform
-- [ ] CSX version
-   - [ ] CI/CD support for deployment from updated metaschema sources?
-- [ ] Release plans and considerations
-- [ ] Review opportunities for unit tests: reuse / pubs / pool 
-
-### Test coverage
-
-Working edges:
-- Wrapped and unwrapped markup-multiline
-- grouped and ungrouped elements and their siblings
-- absolute target paths
-- broken paths (graceful prevention?)
-- INFO and WARNING level tests
-- key scoping for index and is-unique
-
-Use constraint rule IDs to wrangle and cross-link constraints with tests
-
-markup line and markup-multiline validation
-
-- unknown elements
-- elements out of place
-- text out of place
-- weird edge cases e.g. in-xml
-- extract these from XSD sources?

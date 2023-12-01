@@ -36,7 +36,7 @@
         <nm:transform version="3.0">{ $composer-dir }/metaschema-digest.xsl</nm:transform>
         <nm:transform version="3.0">{ $composer-dir }/annotate-composition.xsl</nm:transform>
         
-        <nm:transform version="3.0">InspectorXSLT/generate-inspector-xslt.xsl</nm:transform>
+        <nm:transform version="3.0">InspectorXSLT/generator/generate-inspector-xslt.xsl</nm:transform>
     </xsl:variable>
     
 </xsl:stylesheet>
