@@ -42,7 +42,6 @@ This all ought to be doable in `make`, no?
 
 Alternatively, note that *these scripts as well* might be generated from Metaschema source as they are mostly boilerplate. So to the extent they can be produced on the basis of  `/METASCHEMA/short-name` etc. we should consider doing that.
 
-
 ## Plans
 
 ### Functional enhancements
