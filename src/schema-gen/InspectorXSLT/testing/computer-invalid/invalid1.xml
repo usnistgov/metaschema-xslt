@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<computer xmlns="http://example.com/ns/computer"
+ id="id1">
+    <motherboard>
+        <vendor id="id3">
+            <name>name0</name>
+            <address>address0</address>
+            <website>http://pages.nist.gov/metaschema</website>
+        </vendor>
+        <!-- 'type' and 'memory' are both missing -->
+    </motherboard>
+</computer>

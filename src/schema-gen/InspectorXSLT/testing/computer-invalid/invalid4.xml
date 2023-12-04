@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<computer xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns="http://example.com/ns/computer"
+ id="id1">
+    <motherboard>
+        <vendor>
+            <name>name0</name>
+            <address>address0</address>
+            <website>http://pages.nist.gov/metaschema</website>
+        </vendor>
+        <type>at</type>
+        <cpu>
+            <vendor id="id5">
+                <name>name1</name>
+                <address>address1</address>
+                <website>http://pages.nist.gov/metaschema</website>
+            </vendor>
+            <product-name>product-name0</product-name>
+            <architecture>architecture0</architecture>
+            <speed>5GHz</speed>
+        </cpu>
+        <ata-socket>
+            <vendor id="id7">
+                <name>name2</name>
+                <address>address2</address>
+                <website>http://pages.nist.gov/metaschema</website>
+            </vendor>
+            <product-name>product-name1</product-name>
+            <type>type1</type>
+        </ata-socket>
+        <memory>
+            <vendor id="id9">
+                <name>name3</name>
+                <address>address3</address>
+                <website>http://pages.nist.gov/metaschema</website>
+            </vendor>
+            <product-name>product-name2</product-name>
+            <byte-size>50</byte-size>
+        </memory>
+        <memory>
+            <vendor id="id11">
+                <name>name4</name>
+                <address>address4</address>
+                <website>http://pages.nist.gov/metaschema</website>
+            </vendor>
+            <product-name>product-name3</product-name>
+            <byte-size>50</byte-size>
+        </memory>
+        <expansion-card>
+            <vendor id="id13">
+                <name>name5</name>
+                <address>address5</address>
+                <website>http://pages.nist.gov/metaschema</website>
+            </vendor>
+            <product-name>product-name4</product-name>
+            <type>type2</type>
+        </expansion-card>
+        <expansion-card>
+            <vendor id="id15">
+                <name>name6</name>
+                <address>address6</address>
+                <website>http://pages.nist.gov/metaschema</website>
+            </vendor>
+            <product-name>product-name5</product-name>
+            <type>type3</type>
+        </expansion-card>
+    </motherboard>
+</computer>

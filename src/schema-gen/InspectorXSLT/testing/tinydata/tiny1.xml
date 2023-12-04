@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TINY xmlns="http://example.com/ns/tinydata"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://example.com/ns/tinydata current/tiny_metaschema-xmlschema.xsd"
+   id="tiny1">
+   <title>Hello World</title>
+   <part>
+      <title>Part First</title>
+      <part>
+         <title>Some part</title>
+         <p>Some parting words.</p>
+      </part>
+      <note>
+         <p>Take note here.</p>
+      </note>
+   </part>
+   <notes>
+      <note>
+         <p>An endnote, with <em>emphasis</em>.</p>
+      </note>
+   </notes>
+</TINY>

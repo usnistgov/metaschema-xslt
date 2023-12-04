@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<refactoringOperationDescriptor 
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns="http://www.oxygenxml.com/ns/xmlRefactoring" 
+   id="renumber-xspec-scenarios" 
+   name="Renumber XSpec Scenarios">
+   <description>Provides every x:scenario/@label with a distinct hierarchical number reflecting its position.</description>    
+   <script type="XSLT" href="xspec-renumber.xsl"/>  
+</refactoringOperationDescriptor>
