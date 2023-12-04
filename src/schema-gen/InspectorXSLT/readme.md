@@ -27,6 +27,14 @@ Alternatively, follow the directions to build an XSLT reflecting the rules of an
 
 See the [Metaschema project site](https://pages.nist.gov/metaschema) for more information.
 
+## Note for OSCAL users
+
+While the intent of this project is to support OSCAL\* formats fully, and OSCAL will be an important testbed for these applications, the OSCAL Metaschema modules given in the current version (1.1.1) do *not* process flawlessly (as of the beta-version Inspector Generator) to produce a viable InspectorXSLT rules checker, without patching.
+
+See [the tracking issue](https://github.com/usnistgov/metaschema-xslt/issues/91) for any updates, with possible mitigations for those interested.
+
+\* OSCAL is the [Open Security Controls Assessment Language](https://pages.nist.gov/OSCAL/), a family of schemas describing documentary formats in Systems Security - Catalogs, Profiles (baselines or overlays), System Security Plans (SSP), Security Assessment Plans (SAP) and Reports (SAR), and others.
+
 ## Project purposes
 
 While this project offers a tool that may be useful (for data validation) its ultimate focus is not the data validation as such, but to demonstrate principles of verifiable and trustworthy data validation.
