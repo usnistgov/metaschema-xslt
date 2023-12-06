@@ -18,7 +18,9 @@ Subcommands:
 - docs-testsite METASCHEMA_XML OUTPUT_DIR SCHEMA_NAME [ADDITIONAL_ARGS]
     Generate a set of standalone (self-contained) HTML pages with XML and JSON Schema documentation for a given metaschema, for testing
 - schema-gen METASCHEMA_XML OUTPUT_DIR SCHEMA_NAME [ADDITIONAL_ARGS]
-    Generate JSON and XML schemas for a given metaschema
+    Generate JSON and XML schemas from a metaschema
+- xsd-proofcheck METASCHEMA_XML [ADDITIONAL_ARGS]
+    Generate and dynamically test XSD (XML Schema Definition) for viability
 - converter-gen METASCHEMA_XML OUTPUT_DIR SCHEMA_NAME [ADDITIONAL_ARGS]
     Generate converter transformations (XSLT) between JSON and XML for a given metaschema
 - composition-validate METASCHEMA_XML [ADDITIONAL_ARGS]
@@ -58,6 +60,9 @@ case "$SUBCOMMAND" in
         ;;
     schema-gen)
         "$SRC_DIR"/schema-gen/mvn-schemas-xpl.sh "$@"
+        ;;
+    xsd-proofcheck)
+        "$SRC_DIR"/schema-gen/mvn-xsd-proofcheck-xpl.sh "$@"
         ;;
     converter-gen)
         "$SRC_DIR"/converter-gen/mvn-converters-xpl.sh "$@"

@@ -14,7 +14,9 @@ Please install Maven, configure its system paths, and test before proceeding.
 
 ### `bash` scripts
 
-A bash script located in this distribution provides a single unified interface to functionalities provided by this library. Add [../bin](../bin) to your path, or invoke the script directly, using `-h` for help:
+#### Top-level script
+
+A bash script in this distribution provides a unified interface to functionalities provided by this library. Add [../bin](../bin) to your path, or invoke the script directly, using `-h` for help:
 
 ```
 > path/to/bin/metaschema-xslt -h
@@ -40,7 +42,9 @@ A convention is used indicating that an XProc (`*.xpl` file) or XSLT (`*.xsl`) i
 
 ### `make` support
 
-Additionally, some subdirectories include `make` configurations. These are used for testing including regression testing, but may also be used to support processing.
+GNU `make` is an open source build utility adaptable for use as a production (orchestration) engine.
+
+Some subdirectories include `make` configurations. These are used for testing including regression testing, but may also be used to support processing.
 
 To use `make`, confirm you have [`make`](https://www.gnu.org/software/make/), or install it. In any directory with a Makefile, including this one, test it:
 
