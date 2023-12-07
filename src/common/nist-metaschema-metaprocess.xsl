@@ -13,7 +13,10 @@
     <!-- Utility XSLT supporting pipelining. -->
     
     <xsl:param name="trace" as="xs:string">off</xsl:param>
-    
+
+    <!-- Turning $save-intermediate to 'on' will save the intermediate file from each transformation -->
+    <xsl:param name="save-intermediate" as="xs:string">off</xsl:param>
+
     <xsl:variable name="louder" select="$trace = 'on'"/>
     
     <xsl:variable name="transformation-sequence" select="()"/>
@@ -39,12 +42,20 @@
         <xsl:iterate select="$sequence/*">
             <xsl:param name="doc" select="$source" as="document-node()"/>
             <xsl:on-completion select="$doc"/>
+            <xsl:variable name="transform-result">
+                <xsl:apply-templates mode="nm:execute" select=".">
+                    <xsl:with-param name="sourcedoc" select="$doc"/>
+                </xsl:apply-templates>
+            </xsl:variable>
+            <xsl:if test="$save-intermediate eq 'on'">
+                <xsl:result-document href="{
+                    replace(replace($doc/base-uri(),'^.*/',''),'\.xsl$','')
+                    || '-' || replace(replace(.,'^.*/',''),'\.xsl$','') || 'output.xml'}">
+                    <xsl:sequence select="$transform-result"/>
+                </xsl:result-document>
+            </xsl:if>
             <xsl:next-iteration>
-                <xsl:with-param name="doc">
-                    <xsl:apply-templates mode="nm:execute" select=".">
-                        <xsl:with-param name="sourcedoc" select="$doc"/>
-                    </xsl:apply-templates>
-                </xsl:with-param>
+                <xsl:with-param name="doc" select="$transform-result"/>
             </xsl:next-iteration>
         </xsl:iterate>
     </xsl:template>
