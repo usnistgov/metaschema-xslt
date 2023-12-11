@@ -18,11 +18,11 @@
          <xsl:variable name="max-date" select="max(report/(@date ! xs:dateTime(.)))"/>
          
          <REPORT-SUMMARY from="{$min-date}" to="{$max-date}" report-count="{count(report)}">
-            <xsl:apply-templates/>
+            <xsl:apply-templates select="self::report | child::report" mode="report-report"/>
          </REPORT-SUMMARY>
       </xsl:template>
    
-   <xsl:template match="report">
+   <xsl:template match="report" mode="report-report">
       <report date="{ @date }" test-count="{ count(descendant::test) }" pending-count="{ count(descendant::test[matches(@pending,'\S')]) }">
          <xspec-file>{ @xspec }</xspec-file>
          <xslt-file>{ @stylesheet }</xslt-file>
@@ -35,4 +35,5 @@
    </xsl:template>
    
    <xsl:template match="text()"/>
+   
 </xsl:stylesheet>

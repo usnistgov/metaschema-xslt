@@ -5,8 +5,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 source "$SCRIPT_DIR/../../src/common/subcommand_common.bash"
 
-XSPEC_DIR="${SCRIPT_DIR}/../xspec/src"
-XPROC_HARNESS="${XSPEC_DIR}/harnesses/saxon/saxon-xslt-harness.xproc"
+XPROC_FILE="${SCRIPT_DIR}/xspec-single.xpl"
 
 usage() {
     cat <<EOF
@@ -25,9 +24,8 @@ ADDITIONAL_ARGS=$(shift 1; echo "${*// /\\ }")
 
 RESULT_FILE="xspec/$( echo $(basename "${XSPEC_FILE%.*}") ).html"
 
-# -pxspec-home addresses https://github.com/xspec/xspec/issues/1832
-CALABASH_ARGS="-isource=\"$XSPEC_FILE\" -oresult=\"${RESULT_FILE}\" -pxspec-home=\"file://${XSPEC_DIR}\" \
-                $ADDITIONAL_ARGS \"${XPROC_HARNESS}\""
+CALABASH_ARGS="-ixspec=\"$XSPEC_FILE\" -osummary=/dev/null -ohtml-report=\"${RESULT_FILE}\" \
+                $ADDITIONAL_ARGS \"${XPROC_FILE}\""
 
 mkdir -p xspec
 

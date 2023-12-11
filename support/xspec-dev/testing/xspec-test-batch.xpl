@@ -11,17 +11,18 @@
    
 <!-- A model XProc showing how to run a set of XSpec documents in place,
      showing:
-   XSpec results - 'xspec-results'
-   XML-based summary - 'summary'
-   one-line synopsis - 'determination' for plain text results e.g. to console
    
-   copy this file plus the shell script mvn-run-xspec-test-batch.sh to a convenient location
-   update the import link
-   point the batch to your XSpec documents
-   run to capture the collected results of those XSpecs together
+   'xspec-results' - XSpec results
+   'summary' - XML-based summary
+   'determination' one-line synopsis in plain text (for console)
+   
+   - copy this file plus the shell script mvn-run-xspec-test-batch.sh to a convenient location
+   - omit any unwanted ports or serialization settings
+   - update the import link
+   - point the batch to your XSpec documents
+   - run to capture the collected results of those XSpecs together
+   
    -->
-   
-   <!--<p:option name="here" select="'file:/mnt/c/Users/wap1/Documents/usnistgov/metaschema-xslt/support/xspec-dev/xspec-batch.xpl'"/>-->
    
    <!-- XSpecs to run -->
    <p:input port="batch" sequence="true">
@@ -49,10 +50,6 @@
    
    <p:import href="../xspec-batch.xpl"/>
 
-<!--
-   
-   Could not load file:/C:/Users/wap1/Documents/usnistgov/metaschema-xslt/support/xspec/src/compiler/compile-xslt-tests.xsl (file:/mnt/c/Users/wap1/Documents/usnistgov/metaschema-xslt/support/xspec/src/harnesses/harness-lib.xpl) dtd-validate=false
-   -->
 
    <!-- incipit -->
    <mx:xspec-batch name="test-batch">

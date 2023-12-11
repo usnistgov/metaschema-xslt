@@ -11,21 +11,14 @@
 
    <!-- Study reference: ../support/xspec/src/harnesses/saxon/saxon-xslt-harness.xproc by Florent Georges -->
    
-   <!-- This XProc is very similar to xspec-single.xpl, except
-       - it doesn't make an HTML report
-       - it accepts and processes a sequence of XSpecs not just a single -->
-    
-   <p:input port="batch" sequence="true">
-      <p:document href="testing/xspec-shell.xspec"/>
-      <p:document href="testing/xspec-basic.xspec"/>
-   </p:input>
+   <p:input port="xspec"/>
    
    <p:input port="parameters" kind="parameter"/>
       <!--<p:with-param name="xspec-home" select="'file:/C:/Users/wap1/Documents/usnistgov/metaschema-xslt/support/xspec/src/'"/>/>-->
    
-   <p:serialization port="xspec-results" indent="true"/>
-   <p:output port="xspec-results">
-      <p:pipe port="result" step="results"/>
+   <p:serialization port="html-report" indent="true"/>
+   <p:output port="html-report">
+      <p:pipe port="result" step="html-report"/>
    </p:output>
    
    <p:serialization port="summary" indent="true"/>
@@ -40,34 +33,34 @@
    
    <p:import href="../xspec/src/harnesses/harness-lib.xpl"/>
 
-   <!-- Each XSpec is compiled and run -->
-   <p:for-each>
-      <p:iteration-source>
-         <p:pipe port="batch" step="xspec-batch"/>
-      </p:iteration-source>
-      
-      <t:compile-xslt name="compile"><!-- thanks to gimsieke for tip on static-base-uri()
-        this can be removed when issue is addressed https://github.com/xspec/xspec/issues/1832-->
-         <p:with-param name="xspec-home" select="resolve-uri('../xspec/',static-base-uri())"/>
-      </t:compile-xslt>
+   <t:compile-xslt name="compile"><!-- thanks to gimsieke for tip on static-base-uri()
+     this can be removed when issue is addressed https://github.com/xspec/xspec/issues/1832 -->      
+      <p:with-param name="xspec-home" select="resolve-uri('../xspec/',static-base-uri())"/>
+   </t:compile-xslt>
 
-      <p:xslt name="run" template-name="t:main">
-         <p:input port="source">
-            <p:empty/>
-         </p:input>
-         <p:input port="stylesheet">
-            <p:pipe step="compile" port="result"/>
-         </p:input>
-         <p:input port="parameters">
-            <p:empty/>
-         </p:input>
-      </p:xslt>
-   </p:for-each>
+   <p:xslt name="run" template-name="t:main">
+      <p:input port="source">
+         <p:empty/>
+      </p:input>
+      <p:input port="stylesheet">
+         <p:pipe step="compile" port="result"/>
+      </p:input>
+      <p:input port="parameters">
+         <p:empty/>
+      </p:input>
+   </p:xslt>
+
+   <t:format-report name="html-report">
+     <p:with-param name="inline-css" select="'true'"/>
+     <p:with-param name="xspec-home" select="resolve-uri('../xspec/',static-base-uri())"/>
+   </t:format-report>
    
-   <!-- and the resulting sequence collected -->
-   <p:wrap-sequence wrapper="RESULTS" name="results"/>
-   
+   <p:sink/>
+      
    <p:xslt name="summary">
+      <p:input port="source">
+         <p:pipe port="result" step="run"/>
+      </p:input>
       <p:input port="stylesheet">
          <p:document href="xspec-summarize.xsl"/>
       </p:input>

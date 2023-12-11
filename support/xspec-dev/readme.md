@@ -43,25 +43,13 @@ This should run from anywhere, so for example test it from the testing directory
 testing$ ../mvn-run-xspec-html.sh xspec-basic.xspec
 ```
 
-The script will create an HTML file named after the XSpec source file, in a directory named `xspec`.
-
-#### Buglet repair
-
-In the [XSpec distribution XProc harness library file file](../xspec/src/harnesses/harness-lib.xpl), at line 301 in `//p:xslt[@name='format-report']` provide:
-
-```
-<p:with-param name="inline-css" select="'true'"/>
-```
-
-Otherwise the results have no CSS.
-
-Cf https://github.com/xspec/xspec/issues/1832
+The script will create an HTML file named after the XSpec source file, in a directory named `xspec`. It also echoes a one-line determination to the console or `STDOUT`.
 
 ### Applying and evaluating a batch of XSpecs together
 
-Scripting the 'batch' capability is demonstrated in the test directory, which contains a script [testing/mvn-run-xspec-test-batch.sh](testing/mvn-run-xspec-test-batch.sh) that initiates the test pipeline `testing/xspec-test-batch.xpl` using XML Calabash under Maven. This script can be copied and adjusted to run from anywhere invoking such a pipeline.
+Support for a 'batch' capability is demonstrated in the test directory, which contains a script [testing/mvn-run-xspec-test-batch.sh](testing/mvn-run-xspec-test-batch.sh) that initiates the test pipeline `testing/xspec-test-batch.xpl` using XML Calabash under Maven.
 
-Currently these pipelines are hard-wired for the sets of XSpecs to be processed. But either `xspec-batch.xpl` or an importing pipeline can also bind the XSpec sources dynamically, to the `batch` input port.
+This demonstrates how to hard-wire an XProc for a set of XSpecs to be evaluated.
 
-
+Either this or an importing pipeline can also bind the XSpec sources dynamically, to the `batch` input port.
 
