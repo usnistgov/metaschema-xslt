@@ -31,11 +31,19 @@ For running XSpecs in batch, the [pipeline](xspec-batch.xpl) `xspec-batch.xpl`is
 
 The `determination` port gives a single line of plain text with a determination of `SUCCESS` (when no failures are reported) or `FAILURE` (when any failures are reported).
 
-These pipelines can be called directly (providing XSpecs on source ports), or either can be used as a step in a calling pipeline, which configures its sources and ports.
+either can be used as a step in a calling pipeline, which configures its sources and ports.
 
-See an example of this in the `testing` directory at [testing/xspec-test-batch.xpl](testing/xspec-test-batch.xpl)`
+An example is given in the `testing` directory at [testing/xspec-test-batch.xpl](testing/xspec-test-batch.xpl)`
 
 HTML results from evaluating a batch are not planned currently, but could easily added.
+
+These pipelines can be called directly (providing XSpecs on source ports `xspec` or `batch`), so to combine `1.xspec` and `2.xspec` into a single runtime where `xproc` calls the XProc processor:
+
+```bash
+xproc path/to/xspec-batch.xpl -ibatch=1.xspec -ibatch=2.xspec -oxspec-results=/dev/null -osummary=/dev/null
+```
+
+writes the `determination` for the combined XSpecs to the console (dropping other outputs).
 
 ## Scripts
 
