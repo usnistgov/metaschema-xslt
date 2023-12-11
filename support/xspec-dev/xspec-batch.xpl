@@ -15,11 +15,9 @@
        - it doesn't make an HTML report
        - it accepts and processes a sequence of XSpecs not just a single -->
     
-   <p:input port="batch" sequence="true">
-      <p:document href="testing/xspec-shell.xspec"/>
-      <p:document href="testing/xspec-basic.xspec"/>
-   </p:input>
-   
+   <p:input port="batch" sequence="true"/>
+      
+
    <p:input port="parameters" kind="parameter"/>
       <!--<p:with-param name="xspec-home" select="'file:/C:/Users/wap1/Documents/usnistgov/metaschema-xslt/support/xspec/src/'"/>/>-->
    

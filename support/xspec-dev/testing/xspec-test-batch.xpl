@@ -27,7 +27,7 @@
    <!-- XSpecs to run -->
    <p:input port="batch" sequence="true">
       <p:document href="xspec-shell.xspec"/>
-      <p:document href="./xspec-basic.xspec"/>
+      <p:document href="xspec-basic.xspec"/>
    </p:input>
    
    <p:input port="parameters" kind="parameter"/>
