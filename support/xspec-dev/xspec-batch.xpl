@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+            xmlns:c="http://www.w3.org/ns/xproc-step"
+            xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+            xmlns:xs="http://www.w3.org/2001/XMLSchema"
+            xmlns:t="http://www.jenitennison.com/xslt/xspec"
+            xmlns:mx="http://csrc.nist.gov/ns/csd/metaschema-xslt"
+            name="xspec-batch"
+            type="mx:xspec-batch"
+            version="1.0">
+
+   <!-- Study reference: ../support/xspec/src/harnesses/saxon/saxon-xslt-harness.xproc by Florent Georges -->
+   
+   <p:input port="batch" sequence="true">
+      <p:document href="testing/xspec-shell.xspec"/>
+      <p:document href="testing/xspec-basic.xspec"/>
+   </p:input>
+   
+   <p:input port="parameters" kind="parameter"/>
+      <!--<p:with-param name="xspec-home" select="'file:/C:/Users/wap1/Documents/usnistgov/metaschema-xslt/support/xspec/src/'"/>/>-->
+   
+   <p:serialization port="xspec-results" indent="true"/>
+   <p:output port="xspec-results">
+      <p:pipe port="result" step="results"/>
+   </p:output>
+   
+   <p:serialization port="summary" indent="true"/>
+   <p:output port="summary">
+      <p:pipe port="result" step="summary"/>
+   </p:output>
+   
+   <p:serialization port="determination" indent="true" method="text"/>
+   <p:output port="determination">
+      <p:pipe port="result" step="determination"/>
+   </p:output>
+   
+   <p:import href="../xspec/src/harnesses/harness-lib.xpl"/>
+
+   <!-- Each XSpec is compiled and run -->
+   <p:for-each>
+      <p:iteration-source>
+         <p:pipe port="batch" step="xspec-batch"/>
+      </p:iteration-source>
+      
+      <t:compile-xslt name="compile"><!-- thanks to gimsieke for tip on static-base-uri()
+        this can be removed when issue is addressed https://github.com/xspec/xspec/issues/1832-->
+         <p:with-param name="xspec-home" select="resolve-uri('../xspec/',static-base-uri())"/>
+      </t:compile-xslt>
+
+      <p:xslt name="run" template-name="t:main">
+         <p:input port="source">
+            <p:empty/>
+         </p:input>
+         <p:input port="stylesheet">
+            <p:pipe step="compile" port="result"/>
+         </p:input>
+         <p:input port="parameters">
+            <p:empty/>
+         </p:input>
+      </p:xslt>
+   </p:for-each>
+   
+   <!-- and the resulting sequence collected -->
+   <p:wrap-sequence wrapper="RESULTS" name="results"/>
+   
+   <p:xslt name="summary">
+      <p:input port="stylesheet">
+         <p:document href="xspec-summarize.xsl"/>
+      </p:input>
+   </p:xslt>
+   
+   <p:xslt name="determination">
+      <p:input port="stylesheet">
+         <p:document href="xspec-summary-reduce.xsl"/>
+      </p:input>
+   </p:xslt>
+   
+</p:declare-step>
