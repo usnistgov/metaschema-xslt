@@ -52,8 +52,6 @@
 
 
    <!-- incipit -->
-   <mx:xspec-batch name="test-batch">
-      <!--<p:with-option name="" select=""-->
-   </mx:xspec-batch>
+   <mx:xspec-batch name="test-batch"/>
    
 </p:declare-step>

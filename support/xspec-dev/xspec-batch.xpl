@@ -16,10 +16,8 @@
        - it accepts and processes a sequence of XSpecs not just a single -->
     
    <p:input port="batch" sequence="true"/>
-      
-
+   
    <p:input port="parameters" kind="parameter"/>
-      <!--<p:with-param name="xspec-home" select="'file:/C:/Users/wap1/Documents/usnistgov/metaschema-xslt/support/xspec/src/'"/>/>-->
    
    <p:serialization port="xspec-results" indent="true"/>
    <p:output port="xspec-results">
@@ -37,6 +35,7 @@
    </p:output>
    
    <p:import href="../xspec/src/harnesses/harness-lib.xpl"/>
+
 
    <!-- Each XSpec is compiled and run -->
    <p:for-each>

@@ -14,9 +14,10 @@
    <p:input port="xspec"/>
    
    <p:input port="parameters" kind="parameter"/>
-      <!--<p:with-param name="xspec-home" select="'file:/C:/Users/wap1/Documents/usnistgov/metaschema-xslt/support/xspec/src/'"/>/>-->
    
-   <p:serialization port="html-report" indent="true"/>
+   <!--nb unless patched in the imported XSLT, HTML comes with pseudo-output escaping
+       see ../xspec/src/reporter/format-utils.xsl-->
+   <p:serialization port="html-report" indent="true" method="html"/>
    <p:output port="html-report">
       <p:pipe port="result" step="html-report"/>
    </p:output>
