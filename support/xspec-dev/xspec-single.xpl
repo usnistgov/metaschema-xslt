@@ -15,8 +15,8 @@
    
    <p:input port="parameters" kind="parameter"/>
    
-   <!--nb unless patched in the imported XSLT, HTML comes with pseudo-output escaping
-       see ../xspec/src/reporter/format-utils.xsl-->
+   <!--nb unless patched in the imported XSLT, HTML comes with pseudo-output escaping into Unicode PUA
+       see ../xspec/src/reporter/format-utils.xsl /*/xsl:function[@name='fmt:disable-escaping'] -->
    <p:serialization port="html-report" indent="true" method="html"/>
    <p:output port="html-report">
       <p:pipe port="result" step="html-report"/>
