@@ -9,19 +9,18 @@ XPROC_FILE="${SCRIPT_DIR}/xspec-test-batch.xpl"
 
 usage() {
     cat <<EOF
-Usage: ${BASE_COMMAND:-$(basename "${BASH_SOURCE[0]}")} [ADDITIONAL_ARGS]
+Usage: ${BASE_COMMAND:-$(basename "${BASH_SOURCE[0]}")}
 
-Runs ${XPROC_FILE} echoing a summary determination of its XSpec test suites. 
-
-Additional arguments for XML Calabash should be specified in the 'key=value' format.
+Runs $( echo ${XPROC_FILE##*/} ), returning a one-line summary evaluation of its XSpec test set inputs.
 EOF
 }
 
-ADDITIONAL_ARGS=$(echo "${*// /\\ }")
+# dumping XSpec results and summary (ports), leaving port `determination` for STDOUT
 
-# dumping XSpec results and summary (ports), leaving synopsis for STDOUT
+CALABASH_ARGS="-oxspec-results=/dev/null -osummary=/dev/null \"${XPROC_FILE}\""
 
-CALABASH_ARGS="-oxspec-results=/dev/null -osummary=/dev/null \
-                $ADDITIONAL_ARGS \"${XPROC_FILE}\""
-
-invoke_calabash "${CALABASH_ARGS}"
+if [ $# -ne 0 ] ; then
+  usage
+else
+  invoke_calabash "${CALABASH_ARGS}"
+fi
