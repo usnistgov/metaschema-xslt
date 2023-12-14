@@ -29,8 +29,8 @@
 
 <xsl:output method="xhtml"/>
 
-   <!-- also take 'federal', 'classic', and 'dark' ? -->
-   <xsl:param name="theme" as="xs:string">federal</xsl:param>
+   <!-- also take 'federal', 'classic', and 'toybox' -->
+   <xsl:param name="theme" as="xs:string">toybox</xsl:param>
    
    <!-- implementing strip-space by hand since we don't want to lose ws when copying content through -->
    <xsl:template match="report/text() | scenario/text() | test/text() | call/text() | result/text() | expect/text() | context/text()"/>
@@ -42,11 +42,12 @@
          <head>
             <title/>
             <xsl:call-template name="page-css"/>
+            <xsl:call-template name="page-js"/>
          </head>
          <xsl:apply-templates/>
       </html>
    </xsl:template>
-
+   
    <xsl:template match="/*" priority="101">
       <body class="{ $theme }">
          <xsl:next-match/>
@@ -64,15 +65,15 @@
    </xsl:template>
    
    <xsl:template priority="5" match="test[matches(@pending,'\S')]" mode="gauntlet">
-      <a href="#{@id}">&#9208;</a><!-- pause butten -->
+      <a class="jump" onclick="javascript:viewSection('{@id}')" title="{ ancestor-or-self::*/label => string-join(' ') }">&#129310;</a><!-- crossed fingers -->
    </xsl:template>
    
    <xsl:template match="test[@successful='true']" mode="gauntlet">
-      <a href="#{@id}">&#10004;</a><!-- check mark -->
+      <a class="jump" onclick="javascript:viewSection('{@id}')" title="{ ancestor-or-self::*/label => string-join(' ') }">&#128077;</a><!-- thumbs up -->
    </xsl:template>
    
    <xsl:template match="test" mode="gauntlet">
-      <a href="#{@id}">&#10060;</a><!-- red X -->
+      <a class="jump" onclick="javascript:viewSection('{@id}')" title="{ ancestor-or-self::*/label => string-join(' ') }">&#128078;</a><!-- thumbs down -->
    </xsl:template>
    
    
@@ -82,6 +83,10 @@
    
    <xsl:template priority="20" match="report/@xspec | report/@stylesheet">
       <p class="{local-name(.)}"><b class="pg">{ local-name(..) }/{ local-name(.) }</b>: <a class="pg" href="{ . }">{ . }</a></p>
+   </xsl:template>
+   
+   <xsl:template priority="20" match="report/@date">
+      <p class="{local-name(.)}"><b class="pg">{ local-name(..) }/{ local-name(.) }</b>: { format-dateTime(xs:dateTime(.),'[MNn] [D1], [Y0001] [H01]:[m01]:[s01]') } (<code>{.}</code>)</p>
    </xsl:template>
    
    <xsl:template priority="20" match="test/@successful"/>
@@ -109,13 +114,17 @@
       <span class="label">{ self::report/'Total tests '}{ child::label }</span>
       <span class="result">
       <xsl:iterate select="'passing', 'pending', 'failing','total'[not($subtotal)],'subtotal'[$subtotal]">
-         <xsl:text> </xsl:text>
-         <span class="{ . }">
-            <b class="pg">{ . }</b>
-            <xsl:text>: </xsl:text>
+         
+         <xsl:variable name="this-count">
             <xsl:apply-templates select="." mode="count-tests">
                <xsl:with-param name="where" select="$here"/>
             </xsl:apply-templates>
+         </xsl:variable>
+         <xsl:text> </xsl:text>
+         <span class="{ . }{ ' zero'[$this-count='0']}">
+            <b class="pg">{ . }</b>
+            <xsl:text>: </xsl:text>
+            <xsl:sequence select="$this-count"/>
          </span>
       </xsl:iterate>
       </span>
@@ -174,6 +183,9 @@ body { font-family: 'Calibri', 'Arial', 'Helvetica' }
 
 details { outline: thin solid black; padding: 0.4em }
 
+.failing { background-color: seashell }
+.failing.zero { background-color: inherit } 
+
 .summary-line { margin: 0.6em 0em; font-size: 110% }
 
 .scenario-results * { margin: 0em }
@@ -189,49 +201,84 @@ span.result span { padding: 0.2em; display: inline-block; outline: thin solid bl
 span.label { display: inline-block }
 
 .gauntlet a { text-decoration: none }
+
+.total, .subtotal { background-color: white }
+
+a.jump { cursor: pointer }
+
 </xsl:text>
          <xsl:apply-templates select="$theme" mode="theme-css"/>
       </style>
       
    </xsl:template>
    
-   <xsl:template mode="theme-css" match=".[.='federal']">
+   <xsl:template mode="theme-css" priority="1" match=".[.='federal']">
       <xsl:text xml:space="preserve" expand-text="false">
 .federal {
-  .label {    background-color: midnightblue; color: white}
+  .label {    background-color: #1a4480; color: white}
   .pending .label { background-color: inherit; color: black }
-  .passing, .pending { background-color: white }
-  .failing { background-color: mistyrose }
+  .passing { background-color: #e1f3f8 }
+  .pending { background-color: white }
+  .failing { background-color: #f8dfe2 }
+  .failing.zero { background-color: inherit } 
 }
 </xsl:text>
    </xsl:template>
    
-   <xsl:template mode="theme-css" match=".[.='classic']"><!-- 'classic' theme emulates JT's purple-and-green -->
+   <xsl:template mode="theme-css" priority="1" match=".[.='classic']"><!-- 'classic' theme emulates JT's purple-and-green -->
       <xsl:text xml:space="preserve" expand-text="false">
 .classic {
-  .label {   background-color: #606; color: #6f6;}
+  h1, .label {   background-color: #606; color: #6f6 }
+  h1 { padding: 0.2em }
   .pending .label { background-color: inherit; color: black }
   .passing { background-color: #cfc }
-  .pending { background-color: gainsboro }
-  .failing { background-color: pink }
+  .pending { background-color: #eee }
+  .failing { background-color: #fcc }
+  .failing.zero { background-color: inherit } 
 }
 </xsl:text>
    </xsl:template>
    
-   <xsl:template mode="theme-css" match=".[.='toybox']">
+   <xsl:template mode="theme-css" priority="1" match=".[.='toybox']">
       <xsl:text xml:space="preserve" expand-text="false">
 .toybox {
    .label {   background-color: black; color: white }
-   .pending .label { background-color: inherit; color: black }
    .failing .label { background-color: darkred }
    .passing .label { background-color: darkgreen }
-   .passing { background-color: aliceblue }
+   .pending .label { background-color: inherit; color: black }
+   .passing { background-color: honeydew }
    .pending { background-color: cornsilk }
    .failing { background-color: mistyrose }
-   .total, .subtotal { background-color: white }
+   .failing.zero { background-color: inherit } 
 }
 </xsl:text>
    </xsl:template>
+      
+   <xsl:template mode="theme-css" match="."/>
+   
+   <xsl:template name="page-js">
+      <script type="text/javascript">
+<xsl:text xml:space="preserve" expand-text="false">
+const viewSection = eID => {
+     let who = document.getElementById(eID); 
+     let openers = getAncestorDetails(who);
+     openers.forEach(o => { o.open = true; } );
+     who.scrollIntoView( {behavior: 'smooth'} );
+}
+
+const getAncestorDetails = el => {
+    let ancestors = [];
+    while (el) {
+      if (el.localName === 'details') { ancestors.unshift(el); }
+      el = el.parentNode;
+    }
+    return ancestors;
+}
+</xsl:text>
+      </script>
+   </xsl:template>
+   
+   
 
    <xsl:mode name="count-tests" on-no-match="fail"/>
    
