@@ -17,6 +17,11 @@
    </x:scenario>
 
    <x:scenario label="Comments are copied and PIs are dropped">
+      <x:scenario label="Pending comment" pending="comment">
+         <x:variable name="mx:a-comment"><!--comment--></x:variable>
+         <x:context select="$mx:a-comment"/>
+         <x:expect label="is copied" select="$mx:a-comment"/>
+      </x:scenario>
       <x:scenario label="Comment">
          <x:variable name="mx:a-comment"><!--comment--></x:variable>
          <x:context select="$mx:a-comment"/>

@@ -3,6 +3,8 @@
    xmlns:xs="http://www.w3.org/2001/XMLSchema"
    xmlns:math="http://www.w3.org/2005/xpath-functions/math"
    xmlns:mx="http://csrc.nist.gov/ns/csd/metaschema-xslt"
+   xpath-default-namespace="http://www.jenitennison.com/xslt/xspec"
+   xmlns="http://www.jenitennison.com/xslt/xspec"
    exclude-result-prefixes="#all"
    expand-text="true"
    version="3.0">

@@ -5,6 +5,7 @@
    xmlns:mx="http://csrc.nist.gov/ns/csd/metaschema-xslt"
    exclude-result-prefixes="math"
    xpath-default-namespace="http://www.jenitennison.com/xslt/xspec"
+   xmlns="http://www.jenitennison.com/xslt/xspec"
    expand-text="true"
    version="3.0">
    
@@ -14,11 +15,14 @@
       date="2023-12-08T15:55:17.79518-05:00">-->
       
       <xsl:template match="/*">
-         <xsl:variable name="min-date" select="min(report/(@date ! xs:dateTime(.)))"/>
-         <xsl:variable name="max-date" select="max(report/(@date ! xs:dateTime(.)))"/>
+         <xsl:variable name="reports" select="self::report | child::report"/>
          
-         <REPORT-SUMMARY from="{$min-date}" to="{$max-date}" report-count="{count(report)}">
-            <xsl:apply-templates select="self::report | child::report" mode="report-report"/>
+         <REPORT-SUMMARY report-count="{count($reports)}">
+            <xsl:if test="exists($reports[2])">
+               <xsl:attribute name="from" select="min($reports/(@date ! xs:dateTime(.)))"/>
+               <xsl:attribute name="t0" select="max($reports/(@date ! xs:dateTime(.)))"/>
+            </xsl:if>
+            <xsl:apply-templates select="$reports" mode="report-report"/>
          </REPORT-SUMMARY>
       </xsl:template>
    
