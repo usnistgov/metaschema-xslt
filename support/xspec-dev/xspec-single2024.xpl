@@ -22,7 +22,7 @@
       <p:pipe port="result" step="evaluate-xspec"/>
    </p:output>
    
-   <p:serialization port="html-report" indent="true" method="html"/>
+   <p:serialization port="html-report" indent="false" method="html"/>
    <p:output port="html-report">
       <p:pipe port="result" step="html-report"/>
    </p:output>
