@@ -6,35 +6,12 @@
    expand-text="true"
    version="3.0">
 
-   <!-- 
-   
-   Requirements:
-   
-   Produce graceful and clean HTML with self-contained CSS
-     stacked folders, open when containing failures
-   Support simple theming (with switches) or 'skinning' (w/ external CSS)
-     theme=classic - purple/green
-     theme=uswds - blue/black/white
-     theme=toybox
-     theme=clean (default)
-     add your own theme with a template in mode 'theme-css'
-   Take advantage of current XSLT features
-   Take advantage of current CSS features (e.g. grids)
-   Run without dependencies apart from XSLT 3.0/XPath 3.1
-     - no imports, no libraries, all self-contained
-     - and w/o a character map dependency that has foiled XProc 1.0 deployment
-   XSpec this? why not?
-     XSpec non-obvious functionalities such as driving the styles into CSS?
-   
-   where else to use XSpec under CI/CD besides this repo?
-     xslt-functions
-     oscal-xslt
-   
-   -->
+   <!-- Not used by XProc -->
+   <xsl:output method="html" html-version="5"/>
 
-<xsl:output method="xhtml"/>
-
-   <!-- also accepts 'uswds', 'classic', and 'toybox' -->
+   <!-- 'clean' is a b/w theme with good contrast
+        other available themes are 'uswds', 'classic', and 'toybox'
+        or add your own templates in mode 'theme-css' (see below) -->
    <xsl:param name="theme" as="xs:string">clean</xsl:param>
    
    <!-- implementing strip-space by hand since we don't want to lose ws when copying content through -->
@@ -43,13 +20,6 @@
    <xsl:template match="expect-test-wrap/text() | input-wrap/text()" xpath-default-namespace=""/>
    
    <!--
-     expand all / collapse all
-
-     grouping the icons for navigability - scalability at levels of 100+ tests
-     
-     thumbs icons to mark success from the top (on summary line)
-     accessibility skin? what makes good contrast for color blind readers?
-     code copy to clipboard
      
      XSPec batcher should be able to issue one line per report as well as a summary determination
 
@@ -57,9 +27,9 @@ x 'realistic' example - profile resolution
 o summary per report on 'determination' (full/summary)
 o rename ports?
 o HTML/CSS
-  o 'contrast' skin?
-  o tweaks as above (clean up comment)
-  o truncate reports?
+  x 'contrast' skin?
+  x tweaks as above (clean up comment)
+  x truncate reports?
   
   
 Inspector XSLT
@@ -143,18 +113,21 @@ Multiple XML implementations that are not XDM
       </div>
    </xsl:template>
    
-   <xsl:template priority="5" match="test[matches(@pending,'\S')]" mode="gauntlet">
-      <a class="jump" onclick="javascript:viewSection('{@id}')" title="{ ancestor-or-self::*/label => string-join(' ') }">&#129310;</a><!-- crossed fingers -->
+   <xsl:template priority="5" match="test" mode="gauntlet">
+      <a class="jump" onclick="javascript:viewSection('{@id}')" title="{ ancestor-or-self::*/label => string-join(' ') }">
+         <xsl:apply-templates select="." mode="icon"/>
+      </a><!-- crossed fingers -->
    </xsl:template>
    
-   <xsl:template match="test[@successful='true']" mode="gauntlet">
-      <a class="jump" onclick="javascript:viewSection('{@id}')" title="{ ancestor-or-self::*/label => string-join(' ') }">&#128077;</a><!-- thumbs up -->
-   </xsl:template>
+   <!-- icons indicating test results can also be overridden or themed -->
+   <!-- crossed fingers -->
+   <xsl:template priority="5" match="test[matches(@pending,'\S')]" mode="icon">&#129310;</xsl:template>
    
-   <xsl:template match="test" mode="gauntlet">
-      <a class="jump" onclick="javascript:viewSection('{@id}')" title="{ ancestor-or-self::*/label => string-join(' ') }">&#128078;</a><!-- thumbs down -->
-   </xsl:template>
+   <!-- thumbs up -->
+   <xsl:template match="test[@successful='true']" mode="icon">&#128077;</xsl:template>
    
+   <!-- thumbs down -->
+   <xsl:template match="test" mode="icon">&#128078;</xsl:template>
    
    <xsl:template match="@*">
       <p class="{local-name(.)}"><b class="pg">{ local-name(..) }/{ local-name(.) }</b>: <span class="pg">{ . }</span></p>
@@ -173,7 +146,7 @@ Multiple XML implementations that are not XDM
    <xsl:template priority="20" match="test/@successful"/>
    
    <xsl:template match="scenario">
-      <details class="{ (@pending/'pending',.[descendant::test/@successful = 'false']/'failing','passing')[1]}">
+      <details class="{ (@pending/'pending',.[descendant::test/@successful = 'false']/'failing','passing')[1]}{ child::test[1]/' tested' }">
          <xsl:copy-of select="@id"/>
          <xsl:if test="descendant::test/@successful = 'false'">
             <xsl:attribute name="open">open</xsl:attribute>
@@ -194,6 +167,8 @@ Multiple XML implementations that are not XDM
       <xsl:variable name="subtotal" select="exists(//test except descendant::test)"/>
       <xsl:variable name="all-passing" select="empty(descendant::test[not(@successful='true')])"/>
       <span class="label">{ self::report/'Total tests '}{ child::label }</span>
+      <xsl:text>&#xA0;</xsl:text><!-- nbsp -->
+      <xsl:apply-templates select="self::scenario/descendant::test" mode="gauntlet"/>
       <span class="result">
       <xsl:iterate select="'passing', 'pending', 'failing','total'[not($subtotal)],'subtotal'[$subtotal]">
          
@@ -215,6 +190,8 @@ Multiple XML implementations that are not XDM
    <xsl:template priority="20" match="scenario[exists(child::test)]" mode="in-summary">
       <xsl:variable name="here" select="."/>
       <span class="label">{ child::label }</span>
+      <xsl:text>&#xA0;</xsl:text><!-- nbsp -->
+      <xsl:apply-templates select="child::test" mode="icon"/>
       <xsl:apply-templates select="child::test" mode="#current"/>
       <span class="result { child::test/(@pending/'pending', @successful)[1] }">{ (child::test/@pending/('Pending ' || .),child::test[@successful='true']/'Passes','Fails')[1] }</span>
    </xsl:template>
@@ -244,18 +221,18 @@ Multiple XML implementations that are not XDM
    </xsl:template>
    
    <xsl:template match="test" mode="header">
-      <h3>Testing</h3>
+      <h3>Expecting (testing against)</h3>
    </xsl:template>
    
    <xsl:template match="result" mode="header">
-      <h3>Finding result</h3>
+      <h3>Producing (actual result)</h3>
    </xsl:template>
    
    <xsl:template match="input-wrap" mode="header" priority="3" xpath-default-namespace="">
       <h3>From input</h3>
    </xsl:template>
    
-   <xsl:template match="expect-wrap" mode="header" priority="3" xpath-default-namespace="">
+   <xsl:template match="expect-test-wrap" mode="header" priority="3" xpath-default-namespace="">
       <h4>Expecting</h4>
    </xsl:template>
    
@@ -266,24 +243,22 @@ Multiple XML implementations that are not XDM
          <xsl:next-match/>
    </xsl:template>
    
-   
-   
    <xsl:template match="context[exists(*)]">
-      <div class="codeblock { local-name() }"  onclick="javascript:clipboardCopy(this);">
-           <xsl:call-template name="write-xml"/>
-         </div>
+      <div class="codeblock { local-name() }" onclick="javascript:clipboardCopy(this);">
+         <xsl:call-template name="write-xml"/>
+      </div>
    </xsl:template>
    
-   <xsl:template match="test/label" priority="5"/><!--
-      <p class="label">
+   <xsl:template match="test/label" priority="5">
+      <h5 class="label">
          <xsl:apply-templates/>
-      </p>
-   </xsl:template>-->
+      </h5>
+   </xsl:template>
    
    <xsl:template match="input-wrap" priority="3" xpath-default-namespace="" xmlns:xspec="http://www.jenitennison.com/xslt/xspec"/>
       
    <!-- should match content-wrap in no namespace -->
-   <xsl:template match="content-wrap | expect-wrap" priority="3" xpath-default-namespace="" xmlns:xspec="http://www.jenitennison.com/xslt/xspec">
+   <xsl:template match="content-wrap | expect-test-wrap" priority="3" xpath-default-namespace="" xmlns:xspec="http://www.jenitennison.com/xslt/xspec">
       <div class="{ local-name(.) }{ parent::xspec:scenario/' panel' }">
          <xsl:apply-templates select="." mode="header"/>
          <xsl:next-match/>
@@ -298,7 +273,7 @@ Multiple XML implementations that are not XDM
    </xsl:template>
    
    <xsl:template name="write-xml" xmlns:map="http://www.w3.org/2005/xpath-functions/map">
-      <xsl:sequence select="serialize(child::*, map {'indent': true()}) => replace('^#xA;','')"/>
+      <xsl:sequence select="serialize(child::*, map {'indent': true()}) => replace('^\s+','')"/>
    </xsl:template>
    
   <!-- <xsl:template match="processing-instruction()">
@@ -324,6 +299,7 @@ div.fence.evenodd { flex-direction: column }
 div.summary { margin-top: 0.6em }
 
 details { outline: thin solid black; padding: 0.4em }
+details.tested { outline: thin dotted black }
 
 .failing { background-color: gainsboro }
 .failing.zero { background-color: inherit } 
@@ -348,7 +324,7 @@ details { outline: thin solid black; padding: 0.4em }
 div.panel .codeblock { align-self: flex-end }
 
 .codeblock { width: 100%; box-sizing: border-box;
-  outline: thin solid black; max-height: 40vh; padding: 0.4em; background-color: white;
+  outline: thin solid black; padding: 0.4em; background-color: white;
   overflow: auto; resize: both;
   font-family: 'Consolas', monospace;
   white-space: pre }
@@ -472,7 +448,7 @@ const unescapeHTML = str =>
   );
 
 ]]>
-  
+
 const clipboardCopy = async (who) => {
       let cp = unescapeHTML(who.innerHTML);
       try { await navigator.clipboard.writeText(cp); }

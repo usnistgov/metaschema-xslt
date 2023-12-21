@@ -73,3 +73,12 @@ Support for a batch capability is demonstrated in the test directory, which cont
 
 This demonstrates how to hard-wire an XProc for a set of XSpecs to be evaluated.
 
+## HTML Production
+
+In order to work around limitations in the current XSpec HTML production (details with respect to its deployment under XProc 1.0), a [new HTML production XSLT](xspec-mx-html-report.xsl) is provided here, for use either for standalone XSpec reporting, or for reporting results of batch processes.
+
+[This XSLT ](xspec-mx-html-report.xsl) produces standalone HTML including embedded CSS and some lightweight Javascript supporting navigation features.
+
+A runtime parameter can be set on this transformation, `theme`, customizing color schemes. `theme=clean` (the default) produces a medium-contrast color-neutral format; `theme=uswds` uses colors for emphasis from the USWDS color scheme; `theme=classic` uses colors drawn from the good-old XSpec HTML; and `theme=toybox` provides a more extravagant scheme.
+
+New themes can be added in a new XSLT that imports this one, by copying and modifying an appropriate template. Such an importing XSLT can also modify any other feature of the XSLT.
