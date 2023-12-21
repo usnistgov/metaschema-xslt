@@ -34,6 +34,11 @@
       <p:pipe port="result" step="determination"/>
    </p:output>
    
+   <p:serialization port="html-report" indent="true" method="html"/>
+   <p:output port="html-report">
+      <p:pipe port="result" step="html-report"/>
+   </p:output>
+   
    <p:import href="../xspec/src/harnesses/harness-lib.xpl"/>
 
 
@@ -73,6 +78,17 @@
    <p:xslt name="determination">
       <p:input port="stylesheet">
          <p:document href="xspec-summary-reduce.xsl"/>
+      </p:input>
+   </p:xslt>
+   
+   <p:sink/>
+   
+   <p:xslt name="html-report">
+      <p:input port="source">
+         <p:pipe port="result" step="results"/>
+      </p:input>
+      <p:input port="stylesheet">
+         <p:document href="xspec-mx-html-report.xsl"/>
       </p:input>
    </p:xslt>
    

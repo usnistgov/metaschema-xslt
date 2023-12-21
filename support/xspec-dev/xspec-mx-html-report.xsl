@@ -19,57 +19,6 @@
    
    <xsl:template match="expect-test-wrap/text() | input-wrap/text()" xpath-default-namespace=""/>
    
-   <!--
-     
-     XSPec batcher should be able to issue one line per report as well as a summary determination
-
-x 'realistic' example - profile resolution
-o summary per report on 'determination' (full/summary)
-o rename ports?
-o HTML/CSS
-  x 'contrast' skin?
-  x tweaks as above (clean up comment)
-  x truncate reports?
-  
-  
-Inspector XSLT
-  o bug fix / allowed-values - with tests
-  o bug fix / @target paths - with tests
-  o integrate XProc XSpec
-  o Plan 'thick Schematron' implementation
-
-XSLT Presentation
-
-How to make software 'secure by design'
-  aspects of security - Pillars of Trust
-    Reputation
-    Responsiveness
-  proactive, preemptive
-    demonstration of Least Power and other principles
-    'self-documented' to extent possible and reasonable
-    layered for resilience - commodity stack
-    tested: "the black box is open"
- 
- What is possible
- OSCAL-xslt repository
-   presentations - HTML and PDF
-   OSCAL generators
-   InspectorXSLT
-   others?
- Profile Resolution
-
-
-layers / externalities
-
-(XDM stack provides some measure of data security built in)
-
-Multiple XDM implementations
-Multiple XML implementations that are not XDM
-  Python, DOM and others
-
-
-   -->
-   
    <xsl:template match="/">
       <html>
          <head>
@@ -83,24 +32,33 @@ Multiple XML implementations that are not XDM
    
    <xsl:template match="/*" priority="101">
       <body class="{ $theme }">
+         <xsl:for-each-group select="report" group-by="true()">
+            <ul>
+               <xsl:for-each select="current-group()">
+                  <li><a href="#report_{ count(.|preceding-sibling::report) }">XSpec Report - <code>{ @xspec }</code></a></li>
+               </xsl:for-each>
+            </ul>
+         </xsl:for-each-group>
          <xsl:next-match/>
       </body>
    </xsl:template>
    
    <xsl:template match="report">
-      <h1>XSpec Report - <code>{ @xspec/replace(.,'.*/','') }</code></h1>
-      <xsl:apply-templates select="@*"/>
-      <div class="gauntlet">
-         <xsl:apply-templates mode="gauntlet"/>
-      </div>
-      <button onclick="javascript:expandAllDetails()">Expand All</button>
-      <button onclick="javascript:collapseAllDetails()">Collapse All</button>
-      
-      <div class="summary">
-      <xsl:apply-templates select="." mode="in-summary"/>
-      </div>
-      <hr class="hr"/>
-      <xsl:apply-templates/>
+      <section class="xspec-report" id="report_{ count(.|preceding-sibling::report) }">
+         <h1>XSpec Report - <code>{ @xspec/replace(.,'.*/','') }</code></h1>
+         <xsl:apply-templates select="@*"/>
+         <div class="gauntlet">
+            <xsl:apply-templates mode="gauntlet"/>
+         </div>
+         <button onclick="javascript:expandAllDetails()">Expand All</button>
+         <button onclick="javascript:collapseAllDetails()">Collapse All</button>
+
+         <div class="summary">
+            <xsl:apply-templates select="." mode="in-summary"/>
+         </div>
+         <hr class="hr"/>
+         <xsl:apply-templates/>
+      </section>
    </xsl:template>
    
    <xsl:template match="text()" mode="gauntlet"/>

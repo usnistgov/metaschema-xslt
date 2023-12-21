@@ -48,6 +48,11 @@
       <p:pipe port="determination" step="test-batch"/>
    </p:output>
    
+   <p:serialization port="html-report" indent="true" method="html"/>
+   <p:output port="html-report">
+      <p:pipe port="html-report" step="test-batch"/>
+   </p:output>
+   
    <p:import href="../xspec-batch.xpl"/>
 
 
