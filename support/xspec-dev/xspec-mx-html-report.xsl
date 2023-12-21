@@ -6,6 +6,10 @@
    expand-text="true"
    version="3.0">
 
+<!-- nb: xspec-mx-html-report-nns.xsl is included at the end of this XSLT
+containing templates we would otherwise have to reset wrt xpath-default-namespace
+-->
+
    <!-- Not used by XProc -->
    <xsl:output method="html" html-version="5"/>
 
@@ -17,12 +21,18 @@
    <!-- implementing strip-space by hand since we don't want to lose ws when copying content through -->
    <xsl:template match="report/text() | scenario/text() | test/text() | call/text() | result/text() | expect/text() | context/text()"/>
    
-   <xsl:template match="expect-test-wrap/text() | input-wrap/text()" xpath-default-namespace=""/>
    
+   <!-- Some interesting things about this XSLT:
+   
+   About half of it is literal CSS and Javascript to be pasted out
+   There are templates matching strings, and functions calling templates
+   Since attributes emit elements (not attributes, as more usually) they often don't come first inside their parents
+   
+   -->
    <xsl:template match="/">
       <html>
          <head>
-            <title/>
+            <title>XSpec - { count(descendant::test) } { if (count(descendant::test) eq 1) then 'test' else 'tests'} in { count(descendant::report) } { if (count(descendant::report) eq 1) then 'report' else 'reports'} </title>
             <xsl:call-template name="page-css"/>
             <xsl:call-template name="page-js"/>
          </head>
@@ -45,14 +55,13 @@
    
    <xsl:template match="report">
       <section class="xspec-report" id="report_{ count(.|preceding-sibling::report) }">
-         <h1>XSpec Report - <code>{ @xspec/replace(.,'.*/','') }</code></h1>
-         <xsl:apply-templates select="@*"/>
-         <div class="gauntlet">
-            <xsl:apply-templates mode="gauntlet"/>
+         <div class="iconogram floater">
+            <xsl:apply-templates mode="iconogram"/>
          </div>
-         <button onclick="javascript:expandAllDetails()">Expand All</button>
-         <button onclick="javascript:collapseAllDetails()">Collapse All</button>
-
+         <h1>XSpec Report - <code>{ @xspec/replace(.,'.*/','') }</code></h1>
+         <button onclick="javascript:expandSectionDetails(closest('section'))">Expand report</button>
+         <button onclick="javascript:collapseSectionDetails(closest('section'))">Collapse</button>
+         <xsl:apply-templates select="@*"/>
          <div class="summary">
             <xsl:apply-templates select="." mode="in-summary"/>
          </div>
@@ -61,9 +70,9 @@
       </section>
    </xsl:template>
    
-   <xsl:template match="text()" mode="gauntlet"/>
+   <xsl:template match="text()" mode="iconogram"/>
    
-   <xsl:template match="scenario" mode="gauntlet">
+   <xsl:template match="scenario" mode="iconogram">
       <xsl:variable name="in" select="ancestor-or-self::scenario"/>
       <xsl:variable name="oddness" select="('odd'[count($in) mod 2],'even')[1]"/>
       <div class="fence { $oddness }{ child::test[@successful != 'true']/' failing'}">
@@ -71,7 +80,7 @@
       </div>
    </xsl:template>
    
-   <xsl:template priority="5" match="test" mode="gauntlet">
+   <xsl:template priority="5" match="test" mode="iconogram">
       <a class="jump" onclick="javascript:viewSection('{@id}')" title="{ ancestor-or-self::*/label => string-join(' ') }">
          <xsl:apply-templates select="." mode="icon"/>
       </a><!-- crossed fingers -->
@@ -87,6 +96,8 @@
    <!-- thumbs down -->
    <xsl:template match="test" mode="icon">&#128078;</xsl:template>
    
+   
+   <!-- Generic handling for any attribute not otherwise handled -->
    <xsl:template match="@*">
       <p class="{local-name(.)}"><b class="pg">{ local-name(..) }/{ local-name(.) }</b>: <span class="pg">{ . }</span></p>
    </xsl:template>
@@ -102,6 +113,7 @@
    </xsl:template>
    
    <xsl:template priority="20" match="test/@successful"/>
+   
    
    <xsl:template match="scenario">
       <details class="{ (@pending/'pending',.[descendant::test/@successful = 'false']/'failing','passing')[1]}{ child::test[1]/' tested' }">
@@ -122,11 +134,11 @@
    
    <xsl:template match="report | scenario" mode="in-summary">
       <xsl:variable name="here" select="."/>
-      <xsl:variable name="subtotal" select="exists(//test except descendant::test)"/>
+      <xsl:variable name="subtotal" select="exists(ancestor-or-self::report//test except descendant::test)"/>
       <xsl:variable name="all-passing" select="empty(descendant::test[not(@successful='true')])"/>
       <span class="label">{ self::report/'Total tests '}{ child::label }</span>
       <xsl:text>&#xA0;</xsl:text><!-- nbsp -->
-      <xsl:apply-templates select="self::scenario/descendant::test" mode="gauntlet"/>
+      <xsl:apply-templates select="self::scenario/descendant::test" mode="icon"/>
       <span class="result">
       <xsl:iterate select="'passing', 'pending', 'failing','total'[not($subtotal)],'subtotal'[$subtotal]">
          
@@ -161,7 +173,6 @@
    
    <xsl:template match="result">
       <div class="reported panel">
-         
          <xsl:apply-templates select="." mode="header"/>
          <xsl:apply-templates select="@select"/>
          <xsl:apply-templates/>
@@ -186,14 +197,6 @@
       <h3>Producing (actual result)</h3>
    </xsl:template>
    
-   <xsl:template match="input-wrap" mode="header" priority="3" xpath-default-namespace="">
-      <h3>From input</h3>
-   </xsl:template>
-   
-   <xsl:template match="expect-test-wrap" mode="header" priority="3" xpath-default-namespace="">
-      <h4>Expecting</h4>
-   </xsl:template>
-   
    <xsl:template match="*" mode="header"/>
    
    <xsl:template match="call | expect | context" priority="3">
@@ -213,23 +216,7 @@
       </h5>
    </xsl:template>
    
-   <xsl:template match="input-wrap" priority="3" xpath-default-namespace="" xmlns:xspec="http://www.jenitennison.com/xslt/xspec"/>
       
-   <!-- should match content-wrap in no namespace -->
-   <xsl:template match="content-wrap | expect-test-wrap" priority="3" xpath-default-namespace="" xmlns:xspec="http://www.jenitennison.com/xslt/xspec">
-      <div class="{ local-name(.) }{ parent::xspec:scenario/' panel' }">
-         <xsl:apply-templates select="." mode="header"/>
-         <xsl:next-match/>
-         <!--<xsl:copy-of select="child::node()" exclude-result-prefixes="#all" copy-namespaces="false"/>-->
-      </div>
-   </xsl:template>
-
-   <xsl:template match="content-wrap" xpath-default-namespace="">
-      <div class="codeblock { local-name() }" onclick="javascript:clipboardCopy(this);">
-         <xsl:call-template name="write-xml"/>
-      </div>
-   </xsl:template>
-   
    <xsl:template name="write-xml" xmlns:map="http://www.w3.org/2005/xpath-functions/map">
       <xsl:sequence select="serialize(child::*, map {'indent': true()}) => replace('^\s+','')"/>
    </xsl:template>
@@ -244,15 +231,17 @@
 
 body { font-family: 'Calibri', 'Arial', 'Helvetica' }
 
-div.gauntlet, div.fence { display: flex; border: thin solid grey; margin: 0.1em; padding: 0.1em; flex-wrap: wrap; height: fit-content }
+section { border-top: medium solid black; padding-top: 0.6em; margin-top: 0.6em}
 
-div.gauntlet { max-width: fit-content }
+.floater { float: right; clear: both }
+
+div.iconogram, div.fence { display: flex; border: thin solid grey; margin: 0.1em; padding: 0.1em; flex-wrap: wrap; height: fit-content }
+
+div.iconogram { background-color: white }
 
 div.fence { border: thin dotted grey }
 
 div.fence.failing { border-style: solid }
-
-div.fence.evenodd { flex-direction: column } 
 
 div.summary { margin-top: 0.6em }
 
@@ -279,6 +268,8 @@ details.tested { outline: thin dotted black }
 .panel {  display: flex;
   flex-direction: column  }
 
+.panel.tested { grid-column: 2 }
+
 div.panel .codeblock { align-self: flex-end }
 
 .codeblock { width: 100%; box-sizing: border-box;
@@ -297,7 +288,7 @@ span.label { display: inline-block }
 
 span.expecting { font-style: italic; font-weight: bold }
 
-.gauntlet a { text-decoration: none }
+.iconogram a { text-decoration: none }
 
 .total, .subtotal { background-color: white }
 
@@ -381,13 +372,13 @@ const getAncestorDetails = el => {
     return ancestors;
 }
 
-const expandAllDetails = () => {
-    let allDetails = [... document.getElementsByTagName('details') ];
-    allDetails.forEach(d => { d.open = true; } );
+const expandSectionDetails = inSection => {
+    let sectionDetails = [... inSection.getElementsByTagName('details') ];
+    sectionDetails.forEach(d => { d.open = true; } );
 }
-const collapseAllDetails = () => {
-    let allDetails = [... document.getElementsByTagName('details') ];
-    allDetails.forEach(d => { d.open = false; } );
+const collapseSectionDetails = inSection => {
+    let sectionDetails = [... inSection.getElementsByTagName('details') ];
+    sectionDetails.forEach(d => { d.open = false; } );
 }
 
 <!-- thanks to https://www.30secondsofcode.org/js/s/unescape-html/ -->
@@ -441,5 +432,7 @@ const clipboardCopy = async (who) => {
       <xsl:param name="where" as="element()"/>
       <xsl:sequence select="count($where/descendant::test)"/>
    </xsl:template>
+   
+   <xsl:include href="xspec-mx-html-report-nns.xsl"/>
    
 </xsl:stylesheet>

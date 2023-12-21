@@ -32,6 +32,9 @@
    
    <p:input port="parameters" kind="parameter"/>
    
+   <!-- set to 'clear', 'classic', 'uswds' or 'toybox' or override in the call -->
+   <p:option name="html-theme" select="'uswds'"/>
+   
    <p:serialization port="xspec-results" indent="true"/>
    <p:output port="xspec-results">
       <p:pipe port="xspec-results" step="test-batch"/>
@@ -48,15 +51,18 @@
       <p:pipe port="determination" step="test-batch"/>
    </p:output>
    
-   <p:serialization port="html-report" indent="true" method="html"/>
+   <p:serialization port="html-report" indent="false" method="html"/>
    <p:output port="html-report">
       <p:pipe port="html-report" step="test-batch"/>
    </p:output>
    
    <p:import href="../xspec-batch.xpl"/>
 
-
    <!-- incipit -->
-   <mx:xspec-batch name="test-batch"/>
+   <mx:xspec-batch name="test-batch">
+      <p:with-option name="html-theme" select="$html-theme">
+         <p:empty/>
+      </p:with-option>
+   </mx:xspec-batch>
    
 </p:declare-step>

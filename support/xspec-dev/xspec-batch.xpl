@@ -19,6 +19,8 @@
    
    <p:input port="parameters" kind="parameter"/>
    
+   <p:option name="html-theme" select="'uswds'"/>
+   
    <p:serialization port="xspec-results" indent="true"/>
    <p:output port="xspec-results">
       <p:pipe port="result" step="results"/>
@@ -90,6 +92,7 @@
       <p:input port="stylesheet">
          <p:document href="xspec-mx-html-report.xsl"/>
       </p:input>
+      <p:with-param name="theme" select="$html-theme"/>
    </p:xslt>
    
 </p:declare-step>

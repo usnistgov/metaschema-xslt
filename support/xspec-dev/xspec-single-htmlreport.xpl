@@ -15,6 +15,8 @@
    
    <p:input port="parameters" kind="parameter"/>
    
+   <p:option name="html-theme" select="'clean'"/>
+   
    <!--nb unless patched in the imported XSLT, HTML comes with pseudo-output escaping into Unicode PUA
        see ../xspec/src/reporter/format-utils.xsl /*/xsl:function[@name='fmt:disable-escaping'] -->
    <p:serialization port="raw-report" indent="true" method="html"/>
@@ -60,6 +62,7 @@
       <p:input port="stylesheet">
          <p:document href="xspec-mx-html-report.xsl"/>
       </p:input>
+      <p:with-param name="theme" select="$html-theme"/>
    </p:xslt>
    
    <!--<p:sink/>
