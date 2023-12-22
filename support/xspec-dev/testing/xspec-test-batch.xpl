@@ -29,11 +29,11 @@
       <p:document href="xspec-shell.xspec"/>
       <p:document href="xspec-basic.xspec"/>
    </p:input>
+
+   <!-- set to 'clear', 'classic', 'uswds' or 'toybox' or override in the call -->
+   <p:option name="html-theme" select="'toybox'"/>
    
    <p:input port="parameters" kind="parameter"/>
-   
-   <!-- set to 'clear', 'classic', 'uswds' or 'toybox' or override in the call -->
-   <p:option name="html-theme" select="'uswds'"/>
    
    <p:serialization port="xspec-results" indent="true"/>
    <p:output port="xspec-results">

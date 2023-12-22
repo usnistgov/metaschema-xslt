@@ -54,13 +54,13 @@
    </xsl:template>
    
    <xsl:template match="x:report">
-      <div open="open" class="xspec-report">
+      <section class="xspec-report">
          <div class="iconogram floater">
             <xsl:apply-templates mode="iconogram"/>
          </div>
          <h1>XSpec Report - <code>{ @xspec/replace(.,'.*/','') }</code></h1>
          <xsl:call-template name="make-report"/>
-      </div>
+      </section>
    </xsl:template>
    
    <!--Make a details panel when there is more than one report -->
@@ -277,8 +277,6 @@
 <xsl:text  xml:space="preserve" expand-text="false">
 
 body { font-family: 'Calibri', 'Arial', 'Helvetica' }
-
-section { border-top: medium solid black; padding-top: 0.6em; margin-top: 0.6em}
 
 .floater { float: right; clear: both }
 
