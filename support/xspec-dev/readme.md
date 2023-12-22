@@ -82,3 +82,8 @@ In order to work around limitations in the current XSpec HTML production (detail
 A runtime parameter can be set on this transformation, `theme`, customizing color schemes. `theme=clean` (the default) produces a medium-contrast color-neutral format; `theme=uswds` uses colors for emphasis from the USWDS color scheme; `theme=classic` uses colors drawn from the good-old XSpec HTML; and `theme=toybox` provides a more extravagant scheme.
 
 New themes can be added in a new XSLT that imports this one, by copying and modifying an appropriate template. Such an importing XSLT can also modify any other feature of the XSLT.
+
+### Theming HTML from XProc
+
+The XProc files support a runtime option, `html-theme`, which exposes control of the theme setting to the user or script.
+

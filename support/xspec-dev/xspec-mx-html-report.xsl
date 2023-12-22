@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema"
    xmlns:math="http://www.w3.org/2005/xpath-functions/math" xmlns:mx="http://csrc.nist.gov/ns/csd/metaschema-xslt"
+   xmlns:x="http://www.jenitennison.com/xslt/xspec"
    exclude-result-prefixes="#all"
-   xpath-default-namespace="http://www.jenitennison.com/xslt/xspec"
    expand-text="true"
    version="3.0">
 
-<!-- nb: xspec-mx-html-report-nns.xsl is included at the end of this XSLT
-containing templates we would otherwise have to reset wrt xpath-default-namespace
--->
 
    <!-- Not used by XProc -->
    <xsl:output method="html" html-version="5"/>
@@ -19,20 +16,23 @@ containing templates we would otherwise have to reset wrt xpath-default-namespac
    <xsl:param name="theme" as="xs:string">clean</xsl:param>
    
    <!-- implementing strip-space by hand since we don't want to lose ws when copying content through -->
-   <xsl:template match="report/text() | scenario/text() | test/text() | call/text() | result/text() | expect/text() | context/text()"/>
+   <xsl:template
+      match="x:report/text() | x:scenario/text() | x:test/text() | x:call/text() | x:result/text() | x:expect/text() | x:context/text()"/>
    
    
    <!-- Some interesting things about this XSLT:
    
-   About half of it is literal CSS and Javascript to be pasted out
+   About half of it is boilerplate CSS and Javascript for the receiving application
    There are templates matching strings, and functions calling templates
    Since attributes emit elements (not attributes, as more usually) they often don't come first inside their parents
+
+   nb: note use of xpath-default-namespace, to be cleaned up in favor of x: prefix
    
    -->
    <xsl:template match="/">
       <html>
          <head>
-            <title>XSpec - { count(descendant::test) } { if (count(descendant::test) eq 1) then 'test' else 'tests'} in { count(descendant::report) } { if (count(descendant::report) eq 1) then 'report' else 'reports'} </title>
+            <title>XSpec - { //x:test=>count() } { if (//x:test=>count() eq 1) then 'test' else 'tests'} in { //x:report=>count() } { if (//x:report=>count() eq 1) then 'report' else 'reports'} </title>
             <xsl:call-template name="page-css"/>
             <xsl:call-template name="page-js"/>
          </head>
@@ -42,10 +42,10 @@ containing templates we would otherwise have to reset wrt xpath-default-namespac
    
    <xsl:template match="/*" priority="101">
       <body class="{ $theme }">
-         <xsl:for-each-group select="report" group-by="true()">
+         <xsl:for-each-group select="x:report" group-by="true()">
             <ul>
                <xsl:for-each select="current-group()">
-                  <li><a href="#report_{ count(.|preceding-sibling::report) }">XSpec Report - <code>{ @xspec }</code></a></li>
+                  <li><a href="#report_{ count(.|preceding-sibling::x:report) }">XSpec Report - <code>{ @xspec }</code></a></li>
                </xsl:for-each>
             </ul>
          </xsl:for-each-group>
@@ -53,48 +53,65 @@ containing templates we would otherwise have to reset wrt xpath-default-namespac
       </body>
    </xsl:template>
    
-   <xsl:template match="report">
-      <section class="xspec-report" id="report_{ count(.|preceding-sibling::report) }">
+   <xsl:template match="x:report">
+      <div open="open" class="xspec-report">
          <div class="iconogram floater">
             <xsl:apply-templates mode="iconogram"/>
          </div>
          <h1>XSpec Report - <code>{ @xspec/replace(.,'.*/','') }</code></h1>
-         <button onclick="javascript:expandSectionDetails(closest('section'))">Expand report</button>
-         <button onclick="javascript:collapseSectionDetails(closest('section'))">Collapse</button>
-         <xsl:apply-templates select="@*"/>
-         <div class="summary">
-            <xsl:apply-templates select="." mode="in-summary"/>
-         </div>
-         <hr class="hr"/>
-         <xsl:apply-templates/>
-      </section>
+         <xsl:call-template name="make-report"/>
+      </div>
+   </xsl:template>
+   
+   <!--Make a details panel when there is more than one report -->
+   <xsl:template match="x:report[exists(../x:report except .)]">
+      <details class="xspec-report" id="report_{ count(.|preceding-sibling::x:report) }">
+         <summary class=" { (.[descendant::x:test/@successful = 'false']/'failing','passing')[1]}">
+            <div class="iconogram floater">
+               <xsl:apply-templates mode="iconogram"/>
+            </div>
+            <span class="h1">XSpec Report - <code>{ @xspec/replace(.,'.*/','') }</code></span>
+         </summary>
+         <xsl:call-template name="make-report"/>
+      </details>
+   </xsl:template>
+   
+   <xsl:template name="make-report">
+      <button onclick="javascript:expandSectionDetails(closest('section, details'))">Expand report</button>
+      <button onclick="javascript:collapseSectionDetails(closest('section, details'))">Collapse</button>
+      <xsl:apply-templates select="@*"/>
+      <div class="summary">
+         <xsl:apply-templates select="." mode="in-summary"/>
+      </div>
+      <hr class="hr"/>
+      <xsl:apply-templates/>
    </xsl:template>
    
    <xsl:template match="text()" mode="iconogram"/>
    
-   <xsl:template match="scenario" mode="iconogram">
-      <xsl:variable name="in" select="ancestor-or-self::scenario"/>
+   <xsl:template match="x:scenario" mode="iconogram">
+      <xsl:variable name="in" select="ancestor-or-self::x:scenario"/>
       <xsl:variable name="oddness" select="('odd'[count($in) mod 2],'even')[1]"/>
-      <div class="fence { $oddness }{ child::test[@successful != 'true']/' failing'}">
+      <div class="fence { $oddness }{ child::x:test[@successful != 'true']/' failing'}">
          <xsl:apply-templates mode="#current"/>
       </div>
    </xsl:template>
    
-   <xsl:template priority="5" match="test" mode="iconogram">
-      <a class="jump" onclick="javascript:viewSection('{@id}')" title="{ ancestor-or-self::*/label => string-join(' ') }">
+   <xsl:template priority="5" match="x:test" mode="iconogram">
+      <a class="jump" onclick="javascript:viewSection('{@id}')" title="{ ancestor-or-self::*/x:label => string-join(' ') }">
          <xsl:apply-templates select="." mode="icon"/>
       </a><!-- crossed fingers -->
    </xsl:template>
    
    <!-- icons indicating test results can also be overridden or themed -->
    <!-- crossed fingers -->
-   <xsl:template priority="5" match="test[matches(@pending,'\S')]" mode="icon">&#129310;</xsl:template>
+   <xsl:template priority="5" match="x:test[matches(@pending,'\S')]" mode="icon">&#129310;</xsl:template>
    
    <!-- thumbs up -->
-   <xsl:template match="test[@successful='true']" mode="icon">&#128077;</xsl:template>
+   <xsl:template match="x:test[@successful='true']" mode="icon">&#128077;</xsl:template>
    
    <!-- thumbs down -->
-   <xsl:template match="test" mode="icon">&#128078;</xsl:template>
+   <xsl:template match="x:test" mode="icon">&#128078;</xsl:template>
    
    
    <!-- Generic handling for any attribute not otherwise handled -->
@@ -104,41 +121,41 @@ containing templates we would otherwise have to reset wrt xpath-default-namespac
    
    <xsl:template match="@id" priority="101"/>
    
-   <xsl:template priority="20" match="report/@xspec | report/@stylesheet">
+   <xsl:template priority="20" match="x:report/@xspec | x:report/@stylesheet">
       <p class="{local-name(.)}"><b class="pg">{ local-name(..) }/{ local-name(.) }</b>: <a class="pg" href="{ . }">{ . }</a></p>
    </xsl:template>
    
-   <xsl:template priority="20" match="report/@date">
+   <xsl:template priority="20" match="x:report/@date">
       <p class="{local-name(.)}"><b class="pg">{ local-name(..) }/{ local-name(.) }</b>: { format-dateTime(xs:dateTime(.),'[MNn] [D1], [Y0001] [H01]:[m01]:[s01]') } (<code>{.}</code>)</p>
    </xsl:template>
    
-   <xsl:template priority="20" match="test/@successful"/>
+   <xsl:template priority="20" match="x:test/@successful"/>
    
    
-   <xsl:template match="scenario">
-      <details class="{ (@pending/'pending',.[descendant::test/@successful = 'false']/'failing','passing')[1]}{ child::test[1]/' tested' }">
+   <xsl:template match="x:scenario">
+      <details class="{ (@pending/'pending',.[descendant::x:test/@successful = 'false']/'failing','passing')[1]}{ child::x:test[1]/' tested' }">
          <xsl:copy-of select="@id"/>
-         <xsl:if test="descendant::test/@successful = 'false'">
+         <xsl:if test="descendant::x:test/@successful = 'false'">
             <xsl:attribute name="open">open</xsl:attribute>
          </xsl:if>
          <summary>
             <xsl:apply-templates select="." mode="in-summary"/>
          </summary>
-         <div class="{ (child::scenario[1]/'scenario-results','test-results')[1] }">
+         <div class="{ (child::x:scenario[1]/'scenario-results','test-results')[1] }">
            <xsl:apply-templates/>
          </div>
       </details>
    </xsl:template>
    
-   <xsl:template match="scenario/label"/>
+   <xsl:template match="x:scenario/x:label"/>
    
-   <xsl:template match="report | scenario" mode="in-summary">
+   <xsl:template match="x:report | x:scenario" mode="in-summary">
       <xsl:variable name="here" select="."/>
-      <xsl:variable name="subtotal" select="exists(ancestor-or-self::report//test except descendant::test)"/>
-      <xsl:variable name="all-passing" select="empty(descendant::test[not(@successful='true')])"/>
-      <span class="label">{ self::report/'Total tests '}{ child::label }</span>
+      <xsl:variable name="subtotal" select="exists(ancestor-or-self::x:report//x:test except descendant::test)"/>
+      <xsl:variable name="all-passing" select="empty(descendant::x:test[not(@successful='true')])"/>
+      <span class="label">{ self::x:report/'Total tests '}{ child::x:label }</span>
       <xsl:text>&#xA0;</xsl:text><!-- nbsp -->
-      <xsl:apply-templates select="self::scenario/descendant::test" mode="icon"/>
+      <xsl:apply-templates select="self::x:scenario/descendant::x:test" mode="icon"/>
       <span class="result">
       <xsl:iterate select="'passing', 'pending', 'failing','total'[not($subtotal)],'subtotal'[$subtotal]">
          
@@ -157,21 +174,21 @@ containing templates we would otherwise have to reset wrt xpath-default-namespac
       </span>
    </xsl:template>
    
-   <xsl:template priority="20" match="scenario[exists(child::test)]" mode="in-summary">
+   <xsl:template priority="20" match="x:scenario[exists(child::x:test)]" mode="in-summary">
       <xsl:variable name="here" select="."/>
-      <span class="label">{ child::label }</span>
+      <span class="label">{ child::x:label }</span>
       <xsl:text>&#xA0;</xsl:text><!-- nbsp -->
-      <xsl:apply-templates select="child::test" mode="icon"/>
-      <xsl:apply-templates select="child::test" mode="#current"/>
-      <span class="result { child::test/(@pending/'pending', @successful)[1] }">{ (child::test/@pending/('Pending ' || .),child::test[@successful='true']/'Passes','Fails')[1] }</span>
+      <xsl:apply-templates select="child::x:test" mode="icon"/>
+      <xsl:apply-templates select="child::x:test" mode="#current"/>
+      <span class="result { child::x:test/(@pending/'pending', @successful)[1] }">{ (child::x:test/@pending/('Pending ' || .),child::x:test[@successful='true']/'Passes','Fails')[1] }</span>
    </xsl:template>
    
-   <xsl:template mode="in-summary" match="test">
+   <xsl:template mode="in-summary" match="x:test">
       <xsl:text> </xsl:text>
-      <span class="testing"> Expecting <span class="expecting">{ child::label }</span></span>
+      <span class="testing"> Expecting <span class="expecting">{ child::x:label }</span></span>
    </xsl:template>
    
-   <xsl:template match="result">
+   <xsl:template match="x:result">
       <div class="reported panel">
          <xsl:apply-templates select="." mode="header"/>
          <xsl:apply-templates select="@select"/>
@@ -179,7 +196,7 @@ containing templates we would otherwise have to reset wrt xpath-default-namespac
       </div>
    </xsl:template>
    
-   <xsl:template match="test">
+   <xsl:template match="x:test">
       <div class="tested panel { if (@successful='true') then 'succeeds' else 'fails' }">
          <xsl:copy-of select="@id"/>
          
@@ -189,35 +206,65 @@ containing templates we would otherwise have to reset wrt xpath-default-namespac
       </div>
    </xsl:template>
    
-   <xsl:template match="test" mode="header">
+   <xsl:template match="x:test" mode="header">
       <h3>Expecting (testing against)</h3>
    </xsl:template>
    
-   <xsl:template match="result" mode="header">
+   <xsl:template match="x:result" mode="header">
       <h3>Producing (actual result)</h3>
    </xsl:template>
    
    <xsl:template match="*" mode="header"/>
    
-   <xsl:template match="call | expect | context" priority="3">
+   <xsl:template match="x:call | x:expect | x:context" priority="3">
          <xsl:apply-templates select="@*"/>
          <xsl:next-match/>
    </xsl:template>
    
-   <xsl:template match="context[exists(*)]">
+   <xsl:template match="x:context[exists(*)]">
       <div class="codeblock { local-name() }" onclick="javascript:clipboardCopy(this);">
          <xsl:call-template name="write-xml"/>
       </div>
    </xsl:template>
    
-   <xsl:template match="test/label" priority="5">
+   <xsl:template match="x:test/x:label" priority="5">
       <h5 class="label">
          <xsl:apply-templates/>
       </h5>
    </xsl:template>
    
+   <!-- Following templates match in no namespace -->
+   <xsl:template match="expect-test-wrap/text() | input-wrap/text()"/>
+   
+   <xsl:template match="input-wrap" mode="header" priority="3">
+      <h3>From input</h3>
+   </xsl:template>
+   
+   
+   <xsl:template match="expect-test-wrap" mode="header" priority="3">
+      <h4>Expecting</h4>
+   </xsl:template>
+   
+   
+   <xsl:template match="input-wrap" priority="3"/>
+   
+   <!-- should match content-wrap in no namespace -->
+   <xsl:template match="content-wrap | expect-test-wrap" priority="3" >
+      <div class="{ local-name(.) }{ parent::x:scenario/' panel' }">
+         <xsl:apply-templates select="." mode="header"/>
+         <xsl:next-match/>
+         <!--<xsl:copy-of select="child::node()" exclude-result-prefixes="#all" copy-namespaces="false"/>-->
+      </div>
+   </xsl:template>
+   
+   <xsl:template match="content-wrap">
+      <div class="codeblock { local-name() }" onclick="javascript:clipboardCopy(this);">
+         <xsl:call-template name="write-xml"/>
+      </div>
+   </xsl:template>
+   
       
-   <xsl:template name="write-xml" xmlns:map="http://www.w3.org/2005/xpath-functions/map">
+   <xsl:template name="write-xml">
       <xsl:sequence select="serialize(child::*, map {'indent': true()}) => replace('^\s+','')"/>
    </xsl:template>
    
@@ -248,8 +295,13 @@ div.summary { margin-top: 0.6em }
 details { outline: thin solid black; padding: 0.4em }
 details.tested { outline: thin dotted black }
 
+summary { padding: 0.2em }
+summary + * { margin-top: 0.4em }
+
+.passing { background-color: white }
 .failing { background-color: gainsboro }
 .failing.zero { background-color: inherit } 
+.failing .passing { background-color: white }
 
 .summary-line { margin: 0.6em 0em; font-size: 110% }
 
@@ -258,6 +310,7 @@ details.tested { outline: thin dotted black }
 .scenario-results divx { outline: thin dotted black; padding: 0.2em }
 .scenario-results div:first-child { margin-top: 0em }
 
+span.h1 { display: inline-block; padding: 0.1em; font-size: 2em }
 
 .test-results { margin-top: 0.6em; display: grid;
     overflow: hidden;
@@ -270,7 +323,7 @@ details.tested { outline: thin dotted black }
 
 .panel.tested { grid-column: 2 }
 
-div.panel .codeblock { align-self: flex-end }
+div.panel .codeblock { font-size: smaller }
 
 .codeblock { width: 100%; box-sizing: border-box;
   outline: thin solid black; padding: 0.4em; background-color: white;
@@ -305,11 +358,14 @@ a.jump { cursor: pointer }
    <xsl:template mode="theme-css" priority="1" match=".[.='uswds']">
       <xsl:text xml:space="preserve" expand-text="false"><!-- colors borrowed from USWDS -->
 .uswds {
+   background-color: #f0f0f0;
+   
   .label {    background-color: #1a4480; color: white}
   .pending .label { background-color: inherit; color: black }
-  .passing { background-color: #e1f3f8 }
+  .passing { background-color: #d9e8f6 }
   .pending { background-color: white }
   .failing { background-color: #f8dfe2 }
+  .failing .passing { background-color: #d9e8f6 }
   .pending.zero, .failing.zero { background-color: inherit } 
 }
 </xsl:text>
@@ -323,12 +379,13 @@ a.jump { cursor: pointer }
    <xsl:template mode="theme-css" priority="1" match=".[.='classic']"><!-- 'classic' theme emulates JT's purple-and-green -->
       <xsl:text xml:space="preserve" expand-text="false">
 .classic {
-  h1, .label {   background-color: #606; color: #6f6 }
+  h1, .h1, .label {   background-color: #606; color: #6f6 }
   h1 { padding: 0.2em }
   .pending .label { background-color: inherit; color: black }
   .passing { background-color: #cfc }
   .pending { background-color: #eee }
   .failing { background-color: #fcc }
+  .failing .passing { background-color: #cfc }
   .pending.zero, .failing.zero { background-color: inherit } 
 }
 </xsl:text>
@@ -344,6 +401,7 @@ a.jump { cursor: pointer }
    .passing { background-color: honeydew }
    .pending { background-color: cornsilk }
    .failing { background-color: mistyrose }
+   .failing .passing { background-color: honeydew }
    .pending.zero, .failing.zero { background-color: inherit } 
 }
 </xsl:text>
@@ -382,21 +440,21 @@ const collapseSectionDetails = inSection => {
 }
 
 <!-- thanks to https://www.30secondsofcode.org/js/s/unescape-html/ -->
-<![CDATA[ 
+ 
 const unescapeHTML = str =>
   str.replace(
-    /&amp;|&lt;|&gt;|&#39;|&quot;/g,
+    /&amp;amp;|&amp;lt;|&amp;gt;|&amp;#39;|&amp;quot;/g,
     tag =>
       ({
-        '&amp;': '&',
-        '&lt;': '<',
-        '&gt;': '>',
-        '&#39;': "'",
-        '&quot;': '"'
+        '&amp;amp;': '&amp;',
+        '&amp;lt;': '&lt;',
+        '&amp;gt;': '>',
+        '&amp;#39;': "'",
+        '&amp;quot;': '"'
       }[tag] || tag)
   );
 
-]]>
+
 
 const clipboardCopy = async (who) => {
       let cp = unescapeHTML(who.innerHTML);
@@ -407,32 +465,28 @@ const clipboardCopy = async (who) => {
 </xsl:text>
       </script>
    </xsl:template>
-   
-   
 
    <xsl:mode name="count-tests" on-no-match="fail"/>
    
    <!-- 'Visitor' pattern matches strings to dispatch processing -->
    <xsl:template mode="count-tests" match=".[.='passing']">
       <xsl:param name="where" as="element()"/>
-      <xsl:sequence select="count($where/descendant::test[@successful='true'])"/>
+      <xsl:sequence select="count($where/descendant::x:test[@successful='true'])"/>
    </xsl:template>
    
    <xsl:template mode="count-tests" match=".[.='pending']">
       <xsl:param name="where" as="element()"/>
-      <xsl:sequence select="count($where/descendant::test[matches(@pending,'\S')])"/>
+      <xsl:sequence select="count($where/descendant::x:test[matches(@pending,'\S')])"/>
    </xsl:template>
    
    <xsl:template mode="count-tests" match=".[.='failing']">
       <xsl:param name="where" as="element()"/>
-      <xsl:sequence select="count($where/descendant::test[@successful!='true'])"/>
+      <xsl:sequence select="count($where/descendant::x:test[@successful!='true'])"/>
    </xsl:template>
    
    <xsl:template mode="count-tests" match=".[.=('total','subtotal')]">
       <xsl:param name="where" as="element()"/>
-      <xsl:sequence select="count($where/descendant::test)"/>
+      <xsl:sequence select="count($where/descendant::x:test)"/>
    </xsl:template>
-   
-   <xsl:include href="xspec-mx-html-report-nns.xsl"/>
    
 </xsl:stylesheet>
