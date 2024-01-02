@@ -14,12 +14,18 @@
    
    'xspec-results' - XSpec results
    'summary' - XML-based summary
-   'determination' one-line synopsis in plain text (for console)
+   'determination' short synopsis in plain text (for console)
    
-   - copy this file plus the shell script mvn-run-xspec-test-batch.sh to a convenient location
-   - omit any unwanted ports or serialization settings
-   - update the import link
-   - point the batch to your XSpec documents
+   - At a convenient location, copy and rename
+        this file
+        shell script mvn-xproc-xspec-test-batch.sh
+   
+   - rewire
+       xproc: omit any unwanted ports or serialization settings
+              update import link
+              bind XSpec documents to the input port
+       shell: update names and settings
+       
    - run to capture the collected results of those XSpecs together
    
    -->

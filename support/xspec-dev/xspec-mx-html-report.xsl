@@ -65,13 +65,13 @@
    
    <!--Make a details panel when there is more than one report -->
    <xsl:template match="x:report[exists(../x:report except .)]">
-      <details class="xspec-report" id="report_{ count(.|preceding-sibling::x:report) }">
+      <details open="open" class="xspec-report" id="report_{ count(.|preceding-sibling::x:report) }">
          <summary class=" { (.[descendant::x:test/@successful = 'false']/'failing','passing')[1]}">
-            <div class="iconogram floater">
-               <xsl:apply-templates mode="iconogram"/>
-            </div>
             <span class="h1">XSpec Report - <code>{ @xspec/replace(.,'.*/','') }</code></span>
          </summary>
+         <div class="iconogram floater">
+            <xsl:apply-templates mode="iconogram"/>
+         </div>
          <xsl:call-template name="make-report"/>
       </details>
    </xsl:template>
