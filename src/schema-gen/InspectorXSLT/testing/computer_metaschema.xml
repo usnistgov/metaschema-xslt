@@ -10,11 +10,15 @@
    <define-assembly name="vendor">
         <formal-name>Vendor Information</formal-name>
         <description>Information about a vendor of a computer part.</description>
-        <define-flag name="id" required="yes">
-            <formal-name>Vendor Identifier</formal-name>
-            <description>An identifier for classifying a unique computer parts vendor.</description>
-        </define-flag>
-        <model>
+      <define-flag name="id">
+         <formal-name>Vendor Identifier</formal-name>
+         <description>An identifier for classifying a unique computer parts vendor.</description>
+      </define-flag>
+      <define-flag name="ref">
+         <formal-name>Vendor Reference</formal-name>
+         <description>Instead of an identifier, a reference to another vendor by its @id.</description>
+      </define-flag>
+      <model>
             <define-field name="name" min-occurs="1">
                 <formal-name>Vendor Name</formal-name>
                 <description>The registered company name of the vendor.</description>
@@ -28,6 +32,21 @@
                 <description>A public website made by the vendor documenting their parts as used in the computer.</description>
             </define-field>
         </model>
+        <constraint>
+           <has-cardinality target="@id union @ref" max-occurs="1" min-occurs="1" id="vendor-id-or-ref"/><!-- Either an @id or a @ref, but not both -->
+           <is-unique target=".[exists(@id)]" id="vendor-name-and-site"><!-- A vendor name/site combo must be unique per vendor with id - a repeat must have @ref not @id so one 'prevails' -->
+              <key-field target="vendor/name"/>
+              <key-field target="vendor/website"/>
+           </is-unique>
+           <index name="vendor-ids" target="//vendor[exists(@id)]">
+              <formal-name>Vendor Index by ID</formal-name>
+              <key-field target="@id"/>
+           </index>
+           <index-has-key target=".[exists(@ref)]" name="vendor-ids">
+              <formal-name>Vendor Reference resolves</formal-name>
+              <key-field target="@ref"/>
+           </index-has-key>
+        </constraint>
     </define-assembly>
     <define-field name="product-name">
         <formal-name>Product Name</formal-name>

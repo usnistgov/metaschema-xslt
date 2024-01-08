@@ -61,6 +61,6 @@
          <x:context href="current/tiny_metaschema_COMPOSED-metaschema.xml"/>
          <x:expect label="XSLT transform element with correct attributes" href="tiny_inspector-working.xsl"/>
       </x:scenario>
-
    </x:scenario>
+   
 </x:description>
