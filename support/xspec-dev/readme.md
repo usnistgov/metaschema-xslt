@@ -9,33 +9,42 @@ The initiative focuses on two kinds of assets:
 
 These should be either useful directly, or useful if copied and adjusted, i.e. as templates.
 
+Additionally, this project has new functionality for XSpec provided by an updated **XSpec Report HTML** transformation.
+
 ## Pipelines
+
+Pipelines are currently implemented using XProc 1.0 to be run under XML Calabash.
+
+XProc 3.0 is planned for a later date.
+
+### Scripts calling XProc
 
 XProc pipelines demonstrate running XSpec using the current distribution.
 
 In the XSpec distribution, the [Saxon XSLT Harness pipeline](../xspec/src/harnesses/saxon/saxon-xslt-harness.xproc) can be called directly to process a single XSpec.
 
-But it is easier to use [the script provided](mvn-run-xspec-html.sh) to run [the XProc](xspec-single.xpl), with ports as follows:
+A [pipeline calling this XProc step](xspec-single-xspec2xslt.xpl) is provided here with some configuration, saving analysis and effort.
+
+However a new HTML report format is also offered here, with support for production of XSpec reports now in *multiple formats* - XML, HTML and plain text, and operating over XSpec resources (files) in batch as well as singly.
+
+To use these, run or emulate the [the script provided](mvn-xproc-xspec-html.sh) to run [the XProc](xspec-single.xpl), with ports as follows:
 
 - (input) `xspec` - the XSpec file input
 - (output) `html-report` - an HTML report from evaluating the XSpec
-- (output) `summary` - an XML summary of the XSpec report
-- (output) `determination` - one line, showing findings
 
 For running XSpecs in batch, the [pipeline](xspec-batch.xpl) `xspec-batch.xpl`is offered.
 
 - (input) `batch` - a sequence of XSpec file inputs
 - (output) `xspec-results` - aggregated results from evaluating all XSpecs (XML)
-- (output) `summary` - an XML summary of the XSpec results
-- (output) `determination` - one line, showing findings
+- (output) `summary` - an XML summary of the aggregated XSpec results
+- (output) `html-report` - an HTML report (all XSpecs)
+- (output) `determination` - a shorter plain-text summary showing findings
 
-The `determination` port gives a single line of plain text with a determination of `SUCCESS` (when no failures are reported) or `FAILURE` (when any failures are reported).
-
-either can be used as a step in a calling pipeline, which configures its sources and ports.
+Along with notice of which tests are run, the `determination` port gives a line of plain text with a determination of `SUCCESS` (when no failures are reported) or `FAILURE` (when any failures are reported).
 
 An example is given in the `testing` directory at [testing/xspec-test-batch.xpl](testing/xspec-test-batch.xpl)`
 
-HTML results from evaluating a batch are not planned currently, but could easily added.
+### XProc alone
 
 These pipelines can be called directly (providing XSpecs on source ports `xspec` or `batch`), so to combine `1.xspec` and `2.xspec` into a single runtime where `xproc` calls the XProc processor:
 
@@ -45,31 +54,9 @@ xproc path/to/xspec-batch.xpl -ibatch=1.xspec -ibatch=2.xspec -oxspec-results=/d
 
 writes the `determination` for the combined XSpecs to the console (dropping other outputs).
 
-## Scripts
+### Example for study
 
-`bash` scripts show how to run the pipelines under Maven, using XML Calabash.
-
-They have been tested under WSL/Ubuntu.
-
-### Producing an HTML report for a single XSpec
-
-Emulating the functionality provided in an editor, run XSpec test suites one at a time using this script:
-
-```
-$ ./mvn-run-xspec-html.sh [yourxspec.xspec]
-```
-
-This should run from anywhere, so for example test it from the testing directory on an XSpec test set located in place:
-
-```
-testing$ ../mvn-run-xspec-html.sh xspec-basic.xspec
-```
-
-The script will create an HTML file named after the XSpec source file, in a directory named `xspec`. It also echoes a one-line determination to the console or `STDOUT`.
-
-### Applying and evaluating a batch of XSpecs together
-
-Support for a batch capability is demonstrated in the test directory, which contains a script [testing/mvn-run-xspec-test-batch.sh](testing/mvn-run-xspec-test-batch.sh) that initiates the test pipeline `testing/xspec-test-batch.xpl` using XML Calabash under Maven.
+Support for a batch capability is also demonstrated in the `test` directory, which contains a script [testing/mvn-run-xspec-test-batch.sh](testing/mvn-run-xspec-test-batch.sh) that initiates the test pipeline `testing/xspec-test-batch.xpl` using XML Calabash under Maven.
 
 This demonstrates how to hard-wire an XProc for a set of XSpecs to be evaluated.
 

@@ -15,14 +15,21 @@
    
    <p:input port="parameters" kind="parameter"/>
    
+   <p:option name="html-theme" select="'clean'"/>
+   
    <!--nb unless patched in the imported XSLT, HTML comes with pseudo-output escaping into Unicode PUA
        see ../xspec/src/reporter/format-utils.xsl /*/xsl:function[@name='fmt:disable-escaping'] -->
-   <p:serialization port="html-report" indent="true" method="html"/>
+   <p:serialization port="xspec-report" indent="true" method="html"/>
+   <p:output port="xspec-report">
+      <p:pipe port="result" step="evaluate-xspec"/>
+   </p:output>
+   
+   <p:serialization port="html-report" indent="false" method="html"/>
    <p:output port="html-report">
       <p:pipe port="result" step="html-report"/>
    </p:output>
    
-   <p:serialization port="summary" indent="true"/>
+   <!--<p:serialization port="summary" indent="true"/>
    <p:output port="summary">
       <p:pipe port="result" step="summary"/>
    </p:output>
@@ -30,7 +37,7 @@
    <p:serialization port="determination" indent="true" method="text"/>
    <p:output port="determination">
       <p:pipe port="result" step="determination"/>
-   </p:output>
+   </p:output>-->
    
    <p:import href="../xspec/src/harnesses/harness-lib.xpl"/>
 
@@ -39,7 +46,7 @@
       <p:with-param name="xspec-home" select="resolve-uri('../xspec/',static-base-uri())"/>
    </t:compile-xslt>
 
-   <p:xslt name="run" template-name="t:main">
+   <p:xslt name="evaluate-xspec" template-name="t:main">
       <p:input port="source">
          <p:empty/>
       </p:input>
@@ -51,16 +58,18 @@
       </p:input>
    </p:xslt>
 
-   <t:format-report name="html-report">
-     <p:with-param name="inline-css" select="'true'"/>
-     <p:with-param name="xspec-home" select="resolve-uri('../xspec/',static-base-uri())"/>
-   </t:format-report>
+   <p:xslt name="html-report">
+      <p:input port="stylesheet">
+         <p:document href="xspec-mx-html-report.xsl"/>
+      </p:input>
+      <p:with-param name="theme" select="$html-theme"/>
+   </p:xslt>
    
-   <p:sink/>
+   <!--<p:sink/>
       
    <p:xslt name="summary">
       <p:input port="source">
-         <p:pipe port="result" step="run"/>
+         <p:pipe port="result" step="evaluate-xspec"/>
       </p:input>
       <p:input port="stylesheet">
          <p:document href="xspec-summarize.xsl"/>
@@ -71,6 +80,6 @@
       <p:input port="stylesheet">
          <p:document href="xspec-summary-reduce.xsl"/>
       </p:input>
-   </p:xslt>
+   </p:xslt>-->
    
 </p:declare-step>

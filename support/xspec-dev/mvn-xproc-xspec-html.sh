@@ -24,7 +24,7 @@ ADDITIONAL_ARGS=$(shift 1; echo "${*// /\\ }")
 
 RESULT_FILE="xspec/$( echo $(basename "${XSPEC_FILE%.*}") ).html"
 
-CALABASH_ARGS="-ixspec=\"$XSPEC_FILE\" -osummary=/dev/null -ohtml-report=\"${RESULT_FILE}\" \
+CALABASH_ARGS="-ixspec=\"$XSPEC_FILE\" -oxspec-report=/dev/null -ohtml-report=\"${RESULT_FILE}\" \
                 $ADDITIONAL_ARGS \"${XPROC_FILE}\""
 
 mkdir -p xspec

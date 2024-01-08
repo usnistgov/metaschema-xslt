@@ -26,6 +26,9 @@
          </REPORT-SUMMARY>
       </xsl:template>
    
+   <!-- nb: so far we assume all XSpec to be XSLT
+      - tbd is expanding this logic to cover Schematron, XQuery or what have you
+        this will not be difficult once we have examples / (tests) -->
    <xsl:template match="report" mode="report-report">
       <report date="{ @date }" test-count="{ count(descendant::test) }" pending-count="{ count(descendant::test[matches(@pending,'\S')]) }">
          <xspec-file>{ @xspec }</xspec-file>

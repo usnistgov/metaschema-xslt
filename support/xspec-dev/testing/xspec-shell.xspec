@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-model href="../../../testing/xspec-assurance.sch"?>
+<?xml-model href="../xspec-assurance.sch"?>
 <x:description xmlns:mx="http://csrc.nist.gov/ns/csd/metaschema-xslt"
    xmlns="http://example.com/ns/computer"
    xmlns:x="http://www.jenitennison.com/xslt/xspec" xmlns:xs="http://www.w3.org/2001/XMLSchema"
    stylesheet="copy_me.xsl" xslt-version="3.0">
 
    <x:scenario label="A Success and a failure">
+      <x:call function="true"/>
       <x:scenario label="includes success">
-         <x:call function="true"/>
-         <x:expect label="True is true" test="true()"/>
+         <x:expect label="True is true" select="true()"/>
       </x:scenario>
       <x:scenario label="and not">
-         <x:call function="true"/>         
-         <x:expect label="False isn't" test="false()"/>
+         <x:expect label="False isn't" select="false()"/>
       </x:scenario>
    </x:scenario>
 

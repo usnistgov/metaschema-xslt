@@ -105,7 +105,7 @@
    
    <!-- icons indicating test results can also be overridden or themed -->
    <!-- crossed fingers -->
-   <xsl:template priority="5" match="x:test[matches(@pending,'\S')]" mode="icon">&#129310;</xsl:template>
+   <xsl:template priority="5" match="x:test[exists(@pending)]" mode="icon">&#129310;</xsl:template>
    
    <!-- thumbs up -->
    <xsl:template match="x:test[@successful='true']" mode="icon">&#128077;</xsl:template>
@@ -474,7 +474,7 @@ const clipboardCopy = async (who) => {
    
    <xsl:template mode="count-tests" match=".[.='pending']">
       <xsl:param name="where" as="element()"/>
-      <xsl:sequence select="count($where/descendant::x:test[matches(@pending,'\S')])"/>
+      <xsl:sequence select="count($where/descendant::x:test[exists(@pending)])"/>
    </xsl:template>
    
    <xsl:template mode="count-tests" match=".[.='failing']">
