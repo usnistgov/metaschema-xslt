@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<x:description
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+    stylesheet="../../../generator/generate-inspector-xslt.xsl"
+    xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    
-    xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
-    xmlns:x="http://www.jenitennison.com/xslt/xspec"
-    xmlns:XSLT="http://www.w3.org/1999/XSL/Transform"
-    stylesheet="../../../generator/generate-inspector-xslt.xsl" run-as="external"
-    xslt-version="3.0">
+    xslt-version="3.0"
+    run-as="external">
+
+<!--xmlns:XSLT="http://www.w3.org/1999/XSL/Transform"-->
 
     <!-- This XSpec is for validating the production of an Inspector XSLT from a (composed) metaschema. -->
     
@@ -27,7 +27,7 @@
    <x:scenario label="Top-level transformation setup">
       <x:scenario label="Basic inline">
          <x:context>
-            <METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+            <METASCHEMA >
                <schema-name>Computer Model</schema-name>
                <schema-version>0.0.5</schema-version>
                <short-name>computer</short-name>

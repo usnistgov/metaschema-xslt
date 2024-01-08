@@ -3,6 +3,8 @@
 
 # other generated files
 **/*-xspec/*-result.html
+**/xspec/*-result.html
+**/*xspec*-result.html
 
 # test outputs
 src/**/test_output/

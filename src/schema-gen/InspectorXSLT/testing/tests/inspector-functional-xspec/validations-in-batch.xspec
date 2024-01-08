@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-model href="../../../testing/xspec-assurance.sch"?>
-<x:description xmlns:mx="http://csrc.nist.gov/ns/csd/metaschema-xslt"
-    xmlns="http://example.com/ns/computer"
-    xmlns:x="http://www.jenitennison.com/xslt/xspec" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+<?xml-model href="../../../../../testing/xspec-assurance.sch"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+   xmlns:mx="http://csrc.nist.gov/ns/csd/metaschema-xslt"
+    
     stylesheet="../../current/computer_inspector.xsl" xslt-version="3.0">
 
     <!-- Purpose: XSpec testing the validation of known-valid and known-invalid sets
@@ -20,7 +20,7 @@
     <!-- NB this pattern is regular enough so the XSpec could be generated
      dynamically from a list of valid and invalid instances, or from directory listings. -->
 
-    <x:variable name="mx:makes-reports" as="function(*)"
+   <x:variable name="mx:makes-reports" as="function(*)" xmlns:xs="http://www.w3.org/2001/XMLSchema"
         select="function($d as node()) as xs:boolean { exists($d/descendant-or-self::mx:report) }"/>
 
     <x:scenario label="[A] Reports are made for all files given as invalid">

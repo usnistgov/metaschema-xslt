@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-model href="../../../testing/xspec-assurance.sch"?>
-<x:description xmlns:mx="http://csrc.nist.gov/ns/csd/metaschema-xslt"
-   xmlns:mv="http://csrc.nist.gov/ns/csd/metaschema-xslt" xmlns="http://example.com/ns/computer"
-   xmlns:x="http://www.jenitennison.com/xslt/xspec" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-   stylesheet="../../../generator/generate-inspector-xslt.xsl" xslt-version="3.0">
+<?xml-model href="../../../../../testing/xspec-assurance.sch"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+   xmlns:mx="http://csrc.nist.gov/ns/csd/metaschema-xslt"
+   stylesheet="../../../generator/generate-inspector-xslt.xsl"
+   xmlns="http://example.com/ns/computer"
+   xmlns:xs="http://www.w3.org/2001/XMLSchema"
+   xslt-version="3.0">
 
    <!--<x:variable name="mx:datatypes-xsd-path" as="xs:string">--><!--</x:variable>-->
 

@@ -1,25 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-model href="../../../testing/xspec-assurance.sch"?>
-<x:description xmlns:mx="http://csrc.nist.gov/ns/csd/metaschema-xslt"
-    xmlns:mv="http://csrc.nist.gov/ns/csd/metaschema-xslt" xmlns="http://example.com/ns/computer"
-    xmlns:c="http://example.com/ns/computer" xmlns:x="http://www.jenitennison.com/xslt/xspec"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema" stylesheet="../../current/computer_inspector.xsl"
-    xslt-version="3.0">
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+   xmlns:mx="http://csrc.nist.gov/ns/csd/metaschema-xslt"
+   stylesheet="../../current/computer_inspector.xsl"
+   xmlns="http://example.com/ns/computer"
+   xmlns:c="http://example.com/ns/computer"
+   xslt-version="3.0">
 
    <!-- testing constraints expressed in computer_metaschema.xml -->
    
-<!--
-      
-   
-   -->
-
-   <x:variable name="mx:ACVC-class" as="xs:string">AVCV value-not-allowed</x:variable>
-   <x:variable name="mx:MRCV-class" as="xs:string">MRCV regex-match-fail</x:variable>
-   <x:variable name="mx:MDCV-class" as="xs:string">MDCV datatype-match-fail</x:variable>
-   <x:variable name="mx:XPKT-class" as="xs:string">XPKT expectation-violation</x:variable>
-   <x:variable name="mx:HCCV-class" as="xs:string">HCCV cardinality-violation</x:variable>
-   <x:variable name="mx:UNIQ-class" as="xs:string">UNIQ uniqueness-violation</x:variable>
-   <x:variable name="mx:NXHK-class" as="xs:string">NXHK index-lookup-fail</x:variable>
+   <!--These are being defined as text nodes but will be serialized as / cast into strings when reporting results -->
+   <x:variable name="mx:ACVC-class">AVCV value-not-allowed</x:variable>
+   <x:variable name="mx:MRCV-class">MRCV regex-match-fail</x:variable>
+   <x:variable name="mx:MDCV-class">MDCV datatype-match-fail</x:variable>
+   <x:variable name="mx:XPKT-class">XPKT expectation-violation</x:variable>
+   <x:variable name="mx:HCCV-class">HCCV cardinality-violation</x:variable>
+   <x:variable name="mx:UNIQ-class">UNIQ uniqueness-violation</x:variable>
+   <x:variable name="mx:NXHK-class">NXHK index-lookup-fail</x:variable>
    
    <x:scenario label="[A] allowed-values tests 'AVCV value-not-allowed' notices">
       <!-- /descendant::XSLT:call-template[@name='notice'][7]       -->

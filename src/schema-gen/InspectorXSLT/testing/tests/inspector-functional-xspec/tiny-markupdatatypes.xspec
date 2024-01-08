@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-model href="../../../../../testing/xspec-assurance.sch"?>
 <?xml-model href="../../../inspector-generator-checkup.sch"?>
-
-<x:description xmlns:mx="http://csrc.nist.gov/ns/csd/metaschema-xslt"
-    xmlns="http://example.com/ns/tinydata"
-    xmlns:x="http://www.jenitennison.com/xslt/xspec" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    stylesheet="../../current/tiny_inspector.xsl" xslt-version="3.0">
-
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+   xmlns:mx="http://csrc.nist.gov/ns/csd/metaschema-xslt"
+   xmlns="http://example.com/ns/tinydata"
+   stylesheet="../../current/tiny_inspector.xsl"
+   xslt-version="3.0">
 
    <x:helper stylesheet="../../../mx-reporter.xsl"/>
    
@@ -38,7 +37,7 @@
        - defenestrate and reorganize Inspector (under testing)
     -->
    
-    <x:variable name="mx:makes-reports" as="function(*)"
+   <x:variable name="mx:makes-reports" as="function(*)" xmlns:xs="http://www.w3.org/2001/XMLSchema"
         select="function($d as node()) as xs:boolean { exists($d/descendant-or-self::mx:report) }"/>
 
     <x:scenario label="[A] Reports are made for all files given as invalid">

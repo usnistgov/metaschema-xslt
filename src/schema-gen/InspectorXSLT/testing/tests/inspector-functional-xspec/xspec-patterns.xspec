@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-model href="../../../testing/xspec-assurance.sch"?>
-<x:description xmlns:mx="http://csrc.nist.gov/ns/csd/metaschema-xslt"
-   xmlns:mv="http://csrc.nist.gov/ns/csd/metaschema-xslt" xmlns="http://example.com/ns/computer"
-   xmlns:x="http://www.jenitennison.com/xslt/xspec" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-   stylesheet="../../current/computer_inspector.xsl" xslt-version="3.0">
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+  xmlns:mx="http://csrc.nist.gov/ns/csd/metaschema-xslt"
+  stylesheet="../../current/computer_inspector.xsl"
+  xmlns="http://example.com/ns/computer"
+  xslt-version="3.0">
 
    <!-- This XSpec does two things:
 
@@ -24,34 +25,31 @@ Modes to test:
 
    <x:helper stylesheet="../../../mx-reporter.xsl"/>
 
-   <x:variable name="mx:makes-a-date" as="function(*)"
+   <x:variable name="mx:makes-a-date" as="function(*)"  
+      xmlns:xs="http://www.w3.org/2001/XMLSchema"
       select="function($v as item()) as xs:boolean { $v castable as xs:date }"/>
 
    <!-- Just testing XPath in this processor -->
    <x:scenario label="[A] 'castable as' operation works on a few edge cases">
+      <x:call function="true"/>   
       <x:scenario label="[A.1] For April 0">
-         <x:call function="true"/><!-- required to call something -->         
+               
          <!-- ... with a test independent of context ... -->
          <x:expect label="0th day is not castable" test="not($mx:makes-a-date('2023-04-00'))"/>
       </x:scenario>
       <x:scenario label="[A.2] For April 1">
-         <x:call function="true"/>
          <x:expect label="1st day is castable" test="$mx:makes-a-date('2023-04-01')"/>
       </x:scenario>
       <x:scenario label="[A.3] For April 31">
-         <x:call function="true"/>
          <x:expect label="31st is not castable" test="not($mx:makes-a-date('2023-04-31'))"/>
       </x:scenario>
       <x:scenario label="[A.4] 13 13?">
-         <x:call function="true"/>
          <x:expect label="13th month is not castable" test="not($mx:makes-a-date('2023-13-13'))"/>
       </x:scenario>
       <x:scenario label="[A.5] A Leap Day">
-         <x:call function="true"/>
          <x:expect label="is castable" test="$mx:makes-a-date('2024-02-29')"/>
       </x:scenario>
       <x:scenario label="[A.6] A fake Leap Day">
-         <x:call function="true"/>
          <x:expect label="is not castable" test="not($mx:makes-a-date('2023-02-29'))"/>
       </x:scenario>
    </x:scenario>
@@ -131,9 +129,9 @@ Modes to test:
 
    <x:scenario label="[D] Comments are copied and PIs are dropped">
       <x:scenario label="[D.1] Comment">
-         <x:variable name="mv:a-comment"><!--comment--></x:variable>
-         <x:context select="$mv:a-comment" mode="validate"/>
-         <x:expect label="is copied" select="$mv:a-comment"/>
+         <x:variable name="mx:a-comment"><!--comment--></x:variable>
+         <x:context select="$mx:a-comment" mode="validate"/>
+         <x:expect label="is copied" select="$mx:a-comment"/>
       </x:scenario>
       <x:scenario label="[D.2] Processing instruction">
          <x:context mode="validate"><?pi type="sample" href="file.css"?></x:context>

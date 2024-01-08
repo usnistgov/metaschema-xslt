@@ -1,14 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<x:description
-    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    
-    xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
-    xmlns:mx="http://csrc.nist.gov/ns/csd/metaschema-xslt"
-    xmlns:x="http://www.jenitennison.com/xslt/xspec"
-    xmlns:XSLT="http://www.w3.org/1999/XSL/Transform"
-    stylesheet="boilerplate-testing.xsl" run-as="external"
-    xslt-version="3.0">
-
+<?xml-model href="../../../../../testing/xspec-assurance.sch"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+   stylesheet="boilerplate-testing.xsl"
+   xmlns:mx="http://csrc.nist.gov/ns/csd/metaschema-xslt"
+   xslt-version="3.0">
+   <!-- Note that matches in this XSpec happen against the 'no-namespace' namespace! -->
+   
+   <!--
+      
+     Can this XSpec be retired? Check -
+       boilerplate-testing.xsl can be removed - pipeline works w/o it
+       everything is being tested adequately
+         cf '../inspector-functional-xspec/tiny-markupdatatypes.xspec'
+   -->
+   
+   <!-- for future reference / in case:
+      
+      xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+      xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+      xmlns:XSLT="http://www.w3.org/1999/XSL/Transform" -->
+   
     <!-- This XSpec is for validating the operations of Inspector boilerplate templates. -->
     
    <!-- .     .     .     .     .     .     .     .     .     .     .     .     .     .     . -->
@@ -18,9 +29,7 @@
          <x:context mode="validate" select="/*">
             <TINY/>
          </x:context>
-         <x:expect label="comes through">
-            <TINY/>
-         </x:expect>
+         <x:expect label="comes through" select="$x:context"/>
       </x:scenario>
 
       <x:scenario label="With some markup-multiline">
@@ -32,14 +41,7 @@
                </part>
             </TINY>
          </x:context>
-         <x:expect label="also comes through">
-            <TINY>
-               <part>
-                  <title>A title</title>
-                  <p>A paragraph.</p>
-               </part>
-            </TINY>
-         </x:expect>
+         <x:expect label="also comes through"  select="$x:context"/>
       </x:scenario>
       
    </x:scenario>
@@ -49,19 +51,16 @@
          <x:context mode="validate" select="/*">
             <title>A title</title>
          </x:context>
-         <x:expect label="comes through cleanly">
-            <title>A title</title>
-         </x:expect>
+         <x:expect label="comes through cleanly"  select="$x:context"/>
       </x:scenario>
       <x:scenario label="Messy stuff">
          <x:context mode="validate" select="/*">
             <title>A title <a href="boo.html">with a link</a> and <b>extra</b>.</title>
          </x:context>
-         <x:expect label="comes through cleanly">
-            <title>A title <a href="boo.html">with a link</a> and <b>extra</b>.</title>
-         </x:expect>
+         <x:expect label="comes through cleanly" select="$x:context"/>
       </x:scenario>
-      <x:scenario label="Messy broken stuff">
+      <x:scenario label="Messy broken stuff" pending="cleanup">
+         <!-- Scenario doesn't work b/c the harness 'boilerplate-testing' XSLT intervenes - can this be removed? -->
          <x:context mode="validate" select="/*">
             <title>A title <a HREF="boo.html">with a link</a> and <B/>.</title>
          </x:context>
