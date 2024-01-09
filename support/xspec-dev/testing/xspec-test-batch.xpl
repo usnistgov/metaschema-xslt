@@ -31,13 +31,13 @@
    -->
    
    <!-- XSpecs to run -->
-   <p:input port="batch" sequence="true">
+   <p:input port="xspec" sequence="true">
       <p:document href="xspec-shell.xspec"/>
       <p:document href="xspec-basic.xspec"/>
    </p:input>
 
    <!-- set to 'clear', 'classic', 'uswds' or 'toybox' or override in the call -->
-   <p:option name="html-theme" select="'toybox'"/>
+   <p:option name="theme" select="'toybox'"/>
    
    <p:input port="parameters" kind="parameter"/>
    
@@ -62,11 +62,11 @@
       <p:pipe port="html-report" step="test-batch"/>
    </p:output>
    
-   <p:import href="../xspec-batch.xpl"/>
+   <p:import href="../xspec-batch-report.xpl"/>
 
    <!-- incipit -->
    <mx:xspec-batch name="test-batch">
-      <p:with-option name="html-theme" select="$html-theme">
+      <p:with-option name="theme" select="$theme">
          <p:empty/>
       </p:with-option>
    </mx:xspec-batch>

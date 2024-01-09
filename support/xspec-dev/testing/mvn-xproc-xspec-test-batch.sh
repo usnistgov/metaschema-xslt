@@ -17,7 +17,7 @@ EOF
 
 # dumping XSpec results and summary (ports), leaving port `determination` for STDOUT
 
-CALABASH_ARGS="-oxspec-results=/dev/null -osummary=/dev/null -ohtml-report=/dev/null \"${XPROC_FILE}\""
+CALABASH_ARGS="-oxspec-report=/dev/null -osummary=/dev/null -ohtml-report=/dev/null \"${XPROC_FILE}\""
 
 if [ $# -ne 0 ] ; then
   usage

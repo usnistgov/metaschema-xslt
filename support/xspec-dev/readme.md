@@ -13,54 +13,57 @@ Additionally, this project has new functionality for XSpec provided by an update
 
 ## Pipelines
 
-Pipelines are currently implemented using XProc 1.0 to be run under XML Calabash.
+The pipelines in this project depend on prior art in the XSpec repository. Pipelines are currently implemented using XProc 1.0 to be run under XML Calabash.
 
 XProc 3.0 is planned for a later date.
 
-### Scripts calling XProc
+Three pipelines are provided at the top level. All have dependencies on XSpec [in the XSpec distribution included as a repo submodule](../xspec/src/harnesses/).
 
-XProc pipelines demonstrate running XSpec using the current distribution.
+`xspec-single-xspec-repo-report.xpl` - calls the XSpec project XProc (pipeline), delivering an HTML file using the 'regular' XSLT in the XSpec distribution. *Note*: ymmv especially as it regards CSS setup in HTML file results, etc.
 
-In the XSpec distribution, the [Saxon XSLT Harness pipeline](../xspec/src/harnesses/saxon/saxon-xslt-harness.xproc) can be called directly to process a single XSpec.
+`xspec-single-report.xpl` - is functionally the same as above, except using a new HTML presentation stylesheet, designed to be more lightweight and robust in deployment.
 
-A [pipeline calling this XProc step](xspec-single-xspec2xslt.xpl) is provided here with some configuration, saving analysis and effort.
+`xspec-batch-report.xpl` - provides the same set of operations, except instead of a single XSpec (file instance), it can accept any number. Results from these tests are *aggregated* into a single report.
 
-However a new HTML report format is also offered here, with support for production of XSpec reports now in *multiple formats* - XML, HTML and plain text, and operating over XSpec resources (files) in batch as well as singly.
+This pipeline also demonstrates how reports can be further processed to provide other outputs such as XML summaries (for batches) and simple plain-text summaries.
 
-To use these, run or emulate the [the script provided](mvn-xproc-xspec-html.sh) to run [the XProc](xspec-single.xpl), with ports as follows:
+## How to batch XSpec - a 'mini' demo
 
-- (input) `xspec` - the XSpec file input
-- (output) `html-report` - an HTML report from evaluating the XSpec
+Additionally, a demonstration of how to use the batch XProc as a step in a calling XProc is shown. The advantage of such a 'wrapper' XProc is that it can encapsulate logic for a simpler interface or runtime for the specific use case (whether running from the command line, under CI/CD, in an IDE etc).
 
-For running XSpecs in batch, the [pipeline](xspec-batch.xpl) `xspec-batch.xpl`is offered.
+The ['test batch' XProc](testing/xspec-test-batch.xpl) in this folder can be copied anywhere and adjusted per case, restoring its import link, pointing it to local XSpec file sources, and setting up ports or `p:store` (file save) options as wanted. It then runs in place.
 
-- (input) `batch` - a sequence of XSpec file inputs
-- (output) `xspec-results` - aggregated results from evaluating all XSpecs (XML)
-- (output) `summary` - an XML summary of the aggregated XSpec results
-- (output) `html-report` - an HTML report (all XSpecs)
-- (output) `determination` - a shorter plain-text summary showing findings
+Summary: how to use -
 
-Along with notice of which tests are run, the `determination` port gives a line of plain text with a determination of `SUCCESS` (when no failures are reported) or `FAILURE` (when any failures are reported).
+- Copy XPL and batch script, if wanted
+- Rename and comment both of these for local use, including rewiring their internals / comments / messaging
+- In editing the XProc, consider adding or removing any ports or whether to expose output ports vs write file outputs (`p:store`)
 
-An example is given in the `testing` directory at [testing/xspec-test-batch.xpl](testing/xspec-test-batch.xpl)`
+## Scripts calling XProc
 
-### XProc alone
+The `bash` [script](mvn-xproc-xspec-html.sh) shows how a script can invoke XML Calabash to execute a pipeline.
 
-These pipelines can be called directly (providing XSpecs on source ports `xspec` or `batch`), so to combine `1.xspec` and `2.xspec` into a single runtime where `xproc` calls the XProc processor:
+How a particular XProc is used depends on the ports defined in the XProc. XML Calabash provides syntax and interfaces for those ports. Accordingly, a script or command-line invocation typically has to set, for these XProcs:
+
+- input port `xspec` is where XSpec inputs are configured - these must be files accessible on the system
+- output port `xspec-report`, if any, shows XSpec outputs as a single (XML) report
+- output port `html-report` shows the results, rendered in HTML for viewing in a browser
+- output `summary` shows the XML report reduced to a simple summary form
+- output `determination` shows a plain text result for the entire run as a list of which XSpecs were run and what they show
+
+Additionally, a runtime option `theme` supports changing the HTML page rendition settings (CSS), mainly its color pallette.
+
+## XProc alone
+
+The same system calls or their equivalents can be used to run the pipelines directly in XProc processor such as XML Calabash, binding the input XSpecs to the `xspec` input port. Assuming `xml-calabash.sh` executes XML Calabash, this syntax will serve to combine execution of `1.xspec` and `2.xspec` into a single runtime:
 
 ```bash
-xproc path/to/xspec-batch.xpl -ibatch=1.xspec -ibatch=2.xspec -oxspec-results=/dev/null -osummary=/dev/null
+./xml-calabash.sh path/to/xspec-batch.xpl -ixspec=1.xspec -ixspec=2.xspec -oxspec-report=/dev/null -o html-report=/dev/null -osummary=/dev/null
 ```
 
-writes the `determination` for the combined XSpecs to the console (dropping other outputs).
+Since the port `determination` is unnamed, its outputs are echoed to the console. Bindings to `dev/null` silences the other output ports (but a file path can also be indicated for outputs). 
 
-### Example for study
-
-Support for a batch capability is also demonstrated in the `test` directory, which contains a script [testing/mvn-run-xspec-test-batch.sh](testing/mvn-run-xspec-test-batch.sh) that initiates the test pipeline `testing/xspec-test-batch.xpl` using XML Calabash under Maven.
-
-This demonstrates how to hard-wire an XProc for a set of XSpecs to be evaluated.
-
-## HTML Production
+## Enhanced HTML Production
 
 In order to work around limitations in the current XSpec HTML production (details with respect to its deployment under XProc 1.0), a [new HTML production XSLT](xspec-mx-html-report.xsl) is provided here, for use either for standalone XSpec reporting, or for reporting results of batch processes.
 
@@ -72,5 +75,4 @@ New themes can be added in a new XSLT that imports this one, by copying and modi
 
 ### Theming HTML from XProc
 
-The XProc files support a runtime option, `html-theme`, which exposes control of the theme setting to the user or script.
-
+The XProc files support a runtime option, `theme`, which also exposes control of the theme setting (in the HTML and CSS).
