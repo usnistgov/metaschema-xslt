@@ -233,7 +233,7 @@
       </h5>
    </xsl:template>
    
-   <!-- Following templates match in no namespace -->
+   <!-- *** Following templates match in no namespace *** -->
    <xsl:template match="expect-test-wrap/text() | input-wrap/text()"/>
    
    <xsl:template match="input-wrap" mode="header" priority="3">
@@ -263,7 +263,8 @@
       </div>
    </xsl:template>
    
-      
+<!-- *** Now some named templates *** -->
+   
    <xsl:template name="write-xml">
       <xsl:sequence select="serialize(child::*, map {'indent': true()}) => replace('^\s+','')"/>
    </xsl:template>
@@ -352,6 +353,12 @@ a.jump { cursor: pointer }
       </style>
       
    </xsl:template>
+
+   <!-- Mode theme-css produces CSS per theme, matching on the theme name, a string -->
+   <!-- An importing XSLT can provide templates for whatever additional themes are wanted -->
+   
+   
+<!-- Make a new template with new CSS to match a new $theme value, and you have a new theme to use -->
    
    <xsl:template mode="theme-css" priority="1" match=".[.='uswds']">
       <xsl:text xml:space="preserve" expand-text="false"><!-- colors borrowed from USWDS -->
@@ -369,9 +376,6 @@ a.jump { cursor: pointer }
 </xsl:text>
    </xsl:template>
 
-   <!-- Mode theme-css produces CSS per theme, matching on the theme name, a string -->
-   <!-- An importing XSLT can provide templates for whatever additional themes are wanted -->
-   
    <xsl:template mode="theme-css" priority="1" match=".[.=('clean','simple')]"/>
    
    <xsl:template mode="theme-css" priority="1" match=".[.='classic']"><!-- 'classic' theme emulates JT's purple-and-green -->
@@ -408,6 +412,8 @@ a.jump { cursor: pointer }
    <xsl:template mode="theme-css" match=".">
       <xsl:message>No template for theme '{ $theme }' - using 'simple'</xsl:message>
    </xsl:template>
+   
+   <!-- *** Back to page stuff / named templates ***-->
    
    <xsl:template name="page-js">
       <script type="text/javascript">
@@ -464,6 +470,7 @@ const clipboardCopy = async (who) => {
       </script>
    </xsl:template>
 
+   <!-- Supporting mode 'count-tests' for 'in-summary' mode above -->
    <xsl:mode name="count-tests" on-no-match="fail"/>
    
    <!-- 'Visitor' pattern matches strings to dispatch processing -->

@@ -36,8 +36,8 @@
       <p:document href="xspec-basic.xspec"/>
    </p:input>
 
-   <!-- set to 'clear', 'classic', 'uswds' or 'toybox' or override in the call -->
-   <p:option name="theme" select="'toybox'"/>
+   <!-- set to 'clean', 'classic', 'uswds' or 'toybox', and/or override in the call -->
+   <p:option name="theme" select="'clean'"/>
    
    <p:input port="parameters" kind="parameter"/>
    
