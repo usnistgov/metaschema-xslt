@@ -525,7 +525,7 @@ This XSLT needs to know of two categories:
          match="{ $target-match }">
          <xsl:for-each select="@datatype">
             <XSLT:call-template name="check-{ . }-datatype">
-               <XSLT:with-param name="rule-id" as="xs:string">{ parent::matches/@id }</XSLT:with-param>
+               <XSLT:with-param name="rule-id">{ parent::matches/@id }</XSLT:with-param>
                <XSLT:with-param name="class" as="xs:string">MDCV datatype-match-fail</XSLT:with-param>
                <XSLT:with-param name="matching" as="xs:string">{ $target-match }</XSLT:with-param>
             </XSLT:call-template>
@@ -654,7 +654,7 @@ This XSLT needs to know of two categories:
          <xsl:apply-templates select="." mode="make-key-name"/>
       </xsl:variable>
      
-      <xsl:variable name="count-expr" expand-text="true">mx:key-matches-among-items(.,$selected,'{$keyname}',{mx:key-value(.)},$within)</xsl:variable>
+      <xsl:variable name="count-expr" expand-text="true">mx:key-matches-among-items(.,$selected,'{$keyname}',({mx:key-value(.)}),$within)</xsl:variable>
       <xsl:variable name="assert" expand-text="true">count({$count-expr})=1</xsl:variable>
       
       <xsl:variable name="counting" select="@target"/>
