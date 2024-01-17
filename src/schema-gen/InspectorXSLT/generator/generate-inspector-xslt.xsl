@@ -697,7 +697,7 @@ This XSLT needs to know of two categories:
    
    
    <xsl:template match="index | is-unique" mode="make-key">
-      <xsl:param name="matching" as="xs:string" required="true"/>
+      <xsl:param name="matching" as="xs:string*" required="true"/>
       <xsl:variable name="keyname">
          <xsl:apply-templates select="." mode="make-key-name"/>
       </xsl:variable>
