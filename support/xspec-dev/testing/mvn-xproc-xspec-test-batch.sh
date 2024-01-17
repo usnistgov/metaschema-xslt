@@ -15,9 +15,11 @@ Runs $( echo ${XPROC_FILE##*/} ), returning a one-line summary evaluation of its
 EOF
 }
 
-# dumping XSpec results and summary (ports), leaving port `determination` for STDOUT
+# old invocation with extra ports, dump XSpec results and summary (ports), leaving port `determination` for STDOUT
+# CALABASH_ARGS="-oxspec-results=/dev/null -osummary=/dev/null -ohtml-report=/dev/null \"${XPROC_FILE}\""
 
-CALABASH_ARGS="-oxspec-results=/dev/null -osummary=/dev/null -ohtml-report=/dev/null \"${XPROC_FILE}\""
+# this invocation provides option $theme='uswds' at runtime and writes an HTML file
+CALABASH_ARGS="-ohtml-report=xspec-test-report.html \"${XPROC_FILE}\" theme=uswds"
 
 if [ $# -ne 0 ] ; then
   usage

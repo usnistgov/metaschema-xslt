@@ -41,16 +41,17 @@
    
    <p:input port="parameters" kind="parameter"/>
    
-   <p:serialization port="xspec-results" indent="true"/>
+   <!-- Any of these output ports can be removed, if unwanted, or redirected to /dev/null -->
+   
+   <!--<p:serialization port="xspec-results" indent="true"/>
    <p:output port="xspec-results">
       <p:pipe port="xspec-results" step="test-batch"/>
    </p:output>
    
-   <!-- Any of these output ports can be removed, if unwanted, or redirected to /dev/null -->
    <p:serialization port="summary" indent="true"/>
    <p:output port="summary">
       <p:pipe port="summary" step="test-batch"/>
-   </p:output>
+   </p:output>-->
    
    <p:serialization port="determination" indent="true" method="text"/>
    <p:output port="determination">
