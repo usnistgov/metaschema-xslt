@@ -21,7 +21,7 @@
    
    <p:option name="theme" select="'uswds'"/>
    
-   <p:serialization port="xspec-report" indent="true"/>
+   <p:serialization port="xspec-results" indent="true"/>
    <p:output port="xspec-results">
       <p:pipe port="result" step="results"/>
    </p:output>
@@ -47,7 +47,7 @@
    <!-- Each XSpec is compiled and run -->
    <p:for-each>
       <p:iteration-source>
-         <p:pipe port="batch" step="xspec-batch"/>
+         <p:pipe port="xspec" step="xspec-batch"/>
       </p:iteration-source>
       
       <t:compile-xslt name="compile"><!-- thanks to gimsieke for tip on static-base-uri()

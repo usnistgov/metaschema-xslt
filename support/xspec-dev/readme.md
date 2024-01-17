@@ -58,7 +58,7 @@ The `bash` [script](mvn-xproc-xspec-html.sh) shows how a script can invoke XML C
 How a particular XProc is used depends on the ports defined in the XProc. XML Calabash provides syntax and interfaces for those ports. Accordingly, a script or command-line invocation typically has to set, for these XProcs:
 
 - input port `xspec` is where XSpec inputs are configured - these must be files accessible on the system
-- output port `xspec-report`, if any, shows XSpec outputs as a single (XML) report
+- output port `xspec-report` or `xspec-results`, if any, shows XSpec runtime outputs, with no further processing, as a single (XML) report
 - output port `html-report` shows the results, rendered in HTML for viewing in a web browser
 - output `summary` shows the XML report reduced to a simple summary form
 - output `determination` shows a plain text result for the entire run,with the summary results

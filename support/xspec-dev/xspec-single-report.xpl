@@ -19,8 +19,8 @@
    
    <!--nb unless patched in the imported XSLT, HTML comes with pseudo-output escaping into Unicode PUA
        see ../xspec/src/reporter/format-utils.xsl /*/xsl:function[@name='fmt:disable-escaping'] -->
-   <p:serialization port="xspec-report" indent="true" method="html"/>
-   <p:output port="xspec-report">
+   <p:serialization port="xspec-result" indent="true" method="html"/>
+   <p:output port="xspec-result">
       <p:pipe port="result" step="evaluate-xspec"/>
    </p:output>
    
