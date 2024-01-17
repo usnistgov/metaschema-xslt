@@ -13,7 +13,8 @@ Usage: ${BASE_COMMAND:-$(basename "${BASH_SOURCE[0]}")} XSPEC_FILE [ADDITIONAL_A
 
 Applies XSpec Xproc to XSpec file and produces an HTML report of the test results.
 
-Additional arguments for XML Calabash should be specified in the 'key=value' format,
+Additional arguments for XML Calabash should be specified in the 'key=value' format.
+
 EOF
 }
 

@@ -13,7 +13,7 @@ Usage: ${BASE_COMMAND:-$(basename "${BASH_SOURCE[0]}")}
 
 Runs $( echo ${XPROC_FILE##*/} ), returning a summary evaluation of its XSpec test set inputs to the console (STDOUT).
 
-Additionally an HTML report is written to file xspec-test-report.html
+Additionally an HTML report is written to file xspec-test-report.html.
 
 EOF
 }
