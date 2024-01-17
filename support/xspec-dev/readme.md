@@ -1,7 +1,5 @@
 # XSpec Development
 
-The intention being to merge all this in to ../xspec at some point tbd.
-
 The initiative focuses on two kinds of assets:
 
 - XProc pipelines to orchestrate XSpec evaluation
@@ -35,7 +33,7 @@ Additionally, another XProc is included for future diagnostics:
 
 This pipeline is essentially a minimal, functionally standalone wrapper around XSpec-native capabilities, made to expose the 'pain points' in using the current resources (which were originally authored and tested over ten years ago). For good results using XProc 1.0 under XML Calabash (itself no longer cutting-edge technology), certain modifications must be made in the XSpec repository libraries:
 
-* Serialization needs to use latest (HTML5) serialization options to deal with character handling, rather than the current 'double reverse' character escaping of markup characters into the Unicode PUA - thus effectively requiring a character mapping back, which is not well supported under XProc 1.0.
+* Serialization needs to use latest (HTML5) serialization options to deal with character handling, rather than the current 'double reverse' character escaping of markup characters into [the Unicode Private Use Areas (PUA)](https://en.wikipedia.org/wiki/Private_Use_Areas) -- thus effectively requiring a character mapping back, which is not well supported under XProc 1.0.
 * CSS handling/deployment needs to be improved or exposed such that generated HTML files have their CSS available.
 
 ## How to batch XSpec - a 'mini' demo
