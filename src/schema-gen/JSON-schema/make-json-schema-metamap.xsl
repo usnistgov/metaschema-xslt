@@ -57,7 +57,7 @@
                 <map key="json-schema-directive">
                     <string key="title">Schema Directive</string>
                     <string key="description">A JSON Schema directive to bind a specific schema to its document instance.</string>
-                    <string key="$id">#json-schema-directive</string>
+                    <string key="$id">#/definitions/json-schema-directive</string>
                     <string key="$ref">#/definitions/URIReferenceDatatype</string>
                 </map>
                 <xsl:apply-templates select="define-assembly | define-field"/>
@@ -94,7 +94,7 @@
     <xsl:template match="define-assembly" mode="root-requirement">
         <map key="properties">
             <map key="$schema">
-                <string key="$ref">#json-schema-directive</string>
+                <string key="$ref">#/definitions/json-schema-directive</string>
             </map>
             <map key="{root-name}">
                 <xsl:apply-templates select="." mode="make-ref"/>
@@ -123,7 +123,7 @@
             </string>
         </xsl:if>
     </xsl:template>
-    
+
     <xsl:template match="*" mode="make-ref">
         <string key="$ref">
             <xsl:apply-templates mode="make-definition-id" select="."/>
@@ -131,7 +131,7 @@
     </xsl:template>
     
     <xsl:template match="*" mode="make-definition-id">
-        <xsl:text expand-text="true">#{ substring(replace(@_metaschema-json-id,'/','_'),2) }</xsl:text>
+        <xsl:text expand-text="true">#/definitions/{ $composed-metaschema/*/short-name }-{@_key-name}</xsl:text>
     </xsl:template>
 
     <xsl:template priority="100" match="METASCHEMA/define-assembly">
