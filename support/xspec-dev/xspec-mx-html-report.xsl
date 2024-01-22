@@ -29,7 +29,7 @@
    nb: note use of xpath-default-namespace, to be cleaned up in favor of x: prefix
    
    -->
-   <xsl:template match="/">
+   <xsl:template match="/" name="html-report">
       <html>
          <head>
             <title>XSpec - { //x:test=>count() } { if (//x:test=>count() eq 1) then 'test' else 'tests'} in { //x:report=>count() } { if (//x:report=>count() eq 1) then 'report' else 'reports'} </title>
