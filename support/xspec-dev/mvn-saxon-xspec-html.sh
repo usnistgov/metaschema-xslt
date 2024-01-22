@@ -5,7 +5,6 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 source "$SCRIPT_DIR/../../src/common/subcommand_common.bash"
 
-
 XSLT_FILE="${SCRIPT_DIR}/XSPEC-SINGLE.xsl"
 
 usage() {

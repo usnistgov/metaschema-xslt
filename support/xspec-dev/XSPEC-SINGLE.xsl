@@ -37,8 +37,12 @@
    <!-- in no mode, the imported stylesheet makes HTML reports from XSpec execution results -->
    <xsl:import href="xspec-mx-html-report.xsl"/>
 
-   <xsl:template match="/">
-      <!-- change context into the execution results --> 
+   <!-- for debugging -->
+   <xsl:template name="compile-xspec">
+      <xsl:sequence select="mx:compile-xspec(.)"/>
+   </xsl:template>
+   
+   <xsl:template match="/">   <!-- change context into the execution results --> 
       <xsl:for-each select="mx:compile-xspec(.) => mx:execute-xspec()">
          <!-- apply the imported formatting logic --> 
          <xsl:call-template name="html-report"/>

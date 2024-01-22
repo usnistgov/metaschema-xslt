@@ -81,7 +81,6 @@ In order to work around limitations in the current XSpec HTML production (detail
 
 [This XSLT ](xspec-mx-html-report.xsl) produces standalone HTML including embedded CSS and some lightweight Javascript supporting navigation features.
 
-
 ### Theming HTML from XProc
 
 The XProc files support a runtime option, `theme`, which also exposes control of the theme setting (in the HTML and CSS). This takes the form of an HTML `class` value on the `body` element, along with CSS to be applied to the page on the basis of that setting.
@@ -92,3 +91,13 @@ The XProc files support a runtime option, `theme`, which also exposes control of
 - `theme=toybox` provides a more extravagant scheme.
 
 New themes can be added in the XSLT or in a new "shell" XSLT importing it, by copying and modifying an appropriate template to match the new theme and give it style. Such an importing XSLT can also modify any other feature of the HTML page result.
+
+## Script calling Saxon
+
+As an alternative to XProc, Saxon can be provided with its own pipelining logic in XSLT, for an all-XSLT solution. This often uses the XPath 3.1 function `transform()`.
+
+The XSLT [XSPEC-SINGLE.xsl](XSPEC-SINGLE.xsl) does this by encapsulating in one transformation all the logic to compile and execute XSpec and to format its results. It can be applied directly to an XSpec input file for a 'total experience' running the XSpec tests.
+
+The bash script `mvn-saxon-xspec-html.sh` shows how to invoke this XSLT using Maven.
+
+Note that XSpecs including extension functionality such as iXML can be run this way, since Saxon is more easily configured to register the extension.
