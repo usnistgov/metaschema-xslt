@@ -16,22 +16,20 @@
        bound as $compiler-xslt-path
      imported XSLT xspec-mx-html-report.xsl to provide report formatting
 
-   -->
-   
-   <!--
-      
-     Goal: a standalone XSLT-only version of an XSpec executable
+   Goal: a standalone XSLT-only version of an XSpec executable
      among other things so we can make iXML / extensions available
      by running in Saxon whereby we have access to its extensibility
      
    -->  
-   <!--Code adapted from ../../src/common/nist-metaschema-metaprocess.xsl -->
    
-   
-   
-   <!--1. Compiles XSpec into XSLT
-   2. Executes XSLT
-   3. Formats results
+   <!-- conceptual pipeline:
+      1. Compiles XSpec into XSLT
+      2. Executes XSLT
+      3. Formats results in HTML with themed CSS
+      
+      In the usual XSLT way, this is dispatched in reverse,
+      by formatting the results of executing a transformation
+        generated from the source data (using a transformation)
    -->
    
    <xsl:param name="compiler-xslt-path" as="xs:string">../xspec/src/compiler/compile-xslt-tests.xsl</xsl:param>
@@ -40,8 +38,9 @@
    <xsl:import href="xspec-mx-html-report.xsl"/>
 
    <xsl:template match="/">
-      <!-- change context into the execution results, then hit the imported formatting --> 
+      <!-- change context into the execution results --> 
       <xsl:for-each select="mx:compile-xspec(.) => mx:execute-xspec()">
+         <!-- apply the imported formatting logic --> 
          <xsl:call-template name="html-report"/>
       </xsl:for-each>
       <xsl:message> ... and formatted a report.</xsl:message>   
