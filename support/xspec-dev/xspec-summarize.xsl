@@ -9,6 +9,10 @@
    expand-text="true"
    version="3.0">
    
+  <!-- Accepts as input either an `x:report` document or any document collecting x:report elements
+      produces a REPORT-SUMMARY in no namespace
+      process these results with xspec-summary-reduce.xsl to produce plain text -->
+   
    <!--<RESULTS><report xmlns="http://www.jenitennison.com/xslt/xspec"
       xspec="file:/C:/Users/wap1/Documents/usnistgov/metaschema-xslt/support/xspec-dev/xspec-shell.xspec"
       stylesheet="file:/C:/Users/wap1/Documents/usnistgov/metaschema-xslt/support/xspec-dev/copy_me.xsl"

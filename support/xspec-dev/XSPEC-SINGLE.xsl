@@ -52,7 +52,7 @@
 
    <!-- Accepts an XSpec document and throws it at the compiler -->
    <!-- todo: try/catch? what are the ways this can fail? -->
-   <xsl:function name="mx:compile-xspec" as="document-node()?">
+   <xsl:function name="mx:compile-xspec" as="document-node()?" cache="true">
       <xsl:param name="xspec" as="document-node()"/>      
       
       <xsl:variable name="runtime-params" as="map(xs:QName,item()*)">
@@ -75,7 +75,7 @@
    
    <!-- Attempts to execute an XSLT produced by compiling an XSpec
         todo: try/catch? -->
-   <xsl:function name="mx:execute-xspec" as="document-node()?">
+   <xsl:function name="mx:execute-xspec" as="document-node()?" cache="true">
       <xsl:param name="xspec-executable" as="document-node()"/>
    
       <xsl:variable name="runtime-params" as="map(xs:QName,item()*)">

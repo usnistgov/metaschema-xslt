@@ -25,6 +25,8 @@ Subcommands:
     Generate converter transformations (XSLT) between JSON and XML for a given metaschema
 - composition-validate METASCHEMA_XML [ADDITIONAL_ARGS]
     Test metaschema composition (assembling modules and linking definitions) and report issues
+- xpec-test XSPEC-XML [ADDITIONAL_ARGS]
+    Compile and run an XSpec test set, producing a report in a folder named xspec
 EOF
 }
 
@@ -69,6 +71,9 @@ case "$SUBCOMMAND" in
         ;;
     composition-validate)
         "$SRC_DIR"/validate/mvn-composition-validate-xpl.sh "$@"
+        ;;
+    xspec-test)
+        "$SRC_DIR"/../support/xspec-dev/mvn-saxon-xspec-html.sh "theme=uswds $@"
         ;; 
     ?)
         msg "Unknown subcommand: $SUBCOMMAND"

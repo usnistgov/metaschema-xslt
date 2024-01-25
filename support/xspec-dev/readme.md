@@ -53,7 +53,7 @@ Summary: how to use -
 
 The `bash` [script](mvn-xproc-xspec-html.sh) shows how a script can invoke XML Calabash to execute one of these pipelines.
 
-How a particular XProc is used depends on the ports defined in the XProc. XML Calabash provides syntax and interfaces for those ports. Accordingly, a script or command-line invocation typically has to set, for these XProcs:
+How a particular XProc is used depends on the ports defined in the XProc. XML Calabash provides syntax and interfaces for those ports. Accordingly, a script or command-line invocation typically has to set one or more of the following, for these XProcs:
 
 - input port `xspec` is where XSpec inputs are configured - these must be files accessible on the system
 - output port `xspec-report` or `xspec-results`, if any, shows XSpec runtime outputs, with no further processing, as a single (XML) report
@@ -100,4 +100,4 @@ The XSLT [XSPEC-SINGLE.xsl](XSPEC-SINGLE.xsl) does this by encapsulating in one 
 
 The bash script `mvn-saxon-xspec-html.sh` shows how to invoke this XSLT using Maven.
 
-Note that XSpecs including extension functionality such as iXML can be run this way, since Saxon is more easily configured to register the extension.
+Note that XSpecs that include extension functionality such as iXML can be run this way, since Saxon is more easily configured to register the extension.

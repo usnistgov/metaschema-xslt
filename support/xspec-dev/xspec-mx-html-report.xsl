@@ -30,18 +30,24 @@
    
    -->
    <xsl:template match="/" name="html-report">
+      <xsl:param name="population">
+         <xsl:apply-templates/>
+      </xsl:param>
+         
       <html>
          <head>
-            <title>XSpec - { //x:test=>count() } { if (//x:test=>count() eq 1) then 'test' else 'tests'} in { //x:report=>count() } { if (//x:report=>count() eq 1) then 'report' else 'reports'} </title>
+            <!-- Paths start at . so as to support building a page for any context, not assuming a root node -->
+            <title>XSpec - { .//x:test=>count() } { if (.//x:test=>count() eq 1) then 'test' else 'tests'} in { .//x:report=>count() } { if (.//x:report=>count() eq 1) then 'report' else 'reports'} </title>
             <xsl:call-template name="page-css"/>
             <xsl:call-template name="page-js"/>
          </head>
-         <xsl:apply-templates/>
+         <xsl:sequence select="$population"/>
       </html>
    </xsl:template>
    
-   <xsl:template match="/*" priority="101">
+   <xsl:template match="/*" name="html-body" priority="101">
       <body class="{ $theme }">
+         <!-- Making a toc only for multiple reports -->
          <xsl:for-each-group select="x:report" group-by="true()">
             <ul>
                <xsl:for-each select="current-group()">

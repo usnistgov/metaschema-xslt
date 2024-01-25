@@ -11,7 +11,7 @@ usage() {
     cat <<EOF
 Usage: ${BASE_COMMAND:-$(basename "${BASH_SOURCE[0]}")} XSPEC_FILE [ADDITIONAL_ARGS]
 
-Compiles and executes XSpec in Saxon, writing its results Applies XSpec Xproc to XSpec file and produces an HTML report of the test results.
+Compiles and executes XSpec in Saxon, producing an HTML report of the test results.
 
 As an additional argument, 'theme' may be used to indicate styling in the HTML:
   theme=(clean|classic|toybox|uswds) defaulting to clean
@@ -24,11 +24,13 @@ XSPEC_FILE=$1
 
 ADDITIONAL_ARGS=$(shift 1; echo "${*// /\\ }")
 
-RESULT_FILE="$( echo $(basename "${XSPEC_FILE%.*}") ).html"
+RESULT_FILE="xspec/$( echo $(basename "${XSPEC_FILE%.*}") ).html"
 
 SAXON_ARGS="-s:\"$XSPEC_FILE\" -o:\"${RESULT_FILE}\" -xsl:\"${XSLT_FILE}\" -init:org.nineml.coffeesacks.RegisterCoffeeSacks \
                 $ADDITIONAL_ARGS"
 
-echo  "${SAXON_ARGS}"
+# echo  "${SAXON_ARGS}"
+
+mkdir -p xspec
 
 invoke_saxon "${SAXON_ARGS}"
