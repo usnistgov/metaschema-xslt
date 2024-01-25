@@ -17,7 +17,7 @@
       <xsl:copy>
          <head>XSpec summary report: { mx:enumerate('XSpec',count(report)) }</head>
          <xsl:next-match/>
-         <xsl:text>&#xA;{ (1 to 20) ! '--- ' }</xsl:text>
+         <xsl:text>&#xA;{ (1 to 20) ! '--- ' }&#xA;</xsl:text>
       </xsl:copy>
    </xsl:template>
    

@@ -58,7 +58,23 @@
          writing no reports but processing all *.xspec files anywhere inside ../../src
       -->
    
-   <xsl:param name="baseURI" as="xs:string" select="resolve-uri('../../src', static-base-uri())"/>  
+<!--
+
+returns outputs for one XSpec
+run-batch folder=../support/xspec-dev/testing pattern=xspec-basic.xspec recurse=no
+
+for a set (3 total including an iXML dependency)
+run-batch folder=../support/xspec-dev/testing pattern=*.xspec recurse=no
+
+report-to=xpec-report-all.html (makes an aggregated report file)
+report-to=xpec-reports (makes a set of report files)
+
+stop-on-error=yes with various problems
+
+reset baseURI file:/C:/Users/wap1/Documents/usnistgov/metaschema-xslt/support/xspec-dev/
+
+   -->
+   <xsl:param name="baseURI" as="xs:string" select="resolve-uri('../src', static-base-uri())"/>
    
    <xsl:param name="folder"  as="xs:string">.</xsl:param>
 
@@ -73,8 +89,8 @@
    <xsl:variable name="reporting" as="xs:boolean" select="boolean($report-to)"/>
    <xsl:variable name="reporting-aggregate" as="xs:boolean" select="ends-with($report-to,'.html')"/>
    
-   <xsl:param name="stop-on-error" as="xs:string">no</xsl:param>
-   <xsl:param name="stopping-on-error" as="xs:boolean" select="$stop-on-error=('yes','true')"/>
+   <xsl:param    name="stop-on-error" as="xs:string">no</xsl:param>
+   <xsl:variable name="stopping-on-error" as="xs:boolean" select="$stop-on-error=('yes','true')"/>
    
    
    <xsl:variable name="collection-location" select="resolve-uri($folder, $baseURI)"/>
@@ -83,10 +99,10 @@
       <xsl:variable name="s">select={$pattern}</xsl:variable>
       <xsl:variable name="r">recurse={ if ($recurse=('no','false')) then 'no' else 'yes' }</xsl:variable>
       <xsl:variable name="e">on-error={ if ($stopping-on-error) then 'fail' else 'warning' }</xsl:variable>
-      <xsl:value-of select="($s,$r,$e) => string-join(';')"/>
+      <xsl:value-of select="($s,$r,$e,'metadata=yes') => string-join(';')"/>
    </xsl:variable>
    
-   <xsl:variable name="collection-in">
+   <xsl:variable name="collection-in" as="map(*)*">
       <xsl:variable name="collection-uri" select="($collection-location, $collection-args) => string-join('?')"/>
       <xsl:try select="collection( $collection-uri )">
          <xsl:catch>
@@ -95,12 +111,17 @@
       </xsl:try>
    </xsl:variable>
    
-   <xsl:template name="xsl:initial-template">
+   <xsl:template name="go">
+      
+      <!-- $collection-in is now a sequence of maps cf https://www.saxonica.com/html/documentation10/sourcedocs/collections/index.html
+      under 'metadata=yes'
+      enabling us to capture the name of the resource as $resource?name and get its content using $resource?fetch() -->
       <xsl:variable name="all-compiled" as="document-node()*">
          <xsl:iterate select="$collection-in">
-            <xsl:try select="mx:compile-xspec(.)">
+            <xsl:variable name="my" as="map(*)" select="."/>
+            <xsl:try select="$my?fetch() => mx:compile-xspec($my?name => xs:anyURI())">
                <xsl:catch>
-                  <xsl:message terminate="{ if ($stopping-on-error) then 'yes' else 'no' }" expand-text="true">ERROR: Unable to compile XSpec at { base-uri(/) } - getting {$err:code} '{$err:description}'</xsl:message>
+                  <xsl:message terminate="{ if ($stopping-on-error) then 'yes' else 'no' }" expand-text="true">ERROR: Unable to compile XSpec at { $my?name } - getting {$err:code} '{$err:description}'</xsl:message>
                </xsl:catch>
             </xsl:try>
          </xsl:iterate>

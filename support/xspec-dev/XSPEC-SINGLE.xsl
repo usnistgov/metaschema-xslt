@@ -39,11 +39,11 @@
 
    <!-- for debugging -->
    <xsl:template name="compile-xspec">
-      <xsl:sequence select="mx:compile-xspec(.)"/>
+      <xsl:sequence select="mx:compile-xspec(.,base-uri(.))"/>
    </xsl:template>
    
    <xsl:template match="/">   <!-- change context into the execution results --> 
-      <xsl:for-each select="mx:compile-xspec(.) => mx:execute-xspec()">
+      <xsl:for-each select="mx:compile-xspec(.,base-uri(.)) => mx:execute-xspec()">
          <!-- apply the imported formatting logic --> 
          <xsl:call-template name="html-report"/>
       </xsl:for-each>
@@ -53,47 +53,48 @@
    <!-- Accepts an XSpec document and throws it at the compiler -->
    <!-- todo: try/catch? what are the ways this can fail? -->
    <xsl:function name="mx:compile-xspec" as="document-node()?" cache="true">
-      <xsl:param name="xspec" as="document-node()"/>      
-      
+      <xsl:param name="xspec" as="document-node()"/>
+      <xsl:param name="xspec-name" as="xs:anyURI"/>
       <xsl:variable name="runtime-params" as="map(xs:QName,item()*)">
          <xsl:map>
-            <xsl:map-entry key="QName('','xspec-home')" select="resolve-uri('../xspec/',static-base-uri())"/>
+            <xsl:map-entry key="QName('', 'xspec-home')" select="resolve-uri('../xspec/', static-base-uri())"/>
          </xsl:map>
       </xsl:variable>
       <xsl:variable name="runtime" as="map(xs:string, item())">
          <xsl:map>
-            <xsl:map-entry key="'xslt-version'"        select="3.0"/>
-            <xsl:map-entry key="'source-node'"         select="$xspec"/>
+            <xsl:map-entry key="'xslt-version'" select="3.0"/>
+            <xsl:map-entry key="'source-node'" select="$xspec"/>
+            <xsl:map-entry key="'global-context-item'" select="doc($xspec-name)"/>
+            <!-- uhoh - presumably this will have been cached?-->
             <xsl:map-entry key="'stylesheet-location'" select="$compiler-xslt-path"/>
-            <xsl:map-entry key="'stylesheet-params'"   select="$runtime-params"/>
+            <xsl:map-entry key="'stylesheet-params'" select="$runtime-params"/>
          </xsl:map>
       </xsl:variable>
+
       <!-- https://www.w3.org/TR/xpath-functions-31/#func-transform -->
       <xsl:sequence select="transform($runtime)?output"/>
-      <xsl:message> ... compiled XSpec ... </xsl:message>      
+      <xsl:message> ... compiled XSpec ... </xsl:message>
    </xsl:function>
    
    <!-- Attempts to execute an XSLT produced by compiling an XSpec
         todo: try/catch? -->
    <xsl:function name="mx:execute-xspec" as="document-node()?" cache="true">
       <xsl:param name="xspec-executable" as="document-node()"/>
-   
       <xsl:variable name="runtime-params" as="map(xs:QName,item()*)">
          <xsl:map/>
       </xsl:variable>
       <xsl:variable name="runtime" as="map(xs:string, item())">
          <!-- call template t:main xmlns:t="http://www.jenitennison.com/xslt/xspec"-->
          <xsl:map>
-            <xsl:map-entry key="'xslt-version'"      select="3.0"/>
-            <xsl:map-entry key="'stylesheet-node'"   select="$xspec-executable"/>
-            <xsl:map-entry key="'initial-template'"  select="QName('http://www.jenitennison.com/xslt/xspec','main')"/>
+            <xsl:map-entry key="'xslt-version'" select="3.0"/>
+            <xsl:map-entry key="'stylesheet-node'" select="$xspec-executable"/>
+            <xsl:map-entry key="'initial-template'" select="QName('http://www.jenitennison.com/xslt/xspec', 'main')"/>
             <xsl:map-entry key="'stylesheet-params'" select="$runtime-params"/>
          </xsl:map>
       </xsl:variable>
+
       <xsl:sequence select="transform($runtime)?output"/>
-      <xsl:message> ... executed XSpec ... </xsl:message>      
+      <xsl:message> ... executed XSpec ... </xsl:message>
    </xsl:function>
-   
-   
    
 </xsl:stylesheet>
