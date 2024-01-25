@@ -104,6 +104,7 @@ reset baseURI file:/C:/Users/wap1/Documents/usnistgov/metaschema-xslt/support/xs
    
    <xsl:variable name="collection-in" as="map(*)*">
       <xsl:variable name="collection-uri" select="($collection-location, $collection-args) => string-join('?')"/>
+      <xsl:message expand-text="true">Acquiring collection from { $collection-uri }</xsl:message>
       <xsl:try select="collection( $collection-uri )">
          <xsl:catch>
             <xsl:message terminate="{ if ($stopping-on-error) then 'yes' else 'no' }" expand-text="true">ERROR: Unable to resolve collection at URI {$collection-uri} - getting {$err:code} '{$err:description}'</xsl:message>
@@ -119,7 +120,12 @@ reset baseURI file:/C:/Users/wap1/Documents/usnistgov/metaschema-xslt/support/xs
       <xsl:variable name="all-compiled" as="document-node()*">
          <xsl:iterate select="$collection-in">
             <xsl:variable name="my" as="map(*)" select="."/>
-            <xsl:try select="$my?fetch() => mx:compile-xspec($my?name => xs:anyURI())">
+            <!-- we could execute $my?fetch(), except it has the wrong static context and does not produce
+                 a viable (self-executing) XSLT stylesheet as the compiled results -
+                 the path to the XSLT being tested is broken.
+                 Accordingly, we use collection() only to get our name list, then compile
+                 each XSpec from its own context. -->
+            <xsl:try select="$my?name => xs:anyURI() => mx:compile-xspec-at-uri()">
                <xsl:catch>
                   <xsl:message terminate="{ if ($stopping-on-error) then 'yes' else 'no' }" expand-text="true">ERROR: Unable to compile XSpec at { $my?name } - getting {$err:code} '{$err:description}'</xsl:message>
                </xsl:catch>
@@ -146,68 +152,70 @@ reset baseURI file:/C:/Users/wap1/Documents/usnistgov/metaschema-xslt/support/xs
          </xsl:document>
       </xsl:variable>
 
-      <!--as side effects -
-        if $reporting-aggregate then a single RESULTS element is passed for formatting and written to file $report-to relative $collection-location
-        additionally, processing each report has its own possible side effects -->
-      <xsl:if test="$reporting">
-         <xsl:variable name="formatted-aggregate">
-            <!-- producing an aggregated report, with side effects -->
-            <xsl:call-template name="html-report">
-               <xsl:with-param name="population" as="element(html)">
-                  <!-- matching /* we get a body, containing sections -->
-                  <xsl:apply-templates select="$aggregated-results/RESULTS"/>
-               </xsl:with-param>
-            </xsl:call-template>
-         </xsl:variable>
-         
-         <!-- only write the aggregate into a single page as directed -->
-         <xsl:if test="$reporting-aggregate">
-            <xsl:call-template name="write-html-file">
-               <xsl:with-param name="filename" select="resolve-uri($report-to,$collection-location)"/>
-               <!-- nb in this application, html is in no namespace -->
-               <xsl:with-param name="payload" select="$formatted-aggregate/html"/>
-            </xsl:call-template>
-         </xsl:if>
-      </xsl:if>
+      <xsl:apply-templates select="$aggregated-results/RESULTS" mode="emit-reports"/>
       
       <!-- An aggregated report is produced for -o or STDOUT using transformations xspec-summarize.xsl and xspec-summary-reduce.xsl over $aggregated-results -->
       <xsl:sequence select="$aggregated-results => mx:transform-with(xs:anyURI('xspec-summarize.xsl')) => mx:transform-with(xs:anyURI('xspec-summary-reduce.xsl'))"/>
-   </xsl:template>
       
-      
-   <xsl:template match="x:report" xmlns:x="http://www.jenitennison.com/xslt/xspec">
-      <!--xspec="file:/C:/Users/wap1/Documents/usnistgov/metaschema-xslt/support/xspec-dev/xspec-shell.xspec"-->
-      <xsl:param name="formatted" as="element(html)">
-         <xsl:call-template name="html-report">
-            <xsl:with-param name="population">
-               <!-- html-body provides a body, not only a section -->
-               <xsl:call-template name="html-body"/>
-            </xsl:with-param>
-         </xsl:call-template>
-      </xsl:param>
-      
-      <!-- if $reporting but not $reporting-aggregate, then the formatted result of each of RESULTS/x:report
-         is written out separately to a newly-named file in folder $report-to relative to $collection-location -->
-      <xsl:if test="$reporting and not($reporting-aggregate)">
-         <xsl:variable name="xspec-basename" select="@xspec => replace('.*/', '') => replace('\.[^.]*$', '')"/>
-         <xsl:variable name="html-filename" expand-text="true">{$xspec-basename}.html</xsl:variable>
-         <xsl:variable name="write-to" select="resolve-uri($html-filename, $collection-location)"/>
-         <xsl:call-template name="write-html-file">
-            <xsl:with-param name="filename" select="$write-to"/>
-            <xsl:with-param name="payload"  select="$formatted/html"/>
-         </xsl:call-template>
+      <!-- As extra, we report if we can see that tests were dropped along the way - this goes into main output,
+           post summary, not the message stream -->
+      <xsl:variable name="reported-xspecs" select="$aggregated-results/RESULTS/*/@xspec"/>
+      <xsl:variable name="dropped" select="$collection-in[not(.?name = $reported-xspecs)]"/>
+      <xsl:if test="exists($dropped)" expand-text="true">
+         <xsl:text>WARNING: { count($dropped) } selected { if (count($dropped) = 1) then 'file was' else 'files were'
+         } dropped - either unavailable, would not compile (XSpec to XSLT), or would not execute (XSLT):&#xA;</xsl:text>
+         <xsl:text expand-text="true">   { $dropped?name => string-join(',&#xA;   ') }&#xA;</xsl:text>
       </xsl:if>
+      
    </xsl:template>
 
+   <xsl:template priority="101" match="RESULTS[not($reporting)]" mode="emit-reports"/>
+   
+   <xsl:template priority="99" match="RESULTS[$reporting-aggregate]" mode="emit-reports">
+      <xsl:call-template name="write-html-file">
+         <xsl:with-param name="filename" select="resolve-uri($report-to,$collection-location)"/>
+         <!-- nb in this application, html is in no namespace -->
+         <xsl:with-param name="payload" as="element(html)">
+            <xsl:call-template name="html-report"/>
+         </xsl:with-param>
+      </xsl:call-template>
+   </xsl:template>
+   
+   <xsl:template priority="91" match="RESULTS" mode="emit-reports">
+      <xsl:apply-templates mode="produce-html" select="*"/>
+   </xsl:template>
+   
+   <xsl:template mode="produce-html" match="x:report" xmlns:x="http://www.jenitennison.com/xslt/xspec">
+      <!--xspec="file:/C:/Users/wap1/Documents/usnistgov/metaschema-xslt/support/xspec-dev/xspec-shell.xspec"-->
+
+      <xsl:variable name="xspec-basename" select="@xspec => replace('.*/', '') => replace('\.[^.]*$', '')"/>
+      <xsl:variable name="html-filename" expand-text="true">{$report-to}/{$xspec-basename}.html</xsl:variable>
+      <xsl:variable name="write-to" select="resolve-uri($html-filename, $collection-location)"/>
+
+      <xsl:call-template name="write-html-file">
+         <xsl:with-param name="filename" select="$write-to"/>
+         <xsl:with-param name="payload" as="element(html)">
+            <xsl:call-template name="html-report"/>
+         </xsl:with-param>
+      </xsl:call-template>
+   </xsl:template>
+
+   
+   
    <xsl:template name="write-html-file">
       <xsl:param name="filename" as="xs:anyURI"/>
       <xsl:param name="payload" as="element(html)"/>
-      <xsl:message expand-text="true">Writing report file {$filename} ...</xsl:message>
-      <xsl:result-document href="$filename" method="html" html-version="5.0" indent="yes">
+      <xsl:message expand-text="true">Writing report {$filename} ...</xsl:message>
+      <xsl:result-document href="{$filename}" method="html" html-version="5.0" indent="yes">
          <xsl:sequence select="$payload"/>
       </xsl:result-document>
    </xsl:template>
 
+   <xsl:function name="mx:compile-xspec-at-uri" as="document-node()?" cache="true">
+      <xsl:param name="xspec-uri" as="xs:anyURI"/>
+      <xsl:sequence select="doc($xspec-uri) => mx:compile-xspec()"/>
+   </xsl:function>
+   
    <xsl:function name="mx:transform-with" as="document-node()?" cache="true">
       <xsl:param name="source" as="document-node()"/>
       <xsl:param name="stylesheet-location" as="xs:anyURI"/>
@@ -226,5 +234,6 @@ reset baseURI file:/C:/Users/wap1/Documents/usnistgov/metaschema-xslt/support/xs
       </xsl:variable>
       <xsl:sequence select="transform($runtime)?output"/>
    </xsl:function>
+   
 
 </xsl:stylesheet>

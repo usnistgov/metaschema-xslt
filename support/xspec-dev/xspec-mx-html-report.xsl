@@ -30,21 +30,30 @@
    
    -->
    <xsl:template match="/" name="html-report">
-      <xsl:param name="population">
-         <xsl:apply-templates/>
-      </xsl:param>
-         
+      <xsl:variable name="report-count" select="descendant-or-self::x:report => count()"/>
+      <xsl:variable name="result-count" select=".//x:test => count()"/>
+      
       <html>
          <head>
             <!-- Paths start at . so as to support building a page for any context, not assuming a root node -->
-            <title>XSpec - { .//x:test=>count() } { if (.//x:test=>count() eq 1) then 'test' else 'tests'} in { .//x:report=>count() } { if (.//x:report=>count() eq 1) then 'report' else 'reports'} </title>
+            <title>XSpec - { $result-count } { if ($result-count eq 1) then 'test' else 'tests'} in { $report-count } { if ($report-count eq 1) then 'report' else 'reports'} </title>
             <xsl:call-template name="page-css"/>
             <xsl:call-template name="page-js"/>
          </head>
-         <xsl:sequence select="$population"/>
+         <xsl:apply-templates select="." mode="dispatch"/>
       </html>
    </xsl:template>
    
+   <xsl:template match="/" mode="dispatch">
+      <xsl:apply-templates/>
+   </xsl:template>
+   
+   <xsl:template match="x:report" mode="dispatch">
+      <body class="{ $theme }">
+         <xsl:apply-templates select="."/>
+      </body>
+   </xsl:template>
+      
    <xsl:template match="/*" name="html-body" priority="101">
       <body class="{ $theme }">
          <!-- Making a toc only for multiple reports -->

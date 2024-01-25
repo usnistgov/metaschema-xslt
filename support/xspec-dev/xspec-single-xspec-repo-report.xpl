@@ -9,6 +9,8 @@
             type="mx:xspec-batch"
             version="1.0">
 
+   <!-- Like xspec-single-report.xpl, except uses the 'classic' XSpec distribution formatting XSLT  -->
+   
    <!-- Study reference: ../support/xspec/src/harnesses/saxon/saxon-xslt-harness.xproc by Florent Georges -->
    
    <p:input port="xspec"/>
