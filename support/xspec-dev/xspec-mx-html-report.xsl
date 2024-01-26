@@ -50,7 +50,7 @@
    
    <xsl:template match="x:report" mode="dispatch">
       <body class="{ $theme }">
-         <xsl:apply-templates select="."/>
+         <xsl:call-template name="report-section"/>
       </body>
    </xsl:template>
       
@@ -68,7 +68,7 @@
       </body>
    </xsl:template>
    
-   <xsl:template match="x:report">
+   <xsl:template match="x:report" name="report-section">
       <section class="xspec-report">
          <div class="iconogram floater">
             <xsl:apply-templates mode="iconogram"/>
