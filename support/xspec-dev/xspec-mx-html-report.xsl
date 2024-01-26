@@ -48,19 +48,29 @@
       <xsl:apply-templates/>
    </xsl:template>
    
+   <xsl:template match="/RESULTS" mode="dispatch">
+      <xsl:call-template name="html-body"/>
+   </xsl:template>
+   
    <xsl:template match="x:report" mode="dispatch">
-      <body class="{ $theme }">
+      <body class="{ $theme } line56">
          <xsl:call-template name="report-section"/>
       </body>
    </xsl:template>
       
    <xsl:template match="/*" name="html-body" priority="101">
-      <body class="{ $theme }">
+      <body class="{ $theme } line62">
          <!-- Making a toc only for multiple reports -->
          <xsl:for-each-group select="x:report" group-by="true()">
-            <ul>
+            <ul class="directory">
                <xsl:for-each select="current-group()">
-                  <li><a href="#report_{ count(.|preceding-sibling::x:report) }">XSpec Report - <code>{ @xspec }</code></a></li>
+                  <li><a href="#report_{ count(.|preceding-sibling::x:report) }">XSpec Report - <code>{ @xspec }</code></a>
+                     <xsl:for-each-group select="descendant::x:test[empty(@pending)][not(@successful='true')]" group-by="true()">
+                    <ul>
+                       <xsl:apply-templates select="." mode="toc"/>
+                    </ul>
+                  </xsl:for-each-group>
+                  </li>
                </xsl:for-each>
             </ul>
          </xsl:for-each-group>
@@ -68,8 +78,15 @@
       </body>
    </xsl:template>
    
+   <xsl:template priority="5" match="x:test" mode="toc">
+      <li class="failing"><span class="label">FAILING</span>
+         <xsl:text> </xsl:text>
+         <a class="jump" onclick="javascript:viewSection('{mx:make-id(.)}')">{ ancestor-or-self::*/x:label => string-join(' - ') }</a>
+      </li>
+   </xsl:template>
+   
    <xsl:template match="x:report" name="report-section">
-      <section class="xspec-report">
+      <section class="xspec-report" id="report_{ count(.|preceding-sibling::x:report)}">
          <div class="iconogram floater">
             <xsl:apply-templates mode="iconogram"/>
          </div>
@@ -113,9 +130,9 @@
    </xsl:template>
    
    <xsl:template priority="5" match="x:test" mode="iconogram">
-      <a class="jump" onclick="javascript:viewSection('{@id}')" title="{ ancestor-or-self::*/x:label => string-join(' ') }">
+      <a class="jump" onclick="javascript:viewSection('{mx:make-id(.)}')" title="{ ancestor-or-self::*/x:label => string-join(' - ') }">
          <xsl:apply-templates select="." mode="icon"/>
-      </a><!-- crossed fingers -->
+      </a>
    </xsl:template>
    
    <!-- icons indicating test results can also be overridden or themed -->
@@ -149,7 +166,7 @@
    
    <xsl:template match="x:scenario">
       <details class="{ (@pending/'pending',.[descendant::x:test/@successful = 'false']/'failing','passing')[1]}{ child::x:test[1]/' tested' }">
-         <xsl:copy-of select="@id"/>
+         <xsl:attribute name="id" select="mx:make-id(.)"/>
          <xsl:if test="descendant::x:test/@successful = 'false'">
             <xsl:attribute name="open">open</xsl:attribute>
          </xsl:if>
@@ -162,6 +179,13 @@
       </details>
    </xsl:template>
    
+   
+   <xsl:function name="mx:make-id" as="xs:string">
+      <xsl:param name="whose"/>
+      <xsl:text expand-text="true">{ $whose/ancestor::x:report ! ('report' || count(.|preceding-sibling::x:report || '-' )) }{ $whose/@id }</xsl:text>
+   </xsl:function>
+         
+         
    <xsl:template match="x:scenario/x:label"/>
    
    <xsl:template match="x:report | x:scenario" mode="in-summary">
@@ -213,7 +237,7 @@
    
    <xsl:template match="x:test">
       <div class="tested panel { if (@successful='true') then 'succeeds' else 'fails' }">
-         <xsl:copy-of select="@id"/>
+         <xsl:attribute name="id" select="mx:make-id(.)"/>
          
          <xsl:apply-templates select="." mode="header"/>
          <xsl:apply-templates select="@*"/>
@@ -293,6 +317,8 @@
 <xsl:text  xml:space="preserve" expand-text="false">
 
 body { font-family: 'Calibri', 'Arial', 'Helvetica' }
+
+ul.directory ul li { margin-top: 0.4em; padding: 0.2em; width: fit-content; font-size: 80% }
 
 .floater { float: right; clear: both }
 

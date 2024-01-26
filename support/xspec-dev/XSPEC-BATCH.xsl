@@ -14,14 +14,33 @@
    Reports are written as side effects -->
    <xsl:output method="text"/>
    
+<!-- NOTE TO DEVS: this is the point of dependency on released XSpec
+     If the referenced code moves or changes, this XSLT must be adapted accordingly. -->
    <xsl:param name="compiler-xslt-path" as="xs:string">../xspec/src/compiler/compile-xslt-tests.xsl</xsl:param>
    
    <!-- in no mode, the imported stylesheet makes HTML reports from XSpec execution results -->
    <xsl:import href="XSPEC-SINGLE.xsl"/>
 
-<!-- $baseURI: a URI indicating runtime context - relative to which XSpecs are found
-        defaults to 'src' in repository
-     $folder: a folder, relative to baseURI - defaults to $baseURI
+<!--
+     call template "go" for the full effect - it will do its best
+       current impressions are that runtime is fast but no indication of memory consumption
+     for diagnostic info including paths to resources that the XSLT will use
+       (for reading and writing) use initial template "nogo"
+     
+     Parameters:
+     
+     $baseURI: a URI indicating runtime context - relative to which XSpecs are found
+     $folder: a folder, relative to baseURI - defaults to 'src'
+     
+     hint - if you want your script to run in the current directory or any arbitrary directory
+       and wish to hardwire its location 
+       and it's not inside ../../src (in which case designating $folder works)
+     set baseURI to the script's file: URI e.g. file:/mnt/c/Users/wap1/Documents/usnistgov/metaschema-xslt/support/xspec-dev/script.sh
+       (or to the folder with closing slash)
+     and folder to '.'
+     this parameterization is necessary so the XSLT can locate resource
+       even located elsewhere from where the script is called)
+     
      $pattern: glob-like syntax for file name matching
        cf https://www.saxonica.com/html/documentation12/sourcedocs/collections/collection-directories.html '?select'
        use a single file name for a single file
@@ -74,13 +93,13 @@ stop-on-error=yes with various problems
 reset baseURI file:/C:/Users/wap1/Documents/usnistgov/metaschema-xslt/support/xspec-dev/
 
    -->
-   <xsl:param name="baseURI" as="xs:string" select="resolve-uri('../src', static-base-uri())"/>
+   <xsl:param name="baseURI" as="xs:string" select="resolve-uri('../..', static-base-uri())"/>
    
-   <xsl:param name="folder"  as="xs:string">.</xsl:param>
+   <xsl:param name="folder"  as="xs:string">src</xsl:param>
 
    <xsl:param name="pattern" as="xs:string">*.xspec</xsl:param>
    
-   <xsl:param name="recurse" as="xs:string">yes</xsl:param>
+   <xsl:param name="recurse" as="xs:string">no</xsl:param>
    
    <xsl:param name="report-to" as="xs:string?"/>
    <!-- non-null values produce either a single HTML report, when ending in '.html'
@@ -102,9 +121,10 @@ reset baseURI file:/C:/Users/wap1/Documents/usnistgov/metaschema-xslt/support/xs
       <xsl:value-of select="($s,$r,$e,'metadata=yes') => string-join(';')"/>
    </xsl:variable>
    
+   <xsl:variable name="collection-uri" select="($collection-location, $collection-args) => string-join('?')"/>
+   
    <xsl:variable name="collection-in" as="map(*)*">
-      <xsl:variable name="collection-uri" select="($collection-location, $collection-args) => string-join('?')"/>
-      <xsl:message expand-text="true">Acquiring collection from { $collection-uri }</xsl:message>
+      
       <xsl:try select="collection( $collection-uri )">
          <xsl:catch>
             <xsl:message terminate="{ if ($stopping-on-error) then 'yes' else 'no' }" expand-text="true">ERROR: Unable to resolve collection at URI {$collection-uri} - getting {$err:code} '{$err:description}'</xsl:message>
@@ -112,11 +132,16 @@ reset baseURI file:/C:/Users/wap1/Documents/usnistgov/metaschema-xslt/support/xs
       </xsl:try>
    </xsl:variable>
    
-   <xsl:template name="go">
+   <xsl:template name="nogo" expand-text="true">
+      <xsl:text>Param $baseURI is: { $baseURI }&#xA;</xsl:text>
+      <xsl:text>Static base URI is: { static-base-uri() }&#xA;</xsl:text>
       
-      <!-- $collection-in is now a sequence of maps cf https://www.saxonica.com/html/documentation10/sourcedocs/collections/index.html
-      under 'metadata=yes'
-      enabling us to capture the name of the resource as $resource?name and get its content using $resource?fetch() -->
+   </xsl:template>
+   
+   <xsl:template name="go">
+      <!--<xsl:call-template name="report-locations"/>-->
+      <xsl:text expand-text="true">Acquiring collection from { $collection-uri }&#xA;</xsl:text>
+      
       <xsl:variable name="all-compiled" as="document-node()*">
          <xsl:iterate select="$collection-in">
             <xsl:variable name="my" as="map(*)" select="."/>
@@ -162,8 +187,7 @@ reset baseURI file:/C:/Users/wap1/Documents/usnistgov/metaschema-xslt/support/xs
       <xsl:variable name="reported-xspecs" select="$aggregated-results/RESULTS/*/@xspec"/>
       <xsl:variable name="dropped" select="$collection-in[not(.?name = $reported-xspecs)]"/>
       <xsl:if test="exists($dropped)" expand-text="true">
-         <xsl:text>WARNING: { count($dropped) } selected { if (count($dropped) = 1) then 'file was' else 'files were'
-         } dropped - either unavailable, would not compile (XSpec to XSLT), or would not execute (XSLT):&#xA;</xsl:text>
+         <xsl:text>WARNING: of { count($collection-in) } { if (count($collection-in)=1) then 'file' else 'files' }, { count($dropped) } { if (count($dropped) = 1) then 'file selected was' else 'were' } dropped - either unavailable, would not compile (XSpec to XSLT), or would not execute (XSLT):&#xA;</xsl:text>
          <xsl:text expand-text="true">   { $dropped?name => string-join(',&#xA;   ') }&#xA;</xsl:text>
       </xsl:if>
       
@@ -200,8 +224,6 @@ reset baseURI file:/C:/Users/wap1/Documents/usnistgov/metaschema-xslt/support/xs
       </xsl:call-template>
    </xsl:template>
 
-   
-   
    <xsl:template name="write-html-file">
       <xsl:param name="filename" as="xs:anyURI"/>
       <xsl:param name="payload" as="element(html)"/>

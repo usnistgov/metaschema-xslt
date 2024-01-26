@@ -41,7 +41,8 @@ baseURI: a URI indicating runtime context relative to which XSpecs are found
 
 theme=(clean|classic|toybox|uswds) defaulting to 'clean'
 
-See examples in readme.md.
+To silence progress messages and show only final results, use 2>/dev/null to redirect STDERR
+(a successful run will show test results while a runtime failure emits nothing)
 
 EOF
 }
