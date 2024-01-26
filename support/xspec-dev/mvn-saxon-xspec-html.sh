@@ -26,11 +26,11 @@ ADDITIONAL_ARGS=$(shift 1; echo "${*// /\\ }")
 
 RESULT_FILE="xspec/$( echo $(basename "${XSPEC_FILE%.*}") ).html"
 
+mkdir -p xspec
+
 SAXON_ARGS="-s:\"$XSPEC_FILE\" -o:\"${RESULT_FILE}\" -xsl:\"${XSLT_FILE}\" -init:org.nineml.coffeesacks.RegisterCoffeeSacks \
                 $ADDITIONAL_ARGS"
 
 # echo  "${SAXON_ARGS}"
-
-mkdir -p xspec
 
 invoke_saxon "${SAXON_ARGS}"
