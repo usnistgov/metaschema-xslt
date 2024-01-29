@@ -47,14 +47,20 @@ To silence progress messages and show only final results, use 2>/dev/null to red
 EOF
 }
 
+crash_and_burn()
+
+{
+      echo "Error: $1"
+      exit 1
+}
+
 ADDITIONAL_ARGS=$(echo "${*// /\\ }")
 
 SAXON_ARGS="-it:go -xsl:\"${XSLT_FILE}\" -init:org.nineml.coffeesacks.RegisterCoffeeSacks \
-                $ADDITIONAL_ARGS"
+                 stop-on-error=yes $ADDITIONAL_ARGS"
 
 # echo  "${SAXON_ARGS}"
 
-# remove 2>/dev/null to see runtime messages / progress reports
-# but is there a way to capture error codes to STDERR if it errors?
-# 2>/dev/null
-invoke_saxon "${SAXON_ARGS}"
+# set 2>/dev/null to drop all runtime messages / progress reports instead of logging
+# the process should error out only if stop-on-error=yes, otherwise it will do its best to complete
+invoke_saxon "${SAXON_ARGS}" 2>xspec.log.txt || crash_and_burn "Errors encountered running XSpec - check xspec.log.txt"

@@ -70,9 +70,15 @@ This pipeline is essentially a minimal, functionally standalone wrapper around X
 * Serialization needs to use latest (HTML5) serialization options to deal with character handling, rather than the current 'double reverse' character escaping of markup characters into [the Unicode Private Use Areas (PUA)](https://en.wikipedia.org/wiki/Private_Use_Areas) -- thus effectively requiring a character mapping back, which is not well supported under XProc 1.0.
 * CSS handling/deployment needs to be improved or exposed such that generated HTML files have their CSS available.
 
-## How to batch XSpec - a 'mini' demo
+## 'testing' directory resources
 
-A demonstration of how to use the **batch report** XProc as a step in a calling XProc is provided. The advantage of such a 'wrapper' XProc is that it can encapsulate logic for an even simpler interface or runtime for the specific use case (whether running from the command line, under CI/CD, in an IDE etc). Both the batch (the XSpecs to be run) and what to do with the test results can thus be hard-wired, or provided with customized interface controls.
+The `testing` directory contains a number of small self-contained XSpecs convenient for testing, along with the small XSLT stylesheets that they test.
+
+### How to batch XSpec - a 'mini' demo
+
+Additionally, `testing` contains an [XProc example](testing/xspec-test-batch.xpl) of how to use the batch pipelining XSpec in your project. This is a useful way of configuring and running a set of XSpecs assuming a listing can be given (i.e. it does not query the file system dynamically). Along with this is a [script for calling it](testing/mvn-xproc-xspec-test-batch.sh) - copy and edit these two resources together to have an entire self-contained runtime.
+
+The advantage of such a 'wrapper' XProc is that it can encapsulate logic for an even simpler interface or runtime for the specific use case (whether running from the command line, under CI/CD, in an IDE etc). Both the batch (the XSpecs to be run) and what to do with the test results can thus be hard-wired, or provided with customized interface controls, depending on your needs.
 
 The ['test batch' XProc](testing/xspec-test-batch.xpl) in this folder can be copied anywhere and adjusted per case, restoring its import link, pointing it to local XSpec file sources, and setting up ports or `p:store` (file save) options as wanted. It then runs in place to execute, as a set, all the XSpecs it points to.
 
