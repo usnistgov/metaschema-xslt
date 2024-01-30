@@ -68,31 +68,6 @@
      
      -->
    
-<!-- Testing (in debugger and CL):
-       run with broken paths: baseURI, folder
-       run with patterns including broken patterns
-       report-to options
-       
-       note that no arguments are required, they can all be defaulted
-         writing no reports but processing all *.xspec files anywhere inside ../../src
-      -->
-   
-<!--
-
-returns outputs for one XSpec
-run-batch folder=../support/xspec-dev/testing pattern=xspec-basic.xspec recurse=no
-
-for a set (3 total including an iXML dependency)
-run-batch folder=../support/xspec-dev/testing pattern=*.xspec recurse=no
-
-report-to=xpec-report-all.html (makes an aggregated report file)
-report-to=xpec-reports (makes a set of report files)
-
-stop-on-error=yes with various problems
-
-reset baseURI file:/C:/Users/wap1/Documents/usnistgov/metaschema-xslt/support/xspec-dev/
-
-   -->
    <xsl:param name="baseURI" as="xs:string" select="resolve-uri('../..', static-base-uri())"/>
    
    <xsl:param name="folder"  as="xs:string">src</xsl:param>

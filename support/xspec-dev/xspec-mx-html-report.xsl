@@ -53,13 +53,13 @@
    </xsl:template>
    
    <xsl:template match="x:report" mode="dispatch">
-      <body class="{ $theme } line56">
+      <body class="{ $theme }">
          <xsl:call-template name="report-section"/>
       </body>
    </xsl:template>
       
    <xsl:template match="/*" name="html-body" priority="101">
-      <body class="{ $theme } line62">
+      <body class="{ $theme }">
          <!-- Making a toc only for multiple reports -->
          <xsl:for-each-group select="x:report" group-by="true()">
             <ul class="directory">
