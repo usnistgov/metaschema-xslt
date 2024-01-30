@@ -24,7 +24,7 @@ XSPEC_FILE=$1
 
 ADDITIONAL_ARGS=$(shift 1; echo "${*// /\\ }")
 
-RESULT_FILE="xspec/$( echo $(basename "${XSPEC_FILE%.*}") ).html"
+RESULT_FILE="$( echo $(basename "${XSPEC_FILE%.*}") )-results.html"
 
 mkdir -p xspec
 
