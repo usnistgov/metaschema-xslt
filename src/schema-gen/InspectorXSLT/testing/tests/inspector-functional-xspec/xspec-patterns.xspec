@@ -55,7 +55,7 @@ Modes to test:
    </x:scenario>
 
    <x:scenario label="[B] A simple but valid document (element) copies through">
-      <x:variable name="valid-file" select="document('../../../computer-valid/valid1.xml')"/>
+      <x:variable name="valid-file"  href="../../computer-valid/valid1.xml"/>
       <x:scenario label="[B.1] - A 'computer' document">
          <!--  selecting '/' passes the root of the tree in as wanted, instead of the element alone. -->
          <x:context select="/">

@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
 
+set -o pipefail
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=../common/subcommand_common.bash
 
 source "$SCRIPT_DIR/../../src/common/subcommand_common.bash"
 
 XSLT_FILE="${SCRIPT_DIR}/XSPEC-BATCH.xsl"
+LOGFILE=${LOGFILE:-"xspec_$(date +"%Y%m%d%H%M").log.txt"}
 
 usage() {
     cat <<EOF
@@ -66,12 +69,10 @@ ADDITIONAL_ARGS=$(echo "${*// /\\ }")
 SAXON_ARGS="-it:go -xsl:\"${XSLT_FILE}\" -init:org.nineml.coffeesacks.RegisterCoffeeSacks \
                  stop-on-error=yes $ADDITIONAL_ARGS"
 
-LOGFILE=xspec_$(date +"%Y%m%d%H%M").log.txt
-
 echo "XSpec testing - logging to ${LOGFILE}"
 
 # echo  "${SAXON_ARGS}"
 
 # set 2>/dev/null to drop all runtime messages / progress reports instead of logging
 # the process should error out only if stop-on-error=yes, otherwise it will do its best to complete
-invoke_saxon "${SAXON_ARGS}" 2>${LOGFILE} || echo_on_error "Errors encountered running XSpec - check log file"
+invoke_saxon "${SAXON_ARGS}" 2>&1 | tee ${LOGFILE}

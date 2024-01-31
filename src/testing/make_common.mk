@@ -53,5 +53,5 @@ endef
 # Run a Makefile target for each directory, skipping directories whose Makefile does not contain a rule
 define FOREACH_MAKE_OPTIONAL
 	@echo Running makefile target \'$1\' on all subdirectory makefiles that contain the rule
-	@$(call FOREACH,dir,$2,$(MAKE) -C $$dir -n $1 &> /dev/null && $(MAKE) -C $$dir $1 || echo "Makefile target '$1' does not exist in "$$dir". Continuing...")
+	@$(call FOREACH,dir,$2,$(MAKE) -C $$dir -n $1 &> /dev/null && $(MAKE) -C $$dir $1 || echo "Makefile target '$1' failed or does not exist in "$$dir". Continuing...")
 endef
