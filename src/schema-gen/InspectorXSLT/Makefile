@@ -8,7 +8,7 @@ xspec_script=$(realpath $(module_path)/../../../support/xspec-dev/mvn-saxon-xspe
 test: unit-test smoke-test ## Run all tests
 
 .PHONY: unit-test
-unit-test: ## Run all unit-tests
+spec-test: ## Run all specification-tests
 	LOGFILE="$(output_folder)/unit-tests.log" $(xspec_script) \
 		"baseURI=file:$(xspec_script)" \
 		"folder=$(module_path)/testing/tests/inspector-functional-xspec" \

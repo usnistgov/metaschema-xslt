@@ -16,7 +16,17 @@ If code legibility and consistency become an issue, we can consider more stringe
 
 ## *Test Everything*
 
-TBD - a TEST EVERYTHING subroutine.
+With `make`, `bash`, and Maven installed, `make test -C src` runs all the tests (tested under Ubuntu) in the `src` directory relative to the current working directory.
+
+The top-level Makefile in this directory collects commands from Makefiles distributed throughout the repo.
+
+You can also use `make` in isolation from the top-level testing, to focus on your application. As a developer you only need to worry about the folder containing your application, binding test tasks to the targets 'smoke-test', 'spec-test' and 'unit-test' as need be.
+
+Model such a Makefile, which calls XSpec for testing XSLT, after the example `src/schema-gen/InspectorXSLT/Makefile`.
+
+Experiment using different Makefile targets as configured in the various directories.
+
+For any directory, `make` with no arguments should offer tips.
 
 ## Testing technologies
 
@@ -46,17 +56,14 @@ If you touch a particular unit of code that doesn't have tests, write tests for 
 
 This expenditure of effort prevents bugs (easier than repairing them) and guards against regression, opening opportunities to do more interesting things. So it is not so much "extra" as an investment in future stability and sustainability.
 
-## Test applications
-
-`examples` (tbd) includes top-level independent metaschema examples made for testing and demonstration.
-
-This location is available for lightweight and <q>toy</q> applications, useful for evaluation, demonstration and learning. Fully built-out applications of Metaschema can also call this repository in as a submodule (like [OSCAL](https://github.com/usnistgov/oscal)).
+This approach can require changing some habits. Looking for inspiration and "striking while the iron is hot" no longer works as well (since the forge must be warmed up first). Yet the payoffs are substantial, and come early.
 
 ## Testing under CI/CD
 
-Also tbd
+Github Actions is configured in the file [.github/workflows/test.yml](.github/workflows/test.yml)
 
-Links of interest: 
+Note that since this logic enters the `Makefile` logic from the top, make executes the specified subroutines recursively.
 
-- https://github.com/nkutsche/xspec-maven-plugin
-- https://github.com/galtm/xslt-accumulator-tools/blob/db1c6b2a/pom.xml#L68
+Accordingly, adding a test subroutine to a `spec-tests` Makefile configuration anywhere in the repository has the effect of enabling it (turning it on) for CI/CD as well.
+
+
