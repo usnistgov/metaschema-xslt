@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../../../../../testing/xspec-assurance.sch"?>
+<x:description
+   xmlns:x="http://www.jenitennison.com/xslt/xspec"
+   xmlns:mx="http://csrc.nist.gov/ns/csd/metaschema-xslt"
+   stylesheet="../../../generator/generate-inspector-xslt.xsl"
+   xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+   xslt-version="3.0">
+
+    <!-- This XSpec is for validating internal workings in the Inspector XSLT production XSLT. -->
+    
+    
+   <!-- .     .     .     .     .     .     .     .     .     .     .     .     .     .     . -->
+ 
+ 
+ 
+ <!-- xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+      xmlns:XSLT="http://www.w3.org/1999/XSL/Transform"
+ -->
+   
+   <x:scenario label="Confirming internals in the Inspector Generator">
+      <!-- to do here:
+      
+      with and without @target, @target='.'
+      with and without @pattern
+      combo multiple key-field with @pattern - oops?
+      -->
+      
+      <x:scenario label="Key composition - a constraint with two key fields - gix.683">
+         <x:variable name="mx:constraint" xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0" as="element()">
+            <is-unique target=".">
+               <key-field target="boo"/>
+            </is-unique>
+         </x:variable>
+         <x:call function="mx:key-value">
+            <x:param name="whose" select="$mx:constraint"/>
+         </x:call>
+         <x:expect label="brings an XPath suitable for selecting its key values, as a sequence" select="'(boo)'"/>
+       </x:scenario>
+      <x:scenario label="Key composition - a constraint with two key fields - gix.683" pending="repair">
+         <x:variable name="mx:constraint" as="element()">
+            <is-unique target=".[exists(@id)]" id="vendor-name-and-site"><!-- A vendor name/site combo must be unique per vendor with id - a repeat must have @ref not @id so one 'prevails' -->
+               <key-field target="vendor/name"/>
+               <key-field target="vendor/website"/>
+            </is-unique>
+         </x:variable>
+         <x:call function="mx:key-value">
+            <x:param name="whose" select="$mx:constraint"/>
+         </x:call>
+         <x:expect label="brings an XPath suitable for selecting its key values, as a sequence" select="'(vendor/name, vendor/website)'"/>
+      </x:scenario>
+      <x:scenario label="A key field with a pattern">
+         <x:variable name="mx:constraint" as="element()">
+            <index-has-key name="index-back-matter-resource"
+               target=".[@rel=('reference') and starts-with(@href,'#')]">
+               <key-field target="@href" pattern="#(.*)"/>
+            </index-has-key>
+         </x:variable>
+         <x:call function="mx:key-value">
+            <x:param name="whose" select="$mx:constraint"/>
+         </x:call>
+         <x:expect label="brings a qualified XPath with a string replacement" select="'((@href)[matches(.,''^#(.*)$'')] ! replace(.,''^#(.*)$'',''$1''))'"/>
+      </x:scenario>
+   </x:scenario>
+   
+</x:description>

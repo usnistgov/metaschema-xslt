@@ -11,7 +11,7 @@ test: unit-test smoke-test ## Run all tests
 spec-test: ## Run all specification-tests
 	LOGFILE="$(output_folder)/inspector-functional-tests.log" $(xspec_script) \
 		"folder=$(module_path)/testing/tests/inspector-functional-xspec" \
-		"report-to=$(output_folder)/unit-tests_report.html" \
+		"report-to=$(output_folder)/inspector-functional-tests_report.html" \
 		"recurse=yes"
 
 .PHONY: smoke-test
