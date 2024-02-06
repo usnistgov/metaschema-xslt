@@ -17,19 +17,21 @@
       <xsl:copy>
          <head>XSpec summary report: { mx:enumerate('XSpec',count(report)) }</head>
          <xsl:next-match/>
-         <xsl:text>&#xA;{ (1 to 20) ! '--- ' }&#xA;</xsl:text>
+         <xsl:text>&#xA;{ (1 to 14) ! ' ...' }&#xA;</xsl:text>
       </xsl:copy>
    </xsl:template>
    
    <xsl:template match="/REPORT-SUMMARY">
       <xsl:text>&#xA;</xsl:text>
       <xsl:apply-templates/>
+      <xsl:text>&#xA;</xsl:text>
       <SYNOPSIS>SUCCESS - { mx:give-report-counts(.) } - NO FAILURES REPORTED</SYNOPSIS>
    </xsl:template>
    
    <xsl:template priority="20" match="/REPORT-SUMMARY[exists(descendant::fail)]">
       <xsl:text>&#xA;</xsl:text>
       <xsl:apply-templates/>
+      <xsl:text>&#xA;</xsl:text>
       <SYNOPSIS>FAILURE - { mx:give-report-counts(.) } - { count(descendant::fail) } { mx:pluralize('FAILURE',count(descendant::fail)) } REPORTED</SYNOPSIS>
    </xsl:template>
    
