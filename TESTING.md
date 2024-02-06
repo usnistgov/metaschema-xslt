@@ -28,7 +28,7 @@ Experiment using different Makefile targets as configured in the various directo
 
 For any directory, `make` with no arguments should offer tips.
 
-## Testing technologies
+### Testing technologies
 
 [XSpec](https://github.com/xspec/xspec/) is the preferred testing harness for XSLT in this initiative. XSpec test suites can be either self-contained, or can reference testing artifacts maintained externally. The repository contains XSpec examples demonstrating a range of usage patterns that can be applied.
 
@@ -39,6 +39,21 @@ Script-driven testing should rely on the same dependencies as the runtimes they 
 Currently we are emulating and re-engineering some specific XSpec capabilities in the [support/xspec-dev](support/xspec-dev) folder.
 
 These efforts are focused on producing and refining XSpec runtimes for various use cases and scenarios with specialized requirements faced by this project, such as arbitrary batching and iXML support. Tools we develop here are released under the same terms as Metaschema-XSLT (as open-source software).
+
+
+## Test-driven development
+
+Almost all testing in this repository falls into the category of either XSLT transformations, or runtimes that embed transformations.
+
+### The approach
+
+While this project began as an experimental proof of concept, it now aims for higher levels of assurance and confidence than are necessary or appropriate for applications intended only to produce findings regarding feasibility and levels of effort. Accordingly, our development approach has shifted from rapid prototyping to a more explicit and traceable process of design, specification and implementation.
+
+If you touch a particular unit of code that doesn't have tests, write tests for it in the same PR as your change. If you touch a particular unit of code that has tests, update or augment them to test the change you are making. In general, push the tests ahead of the code, not the other way around, aligning the tests with [the Metaschema specification(s)](https://pages.nist.gov/metaschema/specification/) first.
+
+This expenditure of effort prevents bugs (easier than repairing them) and guards against regression, opening opportunities to do more interesting things. So it is not so much "extra" as an investment in future stability and sustainability.
+
+The approach can require changing some habits. Looking for inspiration and "striking while the iron is hot" no longer works as well (since the forge must be warmed up first). Sometimes immediate gratification has to be set aside. Yet the payoffs are substantial, and come early.
 
 ## Global functional testing
 
@@ -53,16 +68,6 @@ Do not commit anything to this folder that you do not wish to stay there indefin
 When developing applications, feel free to add and modify any `testing` folder or its contents within the scope of work.
 
 Unit tests are expected to run successfully when committed - both completing, and passing all applicable tests. Keep in mind that most testing frameworks support marking tests as not applicable (in XSpec, [flag a scenario or `expect` as `pending`](https://github.com/xspec/xspec/wiki/Focusing-Your-Efforts#marking-scenario-or-expectation-as-pending)), so it is possible to write tests ahead of an implementation and still pass.
-
-### Test-driven development
-
-While this project began as an experimental proof of concept, it now aims for higher levels of assurance and confidence than are necessary or appropriate for applications intended only to produce findings regarding feasibility and levels of effort. Accordingly, our development approach has shifted from rapid prototyping to a more explicit and traceable process of design, specification and implementation.
-
-If you touch a particular unit of code that doesn't have tests, write tests for it in the same PR as your change. If you touch a particular unit of code that has tests, update or augment them to test the change you are making. In general, push the tests ahead of the code, not the other way around, aligning the tests with [the Metaschema specification(s)](https://pages.nist.gov/metaschema/specification/) first.
-
-This expenditure of effort prevents bugs (easier than repairing them) and guards against regression, opening opportunities to do more interesting things. So it is not so much "extra" as an investment in future stability and sustainability.
-
-This approach can require changing some habits. Looking for inspiration and "striking while the iron is hot" no longer works as well (since the forge must be warmed up first). Yet the payoffs are substantial, and come early.
 
 ## Testing under CI/CD
 

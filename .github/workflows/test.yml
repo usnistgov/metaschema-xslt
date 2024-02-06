@@ -32,3 +32,14 @@ jobs:
         run: |
           make -C src spec-test
         id: spec-tests
+
+      # Publish the test summary as comment on the PR
+      - name: Publish XSpec Test Results Summary
+        uses: EnricoMi/publish-unit-test-result-action@8885e273a4343cd7b48eaa72428dea0c3067ea98
+        if: runner.os == 'Linux'
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          check_name: XSpec Test Results
+          files: "**/*_junit-report.xml"
+          report_individual_runs: true
+          deduplicate_classes_by_file_name: false
