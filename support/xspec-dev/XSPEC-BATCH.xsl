@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+   xmlns:x="http://www.jenitennison.com/xslt/xspec"
    xmlns:mx="http://csrc.nist.gov/ns/csd/metaschema-xslt"
    xmlns:err="http://www.w3.org/2005/xqt-errors"
    exclude-result-prefixes="#all"
@@ -14,9 +15,11 @@
    Reports are written as side effects -->
    <xsl:output method="text"/>
    
-<!-- NOTE TO DEVS: this is the point of dependency on released XSpec
+<!-- NOTE TO DEVS: this is a point of dependency on released XSpec
      If the referenced code moves or changes, this XSLT must be adapted accordingly. -->
-   <xsl:param name="compiler-xslt-path" as="xs:string">../xspec/src/compiler/compile-xslt-tests.xsl</xsl:param>
+   <xsl:param name="junit-reporter-xslt-path"  as="xs:string">../xspec/src/reporter/junit-report.xsl</xsl:param>
+
+
    
    <!-- in no mode, the imported stylesheet makes HTML reports from XSpec execution results -->
    <xsl:import href="XSPEC-SINGLE.xsl"/>
@@ -57,6 +60,7 @@
          they will all be together and no precaution is taken for XSpecs with colliding names - take care
          as Saxon will refuse (so rename one of the files or report in aggregate)
        if $report is not given, no external reports are written
+     $junit-to - if set, with any file suffix (matching regex \..+$), a JUnit report in XML is written to this path relative to base URI
      $theme works as it does in XSPEC-SINGLE.xsl (clean|classic|toybox|uswds)
      
      results:
@@ -82,6 +86,10 @@
         nb memory usage may be heavy under the first scenario, untested! -->
    <xsl:variable name="reporting" as="xs:boolean" select="boolean($report-to)"/>
    <xsl:variable name="reporting-aggregate" as="xs:boolean" select="ends-with($report-to,'.html')"/>
+   
+   <xsl:param name="junit-to" as="xs:string?"/>
+   <!-- a path to which an XML file is written -->
+   
    
    <xsl:param    name="stop-on-error" as="xs:string">no</xsl:param>
    <xsl:variable name="stopping-on-error" as="xs:boolean" select="$stop-on-error=('yes','true')"/>
@@ -110,6 +118,7 @@
    <xsl:template name="nogo" expand-text="true">
       <xsl:text>Param $baseURI is: { $baseURI }&#xA;</xsl:text>
       <xsl:text>Static base URI is: { static-base-uri() }&#xA;</xsl:text>
+      <xsl:text>Collection location is: { $collection-location }&#xA;</xsl:text>
       
    </xsl:template>
    
@@ -154,6 +163,10 @@
 
       <xsl:apply-templates select="$aggregated-results/RESULTS" mode="emit-reports"/>
       
+      <xsl:call-template name="junit-report">
+         <xsl:with-param name="xspec-results" select="$aggregated-results"/>
+      </xsl:call-template>
+      
       <!-- An aggregated report is produced for -o or STDOUT using transformations xspec-summarize.xsl and xspec-summary-reduce.xsl over $aggregated-results -->
       <xsl:sequence select="$aggregated-results => mx:transform-with(xs:anyURI('xspec-summarize.xsl')) => mx:transform-with(xs:anyURI('xspec-summary-reduce.xsl'))"/>
       
@@ -170,6 +183,29 @@
 
    <xsl:template priority="101" match="RESULTS[not($reporting)]" mode="emit-reports"/>
    
+   <xsl:template name="junit-report">
+      <xsl:param name="xspec-results" as="document-node()?"/>
+      <xsl:if test="boolean($junit-to)">
+         <xsl:choose>
+            <xsl:when test="matches($junit-to, '\.[^.]+$') and ($junit-to castable as xs:anyURI)">
+               <xsl:call-template name="write-xml-file">
+                  <xsl:with-param name="filename" select="resolve-uri($junit-to, ($collection-location ! replace(.,'([^/])$','$1/')) )"/>
+                  <!-- nb in this application, html is in no namespace -->
+                  <xsl:with-param name="payload" as="element()">
+                     <testsuites name="XSpec report">
+                        <!-- each report needs to be processed standalone for the receiving XSLT - enabling threading? -->
+                        <xsl:sequence select="$xspec-results/RESULTS/x:report ! mx:xspec-junit-report(.)"/>
+                     </testsuites>
+                  </xsl:with-param>
+               </xsl:call-template>
+            </xsl:when>
+            <xsl:otherwise>
+            <xsl:message expand-text="true">WARNING: No JUnit report is written to '{ $junit-to }' - try a file name with suffix</xsl:message>
+            </xsl:otherwise>
+         </xsl:choose>
+      </xsl:if>
+   </xsl:template>
+   
    <xsl:template priority="99" match="RESULTS[$reporting-aggregate]" mode="emit-reports">
       <xsl:call-template name="write-html-file">
          <xsl:with-param name="filename" select="resolve-uri($report-to,$collection-location)"/>
@@ -184,7 +220,7 @@
       <xsl:apply-templates mode="produce-html" select="*"/>
    </xsl:template>
    
-   <xsl:template mode="produce-html" match="x:report" xmlns:x="http://www.jenitennison.com/xslt/xspec">
+   <xsl:template mode="produce-html" match="x:report">
       <!--xspec="file:/C:/Users/wap1/Documents/usnistgov/metaschema-xslt/support/xspec-dev/xspec-shell.xspec"-->
 
       <xsl:variable name="xspec-basename" select="@xspec => replace('.*/', '') => replace('\.[^.]*$', '')"/>
@@ -207,7 +243,16 @@
          <xsl:sequence select="$payload"/>
       </xsl:result-document>
    </xsl:template>
-
+   
+   <xsl:template name="write-xml-file">
+      <xsl:param name="filename" as="xs:anyURI"/>
+      <xsl:param name="payload" as="element()"/>
+      <xsl:message expand-text="true">Writing report {$filename} ...</xsl:message>
+      <xsl:result-document href="{$filename}" method="xml" indent="yes">
+         <xsl:sequence select="$payload"/>
+      </xsl:result-document>
+   </xsl:template>
+   
    <xsl:function name="mx:compile-xspec-at-uri" as="document-node()?" cache="true">
       <xsl:param name="xspec-uri" as="xs:anyURI"/>
       <xsl:sequence select="doc($xspec-uri) => mx:compile-xspec()"/>
@@ -231,6 +276,36 @@
       </xsl:variable>
       <xsl:sequence select="transform($runtime)?output"/>
    </xsl:function>
-   
+ 
+   <!-- Accepts an XSpec document and throws it at the compiler -->
+   <!-- todo: try/catch? what are the ways this can fail? -->
+   <xsl:function name="mx:xspec-junit-report" as="document-node()?" cache="true">
+      <xsl:param name="xspec-report" as="element(x:report)"/>
+      
+      <!--<xsl:variable name="xspec-report" as="document-node()">
+         <xsl:document>
+            <xsl:sequence select="$report"/>
+         </xsl:document>
+      </xsl:variable>-->
+      <!--<xsl:param name="xspec-name" as="xs:anyURI"/>-->
+      <xsl:variable name="runtime-params" as="map(xs:QName,item()*)">
+         <xsl:map>
+            <!--<xsl:map-entry key="QName('', 'xspec-home')" select="resolve-uri('../xspec/', static-base-uri())"/>-->
+         </xsl:map>
+      </xsl:variable>
+      <xsl:variable name="runtime" as="map(xs:string, item())">
+         <xsl:map>
+            <xsl:map-entry key="'xslt-version'" select="3.0"/>
+            <xsl:map-entry key="'source-node'" select="$xspec-report"/>
+            <!--<xsl:map-entry key="'global-context-item'" select="doc($xspec-name)"/>-->
+            <!-- uhoh - presumably this will have been cached?-->
+            <xsl:map-entry key="'stylesheet-location'" select="$junit-reporter-xslt-path"/>
+            <xsl:map-entry key="'stylesheet-params'" select="$runtime-params"/>
+         </xsl:map>
+      </xsl:variable>
+      
+      <!-- https://www.w3.org/TR/xpath-functions-31/#func-transform -->
+      <xsl:sequence select="transform($runtime)?output"/>
+   </xsl:function>
 
 </xsl:stylesheet>

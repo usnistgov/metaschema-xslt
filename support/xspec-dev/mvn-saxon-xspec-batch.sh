@@ -47,6 +47,9 @@ report-to (folder or HTML filename): if not given, no report is written
     e.g. report-to=all-report.html
          report-to=xspec-reports
 
+junit-to (filename with suffix): write a JUnit test report (XML) to this file
+         produces a warning if provided value is not a suffixed file name and a valid URI
+
 stop-on-error (yes|no): hard stop on any failure, or keep going - defaults to 'no'
 
 baseURI: a URI indicating runtime context relative to which XSpecs are found
