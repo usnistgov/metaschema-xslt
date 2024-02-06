@@ -5,12 +5,12 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     exclude-result-prefixes="#all">
 
-    <!-- Purpose: Produce a Schematron capable of validating metaschema-defined constraints over (schema-valid) data conforming to a metaschema-->
+    <!-- Purpose: Produce an XSLT transformation (stylesheet) capable of testing constraints defined in a metaschema -->
     <!-- Dependencies: This is a 'shell' XSLT and calls several steps in sequence, each implemented as an XSLT -->
     <!-- Input: A top-level metaschema; this XSLT also composes metaschema input so composition is not necessary -->
-    <!-- Output: A Schematron suitable for use or deployment, testing the formal validity of XML to metaschema-defined constraints -->
+    <!-- Output: An XSLT describing an XML format consistent with definitions given in the input metaschema -->
     <!-- Note: This XSLT uses the transform() function to execute a series of transformations (referenced out of line) over its input -->
-    
+
     <xsl:output method="xml" indent="yes"/>
 
     <!-- Turning $trace to 'on' will
@@ -36,7 +36,7 @@
         <nm:transform version="3.0">{ $composer-dir }/metaschema-digest.xsl</nm:transform>
         <nm:transform version="3.0">{ $composer-dir }/annotate-composition.xsl</nm:transform>
         
-        <nm:transform version="3.0">Schematron/make-metaschema-metatron.xsl</nm:transform>
+        <nm:transform version="3.0">InspectorXSLT/generator/generate-inspector-xslt.xsl</nm:transform>
     </xsl:variable>
     
 </xsl:stylesheet>

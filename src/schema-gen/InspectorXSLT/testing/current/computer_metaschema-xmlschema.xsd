@@ -1,0 +1,952 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://example.com/ns/computer"
+           xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           elementFormDefault="qualified"
+           targetNamespace="http://example.com/ns/computer"
+           version="0.0.5">
+   <xs:annotation>
+      <xs:appinfo>
+         <m:schema-name>Computer Model</m:schema-name>
+         <m:schema-version>0.0.5</m:schema-version>
+         <m:short-name>computer</m:short-name>
+         <m:root>computer</m:root>
+      </xs:appinfo>
+   </xs:annotation>
+   <xs:complexType name="computer-vendor-ASSEMBLY">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Vendor Information</m:formal-name>
+            <m:description>Information about a vendor of a computer part.</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Vendor Information</b>: Information about a vendor of a computer part.</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="name" minOccurs="1" maxOccurs="1">
+            <xs:simpleType>
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name>Vendor Name</m:formal-name>
+                     <m:description>The registered company name of the vendor.</m:description>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b>Vendor Name</b>: The registered company name of the vendor.</xs:documentation>
+               </xs:annotation>
+               <xs:restriction base="StringDatatype"/>
+            </xs:simpleType>
+         </xs:element>
+         <xs:element name="address" minOccurs="1" maxOccurs="1">
+            <xs:simpleType>
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name>Vendor Address</m:formal-name>
+                     <m:description>The physical address of an office location for the vendor.</m:description>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b>Vendor Address</b>: The physical address of an office location for the vendor.</xs:documentation>
+               </xs:annotation>
+               <xs:restriction base="StringDatatype"/>
+            </xs:simpleType>
+         </xs:element>
+         <xs:element name="website" minOccurs="1" maxOccurs="1">
+            <xs:simpleType>
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name>Vendor Website</m:formal-name>
+                     <m:description>A public website made by the vendor documenting their parts as used in the computer.</m:description>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b>Vendor Website</b>: A public website made by the vendor documenting their parts as used in the computer.</xs:documentation>
+               </xs:annotation>
+               <xs:restriction base="URIDatatype"/>
+            </xs:simpleType>
+         </xs:element>
+      </xs:sequence>
+      <xs:attribute name="id" use="required" type="StringDatatype">
+         <xs:annotation>
+            <xs:appinfo>
+               <m:formal-name>Vendor Identifier</m:formal-name>
+               <m:description>An identifier for classifying a unique computer parts vendor.</m:description>
+            </xs:appinfo>
+            <xs:documentation>
+               <b>Vendor Identifier</b>: An identifier for classifying a unique computer parts vendor.</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+   </xs:complexType>
+   <xs:simpleType name="computer-product-name-FIELD">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Product Name</m:formal-name>
+            <m:description>The product name from the vendor of the computer part.</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Product Name</b>: The product name from the vendor of the computer part.</xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="StringDatatype"/>
+   </xs:simpleType>
+   <xs:element name="computer" type="computer-computer-ASSEMBLY"/>
+   <xs:complexType name="computer-computer-ASSEMBLY">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Computer Assembly</m:formal-name>
+            <m:description>A container object for a computer, its parts, and its sub-parts.</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Computer Assembly</b>: A container object for a computer, its parts, and its sub-parts.</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="build-date" minOccurs="0" maxOccurs="1">
+            <xs:simpleType>
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name>Build Date and Time</m:formal-name>
+                     <m:description>The date and time the computer build was completed.</m:description>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b>Build Date and Time</b>: The date and time the computer build was completed.</xs:documentation>
+               </xs:annotation>
+               <xs:restriction base="DateTimeWithTimezoneDatatype"/>
+            </xs:simpleType>
+         </xs:element>
+         <xs:element name="motherboard" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name>Motherboard Assembly</m:formal-name>
+                     <m:description>A container object for a motherboard in a computer and its sub-parts.</m:description>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b>Motherboard Assembly</b>: A container object for a motherboard in a computer and its sub-parts.</xs:documentation>
+               </xs:annotation>
+               <xs:sequence>
+                  <xs:element name="vendor"
+                              type="computer-vendor-ASSEMBLY"
+                              minOccurs="0"
+                              maxOccurs="1"/>
+                  <xs:element name="type" minOccurs="1" maxOccurs="1">
+                     <xs:simpleType>
+                        <xs:annotation>
+                           <xs:appinfo>
+                              <m:formal-name>Motherboard Type</m:formal-name>
+                              <m:description>The type motherboard layout, <code>at</code>, <code>atx</code>, <code>mini-itx</code> or an alternative.</m:description>
+                           </xs:appinfo>
+                           <xs:documentation>
+                              <b>Motherboard Type</b>: The type motherboard layout, at, atx, mini-itx or an alternative.</xs:documentation>
+                        </xs:annotation>
+                        <xs:restriction base="StringDatatype"/>
+                     </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="cpu" minOccurs="0" maxOccurs="1">
+                     <xs:complexType>
+                        <xs:annotation>
+                           <xs:appinfo>
+                              <m:formal-name>Motherboard Central Processing Unit (CPU)</m:formal-name>
+                              <m:description>The model number of the CPU on the motherboard of a computer.</m:description>
+                           </xs:appinfo>
+                           <xs:documentation>
+                              <b>Motherboard Central Processing Unit (CPU)</b>: The model number of the CPU on the motherboard of a computer.</xs:documentation>
+                        </xs:annotation>
+                        <xs:sequence>
+                           <xs:element name="vendor"
+                                       type="computer-vendor-ASSEMBLY"
+                                       minOccurs="0"
+                                       maxOccurs="1"/>
+                           <xs:element name="product-name"
+                                       type="computer-product-name-FIELD"
+                                       minOccurs="1"
+                                       maxOccurs="1"/>
+                           <xs:element name="cost"
+                                       type="computer-cost-FIELD"
+                                       minOccurs="0"
+                                       maxOccurs="1"/>
+                           <xs:element name="architecture" minOccurs="1" maxOccurs="1">
+                              <xs:simpleType>
+                                 <xs:annotation>
+                                    <xs:appinfo>
+                                       <m:formal-name>CPU Architecture</m:formal-name>
+                                       <m:description>The Instruction Set Architecture (ISA) of the processor, <code>x86</code>, <code>x86-64</code>, <code>arm</code>, or an alternative.</m:description>
+                                    </xs:appinfo>
+                                    <xs:documentation>
+                                       <b>CPU Architecture</b>: The Instruction Set Architecture (ISA) of the processor, x86, x86-64, arm, or an alternative.</xs:documentation>
+                                 </xs:annotation>
+                                 <xs:restriction base="StringDatatype"/>
+                              </xs:simpleType>
+                           </xs:element>
+                           <xs:element name="speed" minOccurs="1" maxOccurs="1">
+                              <xs:simpleType>
+                                 <xs:annotation>
+                                    <xs:appinfo>
+                                       <m:formal-name>CPU Speed</m:formal-name>
+                                       <m:description>The clock speed of the CPU in megahertz or gigahertz.</m:description>
+                                    </xs:appinfo>
+                                    <xs:documentation>
+                                       <b>CPU Speed</b>: The clock speed of the CPU in megahertz or gigahertz.</xs:documentation>
+                                 </xs:annotation>
+                                 <xs:restriction base="StringDatatype"/>
+                              </xs:simpleType>
+                           </xs:element>
+                           <xs:element name="prop"
+                                       type="computer-property-ASSEMBLY"
+                                       minOccurs="0"
+                                       maxOccurs="1"/>
+                           <xs:group ref="blockElementGroup" maxOccurs="unbounded" minOccurs="0"/>
+                        </xs:sequence>
+                     </xs:complexType>
+                  </xs:element>
+                  <xs:element name="ata-socket" minOccurs="0" maxOccurs="8">
+                     <xs:complexType>
+                        <xs:annotation>
+                           <xs:appinfo>
+                              <m:formal-name>Motherboard Advanced Technology Attachment (ATA) Socket</m:formal-name>
+                              <m:description>The model number of ATA socket on the motherboard of a computer. There will only be one socket on any motherboard.</m:description>
+                           </xs:appinfo>
+                           <xs:documentation>
+                              <b>Motherboard Advanced Technology Attachment (ATA) Socket</b>: The model number of ATA socket on the motherboard of a computer. There will only be one socket on any motherboard.</xs:documentation>
+                        </xs:annotation>
+                        <xs:sequence>
+                           <xs:element name="vendor"
+                                       type="computer-vendor-ASSEMBLY"
+                                       minOccurs="0"
+                                       maxOccurs="1"/>
+                           <xs:element name="product-name"
+                                       type="computer-product-name-FIELD"
+                                       minOccurs="1"
+                                       maxOccurs="1"/>
+                           <xs:element name="cost"
+                                       type="computer-cost-FIELD"
+                                       minOccurs="0"
+                                       maxOccurs="1"/>
+                           <xs:element name="type" minOccurs="1" maxOccurs="1">
+                              <xs:simpleType>
+                                 <xs:annotation>
+                                    <xs:appinfo>
+                                       <m:formal-name>ATA Socket Type</m:formal-name>
+                                       <m:description>The type of ATA socket on the motherboard , <code>pata</code> (parallel ATA), <code>sata</code> (Serial ATA), or an alternative.</m:description>
+                                    </xs:appinfo>
+                                    <xs:documentation>
+                                       <b>ATA Socket Type</b>: The type of ATA socket on the motherboard , pata (parallel ATA), sata (Serial ATA), or an alternative.</xs:documentation>
+                                 </xs:annotation>
+                                 <xs:restriction base="StringDatatype"/>
+                              </xs:simpleType>
+                           </xs:element>
+                           <xs:element name="prop"
+                                       type="computer-property-ASSEMBLY"
+                                       minOccurs="0"
+                                       maxOccurs="1"/>
+                           <xs:group ref="blockElementGroup" maxOccurs="unbounded" minOccurs="0"/>
+                        </xs:sequence>
+                        <xs:attribute name="serial-number" type="StringDatatype">
+                           <xs:annotation>
+                              <xs:appinfo>
+                                 <m:formal-name>Serial Number</m:formal-name>
+                                 <m:description>A code for this item only. No spaces are permitted.</m:description>
+                              </xs:appinfo>
+                              <xs:documentation>
+                                 <b>Serial Number</b>: A code for this item only. No spaces are permitted.</xs:documentation>
+                           </xs:annotation>
+                        </xs:attribute>
+                        <xs:attribute name="slot-no" use="required" type="NonNegativeIntegerDatatype">
+                           <xs:annotation>
+                              <xs:appinfo>
+                                 <m:formal-name>Slot number</m:formal-name>
+                                 <m:description>Must be distinctive among ata-sockets, and must be a value between zero (0) and the total number of slots.</m:description>
+                              </xs:appinfo>
+                              <xs:documentation>
+                                 <b>Slot number</b>: Must be distinctive among ata-sockets, and must be a value between zero (0) and the total number of slots.</xs:documentation>
+                           </xs:annotation>
+                        </xs:attribute>
+                     </xs:complexType>
+                  </xs:element>
+                  <xs:element name="memory" minOccurs="1" maxOccurs="unbounded">
+                     <xs:complexType>
+                        <xs:annotation>
+                           <xs:appinfo>
+                              <m:formal-name>Motherboard Random Access Memory (RAM) Module(s)</m:formal-name>
+                              <m:description>Random access memory hardware installed on the motherboard of a computer.</m:description>
+                           </xs:appinfo>
+                           <xs:documentation>
+                              <b>Motherboard Random Access Memory (RAM) Module(s)</b>: Random access memory hardware installed on the motherboard of a computer.</xs:documentation>
+                        </xs:annotation>
+                        <xs:sequence>
+                           <xs:element name="vendor"
+                                       type="computer-vendor-ASSEMBLY"
+                                       minOccurs="0"
+                                       maxOccurs="1"/>
+                           <xs:element name="product-name"
+                                       type="computer-product-name-FIELD"
+                                       minOccurs="1"
+                                       maxOccurs="1"/>
+                           <xs:element name="cost"
+                                       type="computer-cost-FIELD"
+                                       minOccurs="0"
+                                       maxOccurs="1"/>
+                           <xs:element name="byte-size" minOccurs="1" maxOccurs="1">
+                              <xs:simpleType>
+                                 <xs:annotation>
+                                    <xs:appinfo>
+                                       <m:formal-name>Memory Module Size</m:formal-name>
+                                       <m:description>Size of the memory module in binary, not SI base-10 units, meaning a kilobyte is 1024 bytes, not 1000 bytes.</m:description>
+                                    </xs:appinfo>
+                                    <xs:documentation>
+                                       <b>Memory Module Size</b>: Size of the memory module in binary, not SI base-10 units, meaning a kilobyte is 1024 bytes, not 1000 bytes.</xs:documentation>
+                                 </xs:annotation>
+                                 <xs:restriction base="PositiveIntegerDatatype"/>
+                              </xs:simpleType>
+                           </xs:element>
+                           <xs:element name="prop"
+                                       type="computer-property-ASSEMBLY"
+                                       minOccurs="0"
+                                       maxOccurs="1"/>
+                           <xs:group ref="blockElementGroup" maxOccurs="unbounded" minOccurs="0"/>
+                        </xs:sequence>
+                        <xs:attribute name="serial-number" type="StringDatatype">
+                           <xs:annotation>
+                              <xs:appinfo>
+                                 <m:formal-name>Serial Number</m:formal-name>
+                                 <m:description>A code for this item only. No spaces are permitted.</m:description>
+                              </xs:appinfo>
+                              <xs:documentation>
+                                 <b>Serial Number</b>: A code for this item only. No spaces are permitted.</xs:documentation>
+                           </xs:annotation>
+                        </xs:attribute>
+                     </xs:complexType>
+                  </xs:element>
+                  <xs:element name="cooling"
+                              type="computer-cooling-ASSEMBLY"
+                              minOccurs="0"
+                              maxOccurs="1"/>
+                  <xs:element name="expansion-card" minOccurs="0" maxOccurs="unbounded">
+                     <xs:complexType>
+                        <xs:annotation>
+                           <xs:appinfo>
+                              <m:formal-name>Motherboard Expansion Card</m:formal-name>
+                              <m:description>The model number of an expansion card connected to the motherboard of a computer.</m:description>
+                           </xs:appinfo>
+                           <xs:documentation>
+                              <b>Motherboard Expansion Card</b>: The model number of an expansion card connected to the motherboard of a computer.</xs:documentation>
+                        </xs:annotation>
+                        <xs:sequence>
+                           <xs:element name="vendor"
+                                       type="computer-vendor-ASSEMBLY"
+                                       minOccurs="0"
+                                       maxOccurs="1"/>
+                           <xs:element name="product-name"
+                                       type="computer-product-name-FIELD"
+                                       minOccurs="1"
+                                       maxOccurs="1"/>
+                           <xs:element name="cost"
+                                       type="computer-cost-FIELD"
+                                       minOccurs="0"
+                                       maxOccurs="1"/>
+                           <xs:element name="type" minOccurs="1" maxOccurs="1">
+                              <xs:simpleType>
+                                 <xs:annotation>
+                                    <xs:appinfo>
+                                       <m:formal-name>Expansion Card Type</m:formal-name>
+                                       <m:description>The type of expansion card on a motherboard of a computer, such as <code>pci</code> (PCI, e.g. Peripheral Component Interconnect), <code>pcie</code> (PCI Express), or an alternative.</m:description>
+                                    </xs:appinfo>
+                                    <xs:documentation>
+                                       <b>Expansion Card Type</b>: The type of expansion card on a motherboard of a computer, such as pci (PCI, e.g. Peripheral Component Interconnect), pcie (PCI Express), or an alternative.</xs:documentation>
+                                 </xs:annotation>
+                                 <xs:restriction base="StringDatatype"/>
+                              </xs:simpleType>
+                           </xs:element>
+                           <xs:element name="prop"
+                                       type="computer-property-ASSEMBLY"
+                                       minOccurs="0"
+                                       maxOccurs="1"/>
+                           <xs:group ref="blockElementGroup" maxOccurs="unbounded" minOccurs="0"/>
+                        </xs:sequence>
+                        <xs:attribute name="serial-number" type="StringDatatype">
+                           <xs:annotation>
+                              <xs:appinfo>
+                                 <m:formal-name>Serial Number</m:formal-name>
+                                 <m:description>A code for this item only. No spaces are permitted.</m:description>
+                              </xs:appinfo>
+                              <xs:documentation>
+                                 <b>Serial Number</b>: A code for this item only. No spaces are permitted.</xs:documentation>
+                           </xs:annotation>
+                        </xs:attribute>
+                        <xs:attribute name="socket-no" use="required" type="StringDatatype">
+                           <xs:annotation>
+                              <xs:appinfo>
+                                 <m:formal-name>Socket Slot No</m:formal-name>
+                                 <m:description>Identifies the expansion card's socket by its slot number. Note this should be a non-negative integer between 0 and the count of sockets, but this is not formally defined except on the target.</m:description>
+                              </xs:appinfo>
+                              <xs:documentation>
+                                 <b>Socket Slot No</b>: Identifies the expansion card's socket by its slot number. Note this should be a non-negative integer between 0 and the count of sockets, but this is not formally defined except on the target.</xs:documentation>
+                           </xs:annotation>
+                        </xs:attribute>
+                     </xs:complexType>
+                  </xs:element>
+               </xs:sequence>
+               <xs:attribute name="serial-number" type="StringDatatype">
+                  <xs:annotation>
+                     <xs:appinfo>
+                        <m:formal-name>Serial Number</m:formal-name>
+                        <m:description>A code for this item only. No spaces are permitted.</m:description>
+                     </xs:appinfo>
+                     <xs:documentation>
+                        <b>Serial Number</b>: A code for this item only. No spaces are permitted.</xs:documentation>
+                  </xs:annotation>
+               </xs:attribute>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="usb-device" minOccurs="0" maxOccurs="unbounded">
+            <xs:complexType>
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name>Universal Serial Bus Device</m:formal-name>
+                     <m:description>A USB expansion device.</m:description>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b>Universal Serial Bus Device</b>: A USB expansion device.</xs:documentation>
+               </xs:annotation>
+               <xs:sequence>
+                  <xs:element name="vendor"
+                              type="computer-vendor-ASSEMBLY"
+                              minOccurs="0"
+                              maxOccurs="1"/>
+                  <xs:element name="product-name"
+                              type="computer-product-name-FIELD"
+                              minOccurs="1"
+                              maxOccurs="1"/>
+                  <xs:element name="cost"
+                              type="computer-cost-FIELD"
+                              minOccurs="0"
+                              maxOccurs="1"/>
+                  <xs:element name="prop"
+                              type="computer-property-ASSEMBLY"
+                              minOccurs="0"
+                              maxOccurs="1"/>
+                  <xs:group ref="blockElementGroup" maxOccurs="unbounded" minOccurs="0"/>
+               </xs:sequence>
+               <xs:attribute name="uuid" use="required" type="UUIDDatatype">
+                  <xs:annotation>
+                     <xs:appinfo>
+                        <m:formal-name>USB Device Universally Unique Identifier</m:formal-name>
+                        <m:description>An identifier, based on a type 4 UUID, for the USB device.</m:description>
+                     </xs:appinfo>
+                     <xs:documentation>
+                        <b>USB Device Universally Unique Identifier</b>: An identifier, based on a type 4 UUID, for the USB device.</xs:documentation>
+                  </xs:annotation>
+               </xs:attribute>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="prop"
+                     type="computer-property-ASSEMBLY"
+                     minOccurs="0"
+                     maxOccurs="1"/>
+         <xs:group ref="blockElementGroup" maxOccurs="unbounded" minOccurs="0"/>
+      </xs:sequence>
+      <xs:attribute name="serial-number" type="StringDatatype">
+         <xs:annotation>
+            <xs:appinfo>
+               <m:formal-name>Serial Number</m:formal-name>
+               <m:description>A code for this item only. No spaces are permitted.</m:description>
+            </xs:appinfo>
+            <xs:documentation>
+               <b>Serial Number</b>: A code for this item only. No spaces are permitted.</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="id" use="required" type="StringDatatype">
+         <xs:annotation>
+            <xs:appinfo>
+               <m:formal-name>Computer Identifier</m:formal-name>
+               <m:description>An identifier for classifying a unique make and model of computer.</m:description>
+            </xs:appinfo>
+            <xs:documentation>
+               <b>Computer Identifier</b>: An identifier for classifying a unique make and model of computer.</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+   </xs:complexType>
+   <xs:complexType name="computer-cost-FIELD">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Part Cost</m:formal-name>
+            <m:description>The price paid in the specified currency.</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Part Cost</b>: The price paid in the specified currency.</xs:documentation>
+      </xs:annotation>
+      <xs:simpleContent>
+         <xs:extension base="DecimalDatatype">
+            <xs:attribute name="currency" use="required" type="StringDatatype">
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name>Currency Type</m:formal-name>
+                     <m:description>The type of currency.</m:description>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b>Currency Type</b>: The type of currency.</xs:documentation>
+               </xs:annotation>
+            </xs:attribute>
+         </xs:extension>
+      </xs:simpleContent>
+   </xs:complexType>
+   <xs:complexType name="computer-remarks-FIELD">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Remarks</m:formal-name>
+            <m:description>Additional remarks related to the containing computer component.</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Remarks</b>: Additional remarks related to the containing computer component.</xs:documentation>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:extension base="MarkupMultilineDatatype"/>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="computer-property-ASSEMBLY">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Property</m:formal-name>
+            <m:description>An attribute, characteristic, or quality of the containing object expressed as a namespace qualified name/value pair.</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Property</b>: An attribute, characteristic, or quality of the containing object expressed as a namespace qualified name/value pair.</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="remarks" minOccurs="0" maxOccurs="1">
+            <xs:annotation>
+               <xs:appinfo>
+                  <m:formal-name>Remarks</m:formal-name>
+                  <m:description>Additional remarks related to the containing computer component.</m:description>
+               </xs:appinfo>
+               <xs:documentation>
+                  <b>Remarks</b>: Additional remarks related to the containing computer component.</xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+               <xs:group ref="blockElementGroup" maxOccurs="unbounded" minOccurs="0"/>
+            </xs:complexType>
+         </xs:element>
+      </xs:sequence>
+      <xs:attribute name="name" use="required" type="TokenDatatype">
+         <xs:annotation>
+            <xs:appinfo>
+               <m:formal-name>Property Name</m:formal-name>
+               <m:description>A textual label, within a namespace, that uniquely identifies a specific attribute, characteristic, or quality of the property's containing object.</m:description>
+            </xs:appinfo>
+            <xs:documentation>
+               <b>Property Name</b>: A textual label, within a namespace, that uniquely identifies a specific attribute, characteristic, or quality of the property's containing object.</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="uuid" type="UUIDDatatype">
+         <xs:annotation>
+            <xs:appinfo>
+               <m:formal-name>Property Universally Unique Identifier</m:formal-name>
+               <m:description>A unique identifier for a property.</m:description>
+            </xs:appinfo>
+            <xs:documentation>
+               <b>Property Universally Unique Identifier</b>: A unique identifier for a property.</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="ns" type="URIDatatype">
+         <xs:annotation>
+            <xs:appinfo>
+               <m:formal-name>Property Namespace</m:formal-name>
+               <m:description>A namespace qualifying the property's name. This allows different organizations to associate distinct semantics with the same name.</m:description>
+            </xs:appinfo>
+            <xs:documentation>
+               <b>Property Namespace</b>: A namespace qualifying the property's name. This allows different organizations to associate distinct semantics with the same name.</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="value" use="required" type="StringDatatype">
+         <xs:annotation>
+            <xs:appinfo>
+               <m:formal-name>Property Value</m:formal-name>
+               <m:description>Indicates the value of the attribute, characteristic, or quality.</m:description>
+            </xs:appinfo>
+            <xs:documentation>
+               <b>Property Value</b>: Indicates the value of the attribute, characteristic, or quality.</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="class" type="TokenDatatype">
+         <xs:annotation>
+            <xs:appinfo>
+               <m:formal-name>Property Class</m:formal-name>
+               <m:description>A textual label that provides a sub-type or characterization of the property's <code>name</code>.</m:description>
+            </xs:appinfo>
+            <xs:documentation>
+               <b>Property Class</b>: A textual label that provides a sub-type or characterization of the property's name.</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="group" type="TokenDatatype">
+         <xs:annotation>
+            <xs:appinfo>
+               <m:formal-name>Property Group</m:formal-name>
+               <m:description>An identifier for relating distinct sets of properties.</m:description>
+            </xs:appinfo>
+            <xs:documentation>
+               <b>Property Group</b>: An identifier for relating distinct sets of properties.</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+   </xs:complexType>
+   <xs:complexType name="computer-cooling-ASSEMBLY">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Cooling</m:formal-name>
+            <m:description>How the computer cools itself.</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Cooling</b>: How the computer cools itself.</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:choice>
+            <xs:element name="fan" minOccurs="2" maxOccurs="12">
+               <xs:complexType>
+                  <xs:annotation>
+                     <xs:appinfo>
+                        <m:formal-name>Fan</m:formal-name>
+                        <m:description>A fan header for a single fan; at least two fans are required for adequate cooling.</m:description>
+                     </xs:appinfo>
+                     <xs:documentation>
+                        <b>Fan</b>: A fan header for a single fan; at least two fans are required for adequate cooling.</xs:documentation>
+                  </xs:annotation>
+               </xs:complexType>
+            </xs:element>
+            <xs:element name="water" minOccurs="1" maxOccurs="1">
+               <xs:complexType>
+                  <xs:annotation>
+                     <xs:appinfo>
+                        <m:formal-name>Water</m:formal-name>
+                        <m:description>A cooling system using water for thermal regulation.</m:description>
+                     </xs:appinfo>
+                     <xs:documentation>
+                        <b>Water</b>: A cooling system using water for thermal regulation.</xs:documentation>
+                  </xs:annotation>
+                  <xs:attribute name="illuminated" type="BooleanDatatype">
+                     <xs:annotation>
+                        <xs:appinfo>
+                           <m:formal-name>Whether illuminated</m:formal-name>
+                           <m:description>The water system is illuminated for visual effect.</m:description>
+                        </xs:appinfo>
+                        <xs:documentation>
+                           <b>Whether illuminated</b>: The water system is illuminated for visual effect.</xs:documentation>
+                     </xs:annotation>
+                  </xs:attribute>
+               </xs:complexType>
+            </xs:element>
+         </xs:choice>
+      </xs:sequence>
+      <xs:attribute name="serial-number" type="StringDatatype">
+         <xs:annotation>
+            <xs:appinfo>
+               <m:formal-name>Serial Number</m:formal-name>
+               <m:description>A code for this item only. No spaces are permitted.</m:description>
+            </xs:appinfo>
+            <xs:documentation>
+               <b>Serial Number</b>: A code for this item only. No spaces are permitted.</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+   </xs:complexType>
+   <xs:complexType name="MarkupMultilineDatatype">
+      <xs:choice minOccurs="1" maxOccurs="unbounded">
+         <xs:group ref="blockElementGroup"/>
+      </xs:choice>
+   </xs:complexType>
+   <xs:group name="headingBlockElementGroup">
+      <xs:choice>
+         <xs:element name="h1" type="inlineMarkupType"/>
+         <xs:element name="h2" type="inlineMarkupType"/>
+         <xs:element name="h3" type="inlineMarkupType"/>
+         <xs:element name="h4" type="inlineMarkupType"/>
+         <xs:element name="h5" type="inlineMarkupType"/>
+         <xs:element name="h6" type="inlineMarkupType"/>
+      </xs:choice>
+   </xs:group>
+   <xs:group name="blockElementGroup">
+      <xs:choice>
+         <xs:group ref="headingBlockElementGroup"/>
+         <xs:group ref="listsGroup"/>
+         <xs:group ref="blockTextGroup"/>
+         <xs:element name="p" type="inlineMarkupType"/>
+         <xs:element name="table" type="tableType"/>
+         <!-- QUESTION: Deprecate this? -->
+         <xs:element name="img" type="imageType"/>
+      </xs:choice>
+   </xs:group>
+   <xs:group name="blockTextGroup">
+      <xs:choice>
+         <xs:element name="pre" type="preformattedType"/>
+         <xs:element name="hr"/>
+         <!-- TODO: need to add support for blockquote, which can contain block elements. usnistgov/metaschema#70 -->
+         <xs:element name="blockquote" type="blockQuoteType"/>
+      </xs:choice>
+   </xs:group>
+   <xs:complexType name="preformattedType" mixed="true">
+      <xs:complexContent>
+         <xs:extension base="inlineMarkupType">
+            <xs:annotation>
+               <xs:documentation>The content model is the same as inlineMarkupType, but line endings need
+            to be preserved, since this is pre-formatted.</xs:documentation>
+            </xs:annotation>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="listType">
+      <xs:sequence>
+         <xs:element name="li"
+                     type="listItemType"
+                     minOccurs="1"
+                     maxOccurs="unbounded"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="orderedListType">
+      <xs:complexContent>
+         <xs:extension base="listType">
+		<!-- TODO: confirm if romans are allowed -->
+            <xs:attribute name="start" type="xs:nonNegativeInteger"/>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:group name="listsGroup">
+      <xs:choice>
+         <xs:element name="ul" type="listType"/>
+         <xs:element name="ol" type="orderedListType"/>
+      </xs:choice>
+   </xs:group>
+   <xs:complexType name="listItemType" mixed="true">
+    <!-- TODO: is this the correct construction? -->
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+         <xs:group ref="inlineMarkupGroup"/>
+         <xs:group ref="listsGroup"/>
+         <xs:group ref="blockTextGroup"/>
+         <xs:group ref="headingBlockElementGroup"/>
+         <xs:element name="p" type="inlineMarkupType"/>
+      </xs:choice>
+   </xs:complexType>
+   <xs:complexType name="tableType">
+      <xs:sequence>
+         <xs:element maxOccurs="unbounded" name="tr" type="tableRowType"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="tableRowType">
+    <!-- QUESTION: Should we allow TH and TD to be mixed? -->
+      <xs:choice minOccurs="1" maxOccurs="unbounded">
+         <xs:element name="td" type="tableCellType" maxOccurs="unbounded"/>
+         <xs:element name="th" type="tableCellType" maxOccurs="unbounded"/>
+      </xs:choice>
+   </xs:complexType>
+   <xs:complexType name="tableCellType" mixed="true">
+      <xs:complexContent>
+      <!-- TODO: consider adding a choice between the inline or paragraphs. We need to figure out what is supported in Markdown. -->
+         <xs:extension base="inlineMarkupType">
+        <!-- TODO: need to add support for alignment. usnistgov/metaschema#70 -->
+            <xs:attribute name="align" type="alignType" default="left"/>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:simpleType name="alignType">
+      <xs:restriction base="xs:token">
+         <xs:enumeration value="left"/>
+         <xs:enumeration value="center"/>
+         <xs:enumeration value="right"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:complexType name="blockQuoteType">
+    <!-- TODO: confirm if nested blockquote is supported in markdown -->
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+         <xs:group ref="blockElementGroup"/>
+      </xs:choice>
+   </xs:complexType>
+   <xs:complexType name="MarkupLineDatatype" mixed="true">
+      <xs:complexContent>
+         <xs:extension base="inlineMarkupType"/>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="inlineMarkupType" mixed="true">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+         <xs:group ref="inlineMarkupGroup"/>
+      </xs:choice>
+   </xs:complexType>
+   <xs:group name="inlineMarkupGroup">
+      <xs:choice>
+         <xs:element name="a" type="anchorType"/>
+         <xs:element name="insert" type="insertType"/>
+         <xs:element name="br"/>
+         <xs:group ref="phraseMarkupGroup"/>
+      </xs:choice>
+   </xs:group>
+   <xs:group name="phraseMarkupGroup">
+      <xs:choice>
+         <xs:element name="code" type="codeType"/>
+         <xs:element name="em" type="inlineMarkupType"/>
+         <xs:element name="i" type="inlineMarkupType"/>
+         <xs:element name="b" type="inlineMarkupType"/>
+         <xs:element name="strong" type="inlineMarkupType"/>
+         <xs:element name="sub" type="inlineMarkupType"/>
+         <xs:element name="sup" type="inlineMarkupType"/>
+         <xs:element name="q" type="inlineMarkupType"/>
+         <xs:element name="img" type="imageType"/>
+      </xs:choice>
+   </xs:group>
+   <xs:complexType name="codeType">
+      <xs:complexContent>
+         <xs:extension base="inlineMarkupType">
+            <xs:attribute name="class" type="xs:token"/>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="imageType">
+      <xs:attribute name="alt" type="xs:string"/>
+      <xs:attribute name="src" use="required" type="xs:anyURI"/>
+      <xs:attribute name="title" type="xs:string"/>
+   </xs:complexType>
+   <xs:complexType name="anchorType" mixed="true">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+         <xs:group ref="phraseMarkupGroup"/>
+      </xs:choice>
+      <xs:attribute name="href" type="xs:anyURI"/>
+      <xs:attribute name="title" type="xs:string"/>
+   </xs:complexType>
+   <xs:complexType name="insertType">
+      <xs:annotation>
+         <xs:documentation>An insert can be used to identify a placeholder for dynamically inserting text related to a specific object, which is referenced by the object's identifier using an <code xmlns="">id-ref</code>. This insert mechanism allows the selection of which text value from the object to dynamically include based on the application's display requirements.</xs:documentation>
+      </xs:annotation>
+      <xs:attribute name="type" use="required" type="xs:NCName">
+         <xs:annotation>
+            <xs:documentation>The type of object to include from (e.g., parameter, control, component, role, etc.)</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="id-ref" use="required" type="xs:NCName">
+         <xs:annotation>
+            <xs:documentation>The identity of the object to insert a value for. The identity will be selected from the index of objects of the specified <code xmlns="">type</code>. The specific value to include is based on the application's display requirements, which will likely use a specific data element associated with the <code xmlns="">type</code> (e.g., title, identifier, value, etc.) that is appropriate for the application.</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+   </xs:complexType>
+   <xs:simpleType name="BooleanDatatype">
+      <xs:annotation>
+         <xs:documentation>A binary value that is either: true (or 1) or false (or 0).</xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:boolean">
+         <xs:pattern value="true|1|false|0"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="DateTimeDatatype">
+      <xs:annotation>
+         <xs:documentation>A string representing a point in time with an optional timezone.</xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:dateTime">
+         <xs:pattern value="(((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30)))T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\.[0-9]+)?(Z|(-((0[0-9]|1[0-2]):00|0[39]:30)|\+((0[0-9]|1[0-4]):00|(0[34569]|10):30|(0[58]|12):45)))?"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="DateTimeWithTimezoneDatatype">
+      <xs:annotation>
+         <xs:documentation>A string representing a point in time with a required timezone.</xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="DateTimeDatatype">
+         <xs:pattern value="(((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30)))T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\.[0-9]+)?(Z|(-((0[0-9]|1[0-2]):00|0[39]:30)|\+((0[0-9]|1[0-4]):00|(0[34569]|10):30|(0[58]|12):45)))"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="DecimalDatatype">
+      <xs:annotation>
+         <xs:documentation>A real number expressed using a whole and optional fractional part
+				separated by a period.</xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:decimal">
+         <xs:pattern value="\S(.*\S)?">
+            <xs:annotation>
+               <xs:documentation>This pattern ensures that leading and trailing whitespace is
+						disallowed. This helps to even the user experience between implementations
+						related to whitespace.</xs:documentation>
+            </xs:annotation>
+         </xs:pattern>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="NonNegativeIntegerDatatype">
+      <xs:annotation>
+         <xs:documentation>An integer value that is equal to or greater than 0.</xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:nonNegativeInteger">
+         <xs:pattern value="\S(.*\S)?">
+            <xs:annotation>
+               <xs:documentation>This pattern ensures that leading and trailing whitespace is
+						disallowed. This helps to even the user experience between implementations
+						related to whitespace.</xs:documentation>
+            </xs:annotation>
+         </xs:pattern>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="PositiveIntegerDatatype">
+      <xs:annotation>
+         <xs:documentation>An integer value that is greater than 0.</xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:positiveInteger">
+         <xs:pattern value="\S(.*\S)?">
+            <xs:annotation>
+               <xs:documentation>This pattern ensures that leading and trailing whitespace is
+						disallowed. This helps to even the user experience between implementations
+						related to whitespace.</xs:documentation>
+            </xs:annotation>
+         </xs:pattern>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="StringDatatype">
+      <xs:annotation>
+         <xs:documentation>A non-empty string of Unicode characters with leading and trailing whitespace
+				disallowed. Whitespace is: U+9, U+10, U+32 or [ \n\t]+</xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:string">
+         <xs:annotation>
+            <xs:documentation>The 'string' datatype restricts the XSD type by prohibiting leading 
+					and trailing whitespace, and something (not only whitespace) is required.</xs:documentation>
+         </xs:annotation>
+         <xs:whiteSpace value="preserve"/>
+         <xs:pattern value="\S(.*\S)?">
+            <xs:annotation>
+               <xs:documentation>This pattern ensures that leading and trailing whitespace is
+						disallowed. This helps to even the user experience between implementations
+						related to whitespace.</xs:documentation>
+            </xs:annotation>
+         </xs:pattern>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="TokenDatatype">
+      <xs:annotation>
+			<!--<xs:documentation>Matching XSD NCName, except whitespace is not collapsed.</xs:documentation> -->
+         <xs:documentation>A non-empty, non-colonized name as defined by XML Schema Part 2: Datatypes
+				Second Edition (https://www.w3.org/TR/xmlschema11-2/#NCName), with leading and trailing
+				whitespace disallowed.</xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="StringDatatype">
+         <xs:pattern value="(\p{L}|_)(\p{L}|\p{N}|[.\-_])*">
+            <xs:annotation>
+					<!--<xs:documentation>An XML initial character (but not colon), followed 
+						by any XML name character (but not colon).</xs:documentation> -->
+               <xs:documentation>A single token may not contain whitespace.
+					</xs:documentation>
+            </xs:annotation>
+         </xs:pattern>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="URIDatatype">
+      <xs:annotation>
+         <xs:documentation>A universal resource identifier (URI) formatted according to RFC3986.</xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:anyURI">
+         <xs:pattern value="[a-zA-Z][a-zA-Z0-9+\-.]+:.*\S">
+            <xs:annotation>
+               <xs:documentation>Requires a scheme with colon per RFC 3986.</xs:documentation>
+            </xs:annotation>
+         </xs:pattern>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="UUIDDatatype">
+      <xs:annotation>
+         <xs:documentation>A type 4 ('random' or 'pseudorandom') or type 5 UUID per RFC
+				4122.</xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="StringDatatype">
+         <xs:pattern value="[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[45][0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}">
+            <xs:annotation>
+               <xs:documentation>A sequence of 8-4-4-4-12 hex digits, with extra
+						constraints in the 13th and 17-18th places for version 4 and 5
+					</xs:documentation>
+            </xs:annotation>
+         </xs:pattern>
+      </xs:restriction>
+   </xs:simpleType>
+</xs:schema>

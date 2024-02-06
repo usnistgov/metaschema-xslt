@@ -1,7 +1,10 @@
 include testing/make_common.mk
 
-# Each subdirectory that has a makefile
-dirs:=$(dir $(wildcard ./*/Makefile))
+# Each subdirectory (recursively) that has a makefile
+# Makefile wildcard function does not support that, so we use the shell
+# function with the find utility and look ever Makefile in a child dir
+# relative to this one, but exclude this one to use with the FOREACH macro.
+dirs:=$(shell find '.' ! -wholename ./Makefile -name 'Makefile' -printf "%h\n")
 
 .PHONY: test
 test: ## Run all tests

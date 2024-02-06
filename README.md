@@ -175,6 +175,10 @@ See the [Metaschema Repository](https://github.com/usnistgov/metaschema) and its
 
 See the Project [Wiki](https://github.com/usnistgov/metaschema-xslt/wiki) for documentation maintained on this site.
 
+## Acknowledgements
+
+This work and especially work on testing XSLT represented by this project would have been impossible without examples and leadership provided by persons including AG; AJS; DW; NW.
+
 ## Required outline
 
 This page includes all the following, as described by guidelines at https://raw.githubusercontent.com/usnistgov/opensource-repo/main/README.md
