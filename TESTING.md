@@ -34,6 +34,12 @@ For any directory, `make` with no arguments should offer tips.
 
 Script-driven testing should rely on the same dependencies as the runtimes they test, as documented.
 
+### Extensions to XSpec
+
+Currently we are emulating and re-engineering some specific XSpec capabilities in the [support/xspec-dev](support/xspec-dev) folder.
+
+These efforts are focused on producing and refining XSpec runtimes for various use cases and scenarios with specialized requirements faced by this project, such as arbitrary batching and iXML support. Tools we develop here are released under the same terms as Metaschema-XSLT (as open-source software).
+
 ## Global functional testing
 
 `src/testing` includes resources for global-level testing. This folder or its contents should not to be moved or edited without fully testing *all* test runtimes, as resources inside this directory are sometimes dependencies.

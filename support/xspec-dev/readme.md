@@ -142,6 +142,7 @@ Other arguments can provide for:
 - processing recursively over folders and subfolders (aggregating all results)
 - stopping on parse or processing errors
 - or no HTML reports, just console messages showing results
+- JUnit XML report production suitable for CI/CD integration
 
 See inline comments in XSLT [XSPEC-BATCH.xsl](XSPEC-BATCH.xsl) for details.
 

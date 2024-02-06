@@ -12,6 +12,7 @@ spec-test: ## Run all specification-tests
 	LOGFILE="$(output_folder)/inspector-functional-tests.log" $(xspec_script) \
 		"folder=$(module_path)/testing/tests/inspector-functional-xspec" \
 		"report-to=$(output_folder)/inspector-functional-tests_report.html" \
+		"junit-to=$(output_folder)/inspector-functional-tests_junit-report.xml" \
 		"recurse=yes"
 
 .PHONY: smoke-test
@@ -19,6 +20,7 @@ smoke-test: ## Run all smoke-tests
 	LOGFILE="$(output_folder)/integration-tests.log" $(xspec_script) \
 		"folder=$(module_path)/testing/tests/inspector-generation-xspec" \
 		"report-to=$(output_folder)/integration-tests_report.html" \
+		"junit-to=$(output_folder)/integration-tests_junit-report.xml" \
 		"recurse=yes"
 
 .PHONY: clean
