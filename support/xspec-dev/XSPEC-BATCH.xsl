@@ -188,13 +188,23 @@
       <xsl:if test="boolean($junit-to)">
          <xsl:choose>
             <xsl:when test="matches($junit-to, '\.[^.]+$') and ($junit-to castable as xs:anyURI)">
+               <xsl:variable name="junit-reports" select="$xspec-results/RESULTS/x:report ! mx:xspec-junit-report(.)"/>
+               
                <xsl:call-template name="write-xml-file">
                   <xsl:with-param name="filename" select="resolve-uri($junit-to, ($collection-location ! replace(.,'([^/])$','$1/')) )"/>
-                  <!-- nb in this application, html is in no namespace -->
                   <xsl:with-param name="payload" as="element()">
-                     <testsuites name="XSpec report">
+                     <testsuites name="XSpec report - times { count($junit-reports) }">
+                        <xsl:call-template name="summary-attributes">
+                           <xsl:with-param name="where" select="$junit-reports"/>
+                        </xsl:call-template>
+                        <xsl:for-each select="$junit-reports/testsuites">
+                           <testsuite>
+                              <xsl:copy-of select="@*"/>
+                              <xsl:call-template name="summary-attributes"/>
+                              <xsl:copy-of select="child::node()"/>
+                           </testsuite>
+                        </xsl:for-each>
                         <!-- each report needs to be processed standalone for the receiving XSLT - enabling threading? -->
-                        <xsl:sequence select="$xspec-results/RESULTS/x:report ! mx:xspec-junit-report(.)"/>
                      </testsuites>
                   </xsl:with-param>
                </xsl:call-template>
@@ -205,6 +215,15 @@
          </xsl:choose>
       </xsl:if>
    </xsl:template>
+
+   <xsl:template name="summary-attributes">
+      <xsl:param name="where" select="." as="node()*"/>
+      <xsl:attribute name="tests" select="count($where/descendant::testcase)"/>
+      <xsl:attribute name="skipped" select="count($where/descendant::testcase[@status='skipped'])"/>
+      <xsl:attribute name="failures" select="count($where/descendant::testcase[@status='failed'])"/>
+   </xsl:template>
+   
+
    
    <xsl:template priority="99" match="RESULTS[$reporting-aggregate]" mode="emit-reports">
       <xsl:call-template name="write-html-file">
