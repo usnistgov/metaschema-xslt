@@ -163,10 +163,7 @@
          <xsl:with-param name="xspec-results" select="$aggregated-results"/>
       </xsl:call-template>
       
-      <!-- An aggregated report is produced for -o or STDOUT using transformations xspec-summarize.xsl and xspec-summary-reduce.xsl over $aggregated-results -->
-      <xsl:sequence select="$aggregated-results => mx:transform-with(xs:anyURI('xspec-summarize.xsl')) => mx:transform-with(xs:anyURI('xspec-summary-reduce.xsl'))"/>
-      
-      <!-- As extra, we report if we can see that tests were dropped along the way - this goes into main output,
+      <!-- For completeness we report if we can see that tests were dropped along the way - this goes into main output,
            post summary, not the message stream -->
       <xsl:variable name="reported-xspecs" select="$aggregated-results/RESULTS/*/@xspec"/>
       <xsl:variable name="dropped" select="$collection-in[not(.?name = $reported-xspecs)]"/>
@@ -175,6 +172,8 @@
          <xsl:text expand-text="true">   { $dropped?name => string-join(',&#xA;   ') }&#xA;</xsl:text>
       </xsl:if>
       
+      <!-- An aggregated report is produced for -o or STDOUT using transformations xspec-summarize.xsl and xspec-summary-reduce.xsl over $aggregated-results -->
+      <xsl:sequence select="$aggregated-results => mx:transform-with(xs:anyURI('xspec-summarize.xsl')) => mx:transform-with(xs:anyURI('xspec-summary-reduce.xsl'))"/>
    </xsl:template>
 
    <xsl:template priority="101" match="RESULTS[not($reporting)]" mode="emit-reports"/>
