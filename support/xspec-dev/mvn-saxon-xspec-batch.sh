@@ -70,7 +70,7 @@ echo_on_error()
 ADDITIONAL_ARGS=$(echo "${*// /\\ }")
 
 SAXON_ARGS="-it:go -xsl:\"${XSLT_FILE}\" -init:org.nineml.coffeesacks.RegisterCoffeeSacks \
-                 stop-on-error=yes $ADDITIONAL_ARGS"
+            $ADDITIONAL_ARGS"
 
 echo "XSpec testing - logging to ${LOGFILE}"
 

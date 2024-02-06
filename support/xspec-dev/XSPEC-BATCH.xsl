@@ -32,35 +32,31 @@
      
      Parameters:
      
-     $baseURI: a URI indicating runtime context - relative to which XSpecs are found
-     $folder: a folder, relative to baseURI - defaults to 'src'
-     
-     hint - if you want your script to run in the current directory or any arbitrary directory
-       and wish to hardwire its location 
-       and it's not inside ../../src (in which case designating $folder works)
-     set baseURI to the script's file: URI e.g. file:/mnt/c/Users/wap1/Documents/usnistgov/metaschema-xslt/support/xspec-dev/script.sh
-       (or to the folder with closing slash)
-     and folder to '.'
-     this parameterization is necessary so the XSLT can locate resource
-       even located elsewhere from where the script is called)
-     
+     $baseURI (optional, defaults to repository root): a URI indicating a runtime context
+     $folder (optional, defaults to 'src'): a folder, relative to baseURI, where XSpecs are to be found
+       By default, the path is directed to all XSpecs in the repo src/ directory
+      
+       Reset $folder first (to navigate from the top of the repository), and if it becomes too complex, reset $baseURI
+       Alternatively, pass an absolute URI in for $folder and ignore the $baseURI
+       Alternatively, give a file path as $baseURI, set $folder to '.' and the evaluation will operate from the file location
+      
      $pattern: glob-like syntax for file name matching
        cf https://www.saxonica.com/html/documentation12/sourcedocs/collections/collection-directories.html '?select'
-       use a single file name for a single file
-       use (file1.xspec|file2.xspec|...|fileN.xspec) for file name literals (with URI escaping)
-       defaults to *.xspec (all files suffixed xspec)  
+       Use a single file name for a single file
+       Use (file1.xspec|file2.xspec|...|fileN.xspec) for file name literals (with URI escaping)
+       Defaults to *.xspec (all files suffixed xspec)  
      $recurse (yes|no) identify files recursively - defaults to 'yes'
      $stop-on-error (yes|no) hard stop on any failure, or keep going
-       does not stop if a test successfully runs and returns a false result
-       only if tests fail to run for any reason
-       default to 'hard'
+       Does not stop if a test successfully runs and returns a false result
+       Only if tests fail to run for any reason
+       Defaults to 'no'
        
-     $report-to - if ends in '.html', a single aggregated report is written to this path relative to baseURI
+     $report-to - if ends in '.html', a single aggregated report is written to this path relative to the folder (target) path
        otherwise a non-empty $report-to results in each XSpec getting its own report written into a folder of that name
          they will all be together and no precaution is taken for XSpecs with colliding names - take care
-         as Saxon will refuse (so rename one of the files or report in aggregate)
+         as Saxon will refuse (so rename one of the files or report in aggregate instead)
        if $report is not given, no external reports are written
-     $junit-to - if set, with any file suffix (matching regex \..+$), a JUnit report in XML is written to this path relative to base URI
+     $junit-to - if set, with any file suffix (matching regex \..+$), a JUnit report in XML is written to this path relative to folder path
      $theme works as it does in XSPEC-SINGLE.xsl (clean|classic|toybox|uswds)
      
      results:
