@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            abstract="no"
+            module="computer"
+            _base-uri="file:/C:/Users/wap1/Documents/usnistgov/metaschema-xslt/src/schema-gen/InspectorXSLT/testing/tiny_metaschema.xml">
+   <INFO info-type="objects-used">Seeing assembly#computer:TINY, field#computer:title, field#computer:term, assembly#computer:part, field#computer:note</INFO>
+   <schema-name>Computer Model</schema-name>
+   <schema-version>0.0.5</schema-version>
+   <short-name>computer</short-name>
+   <namespace>http://example.com/ns/tinydata</namespace>
+   <json-base-uri>http://example.com/ns/tinydata</json-base-uri>
+   <remarks>
+      <h1>Tiny Metaschema</h1>
+      <p>A metaschema can be small and yet deep.</p>
+   </remarks>
+   <define-assembly _metaschema-xml-id="/assembly/computer/TINY"
+                    _metaschema-json-id="/assembly/computer/TINY"
+                    scope="global"
+                    name="TINY"
+                    module="computer"
+                    _base-uri="file:/C:/Users/wap1/Documents/usnistgov/metaschema-xslt/src/schema-gen/InspectorXSLT/testing/tiny_metaschema.xml"
+                    _key-name="computer:TINY"
+                    _using-root-name="TINY">
+      <formal-name>Tiny Data</formal-name>
+      <description>A minimally described data set.</description>
+      <root-name>TINY</root-name>
+      <define-flag _step="id"
+                   _key="id"
+                   _metaschema-xml-id="/assembly/computer/TINY/id"
+                   _metaschema-json-id="/assembly/computer/TINY/id"
+                   required="yes"
+                   as-type="string"
+                   name="id"
+                   _using-name="id"
+                   _in-xml-name="id"
+                   _in-json-name="id">
+         <formal-name>Tiny ID</formal-name>
+         <description>An identifier.</description>
+      </define-flag>
+      <model>
+         <field _step="title"
+                _key="title"
+                _metaschema-xml-id="/assembly/computer/TINY/title"
+                _metaschema-json-id="/assembly/computer/TINY/title"
+                max-occurs="1"
+                min-occurs="1"
+                ref="title"
+                _key-ref="computer:title"
+                _using-name="title"
+                _in-xml-name="title"
+                _in-json-name="title"/>
+         <field _step="term"
+                _key="term"
+                _metaschema-xml-id="/assembly/computer/TINY/term"
+                _metaschema-json-id="/assembly/computer/TINY/term"
+                max-occurs="unbounded"
+                min-occurs="0"
+                ref="term"
+                _key-ref="computer:term"
+                _using-name="term"
+                _in-xml-name="term"
+                _in-json-name="term"/>
+         <define-field _step="stuff"
+                       _key="stuff"
+                       _metaschema-xml-id="/assembly/computer/TINY/stuff"
+                       _metaschema-json-id="/assembly/computer/TINY/stuff"
+                       max-occurs="1"
+                       min-occurs="0"
+                       in-xml="UNWRAPPED"
+                       collapsible="no"
+                       as-type="markup-multiline"
+                       name="stuff"
+                       _using-name="stuff"
+                       _in-xml-name="p ul ol pre table h1 h2 h3 h4 h5 h6"
+                       _in-json-name="stuff">
+            <formal-name>Stuff</formal-name>
+            <description>Some amount of tiny stuff.</description>
+         </define-field>
+         <assembly _step="part"
+                   _key="parts"
+                   _group-name="parts"
+                   _metaschema-xml-id="/assembly/computer/TINY/part"
+                   _metaschema-json-id="/assembly/computer/TINY/parts"
+                   max-occurs="unbounded"
+                   min-occurs="0"
+                   ref="part"
+                   _key-ref="computer:part"
+                   _using-name="part"
+                   _in-xml-name="part"
+                   _in-json-name="parts">
+            <group-as name="parts"/>
+         </assembly>
+         <field _step="notes/notes"
+                _key="notes"
+                _group-name="notes"
+                _metaschema-xml-id="/assembly/computer/TINY/notes/notes"
+                _metaschema-json-id="/assembly/computer/TINY/notes"
+                max-occurs="unbounded"
+                min-occurs="0"
+                ref="note"
+                _key-ref="computer:note"
+                in-xml="WRAPPED"
+                _using-name="note"
+                _in-xml-name="notes"
+                _in-json-name="notes">
+            <group-as name="notes" in-xml="GROUPED"/>
+         </field>
+      </model>
+   </define-assembly>
+   <define-field _metaschema-xml-id="/field/computer/title"
+                 _metaschema-json-id="/field/computer/title"
+                 collapsible="no"
+                 as-type="markup-line"
+                 scope="global"
+                 name="title"
+                 module="computer"
+                 _base-uri="file:/C:/Users/wap1/Documents/usnistgov/metaschema-xslt/src/schema-gen/InspectorXSLT/testing/tiny_metaschema.xml"
+                 _key-name="computer:title">
+      <formal-name>Title</formal-name>
+      <description>markup-line example.</description>
+   </define-field>
+   <define-field _metaschema-xml-id="/field/computer/term"
+                 _metaschema-json-id="/field/computer/term"
+                 collapsible="no"
+                 as-type="string"
+                 scope="global"
+                 name="term"
+                 module="computer"
+                 _base-uri="file:/C:/Users/wap1/Documents/usnistgov/metaschema-xslt/src/schema-gen/InspectorXSLT/testing/tiny_metaschema.xml"
+                 _key-name="computer:term">
+      <formal-name>Term</formal-name>
+      <description>Simple string value example.</description>
+      <flag _step=""
+            _key=""
+            _metaschema-xml-id="/field/computer/term/"
+            _metaschema-json-id="/field/computer/term/"
+            required="yes"
+            name="id"
+            as-type="token"
+            _in-xml-name=""
+            _in-json-name=""/>
+      <flag _step=""
+            _key=""
+            _metaschema-xml-id="/field/computer/term/"
+            _metaschema-json-id="/field/computer/term/"
+            required="yes"
+            name="show-as"
+            as-type="string"
+            _in-xml-name=""
+            _in-json-name=""/>
+   </define-field>
+   <define-field _metaschema-xml-id="/field/computer/note"
+                 _metaschema-json-id="/field/computer/note"
+                 in-xml="WITH_WRAPPER"
+                 collapsible="no"
+                 as-type="markup-multiline"
+                 scope="global"
+                 name="note"
+                 module="computer"
+                 _base-uri="file:/C:/Users/wap1/Documents/usnistgov/metaschema-xslt/src/schema-gen/InspectorXSLT/testing/tiny_metaschema.xml"
+                 _key-name="computer:note">
+      <formal-name>Note</formal-name>
+      <description>Wrapped markup-multiline example.</description>
+   </define-field>
+   <define-assembly _metaschema-xml-id="/assembly/computer/part"
+                    _metaschema-json-id="/assembly/computer/part"
+                    scope="global"
+                    name="part"
+                    module="computer"
+                    _base-uri="file:/C:/Users/wap1/Documents/usnistgov/metaschema-xslt/src/schema-gen/InspectorXSLT/testing/tiny_metaschema.xml"
+                    _key-name="computer:part">
+      <formal-name>Tiny part</formal-name>
+      <description>A bit of tiny data.</description>
+      <model>
+         <field _step="title"
+                _key="title"
+                _metaschema-xml-id="/assembly/computer/part/title"
+                _metaschema-json-id="/assembly/computer/part/title"
+                max-occurs="1"
+                min-occurs="1"
+                ref="title"
+                _key-ref="computer:title"
+                _using-name="title"
+                _in-xml-name="title"
+                _in-json-name="title"/>
+         <field _step="term"
+                _key="term"
+                _metaschema-xml-id="/assembly/computer/part/term"
+                _metaschema-json-id="/assembly/computer/part/term"
+                max-occurs="unbounded"
+                min-occurs="0"
+                ref="term"
+                _key-ref="computer:term"
+                _using-name="term"
+                _in-xml-name="term"
+                _in-json-name="term"/>
+         <define-field _step="stuff"
+                       _key="stuff"
+                       _metaschema-xml-id="/assembly/computer/part/stuff"
+                       _metaschema-json-id="/assembly/computer/part/stuff"
+                       max-occurs="1"
+                       min-occurs="0"
+                       in-xml="UNWRAPPED"
+                       collapsible="no"
+                       as-type="markup-multiline"
+                       name="stuff"
+                       _using-name="stuff"
+                       _in-xml-name="p ul ol pre table h1 h2 h3 h4 h5 h6"
+                       _in-json-name="stuff">
+            <formal-name>Stuff</formal-name>
+            <description>Some amount of tiny stuff.</description>
+         </define-field>
+         <assembly _step="part"
+                   _key="parts"
+                   _group-name="parts"
+                   _metaschema-xml-id="/assembly/computer/part/part"
+                   _metaschema-json-id="/assembly/computer/part/parts"
+                   max-occurs="unbounded"
+                   min-occurs="0"
+                   ref="part"
+                   _key-ref="computer:part"
+                   _using-name="part"
+                   _in-xml-name="part"
+                   _in-json-name="parts">
+            <group-as name="parts"/>
+         </assembly>
+         <field _step="note"
+                _key="note"
+                _metaschema-xml-id="/assembly/computer/part/note"
+                _metaschema-json-id="/assembly/computer/part/note"
+                max-occurs="1"
+                min-occurs="0"
+                ref="note"
+                _key-ref="computer:note"
+                in-xml="WRAPPED"
+                _using-name="note"
+                _in-xml-name="note"
+                _in-json-name="note"/>
+      </model>
+   </define-assembly>
+</METASCHEMA>

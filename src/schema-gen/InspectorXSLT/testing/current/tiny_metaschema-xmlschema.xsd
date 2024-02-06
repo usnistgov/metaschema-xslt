@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://example.com/ns/tinydata"
+           xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           elementFormDefault="qualified"
+           targetNamespace="http://example.com/ns/tinydata"
+           version="0.0.5">
+   <xs:annotation>
+      <xs:appinfo>
+         <m:schema-name>Computer Model</m:schema-name>
+         <m:schema-version>0.0.5</m:schema-version>
+         <m:short-name>computer</m:short-name>
+         <m:remarks>
+            <h1>Tiny Metaschema</h1>
+            <p>A metaschema can be small and yet deep.</p>
+         </m:remarks>
+         <m:root>TINY</m:root>
+      </xs:appinfo>
+   </xs:annotation>
+   <xs:element name="TINY" type="computer-TINY-ASSEMBLY"/>
+   <xs:complexType name="computer-TINY-ASSEMBLY">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Tiny Data</m:formal-name>
+            <m:description>A minimally described data set.</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Tiny Data</b>: A minimally described data set.</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="title"
+                     type="computer-title-FIELD"
+                     minOccurs="1"
+                     maxOccurs="1"/>
+         <xs:element name="term"
+                     type="computer-term-FIELD"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
+         <xs:group ref="blockElementGroup" maxOccurs="unbounded" minOccurs="0"/>
+         <xs:element name="part"
+                     type="computer-part-ASSEMBLY"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
+         <xs:element name="notes" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+               <xs:sequence>
+                  <xs:element name="note" minOccurs="0" maxOccurs="unbounded">
+                     <xs:annotation>
+                        <xs:appinfo>
+                           <m:formal-name>Note</m:formal-name>
+                           <m:description>Wrapped markup-multiline example.</m:description>
+                        </xs:appinfo>
+                        <xs:documentation>
+                           <b>Note</b>: Wrapped markup-multiline example.</xs:documentation>
+                     </xs:annotation>
+                     <xs:complexType>
+                        <xs:group ref="blockElementGroup" maxOccurs="unbounded" minOccurs="0"/>
+                     </xs:complexType>
+                  </xs:element>
+               </xs:sequence>
+            </xs:complexType>
+         </xs:element>
+      </xs:sequence>
+      <xs:attribute name="id" use="required" type="StringDatatype">
+         <xs:annotation>
+            <xs:appinfo>
+               <m:formal-name>Tiny ID</m:formal-name>
+               <m:description>An identifier.</m:description>
+            </xs:appinfo>
+            <xs:documentation>
+               <b>Tiny ID</b>: An identifier.</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+   </xs:complexType>
+   <xs:complexType mixed="true" name="computer-title-FIELD">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Title</m:formal-name>
+            <m:description>markup-line example.</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Title</b>: markup-line example.</xs:documentation>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:extension base="MarkupLineDatatype"/>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="computer-term-FIELD">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Term</m:formal-name>
+            <m:description>Simple string value example.</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Term</b>: Simple string value example.</xs:documentation>
+      </xs:annotation>
+      <xs:simpleContent>
+         <xs:extension base="StringDatatype">
+            <xs:attribute name="id" use="required" type="TokenDatatype">
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name>Term identifier</m:formal-name>
+                     <m:description>A token identifying this term uniquely within the document.</m:description>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b>Term identifier</b>: A token identifying this term uniquely within the document.</xs:documentation>
+               </xs:annotation>
+            </xs:attribute>
+         </xs:extension>
+      </xs:simpleContent>
+   </xs:complexType>
+   <xs:complexType name="computer-note-FIELD">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Note</m:formal-name>
+            <m:description>Wrapped markup-multiline example.</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Note</b>: Wrapped markup-multiline example.</xs:documentation>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:extension base="MarkupMultilineDatatype"/>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="computer-part-ASSEMBLY">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Tiny part</m:formal-name>
+            <m:description>A bit of tiny data.</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Tiny part</b>: A bit of tiny data.</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="title"
+                     type="computer-title-FIELD"
+                     minOccurs="1"
+                     maxOccurs="1"/>
+         <xs:element name="term"
+                     type="computer-term-FIELD"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
+         <xs:group ref="blockElementGroup" maxOccurs="unbounded" minOccurs="0"/>
+         <xs:element name="part"
+                     type="computer-part-ASSEMBLY"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
+         <xs:element name="note" minOccurs="0" maxOccurs="1">
+            <xs:annotation>
+               <xs:appinfo>
+                  <m:formal-name>Note</m:formal-name>
+                  <m:description>Wrapped markup-multiline example.</m:description>
+               </xs:appinfo>
+               <xs:documentation>
+                  <b>Note</b>: Wrapped markup-multiline example.</xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+               <xs:group ref="blockElementGroup" maxOccurs="unbounded" minOccurs="0"/>
+            </xs:complexType>
+         </xs:element>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="MarkupMultilineDatatype">
+      <xs:choice minOccurs="1" maxOccurs="unbounded">
+         <xs:group ref="blockElementGroup"/>
+      </xs:choice>
+   </xs:complexType>
+   <xs:group name="headingBlockElementGroup">
+      <xs:choice>
+         <xs:element name="h1" type="inlineMarkupType"/>
+         <xs:element name="h2" type="inlineMarkupType"/>
+         <xs:element name="h3" type="inlineMarkupType"/>
+         <xs:element name="h4" type="inlineMarkupType"/>
+         <xs:element name="h5" type="inlineMarkupType"/>
+         <xs:element name="h6" type="inlineMarkupType"/>
+      </xs:choice>
+   </xs:group>
+   <xs:group name="blockElementGroup">
+      <xs:choice>
+         <xs:group ref="headingBlockElementGroup"/>
+         <xs:group ref="listsGroup"/>
+         <xs:group ref="blockTextGroup"/>
+         <xs:element name="p" type="inlineMarkupType"/>
+         <xs:element name="table" type="tableType"/>
+         <!-- QUESTION: Deprecate this? -->
+         <xs:element name="img" type="imageType"/>
+      </xs:choice>
+   </xs:group>
+   <xs:group name="blockTextGroup">
+      <xs:choice>
+         <xs:element name="pre" type="preformattedType"/>
+         <xs:element name="hr"/>
+         <!-- TODO: need to add support for blockquote, which can contain block elements. usnistgov/metaschema#70 -->
+         <xs:element name="blockquote" type="blockQuoteType"/>
+      </xs:choice>
+   </xs:group>
+   <xs:complexType name="preformattedType" mixed="true">
+      <xs:complexContent>
+         <xs:extension base="inlineMarkupType">
+            <xs:annotation>
+               <xs:documentation>The content model is the same as inlineMarkupType, but line endings need
+            to be preserved, since this is pre-formatted.</xs:documentation>
+            </xs:annotation>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="listType">
+      <xs:sequence>
+         <xs:element name="li"
+                     type="listItemType"
+                     minOccurs="1"
+                     maxOccurs="unbounded"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="orderedListType">
+      <xs:complexContent>
+         <xs:extension base="listType">
+		<!-- TODO: confirm if romans are allowed -->
+            <xs:attribute name="start" type="xs:nonNegativeInteger"/>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:group name="listsGroup">
+      <xs:choice>
+         <xs:element name="ul" type="listType"/>
+         <xs:element name="ol" type="orderedListType"/>
+      </xs:choice>
+   </xs:group>
+   <xs:complexType name="listItemType" mixed="true">
+    <!-- TODO: is this the correct construction? -->
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+         <xs:group ref="inlineMarkupGroup"/>
+         <xs:group ref="listsGroup"/>
+         <xs:group ref="blockTextGroup"/>
+         <xs:group ref="headingBlockElementGroup"/>
+         <xs:element name="p" type="inlineMarkupType"/>
+      </xs:choice>
+   </xs:complexType>
+   <xs:complexType name="tableType">
+      <xs:sequence>
+         <xs:element maxOccurs="unbounded" name="tr" type="tableRowType"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="tableRowType">
+    <!-- QUESTION: Should we allow TH and TD to be mixed? -->
+      <xs:choice minOccurs="1" maxOccurs="unbounded">
+         <xs:element name="td" type="tableCellType" maxOccurs="unbounded"/>
+         <xs:element name="th" type="tableCellType" maxOccurs="unbounded"/>
+      </xs:choice>
+   </xs:complexType>
+   <xs:complexType name="tableCellType" mixed="true">
+      <xs:complexContent>
+      <!-- TODO: consider adding a choice between the inline or paragraphs. We need to figure out what is supported in Markdown. -->
+         <xs:extension base="inlineMarkupType">
+        <!-- TODO: need to add support for alignment. usnistgov/metaschema#70 -->
+            <xs:attribute name="align" type="alignType" default="left"/>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:simpleType name="alignType">
+      <xs:restriction base="xs:token">
+         <xs:enumeration value="left"/>
+         <xs:enumeration value="center"/>
+         <xs:enumeration value="right"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:complexType name="blockQuoteType">
+    <!-- TODO: confirm if nested blockquote is supported in markdown -->
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+         <xs:group ref="blockElementGroup"/>
+      </xs:choice>
+   </xs:complexType>
+   <xs:complexType name="MarkupLineDatatype" mixed="true">
+      <xs:complexContent>
+         <xs:extension base="inlineMarkupType"/>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="inlineMarkupType" mixed="true">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+         <xs:group ref="inlineMarkupGroup"/>
+      </xs:choice>
+   </xs:complexType>
+   <xs:group name="inlineMarkupGroup">
+      <xs:choice>
+         <xs:element name="a" type="anchorType"/>
+         <xs:element name="insert" type="insertType"/>
+         <xs:element name="br"/>
+         <xs:group ref="phraseMarkupGroup"/>
+      </xs:choice>
+   </xs:group>
+   <xs:group name="phraseMarkupGroup">
+      <xs:choice>
+         <xs:element name="code" type="codeType"/>
+         <xs:element name="em" type="inlineMarkupType"/>
+         <xs:element name="i" type="inlineMarkupType"/>
+         <xs:element name="b" type="inlineMarkupType"/>
+         <xs:element name="strong" type="inlineMarkupType"/>
+         <xs:element name="sub" type="inlineMarkupType"/>
+         <xs:element name="sup" type="inlineMarkupType"/>
+         <xs:element name="q" type="inlineMarkupType"/>
+         <xs:element name="img" type="imageType"/>
+      </xs:choice>
+   </xs:group>
+   <xs:complexType name="codeType">
+      <xs:complexContent>
+         <xs:extension base="inlineMarkupType">
+            <xs:attribute name="class" type="xs:token"/>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="imageType">
+      <xs:attribute name="alt" type="xs:string"/>
+      <xs:attribute name="src" use="required" type="xs:anyURI"/>
+      <xs:attribute name="title" type="xs:string"/>
+   </xs:complexType>
+   <xs:complexType name="anchorType" mixed="true">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+         <xs:group ref="phraseMarkupGroup"/>
+      </xs:choice>
+      <xs:attribute name="href" type="xs:anyURI"/>
+      <xs:attribute name="title" type="xs:string"/>
+   </xs:complexType>
+   <xs:complexType name="insertType">
+      <xs:annotation>
+         <xs:documentation>An insert can be used to identify a placeholder for dynamically inserting text related to a specific object, which is referenced by the object's identifier using an <code xmlns="">id-ref</code>. This insert mechanism allows the selection of which text value from the object to dynamically include based on the application's display requirements.</xs:documentation>
+      </xs:annotation>
+      <xs:attribute name="type" use="required" type="xs:NCName">
+         <xs:annotation>
+            <xs:documentation>The type of object to include from (e.g., parameter, control, component, role, etc.)</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="id-ref" use="required" type="xs:NCName">
+         <xs:annotation>
+            <xs:documentation>The identity of the object to insert a value for. The identity will be selected from the index of objects of the specified <code xmlns="">type</code>. The specific value to include is based on the application's display requirements, which will likely use a specific data element associated with the <code xmlns="">type</code> (e.g., title, identifier, value, etc.) that is appropriate for the application.</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+   </xs:complexType>
+   <xs:simpleType name="StringDatatype">
+      <xs:annotation>
+         <xs:documentation>A non-empty string of Unicode characters with leading and trailing whitespace
+				disallowed. Whitespace is: U+9, U+10, U+32 or [ \n\t]+</xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:string">
+         <xs:annotation>
+            <xs:documentation>The 'string' datatype restricts the XSD type by prohibiting leading 
+					and trailing whitespace, and something (not only whitespace) is required.</xs:documentation>
+         </xs:annotation>
+         <xs:whiteSpace value="preserve"/>
+         <xs:pattern value="\S(.*\S)?">
+            <xs:annotation>
+               <xs:documentation>This pattern ensures that leading and trailing whitespace is
+						disallowed. This helps to even the user experience between implementations
+						related to whitespace.</xs:documentation>
+            </xs:annotation>
+         </xs:pattern>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="TokenDatatype">
+      <xs:annotation>
+			<!--<xs:documentation>Matching XSD NCName, except whitespace is not collapsed.</xs:documentation> -->
+         <xs:documentation>A non-empty, non-colonized name as defined by XML Schema Part 2: Datatypes
+				Second Edition (https://www.w3.org/TR/xmlschema11-2/#NCName), with leading and trailing
+				whitespace disallowed.</xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="StringDatatype">
+         <xs:pattern value="(\p{L}|_)(\p{L}|\p{N}|[.\-_])*">
+            <xs:annotation>
+					<!--<xs:documentation>An XML initial character (but not colon), followed 
+						by any XML name character (but not colon).</xs:documentation> -->
+               <xs:documentation>A single token may not contain whitespace.
+					</xs:documentation>
+            </xs:annotation>
+         </xs:pattern>
+      </xs:restriction>
+   </xs:simpleType>
+</xs:schema>
