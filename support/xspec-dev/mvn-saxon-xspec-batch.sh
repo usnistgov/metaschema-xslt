@@ -50,7 +50,11 @@ report-to (folder or HTML filename): if not given, no report is written
 junit-to (filename with suffix): write a JUnit test report (XML) to this file
          produces a warning if provided value is not a suffixed file name and a valid URI
 
-stop-on-error (yes|no): hard stop on any failure, or keep going - defaults to 'no'
+error-on-fail (yes|no): if a failing test is detected in the results, return an error - defaults to 'no'
+         warning: an optimizing processor may not write complete reports, or any, with this setting - ymmv
+
+stop-on-error (yes|no): hard stop on any processing error, or keep going - defaults to 'no'
+         this also switches to 'yes' if error-on-failure=yes
 
 baseURI: a URI indicating runtime context relative to which XSpecs are found
          defaults to repository root
