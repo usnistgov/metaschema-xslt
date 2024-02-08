@@ -46,11 +46,12 @@
        Use (file1.xspec|file2.xspec|...|fileN.xspec) for file name literals (with URI escaping)
        Defaults to *.xspec (all files suffixed xspec)  
      $recurse (yes|no) identify files recursively - defaults to 'yes'
+     $error-on-fail (yes|no) after delivering a report, on detecting a failure in test results, terminate the process
+       useful under CI/CD so a failure in testing 'breaks the build'
      $stop-on-error (yes|no) hard stop on any failure, or keep going
        Does not stop if a test successfully runs and returns a false result
        Only if tests fail to run for any reason
-       Defaults to 'no'
-       
+       Defaults to 'no', but $error-on-fail=yes also sets this to yes
      $report-to - if ends in '.html', a single aggregated report is written to this path relative to the folder (target) path
        otherwise a non-empty $report-to results in each XSpec getting its own report written into a folder of that name
          they will all be together and no precaution is taken for XSpecs with colliding names - take care
@@ -85,12 +86,13 @@
    
    <xsl:param name="junit-to" as="xs:string?"/>
    <!-- a path to which an XML file is written -->
-   
+
+   <xsl:param    name="error-on-fail" as="xs:string">no</xsl:param>
+   <xsl:variable name="failing-hard" as="xs:boolean" select="$error-on-fail=('yes','true')"/>
    
    <xsl:param    name="stop-on-error" as="xs:string">no</xsl:param>
-   <xsl:variable name="stopping-on-error" as="xs:boolean" select="$stop-on-error=('yes','true')"/>
-   
-   
+   <xsl:variable name="stopping-on-error" as="xs:boolean" select="$stop-on-error=('yes','true') or $failing-hard"/>
+     
    <xsl:variable name="collection-location" select="resolve-uri($folder, $baseURI)"/>
    
    <xsl:variable name="collection-args" as="xs:string" expand-text="true">
@@ -174,10 +176,13 @@
       
       <!-- An aggregated report is produced for -o or STDOUT using transformations xspec-summarize.xsl and xspec-summary-reduce.xsl over $aggregated-results -->
       <xsl:sequence select="$aggregated-results => mx:transform-with(xs:anyURI('xspec-summarize.xsl')) => mx:transform-with(xs:anyURI('xspec-summary-reduce.xsl'))"/>
+      
+      <xsl:if test="$failing-hard and $aggregated-results//x:test/@successful!='true'">
+         <xsl:message terminate="yes">Failures detected - process terminating - </xsl:message>
+      </xsl:if>
+            
    </xsl:template>
 
-   <xsl:template priority="101" match="RESULTS[not($reporting)]" mode="emit-reports"/>
-   
    <xsl:template name="junit-report">
       <xsl:param name="xspec-results" as="document-node()?"/>
       <xsl:if test="boolean($junit-to)">
@@ -211,6 +216,7 @@
       </xsl:if>
    </xsl:template>
 
+   <!-- interrogates JUnit XML to summarize findings when wrapping -->
    <xsl:template name="summary-attributes">
       <xsl:param name="where" select="." as="node()*"/>
       <xsl:attribute name="tests" select="count($where/descendant::testcase)"/>
@@ -218,7 +224,7 @@
       <xsl:attribute name="failures" select="count($where/descendant::testcase[@status='failed'])"/>
    </xsl:template>
    
-
+   <xsl:template priority="101" match="RESULTS[not($reporting)]" mode="emit-reports"/>
    
    <xsl:template priority="99" match="RESULTS[$reporting-aggregate]" mode="emit-reports">
       <xsl:call-template name="write-html-file">

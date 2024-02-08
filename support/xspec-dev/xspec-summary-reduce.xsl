@@ -32,7 +32,7 @@
       <xsl:text>&#xA;</xsl:text>
       <xsl:apply-templates/>
       <xsl:text>&#xA;</xsl:text>
-      <SYNOPSIS>FAILURE - { mx:give-report-counts(.) } - { count(descendant::fail) } { mx:pluralize('FAILURE',count(descendant::fail)) } REPORTED</SYNOPSIS>
+      <SYNOPSIS>FAILURE - { mx:give-report-counts(.) } - { count(descendant::fail) } { mx:pluralize('failure',count(descendant::fail)) => upper-case() } REPORTED</SYNOPSIS>
    </xsl:template>
    
    <xsl:template match="report">
@@ -64,11 +64,6 @@
    <xsl:template match="." mode="pluralize">
       <xsl:param name="plural" as="xs:boolean" select="false()"/>
       <xsl:text>{ . }{ 's'[$plural] }</xsl:text>
-   </xsl:template>
-   
-   <xsl:template priority="11" match=".[. = upper-case(.)]" mode="pluralize">
-      <xsl:param name="plural" as="xs:boolean" select="false()"/>
-      <xsl:text>{ . }{ 'S'[$plural] }</xsl:text>
    </xsl:template>
    
 </xsl:stylesheet>

@@ -1,5 +1,14 @@
 include ../../testing/make_common.mk
 
+# TODO (sort out):
+# unit testing - XSLT production templates
+# smoke testing - whether an XSLT is produced and compiles in a run
+#   trying on available samples?
+#   use testing/TEST-INSPECTOR-RUNTIME.xpl
+# spec testing - functional runtime tests of the generated XSLT
+
+# refresh-inspector - run XSLT production for test metaschemas writing to current (and smoke test)
+
 module_path:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 output_folder:=$(module_path)/test_output
 xspec_script=$(realpath $(module_path)/../../../support/xspec-dev/mvn-saxon-xspec-batch.sh)
