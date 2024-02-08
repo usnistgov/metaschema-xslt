@@ -26,7 +26,8 @@ Runtime parameters (use param=value syntax):
 
 folder: XSpec inputs are found in the targeted folder, relative to baseURI - defaults to 'src'
          (baseURI being set by default to the repository, this gives its /src directory)
-
+        to process outside the repository, pass in an absolute URL or reset baseURI
+Yeah 
 e.g. folder=src (sets folder to repository /src)
 
 pattern: glob-like syntax for file name matching
@@ -54,7 +55,7 @@ error-on-fail (yes|no): if a failing test is detected in the results, return an 
          warning: an optimizing processor may not write complete reports, or any, with this setting - ymmv
 
 stop-on-error (yes|no): hard stop on any processing error, or keep going - defaults to 'no'
-         this also switches to 'yes' if error-on-failure=yes
+         this also switches to 'yes' if error-on-fail=yes
 
 baseURI: a URI indicating runtime context relative to which XSpecs are found
          defaults to repository root
