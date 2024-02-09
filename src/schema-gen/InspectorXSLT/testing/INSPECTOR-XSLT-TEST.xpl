@@ -2,20 +2,24 @@
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
   xmlns:c="http://www.w3.org/ns/xproc-step" version="1.0"
   xmlns:metaschema="http://csrc.nist.gov/ns/metaschema/1.0"
-  type="metaschema:TEST-INSPECTOR-RUNTIME" name="TEST-INSPECTOR-RUNTIME">
+  type="metaschema:INSPECTOR-XSLT-TEST" name="INSPECTOR-XSLT-TEST">
   
-  <!-- Purpose: Produces an XSLT instance (Metaschema Inspector)  -->
-  <!-- Input: A valid and correct OSCAL Metaschema instance linked to its modules (also valid and correct) -->
-  <!-- Output: Port exposes an XSLT -->
+  <!-- Purpose: Builds and runs an Inspector XSLT on a document using a metaschema -->
+
+
+  <!-- Output: Port exposes an XSLT, while another port exposes a validation result -->
+  <!-- Note: outputs do not need to be captured for this pipeline to provide
+       a viability test for XSLT generation and application (irrespective of validation results) -->
+  <!-- Assumptions: the input metaschema is valid and correct; 
+       the input instance is well-formed (but not necessarily valid) -->
   
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Ports -->
   
   <p:input port="METASCHEMA" primary="true"/>
+     <!--<p:document href="computer_metaschema.xml"/>-->
   
-  <p:input port="instance" primary="false" sequence="true">
-    <p:document href="invalid/invalid1.xml"/>
-  </p:input>
+  <p:input port="instance" primary="false" sequence="true"/>
   
   <p:input port="parameters" kind="parameter"/>
   
@@ -80,9 +84,10 @@
   
   <p:sink/>
   
+  <!-- This step fails if the artifact produced by `produce-inspector` is not XSLT -->
   <p:xslt name="inspect-input-instant">
     <p:input port="source">
-      <p:pipe port="instance" step="TEST-INSPECTOR-RUNTIME"/>
+      <p:pipe port="instance" step="INSPECTOR-XSLT-TEST"/>
     </p:input>
     <p:input port="stylesheet">
       <p:pipe port="result" step="inspector"/>
