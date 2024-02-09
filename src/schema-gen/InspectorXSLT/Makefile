@@ -12,6 +12,7 @@ include ../../testing/make_common.mk
 module_path:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 output_folder:=$(module_path)/test_output
 xspec_script=$(realpath $(module_path)/../../../support/xspec-dev/mvn-saxon-xspec-batch.sh)
+smoketest_script=$(realpath $(module_path)/testing/smoketest-computer-inspector.sh)
 
 .PHONY: test
 test: unit-test spec-test smoke-test ## Run all tests
@@ -25,14 +26,18 @@ spec-test: ## Run all specification tests
 		"stop-on-error=yes" \
 		"recurse=yes"
 
-.PHONY: smoke-test
-smoke-test: ## Run all smoke tests
+.PHONY: unit-test
+unit-test: ## Run all unit tests
 	LOGFILE="$(output_folder)/integration-tests.log" $(xspec_script) \
 		"folder=$(module_path)/testing/tests/inspector-generation-xspec" \
 		"report-to=$(output_folder)/integration-tests_report.html" \
 		"junit-to=$(output_folder)/integration-tests_junit-report.xml" \
 		"stop-on-error=yes" \
 		"recurse=yes"
+
+.PHONY: smoke-test
+smoke-test: ## Run smoke test
+	$(smoketest_script)
 
 .PHONY: clean
 clean: ## Remove test output

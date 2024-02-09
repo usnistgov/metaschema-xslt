@@ -33,8 +33,11 @@
      Parameters:
      
      $baseURI (optional, defaults to repository root): a URI indicating a runtime context
+       Reset this only if you want a given $folder value (as a URI) to evaluate from a different context
+       For example, if a script has baseURI set to the script's file URI, $folder will work relative to the script not the repository
      $folder (optional, defaults to 'src'): a folder, relative to baseURI, where XSpecs are to be found
        By default, the path is directed to all XSpecs in the repo src/ directory
+       Or use an absolute (file path) URI (and $baseURI will be ignored)
       
        Reset $folder first (to navigate from the top of the repository), and if it becomes too complex, reset $baseURI
        Alternatively, pass an absolute URI in for $folder and ignore the $baseURI
@@ -46,8 +49,8 @@
        Use (file1.xspec|file2.xspec|...|fileN.xspec) for file name literals (with URI escaping)
        Defaults to *.xspec (all files suffixed xspec)  
      $recurse (yes|no) identify files recursively - defaults to 'yes'
-     $error-on-fail (yes|no) after delivering a report, on detecting a failure in test results, terminate the process
-       useful under CI/CD so a failure in testing 'breaks the build'
+     $error-on-fail (yes|no) on detecting a failure in test results, terminate the process
+       This is useful under CI/CD so a failure in testing 'breaks the build' (note: might terminate early though leaving reports incomplete)
      $stop-on-error (yes|no) hard stop on any failure, or keep going
        Does not stop if a test successfully runs and returns a false result
        Only if tests fail to run for any reason

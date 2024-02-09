@@ -1,48 +1,32 @@
 #!/usr/bin/env bash
 
-# Fail early if an error occurs
-set -Eeuo pipefail
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=../common/subcommand_common.bash
 
-usage() {
-    cat <<EOF
-Usage: $(basename "${BASH_SOURCE[0]}") [ADDITIONAL_ARGS]
+source "$SCRIPT_DIR/../../../common/subcommand_common.bash"
 
-Refreshes current/computer_inspector.xsl
-
-Additional arguments are provided to SaxonHE - see https://www.saxonica.com/documentation11/#!using-xsl/commandline
-EOF
-}
-
-if ! [ -x "$(command -v mvn)" ]; then
-  echo 'Error: Maven (mvn) is not in the PATH, is it installed?' >&2
-  exit 1
-fi
-
-METASCHEMA_SOURCE=computer_metaschema.xml
+# XProc produces Inspector XSLT with a fail-safe check by compiling and running it
+XPROC_FILE="${SCRIPT_DIR}/COMPUTER-INSPECTOR-PRODUCE.xpl"
 
 XSLT_RESULT=current/computer_inspector.xsl
 
-ADDITIONAL_ARGS=$(echo ${*// /\\ })
+usage() {
+    cat <<EOF
+Usage: ${BASE_COMMAND:-$(basename "${BASH_SOURCE[0]}")} [ADDITIONAL_ARGS]
 
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)"
-POM_FILE="${SCRIPT_DIR}/../../../../support/pom.xml"
+Generates an Inpspector XSLT on computer_metaschema.xml and applies it to a document.
 
-MAIN_CLASS="net.sf.saxon.Transform" # Saxon defined in pom.xml
+As a smoke test, this fails if either an XSLT cannot be produced, or if it errors on known inputs.
 
-if [ -e "$XSLT_RESULT" ]
-then 
-    echo "Deleting prior $XSLT_RESULT ..."
-    rm -f ./$XSLT_RESULT
-fi
+See pipeline COMPUTER-INSPECTOR-TEST.xpl for dependencies.
 
-mvn \
-    -quiet \
-    -f "$POM_FILE" \
-    exec:java \
-    -Dexec.mainClass="$MAIN_CLASS" \
-    -Dexec.args="-xsl:${SCRIPT_DIR}/../../nist-metaschema-MAKE-INSPECTOR-XSLT.xsl -s:\"$METASCHEMA_SOURCE\" -o:\"$XSLT_RESULT\" $ADDITIONAL_ARGS"
+EOF
+}
 
-if [ -e "$XSLT_RESULT" ]
-then 
-    echo "XSLT written to file $XSLT_RESULT"
-fi
+ADDITIONAL_ARGS=$(echo "${*// /\\ }")
+
+CALABASH_ARGS="-o\"$XSLT_RESULT\" $ADDITIONAL_ARGS \"${XPROC_FILE}\""
+
+invoke_calabash "${CALABASH_ARGS}"
+
+echo Computer Model Inspector XSLT refreshed - check -

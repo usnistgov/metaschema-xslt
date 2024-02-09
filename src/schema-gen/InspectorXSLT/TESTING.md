@@ -14,6 +14,32 @@ Currently we focus on the *first two* of these, producing functional results in 
 
 Find resources for testing the XSLT Inspector and its production in the [testing](testing) subdirectory.
 
+
+## Testing under `make`
+
+Documented in the Makefile -
+
+For example
+
+```
+> make test
+```
+
+Runs all tests using provided scripting.
+
+Don't commit unless this passes.
+
+```
+> make smoke-test
+```
+
+Runs only the 'smoke tests' (end to end production pipeline testing - are viable artifacts produced irrespective of their functionality or correctness)
+
+Available:
+ - `smoke-test`
+ - `spec-test`
+ - `unit-test`
+
 ## Model metaschemas for testing
 
 ### `current` resource cache

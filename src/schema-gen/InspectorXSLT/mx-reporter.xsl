@@ -26,9 +26,7 @@
                 <h1>Validation { @src ! replace(.,'.*/','') }</h1>
                 <p class="source"><a href="{ @src }">{ @src }</a></p>
                 <p>{ @elements } elements and { @attributes } attributes found in the document.</p>
-                <div>
-                    <xsl:apply-templates select="." mode="summary"/>
-                </div>
+                <xsl:apply-templates select="." mode="summary"/>
                 <xsl:apply-templates/>
             </body>
         </html>
@@ -40,6 +38,10 @@
         </div>
     </xsl:template>
     
+    <xsl:template match="mx:metaschema">
+       <h2>Metaschema: { . } (namespace '{ @namespace }')</h2>
+    </xsl:template>
+   
     <xsl:template match="mx:validation[empty(descendant::mx:report)]" mode="summary">
         <div class="summary valid">
             <p>Good news - nothing to report - the instance is valid.</p>
