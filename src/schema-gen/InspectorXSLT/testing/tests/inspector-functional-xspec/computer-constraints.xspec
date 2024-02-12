@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-model href="../../../testing/xspec-assurance.sch"?>
+<?xml-model href="../../../../../testing/xspec-assurance.sch"?>
 <x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
    xmlns:mx="http://csrc.nist.gov/ns/csd/metaschema-xslt"
-   stylesheet="../../current/computer_inspector.xsl"
+   stylesheet="../../current/computer_metaschema-inspector.xsl"
    xmlns="http://example.com/ns/computer"
    xmlns:c="http://example.com/ns/computer"
    xslt-version="3.0">
@@ -308,10 +308,10 @@
             </computer>
          </x:context>
          <x:expect label="a violation emits as many reports as there are occasions of use (of any repeated value) - here, two (2) reports">
-            <mx:report cf="..." test="not(count(mx:key-matches-among-items(.,$selected,'UNQ_1',(@slot-no),$within))=1)"
+            <mx:report cf="..." test="not(count(mx:key-matches-among-items(.,$selected,'UNQ_3',((@slot-no)),$within))=1)"
                class="UNIQ uniqueness-violation" xpath="/computer/motherboard/ata-socket[1]"
                level="ERROR" matching="/computer/motherboard/(ata-socket)">With respect to its assigned <mx:gi>(@slot-no)</mx:gi>, this <mx:gi>ata-socket</mx:gi> instance of <mx:code>/computer/motherboard/(ata-socket)</mx:code> is expected to be unique within its <mx:gi>motherboard</mx:gi>. 2 items are found with the value <mx:code>0</mx:code>.</mx:report>
-            <mx:report cf="..." test="not(count(mx:key-matches-among-items(.,$selected,'UNQ_1',(@slot-no),$within))=1)"
+            <mx:report cf="..." test="not(count(mx:key-matches-among-items(.,$selected,'UNQ_3',((@slot-no)),$within))=1)"
                class="UNIQ uniqueness-violation" xpath="/computer/motherboard/ata-socket[2]"
                level="ERROR" matching="/computer/motherboard/(ata-socket)">With respect to its assigned <mx:gi>(@slot-no)</mx:gi>, this <mx:gi>ata-socket</mx:gi> instance of <mx:code>/computer/motherboard/(ata-socket)</mx:code> is expected to be unique within its <mx:gi>motherboard</mx:gi>. 2 items are found with the value <mx:code>0</mx:code>.</mx:report>
          </x:expect>
@@ -339,10 +339,10 @@
             </computer>
          </x:context>
          <x:expect label="two reports, each for a distince uniqueness violation">
-            <mx:report cf="..." test="not(count(mx:key-matches-among-items(.,$selected,'UNQ_4',(@serial-number),$within))=1)"
+            <mx:report cf="..." test="not(count(mx:key-matches-among-items(.,$selected,'UNQ_6',((@serial-number)),$within))=1)"
                class="UNIQ uniqueness-violation" xpath="/computer/memory"
                level="ERROR" matching="computer/(descendant::*[exists(@serial-number)])">With respect to its assigned <mx:gi>(@serial-number)</mx:gi>, this <mx:gi>memory</mx:gi> instance of <mx:code>computer/(descendant::*[exists(@serial-number)])</mx:code> is expected to be unique within its <mx:gi>computer</mx:gi>. 2 items are found with the value <mx:code>a1</mx:code>.</mx:report>
-            <mx:report cf="..." test="not(count(mx:key-matches-among-items(.,$selected,'UNQ_4',(@serial-number),$within))=1)"
+            <mx:report cf="..." test="not(count(mx:key-matches-among-items(.,$selected,'UNQ_6',((@serial-number)),$within))=1)"
                class="UNIQ uniqueness-violation" xpath="/computer/expansion-card[1]"
                level="ERROR" matching="computer/(descendant::*[exists(@serial-number)])">With respect to its assigned <mx:gi>(@serial-number)</mx:gi>, this <mx:gi>expansion-card</mx:gi> instance of <mx:code>computer/(descendant::*[exists(@serial-number)])</mx:code> is expected to be unique within its <mx:gi>computer</mx:gi>. 2 items are found with the value <mx:code>a1</mx:code>.</mx:report>
          </x:expect>
