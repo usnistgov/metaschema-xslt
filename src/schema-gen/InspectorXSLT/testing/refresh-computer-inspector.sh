@@ -8,7 +8,7 @@ source "$SCRIPT_DIR/../../../common/subcommand_common.bash"
 # XProc produces Inspector XSLT with a fail-safe check by compiling and running it
 XPROC_FILE="${SCRIPT_DIR}/COMPUTER-INSPECTOR-PRODUCE.xpl"
 
-XSLT_RESULT=current/computer_metaschema-inspector.xsl
+XSLT_RESULT=${SCRIPT_DIR}/current/computer_metaschema-inspector.xsl
 
 usage() {
     cat <<EOF
