@@ -12,7 +12,7 @@ include ../../testing/make_common.mk
 module_path:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 output_folder:=$(module_path)/test_output
 xspec_script=$(realpath $(module_path)/../../../support/xspec-dev/mvn-saxon-xspec-batch.sh)
-smoketest_script=$(realpath $(module_path)/testing/smoketest-computer-inspector.sh)
+smoketest_script=$(realpath $(module_path)/testing/refresh-computer-inspector.sh  -oINSPECTOR-XSLT=/dev/null)
 
 .PHONY: test
 test: unit-test spec-test smoke-test ## Run all tests
@@ -37,7 +37,7 @@ unit-test: ## Run all unit tests
 
 .PHONY: smoke-test
 smoke-test: ## Run smoke test
-	$(smoketest_script) -oINSPECTOR-XSLT=/dev/null
+	$(smoketest_script)
 
 .PHONY: clean
 clean: ## Remove test output

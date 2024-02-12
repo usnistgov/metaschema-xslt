@@ -12,7 +12,11 @@ Keep in mind when considering testing that Inspector XSLT currently only support
 
 Any valid and correct Metaschema module can be used to produce an Inspector for the XML format defined by that metaschema. Use the included script to produce your Inspector XSLT, or run the generator pipeline directly, not skipping composition, (Even a self-containted schema module in one file needs to be composed to link up definitions with their uses.)
 
-See the top-level [readme](../readme.md) for more information. Please consider reporting what you learn.
+In this subdirectory, two models (at time of writing) are used in harnesses for testing Metaschema-based XSLT generation (transpiling): `computer_metaschema.xml` and `tiny_metaschema.xml`. Together these are able to represent a broad range (ultimateley, the broadest range possible) of metaschema-based declarative functionality in modeling and constraint definition. At present they are also useful examples of small metaschema-based applications.
+
+This means the developer of any metaschema should be able to copy handling found here, especially for `computer_metaschema.xml`, such as scripts for [refreshing an InspectorXSLT for testing](refresh-computer-inspector.sh), or [simply to apply an InspectorXSLT](inspect-computer.sh) to an XML document nominated at the command line.
+
+See the [InspectorXSLT readme](../readme.md) for more information. Additionally, please consider reporting what you learn and letting project developers know of your needs, as a Metaschema consumer and implementor.
 
 ## Working with the trial (model) metaschemas
 

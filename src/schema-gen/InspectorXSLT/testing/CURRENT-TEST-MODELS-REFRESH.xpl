@@ -21,52 +21,57 @@
       <p:document href="computer_metaschema.xml"/>
    </p:input>
    
+ 
+   <!-- &__& &__& &__& &__& &__& &__& &__& &__& &__& &__& &__& &__& &__& -->
+   <!-- Import (subpipelines) -->
    
    <p:import href="../../METASCHEMA-XSD.xpl"/>
    
    <p:import href="INSPECTOR-XSLT-TEST.xpl"/>
    
+
+   <!-- &__& &__& &__& &__& &__& &__& &__& &__& &__& &__& &__& &__& &__& -->
+   <!-- It beginneth -->
    
    <p:for-each name="iterate">
       <p:iteration-source>
          <p:pipe port="METASCHEMA" step="CURRENT-TEST-MODELS-REFRESH"/>
       </p:iteration-source>
-      
+
       <p:variable name="baseURI" select="base-uri(.)"/>
-      <p:variable name="filepath" select="(replace($baseURI,'[^/]+$',''), $targetDir, replace($baseURI,'(.*/|\.xml$)','') ) => string-join('/')"/>
-      
+      <p:variable name="filepath"
+         select="(replace($baseURI,'[^/]+$',''), $targetDir, replace($baseURI,'(.*/|\.xml$)','') ) => string-join('/')"/>
+
       <p:identity name="this-metaschema"/>
-      
+
       <metaschema:METASCHEMA-XSD name="produce-xsd"/>
-      
-      <!--<p:sink/>-->
+
       <p:store name="save-xsd" indent="true" encoding="ASCII">
          <p:with-option name="href" select="$filepath || '-schema.xsd'"/>
          <p:input port="source">
             <p:pipe port="XSD" step="produce-xsd"/>
          </p:input>
       </p:store>
-      
-      
-   <metaschema:INSPECTOR-XSLT-TEST name="produce-inspector">
-      <p:input port="METASCHEMA">
-         <p:pipe port="result" step="this-metaschema"/>
-      </p:input>
-      <p:input port="instance">
-         <p:inline><X/></p:inline>
-      </p:input>
-      <p:input port="parameters"/>
-   </metaschema:INSPECTOR-XSLT-TEST>
 
+      <metaschema:INSPECTOR-XSLT-TEST name="produce-inspector">
+         <p:input port="METASCHEMA">
+            <p:pipe port="result" step="this-metaschema"/>
+         </p:input>
+         <p:input port="instance">
+            <p:inline>
+               <X/>
+            </p:inline>
+         </p:input>
+         <p:input port="parameters"/>
+      </metaschema:INSPECTOR-XSLT-TEST>
 
       <p:store name="save-inspector" indent="true" encoding="ASCII">
          <p:with-option name="href" select="$filepath || '-inspector.xsl'"/>
          <p:input port="source">
-            <p:pipe port="INT_50_inspector" step="produce-inspector"/>
+            <p:pipe port="OUT_INSPECTOR-XSLT" step="produce-inspector"/>
          </p:input>
       </p:store>
-      
-      
+
    </p:for-each>
    
 </p:declare-step>

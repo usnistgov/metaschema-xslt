@@ -20,7 +20,7 @@
    
    <p:serialization port="INSPECTOR-XSLT" indent="true" method="xml" encoding="us-ascii" omit-xml-declaration="false"/>
    <p:output port="INSPECTOR-XSLT">
-      <p:pipe port="INT_50_inspector" step="produce-inspector"/>
+      <p:pipe port="OUT_INSPECTOR-XSLT" step="produce-inspector"/>
    </p:output>
 
    <p:import href="INSPECTOR-XSLT-TEST.xpl"/>

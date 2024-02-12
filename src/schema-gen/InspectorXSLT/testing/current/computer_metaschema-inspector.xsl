@@ -5,7 +5,7 @@
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 version="3.0"
                 xpath-default-namespace="http://example.com/ns/computer"
-                exclude-result-prefixes="#all"><!-- Generated 2024-02-09T16:25:58.587489-05:00 -->
+                exclude-result-prefixes="#all"><!-- Generated 2024-02-12T16:11:52.004059-05:00 -->
    <xsl:mode on-no-match="fail"/>
    <xsl:mode name="test" on-no-match="shallow-skip"/>
    <!-- .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     . -->
@@ -26,7 +26,6 @@
                   match="root()">
       <xsl:call-template name="inspect"/>
    </xsl:template>
-   <!-- change to document-node()? -->
    <xsl:template mode="#default"
                   priority="101"
                   match="root()[$format=('mx','mx-report')]">
