@@ -37,7 +37,7 @@ unit-test: ## Run all unit tests
 
 .PHONY: smoke-test
 smoke-test: ## Run smoke test
-	$(smoketest_script)
+	$(smoketest_script) -oINSPECTOR-XSLT=/dev/null
 
 .PHONY: clean
 clean: ## Remove test output

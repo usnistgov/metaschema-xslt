@@ -8,7 +8,7 @@ source "$SCRIPT_DIR/../../../common/subcommand_common.bash"
 # XProc produces Inspector XSLT with a fail-safe check by compiling and running it
 XPROC_FILE="${SCRIPT_DIR}/COMPUTER-INSPECTOR-PRODUCE.xpl"
 
-XSLT_RESULT=current/computer_inspector.xsl
+XSLT_RESULT=current/computer_metaschema-inspector.xsl
 
 usage() {
     cat <<EOF
@@ -25,7 +25,10 @@ EOF
 
 ADDITIONAL_ARGS=$(echo "${*// /\\ }")
 
-CALABASH_ARGS="-o\"$XSLT_RESULT\" $ADDITIONAL_ARGS \"${XPROC_FILE}\""
+CALABASH_ARGS="-oINSPECTOR-XSLT=\"$XSLT_RESULT\" $ADDITIONAL_ARGS \"${XPROC_FILE}\""
+
+
+# echo "${CALABASH_ARGS}"
 
 invoke_calabash "${CALABASH_ARGS}"
 

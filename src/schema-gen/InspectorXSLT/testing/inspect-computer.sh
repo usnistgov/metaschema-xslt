@@ -7,7 +7,7 @@ usage() {
     cat <<EOF
 Usage: $(basename "${BASH_SOURCE[0]}") XML_SOURCE [-o:RESULT] [ADDITIONAL_ARGS]
 
-Invokes current/computer_inspector.xsl to issue a validation report for XML_SOURCE.
+Invokes current/current/computer_metaschema-inspector.xsl to issue a validation report for XML_SOURCE.
 
 For the application being invoked (Saxon), flags (-f: syntax) must be given before parameters (name=val syntax).
 

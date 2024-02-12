@@ -49,7 +49,7 @@
   </p:output>-->
   
   <p:serialization port="INT_50_inspector" indent="true"/>
-  <p:output        port="INT_50_inspector" primary="false">
+  <p:output        port="INT_50_inspector" primary="true">
     <p:pipe        port="result"     step="inspector"/>
   </p:output>
   
