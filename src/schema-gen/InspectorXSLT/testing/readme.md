@@ -16,7 +16,7 @@ In this subdirectory, two models (at time of writing) are used in harnesses for 
 
 This means the developer of any metaschema should be able to copy handling found here, especially for `computer_metaschema.xml`, such as scripts for [refreshing an InspectorXSLT for testing](refresh-computer-inspector.sh), or [simply to apply an InspectorXSLT](inspect-computer.sh) to an XML document nominated at the command line.
 
-See the [InspectorXSLT readme](../readme.md) for more information. Additionally, please consider reporting what you learn and letting project developers know of your needs, as a Metaschema consumer and implementor.
+See the [InspectorXSLT readme](../readme.md) for more information. Additionally, please consider reporting what you learn and letting project developers know of your needs as a Metaschema consumer and implementor.
 
 ## Working with the trial (model) metaschemas
 
@@ -30,6 +30,6 @@ Additionally, `tiny_metaschema.xml` is a small metaschema made specifically for 
 
 An Inspector can be generated from a metaschema such as `computer_model.xml` and tested against known inputs to demonstrate that the tests performed by the Inspector bring the correct results.
 
-Exercising these tests, a number of XSpec files in this folder calling `current/computer_inspector.xsl` should all complete successfully and report "all green" -- no warnings, no errors, no unexpected 'pending' sections.
+Exercising these tests, a number of XSpec files in this folder calling `current/computer_metaschema-inspector.xsl` should all complete successfully and report "all green" -- no warnings, no errors, no unexpected 'pending' sections.
 
 See the [TESTING](../TESTING.md) docs for more information.

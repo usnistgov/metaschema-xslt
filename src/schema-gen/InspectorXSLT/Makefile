@@ -15,7 +15,7 @@ xspec_script=$(realpath $(module_path)/../../../support/xspec-dev/mvn-saxon-xspe
 smoketest_script=$(realpath $(module_path)/testing/refresh-computer-inspector.sh  -oINSPECTOR-XSLT=/dev/null)
 
 .PHONY: test
-test: unit-test spec-test smoke-test ## Run all tests
+test: smoke-test unit-test spec-test ## Run all tests
 
 .PHONY: spec-test
 spec-test: ## Run all specification tests
