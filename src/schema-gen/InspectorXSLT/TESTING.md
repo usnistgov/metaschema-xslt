@@ -36,9 +36,9 @@ Don't commit unless this passes.
 Runs only the 'smoke tests' (end to end production pipeline testing - are viable artifacts produced irrespective of their functionality or correctness)
 
 Available:
- - `smoke-test`
- - `spec-test`
- - `unit-test`
+ - `smoke-test` - builds an XSLT from the `computer_metaschema.xml` test example, and attempts to execute the resulting XSLT over stub input.
+ - `spec-test` - runs specification tests - does the produced XSLT behave as expected when used on the possible range of (XML) inputs? this is a validator: does it validate?
+ - `unit-test` - runs transformation template- and function-level unit tests regulating the mapping between source (Metaschema) and target (XSLT) expressions.
 
 ## Model metaschemas for testing
 
