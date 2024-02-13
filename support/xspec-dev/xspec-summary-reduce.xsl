@@ -15,6 +15,7 @@
    
    <xsl:template match="/*" priority="50">
       <xsl:copy>
+         <xsl:text>&#xA;{ (1 to 14) ! ' ...' }&#xA;</xsl:text>
          <head>XSpec summary report: { mx:enumerate('XSpec',count(report)) }</head>
          <xsl:next-match/>
          <xsl:text>&#xA;{ (1 to 14) ! ' ...' }&#xA;</xsl:text>
@@ -22,7 +23,6 @@
    </xsl:template>
    
    <xsl:template match="/REPORT-SUMMARY">
-      <xsl:text>&#xA;</xsl:text>
       <xsl:apply-templates/>
       <xsl:text>&#xA;</xsl:text>
       <SYNOPSIS>SUCCESS - { mx:give-report-counts(.) } - NO FAILURES REPORTED</SYNOPSIS>

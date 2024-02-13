@@ -54,8 +54,7 @@ xspec: ## Run all *.xspec in folder $(folder)
 	LOGFILE="$(output_folder)/$(folder)-xspec-tests.log" $(xspec_script) \
 		"baseURI=file:$(module_path)/" \
 		"folder=$(folder)" \
-		"report-to=$(output_folder)/inspector-functional-tests_report.html" \
-		"junit-to=$(output_folder)/inspector-functional-tests_junit-report.xml" \
+		"report-to=$(output_folder)/inspector-$(folder)-tests_report.html" \
 		"stop-on-error=no" \
 		"recurse=yes"
 
