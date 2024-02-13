@@ -11,15 +11,18 @@ include ../../testing/make_common.mk
 
 module_path:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 output_folder:=$(module_path)/test_output
-xspec_script=$(realpath $(module_path)/../../../support/xspec-dev/mvn-saxon-xspec-batch.sh)
+xspec_script=$(realpath $(module_path)/../../../support/xspec-dev/mvn-saxon-xspec-batch-quiet.sh)
+xspec_ci_script=$(realpath $(module_path)/../../../support/xspec-dev/mvn-saxon-xspec-batch.sh)
 smoketest_script=$(realpath $(module_path)/testing/smoketest-computer-inspector.sh)
+folder=.
 
 .PHONY: test
 test: smoke-test unit-test spec-test ## Run all tests
 
+
 .PHONY: spec-test
 spec-test: ## Run all specification tests
-	LOGFILE="$(output_folder)/inspector-functional-tests.log" $(xspec_script) \
+	LOGFILE="$(output_folder)/inspector-functional-tests.log" $(xspec_ci_script) \
 		"folder=$(module_path)/testing/tests/inspector-functional-xspec" \
 		"report-to=$(output_folder)/inspector-functional-tests_report.html" \
 		"junit-to=$(output_folder)/inspector-functional-tests_junit-report.xml" \
@@ -28,7 +31,7 @@ spec-test: ## Run all specification tests
 
 .PHONY: unit-test
 unit-test: ## Run all unit tests
-	LOGFILE="$(output_folder)/integration-tests.log" $(xspec_script) \
+	LOGFILE="$(output_folder)/integration-tests.log" $(xspec_ci_script) \
 		"folder=$(module_path)/testing/tests/inspector-generation-xspec" \
 		"report-to=$(output_folder)/integration-tests_report.html" \
 		"junit-to=$(output_folder)/integration-tests_junit-report.xml" \
@@ -38,6 +41,18 @@ unit-test: ## Run all unit tests
 .PHONY: smoke-test
 smoke-test: ## Run smoke test
 	$(smoketest_script)
+
+
+.PHONY: xspec
+xspec: ## Run all *.xspec in folder $(folder)
+	LOGFILE="$(output_folder)/inspector-functional-tests.log" $(xspec_script) \
+		"baseURI=file:$(module_path)/" \
+		"folder=$(folder)" \
+		"report-to=$(output_folder)/inspector-functional-tests_report.html" \
+		"junit-to=$(output_folder)/inspector-functional-tests_junit-report.xml" \
+		"stop-on-error=no" \
+		"recurse=yes"
+
 
 .PHONY: clean
 clean: ## Remove test output
