@@ -19,6 +19,14 @@ The XSLT that is created this way can be used to test XML instances for errors i
 
 That is, it combines the effective functionality of XML schema and Schematron (XPath-based) validation.
 
+## Limitations
+
+Aiming at a complete and conformant implementation for XML of the [Metaschema](https://pages.nist.gov/metaschema) language version 1.0, there are a few known gaps, with a testing framework and protocols now being established both for filling those gaps and for demonstrating the tool's full functionality. Please use the processor with this in mind, that developers and sponsors need your feedback and contributions to enable us to complete the work.
+
+Currently we plan to support only XML-based formats as defined by Metaschema, not their semantically-equivalent JSON or YAML 'cousins'.
+
+Users of Metaschema-defined JSON can try reformatting their data as XML using automated means such as scripts produced by the  [Metaschema XSLT Converter Generators](../../converter-gen). Successful conversion will be valid on the other side. But failures will be indicated not typically be invalid results, and instead results missing those parts of the invalid that went unrecognized by the converter because they are invalid.
+
 ## Demo
 
 The [testing/current](testing/current) directory shows such an XSLT, which can be applied to an instance or set of instances (documents) to be tested against the rules defined by its metaschema - in this case the Computer Model metaschema example provided.

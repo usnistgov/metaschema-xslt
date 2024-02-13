@@ -40,7 +40,7 @@ unit-test: ## Run all unit tests
 
 
 .PHONY: smoke-test
-smoke-test: ## Run smoke test
+smoke-test: ## Run InspectorXSLT production smoke test
 	$(smoketest_script)
 
 
@@ -50,7 +50,7 @@ refresh-testing: ## Update InspectorXSLT and XSD for test metaschemas (doesn't r
 
 
 .PHONY: xspec
-xspec: ## Run all *.xspec in folder $(folder)
+xspec: ## Run all *.xspec in a designated folder, quietly - use folder=[folder]
 	LOGFILE="$(output_folder)/$(folder)-xspec-tests.log" $(xspec_script) \
 		"baseURI=file:$(module_path)/" \
 		"folder=$(folder)" \

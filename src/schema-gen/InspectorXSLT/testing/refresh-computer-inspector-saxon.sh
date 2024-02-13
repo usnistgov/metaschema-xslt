@@ -2,7 +2,8 @@
 
 # This script shows how to use Saxon with only a Maven dependency.
 # Unlike other scripts in this folder it does not rely on an external (bash scripting) dependency
-# You do need Maven installed..
+# Another difference is that it bypasses the XSLT-checking, so GIGO - this can be useful (for producing an XSLT for debugging)
+# Maven is required on your system PATH.
 
 # Fail early if an error occurs
 set -Eeuo pipefail
@@ -11,7 +12,7 @@ usage() {
     cat <<EOF
 Usage: $(basename "${BASH_SOURCE[0]}") [ADDITIONAL_ARGS]
 
-Refreshes current/computer_inspector.xsl
+Rewrites current/computer_metaschema-inspector.xsl, without testing (e.g., for testing)
 
 Additional arguments are provided to SaxonHE - see https://www.saxonica.com/documentation11/#!using-xsl/commandline
 EOF
