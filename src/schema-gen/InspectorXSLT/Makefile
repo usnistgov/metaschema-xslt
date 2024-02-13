@@ -38,13 +38,16 @@ unit-test: ## Run all unit tests
 		"stop-on-error=yes" \
 		"recurse=yes"
 
+
 .PHONY: smoke-test
 smoke-test: ## Run smoke test
 	$(smoketest_script)
 
+
 .PHONY: refresh-testing
 refresh-testing: ## Update InspectorXSLT and XSD for test metaschemas (doesn't run tests)
 	$(testing-refresh_script)
+
 
 .PHONY: xspec
 xspec: ## Run all *.xspec in folder $(folder)
