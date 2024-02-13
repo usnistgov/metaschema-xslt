@@ -4,12 +4,12 @@
 
 - [ ] [Run CI/CD on forks?]( https://github.com/marketplace/actions/publish-test-results#support-fork-repositories-and-dependabot-branches)
 - [ ] If not, then find a graceful way to error on failures, in forks
-- [ ] Refactor testing in this directory
-  - [ ] smoke-test: is a functional XSLT produced from a valid Metaschema
-  - [ ] unit-test:
+- [x] Refactor testing in this directory
+  - [x] smoke-test: is a functional XSLT produced from a valid Metaschema
+  - [x] unit-test:
     - current production tests (build out a little)
     - report (mx) format to HTML presentation XSLT
-  - [ ] spec-test: current functional tests 
+  - [x] spec-test: current functional tests 
 
 ## Inspector XSLT
 
@@ -17,6 +17,8 @@
    - [ ] isolate an example (OSCAL?)
    - [ ] XSpec a retrieval function returning (rule/value)*
    - [ ] check back, anything missed?
+- [ ] Address OSCAL functional gaps
+   - [ ] OSCAL implementation in oscal-xslt repository
 - [ ] More assertively test all constraints
 - [ ] More assertively test markup-line and markup-multiline
 - [ ] Test out other aspects
@@ -24,9 +26,6 @@
    - [ ] XSpec MX to HTML to Markdown? functions?
    - [ ] Build out TINY to include constraints on insert (note-ref and term-ref)
 - [ ] Review specs with eye to contributions
-- [ ] OSCAL implementation
-   - [ ] Publishing considerations
-   - [ ] Pages / platform
 - [ ] CSX version
    - [ ] CI/CD support for deployment from updated metaschema sources?
 - [ ] Release plans and considerations

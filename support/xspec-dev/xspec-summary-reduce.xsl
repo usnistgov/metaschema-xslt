@@ -24,14 +24,13 @@
    
    <xsl:template match="/REPORT-SUMMARY">
       <xsl:apply-templates/>
-      <xsl:text>&#xA;</xsl:text>
+      <xsl:text>&#xA;&#xA;</xsl:text>
       <SYNOPSIS>SUCCESS - { mx:give-report-counts(.) } - NO FAILURES REPORTED</SYNOPSIS>
    </xsl:template>
    
    <xsl:template priority="20" match="/REPORT-SUMMARY[exists(descendant::fail)]">
-      <xsl:text>&#xA;</xsl:text>
       <xsl:apply-templates/>
-      <xsl:text>&#xA;</xsl:text>
+      <xsl:text>&#xA;&#xA;</xsl:text>
       <SYNOPSIS>FAILURE - { mx:give-report-counts(.) } - { count(descendant::fail) } { mx:pluralize('failure',count(descendant::fail)) => upper-case() } REPORTED</SYNOPSIS>
    </xsl:template>
    
