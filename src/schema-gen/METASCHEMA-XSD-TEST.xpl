@@ -16,12 +16,12 @@
   <p:input port="parameters" kind="parameter"/>
   
   <p:serialization port="OUT_success-message" method="text"/>
-  <p:output port="OUT_success-message" primary="true">
+  <p:output port="OUT_success-message" primary="false">
     <p:pipe port="result" step="invalidate-stub"/>
   </p:output>
   
   <p:serialization port="OUT_XSD" method="xml" indent="true"/>
-  <p:output port="OUT_XSD" primary="false">
+  <p:output port="OUT_XSD" primary="true">
     <p:pipe port="result" step="make-xsd"/>
   </p:output>
   

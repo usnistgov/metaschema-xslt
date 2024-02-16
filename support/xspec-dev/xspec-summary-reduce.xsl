@@ -15,22 +15,23 @@
    
    <xsl:template match="/*" priority="50">
       <xsl:copy>
+         <xsl:text>&#xA;{ (1 to 14) ! ' ...' }&#xA;</xsl:text>
          <head>XSpec summary report: { mx:enumerate('XSpec',count(report)) }</head>
          <xsl:next-match/>
-         <xsl:text>&#xA;{ (1 to 20) ! '--- ' }&#xA;</xsl:text>
+         <xsl:text>&#xA;{ (1 to 14) ! ' ...' }&#xA;</xsl:text>
       </xsl:copy>
    </xsl:template>
    
    <xsl:template match="/REPORT-SUMMARY">
-      <xsl:text>&#xA;</xsl:text>
-      <SYNOPSIS>SUCCESS - { mx:give-report-counts(.) } - NO FAILURES REPORTED</SYNOPSIS>
       <xsl:apply-templates/>
+      <xsl:text>&#xA;&#xA;</xsl:text>
+      <SYNOPSIS>SUCCESS - { mx:give-report-counts(.) } - NO FAILURES REPORTED</SYNOPSIS>
    </xsl:template>
    
    <xsl:template priority="20" match="/REPORT-SUMMARY[exists(descendant::fail)]">
-      <xsl:text>&#xA;</xsl:text>
-      <SYNOPSIS>FAILURE - { mx:give-report-counts(.) } - { count(descendant::fail) } { mx:pluralize('FAILURE',count(descendant::fail)) } REPORTED</SYNOPSIS>
       <xsl:apply-templates/>
+      <xsl:text>&#xA;&#xA;</xsl:text>
+      <SYNOPSIS>FAILURE - { mx:give-report-counts(.) } - { count(descendant::fail) } { mx:pluralize('failure',count(descendant::fail)) => upper-case() } REPORTED</SYNOPSIS>
    </xsl:template>
    
    <xsl:template match="report">
@@ -62,11 +63,6 @@
    <xsl:template match="." mode="pluralize">
       <xsl:param name="plural" as="xs:boolean" select="false()"/>
       <xsl:text>{ . }{ 's'[$plural] }</xsl:text>
-   </xsl:template>
-   
-   <xsl:template priority="11" match=".[. = upper-case(.)]" mode="pluralize">
-      <xsl:param name="plural" as="xs:boolean" select="false()"/>
-      <xsl:text>{ . }{ 'S'[$plural] }</xsl:text>
    </xsl:template>
    
 </xsl:stylesheet>

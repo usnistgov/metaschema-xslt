@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <xsl:transform xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:mx="http://csrc.nist.gov/ns/csd/metaschema-xslt"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 version="3.0"
                 xpath-default-namespace="http://example.com/ns/computer"
-                exclude-result-prefixes="#all"><!-- Generated 2024-01-03T11:37:11.730831-05:00 -->
+                exclude-result-prefixes="#all"><!-- Generated 2024-02-12T18:06:18.57633-05:00 -->
    <xsl:mode on-no-match="fail"/>
    <xsl:mode name="test" on-no-match="shallow-skip"/>
    <!-- .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     . -->
@@ -335,7 +335,7 @@
    <xsl:template match="/mx:validation" mode="mx-to-html" expand-text="true">
       <xsl:variable name="reported-valid" select="@reports = 0"/>
       <xsl:variable name="validating-filename" select="replace(@src, '.*/', '')"/>
-      <xsl:variable name="checked" select="if ($reported-valid) then '✔' else '✘'"/>
+      <xsl:variable name="checked" select="if ($reported-valid) then '&#x2714;' else '&#x2718;'"/>
       <html>
          <head>
             <title>{ $validating-filename } - { $checked } - { mx:metaschema/@shortname } validation</title>
@@ -382,14 +382,14 @@ details p { margin: 0.2em 0em }
          <p>{ count(.//mx:report) } { mx:pluralize(count(.//mx:report),'issue') } reported.</p>
          <p>
             <xsl:iterate select="descendant::mx:report">
-               <span class="ji">💥</span>
+               <span class="ji">&#x1f4a5;</span>
             </xsl:iterate>
          </p>
       </div>
    </xsl:template>
    <xsl:template match="mx:validation[empty(descendant::mx:report)]" mode="summary">
       <div class="summary valid">
-         <p>Good news - nothing to report - the instance is valid. <span class="ji">🚀</span>
+         <p>Good news - nothing to report - the instance is valid. <span class="ji">&#x1f680;</span>
          </p>
       </div>
    </xsl:template>
@@ -552,7 +552,7 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="require-for-computer-assembly"/>
       <xsl:apply-templates select="." mode="constraint-cascade"/>
    </xsl:template>
-   <xsl:key name="UNQ_3" match="computer/(usb-device)" use="(@uuid)"/>
+   <xsl:key name="UNQ_5" match="computer/(usb-device)" use="(@uuid)"/>
    <xsl:template priority="109" mode="constraint-cascade" match="computer">
       <xsl:variable name="within" select="."/>
       <xsl:variable name="selected" select="usb-device"/>
@@ -562,15 +562,15 @@ details p { margin: 0.2em 0em }
             <xsl:with-param name="rule-id"/>
             <xsl:with-param name="matching" as="xs:string">computer/(usb-device)</xsl:with-param>
             <xsl:with-param name="class">UNIQ uniqueness-violation</xsl:with-param>
-            <xsl:with-param name="testing" as="xs:string">not(count(mx:key-matches-among-items(.,$selected,'UNQ_3',(@uuid),$within))=1)</xsl:with-param>
+            <xsl:with-param name="testing" as="xs:string">not(count(mx:key-matches-among-items(.,$selected,'UNQ_5',((@uuid)),$within))=1)</xsl:with-param>
             <xsl:with-param name="condition"
-                             select="not(count(mx:key-matches-among-items(.,$selected,'UNQ_3',(@uuid),$within))=1)"/>
-            <xsl:with-param name="msg" expand-text="true">With respect to its assigned <mx:gi>(@uuid)</mx:gi>, this <mx:gi>{name(.)}</mx:gi> instance of <mx:code>computer/(usb-device)</mx:code> is expected to be unique within its <mx:gi>{$within/name(.)}</mx:gi>. {count(mx:key-matches-among-items(.,$selected,'UNQ_3',(@uuid),$within))} items are found with the value <mx:code>{string-join(((@uuid)),',')}</mx:code>.</xsl:with-param>
+                             select="not(count(mx:key-matches-among-items(.,$selected,'UNQ_5',((@uuid)),$within))=1)"/>
+            <xsl:with-param name="msg" expand-text="true">With respect to its assigned <mx:gi>(@uuid)</mx:gi>, this <mx:gi>{name(.)}</mx:gi> instance of <mx:code>computer/(usb-device)</mx:code> is expected to be unique within its <mx:gi>{$within/name(.)}</mx:gi>. {count(mx:key-matches-among-items(.,$selected,'UNQ_5',((@uuid)),$within))} items are found with the value <mx:code>{string-join(((@uuid)),',')}</mx:code>.</xsl:with-param>
          </xsl:call-template>
       </xsl:for-each>
       <xsl:next-match/>
    </xsl:template>
-   <xsl:key name="UNQ_4"
+   <xsl:key name="UNQ_6"
              match="computer/(descendant::*[exists(@serial-number)])"
              use="(@serial-number)"/>
    <xsl:template priority="108" mode="constraint-cascade" match="computer">
@@ -582,10 +582,10 @@ details p { margin: 0.2em 0em }
             <xsl:with-param name="rule-id"/>
             <xsl:with-param name="matching" as="xs:string">computer/(descendant::*[exists(@serial-number)])</xsl:with-param>
             <xsl:with-param name="class">UNIQ uniqueness-violation</xsl:with-param>
-            <xsl:with-param name="testing" as="xs:string">not(count(mx:key-matches-among-items(.,$selected,'UNQ_4',(@serial-number),$within))=1)</xsl:with-param>
+            <xsl:with-param name="testing" as="xs:string">not(count(mx:key-matches-among-items(.,$selected,'UNQ_6',((@serial-number)),$within))=1)</xsl:with-param>
             <xsl:with-param name="condition"
-                             select="not(count(mx:key-matches-among-items(.,$selected,'UNQ_4',(@serial-number),$within))=1)"/>
-            <xsl:with-param name="msg" expand-text="true">With respect to its assigned <mx:gi>(@serial-number)</mx:gi>, this <mx:gi>{name(.)}</mx:gi> instance of <mx:code>computer/(descendant::*[exists(@serial-number)])</mx:code> is expected to be unique within its <mx:gi>{$within/name(.)}</mx:gi>. {count(mx:key-matches-among-items(.,$selected,'UNQ_4',(@serial-number),$within))} items are found with the value <mx:code>{string-join(((@serial-number)),',')}</mx:code>.</xsl:with-param>
+                             select="not(count(mx:key-matches-among-items(.,$selected,'UNQ_6',((@serial-number)),$within))=1)"/>
+            <xsl:with-param name="msg" expand-text="true">With respect to its assigned <mx:gi>(@serial-number)</mx:gi>, this <mx:gi>{name(.)}</mx:gi> instance of <mx:code>computer/(descendant::*[exists(@serial-number)])</mx:code> is expected to be unique within its <mx:gi>{$within/name(.)}</mx:gi>. {count(mx:key-matches-among-items(.,$selected,'UNQ_6',((@serial-number)),$within))} items are found with the value <mx:code>{string-join(((@serial-number)),',')}</mx:code>.</xsl:with-param>
          </xsl:call-template>
       </xsl:for-each>
       <xsl:next-match/>
@@ -948,7 +948,7 @@ details p { margin: 0.2em 0em }
       </xsl:call-template>
       <xsl:next-match/>
    </xsl:template>
-   <xsl:key name="UNQ_1"
+   <xsl:key name="UNQ_3"
              match="/computer/motherboard/(ata-socket)"
              use="(@slot-no)"/>
    <xsl:template priority="114"
@@ -962,10 +962,10 @@ details p { margin: 0.2em 0em }
             <xsl:with-param name="rule-id"/>
             <xsl:with-param name="matching" as="xs:string">/computer/motherboard/(ata-socket)</xsl:with-param>
             <xsl:with-param name="class">UNIQ uniqueness-violation</xsl:with-param>
-            <xsl:with-param name="testing" as="xs:string">not(count(mx:key-matches-among-items(.,$selected,'UNQ_1',(@slot-no),$within))=1)</xsl:with-param>
+            <xsl:with-param name="testing" as="xs:string">not(count(mx:key-matches-among-items(.,$selected,'UNQ_3',((@slot-no)),$within))=1)</xsl:with-param>
             <xsl:with-param name="condition"
-                             select="not(count(mx:key-matches-among-items(.,$selected,'UNQ_1',(@slot-no),$within))=1)"/>
-            <xsl:with-param name="msg" expand-text="true">With respect to its assigned <mx:gi>(@slot-no)</mx:gi>, this <mx:gi>{name(.)}</mx:gi> instance of <mx:code>/computer/motherboard/(ata-socket)</mx:code> is expected to be unique within its <mx:gi>{$within/name(.)}</mx:gi>. {count(mx:key-matches-among-items(.,$selected,'UNQ_1',(@slot-no),$within))} items are found with the value <mx:code>{string-join(((@slot-no)),',')}</mx:code>.</xsl:with-param>
+                             select="not(count(mx:key-matches-among-items(.,$selected,'UNQ_3',((@slot-no)),$within))=1)"/>
+            <xsl:with-param name="msg" expand-text="true">With respect to its assigned <mx:gi>(@slot-no)</mx:gi>, this <mx:gi>{name(.)}</mx:gi> instance of <mx:code>/computer/motherboard/(ata-socket)</mx:code> is expected to be unique within its <mx:gi>{$within/name(.)}</mx:gi>. {count(mx:key-matches-among-items(.,$selected,'UNQ_3',((@slot-no)),$within))} items are found with the value <mx:code>{string-join(((@slot-no)),',')}</mx:code>.</xsl:with-param>
          </xsl:call-template>
       </xsl:for-each>
       <xsl:next-match/>
@@ -1797,6 +1797,11 @@ details p { margin: 0.2em 0em }
       <xsl:call-template name="require-for-vendor_..._id-flag"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
    </xsl:template>
+   <xsl:template match="motherboard/vendor/@ref | cpu/vendor/@ref | ata-socket/vendor/@ref | memory/vendor/@ref | expansion-card/vendor/@ref | usb-device/vendor/@ref"
+                  mode="test">
+      <xsl:call-template name="require-for-vendor_..._ref-flag"/>
+      <xsl:apply-templates mode="constraint-cascade" select="."/>
+   </xsl:template>
    <xsl:template match="/computer/@id" mode="test">
       <xsl:call-template name="require-for-computer_..._id-flag"/>
       <xsl:apply-templates mode="constraint-cascade" select="."/>
@@ -1865,7 +1870,7 @@ details p { margin: 0.2em 0em }
       </xsl:call-template>
    </xsl:template>
    <xsl:template mode="test"
-                  match="@id | @serial-number | @slot-no | @socket-no | @uuid | @currency | @name | @ns | @value | @class | @group | @illuminated">
+                  match="@id | @ref | @serial-number | @slot-no | @socket-no | @uuid | @currency | @name | @ns | @value | @class | @group | @illuminated">
       <xsl:call-template name="notice">
          <xsl:with-param name="cf" as="xs:string">gix.117</xsl:with-param>
          <xsl:with-param name="class">AOOP attribute-out-of-place</xsl:with-param>
@@ -1876,13 +1881,6 @@ details p { margin: 0.2em 0em }
    <!--     Definitions - a named template for each     -->
    <!-- .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     . -->
    <xsl:template name="require-for-vendor-assembly">
-      <xsl:call-template name="notice">
-         <xsl:with-param name="cf">gix.748</xsl:with-param>
-         <xsl:with-param name="class">MRQA missing-required-attribute</xsl:with-param>
-         <xsl:with-param name="testing" as="xs:string">empty(@id)</xsl:with-param>
-         <xsl:with-param name="condition" select="empty(@id)"/>
-         <xsl:with-param name="msg" expand-text="true">Element <mx:gi>{ name() }</mx:gi> requires attribute <mx:gi>@id</mx:gi>.</xsl:with-param>
-      </xsl:call-template>
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.445</xsl:with-param>
          <xsl:with-param name="class">MRQC missing-required-contents</xsl:with-param>
@@ -1906,6 +1904,9 @@ details p { margin: 0.2em 0em }
       </xsl:call-template>
    </xsl:template>
    <xsl:template name="require-for-vendor_..._id-flag">
+      <xsl:call-template name="check-string-datatype"/>
+   </xsl:template>
+   <xsl:template name="require-for-vendor_..._ref-flag">
       <xsl:call-template name="check-string-datatype"/>
    </xsl:template>
    <xsl:template name="require-for-vendor_..._name-field">

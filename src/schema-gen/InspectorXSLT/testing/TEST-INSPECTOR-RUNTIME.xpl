@@ -4,48 +4,31 @@
   xmlns:metaschema="http://csrc.nist.gov/ns/metaschema/1.0"
   type="metaschema:TEST-INSPECTOR-RUNTIME" name="TEST-INSPECTOR-RUNTIME">
   
-  <!-- Purpose: Produces an XSLT instance (Metaschema Inspector)  -->
-  <!-- Input: A valid and correct OSCAL Metaschema instance linked to its modules (also valid and correct) -->
-  <!-- Output: Port exposes an XSLT -->
+  <!-- Purpose: Builds and runs an Inspector XSLT on a document using a metaschema -->
+  <!-- Input: `computer_metaschema.xml` (hard-wired) -->
+  <!-- Input: `computer-invalid/invalid1.xml` (hard-wired) -->
+   
+  <!-- Output: Port exposes an XSLT, while another port exposes a validation result -->
+  <!-- Note: outputs do not need to be captured for this pipeline to provide
+       a viability test for XSLT generation and application (irrespective of validation results) -->
+  <!-- Assumptions: the input metaschema is valid and correct; 
+       the input instance is well-formed (but not necessarily valid) -->
   
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Ports -->
   
-  <p:input port="METASCHEMA" primary="true"/>
+  <p:input port="METASCHEMA" primary="true">
+     <p:document href="computer_metaschema.xml"/>
+  </p:input>
   
   <p:input port="instance" primary="false" sequence="true">
-    <p:document href="invalid/invalid1.xml"/>
+    <p:document href="computer-invalid/invalid1.xml"/>
   </p:input>
   
   <p:input port="parameters" kind="parameter"/>
   
-  <p:serialization port="INT_0_echo-input" indent="true"/>
-  <p:output        port="INT_0_echo-input" primary="false">
-    <p:pipe        port="result"       step="metaschema-in"/>
-  </p:output>
-  
-  <!--<p:serialization port="INT_1_composed" indent="true"/>
-  <p:output        port="INT_1_composed" primary="false">
-    <p:pipe        port="result"     step="composed"/>
-  </p:output>
-  
-  <p:serialization port="INT_50_core-templates" indent="true"/>
-  <p:output        port="INT_50_core-templates" primary="false">
-    <p:pipe        port="result"     step="make-inspector"/>
-  </p:output>
-  
-  <p:serialization port="INT_51_with-datatype-checks" indent="true"/>
-  <p:output        port="INT_51_with-datatype-checks" primary="false">
-    <p:pipe        port="result"     step="provide-datatype-checking"/>
-  </p:output>
-  
-  <p:serialization port="OUT_inspector-xslt" indent="true" method="xml" omit-xml-declaration="false"/>
-  <p:output        port="OUT_inspector-xslt" primary="true">
-    <p:pipe        port="result" step="produce-validator"/>
-  </p:output>-->
-  
-  <p:serialization port="INT_50_inspector" indent="true"/>
-  <p:output        port="INT_50_inspector" primary="false">
+  <p:serialization port="OUT_INSPECTOR-XSLT" indent="true"/>
+  <p:output        port="OUT_INSPECTOR-XSLT" primary="false">
     <p:pipe        port="result"     step="inspector"/>
   </p:output>
   
@@ -74,12 +57,16 @@
   
   <p:identity name="metaschema-in"/>
   
-  <metaschema:METASCHEMA-INSPECTOR-XSLT name="produce-inspector"/>
+  <metaschema:METASCHEMA-INSPECTOR-XSLT name="produce-inspector">
+     <!-- Not running a test there, because it is effectively run here -->
+     <p:with-option name="xslt-test" select="'skip'"/>
+  </metaschema:METASCHEMA-INSPECTOR-XSLT>
   
   <p:identity name="inspector"/>
   
   <p:sink/>
   
+  <!-- This step fails if the artifact produced by `produce-inspector` is not XSLT -->
   <p:xslt name="inspect-input-instant">
     <p:input port="source">
       <p:pipe port="instance" step="TEST-INSPECTOR-RUNTIME"/>

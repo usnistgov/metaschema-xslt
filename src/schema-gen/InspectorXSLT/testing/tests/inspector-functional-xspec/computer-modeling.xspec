@@ -2,7 +2,7 @@
 <?xml-model href="../../../testing/xspec-assurance.sch"?>
 <x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
     xmlns:mx="http://csrc.nist.gov/ns/csd/metaschema-xslt"
-    stylesheet="../../current/computer_inspector.xsl"
+    stylesheet="../../current/computer_metaschema-inspector.xsl"
     xmlns="http://example.com/ns/computer"
     xmlns:c="http://example.com/ns/computer"
     xslt-version="3.0">

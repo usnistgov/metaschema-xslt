@@ -25,3 +25,22 @@ Use models_metaschema.xml
 
 XProc to generate a schema dynamically and then validate a set of documents?
 
+## XSD Schemas
+
+XSD Schema production was not originally developed using test-driven-development practices. We are now catching up.
+
+Work to be done includes comprehensive XSpecs for XSD production. A dependency for this is a specification for how to represent Metaschema in XSD, either established by Metaschema itself, or for this application. The current XSD generated provides a place to start.
+
+## JSON Schemas
+
+The pipelines generating JSON Schema have some ad-hoc unit testing developed to support bug fixing, buts await comprehensive unit tests.
+
+A separate work item is to update this generation to support more recent versions of JSON Schema - while that too demands unit tests.
+
+## InspectorXSLT
+
+The InspectorXSLT application produces an XSLT representing the constraints defined by a Metaschema, both model-based constraints (thereby in emulation of grammar-based validators such as XML DTD, W3C XSD and ISO RelaxNG) and constraints based on arbitrary assertions.
+
+It thus combines in one the functional properties of Schematron with XSD used as a validation application.
+
+Its testing is also the most advanced in this repository at time of writing, including smoke tests, unit tests and specification testing, and growing. See documentation in the folder including [readme](InspectorXSLT/readme.md) and [testing](InspectorXSLT/TESTING.md) documentation.

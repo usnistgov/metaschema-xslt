@@ -76,4 +76,5 @@ echo "XSpec testing - logging to ${LOGFILE}"
 
 # set 2>/dev/null to drop all runtime messages / progress reports instead of logging
 # the process should error out only if stop-on-error=yes, otherwise it will do its best to complete
-invoke_saxon "${SAXON_ARGS}" 2>&1 | tee ${LOGFILE}
+# invoke_saxon "${SAXON_ARGS}" 2>${LOGFILE} | echo_on_error "Failure running XSpec: see ${LOGFILE}" | tee ${LOGFILE}
+invoke_saxon "${SAXON_ARGS}" 2>${LOGFILE} | tee ${LOGFILE}

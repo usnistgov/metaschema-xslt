@@ -11,7 +11,7 @@
    <!-- Just testing XPath in this processor -->
    <x:scenario label="[A] 'castable as' operation works on a few edge cases">
       <x:call function="true"/><!-- required to call something -->         
-      <x:scenario label="[A.0] always fails"><!--  mark as pending="when failure is wanted" to silence -->
+      <x:scenario label="[A.0] always fails" pending="for testing"><!--  mark as  to silence -->
          <x:expect label="as it is false" test="false()"/>
       </x:scenario>
       <x:scenario label="[A.1] For April 0">

@@ -50,7 +50,7 @@
          </x:expect>
       </x:scenario>
       <x:scenario label="Basic external - Tiny metaschema">
-         <x:context href="../../current/tiny_metaschema_COMPOSED-metaschema.xml"/>
+         <x:context href="../../tiny_metaschema.xml"/>
          <x:expect label="XSLT transform element with correct attributes">
             <xsl:transform version="3.0" xpath-default-namespace="http://example.com/ns/tinydata"
                exclude-result-prefixes="#all">...</xsl:transform>
