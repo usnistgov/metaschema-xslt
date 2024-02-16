@@ -2,9 +2,8 @@
 
 ## Testing
 
-- [ ] [Run CI/CD on forks?]( https://github.com/marketplace/actions/publish-test-results#support-fork-repositories-and-dependabot-branches)
-- [ ] If not, then find a graceful way to error on failures, in forks
-- [x] Refactor testing in this directory
+- [x] Run CI/CD on forks?
+  - [x] Refactor testing in this directory
   - [x] smoke-test: is a functional XSLT produced from a valid Metaschema
   - [x] unit-test:
     - current production tests (build out a little)

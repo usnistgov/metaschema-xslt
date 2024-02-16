@@ -2,6 +2,12 @@
 
 See the [TESTING](../TESTING.md) docs for Inspector XSLT for explanation of how to test the application using these resources.
 
+*Plus* - to see quickly what utilities for testing and development are supported using `make`, open a command line interface to the [InspectorXSLT directory[(..) and use
+
+```
+> make help
+```
+
 ## Apologies to the XML-averse (for now)
 
 Keep in mind when considering testing that Inspector XSLT currently only supports XML-based formats defined by a metaschema. Your JSON can be inspected only if you convert it to XML first - a conversion that is dependable only if the data was already valid to begin with.
