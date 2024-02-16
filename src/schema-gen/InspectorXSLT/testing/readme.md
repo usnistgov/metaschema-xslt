@@ -26,10 +26,18 @@ Some [known-valid](valid/) and [known-invalid](invalid/) instances are also prov
 
 Additionally, `tiny_metaschema.xml` is a small metaschema made specifically for trying and testing the markup datatypes.
 
+### XSD validations of computer samples
+
+This can be done with a script in batch, respecting the organization of examples that should be found valid or invalid, as indicated by their file location.
+
+The script is `xsd-crosscheck-samples.sh`, which invokes XProc pipeline `XSD-VALIDATE-COMPUTER-SAMPLES.xpl`.
+
+See [InpspectorXSLT/TESTING.md](../TESTING.md) for more information.
+
 ### XSpec demonstrating correctness of the Inspector
 
 An Inspector can be generated from a metaschema such as `computer_model.xml` and tested against known inputs to demonstrate that the tests performed by the Inspector bring the correct results.
 
 Exercising these tests, a number of XSpec files in this folder calling `current/computer_metaschema-inspector.xsl` should all complete successfully and report "all green" -- no warnings, no errors, no unexpected 'pending' sections.
 
-See the [TESTING](../TESTING.md) docs for more information.
+Again, see the [TESTING](../TESTING.md) docs for more information.

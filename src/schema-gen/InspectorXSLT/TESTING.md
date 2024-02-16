@@ -70,6 +70,14 @@ This XSD should validate the same set of rules as the Inspector (excluding Metas
 
 A copy of the current-best schema is also here, to be refreshed as necessary): [testing/current/computer_metaschema-xmlschema.xsd](testing/current/computer_metaschema-xmlschema.xsd)
 
+#### XSD Validate the Samples
+
+A bash script `testing/xsd-crosscheck-samples.sh` executes an XProc pipeline that performs batch 'go/no-go' validation of XML sources expected to be either valid, or invalid, to the computer_metaschema model, as found in the `testing` folder.
+
+It will report on the command line whether any files expected to be valid (based on their placement in the `computer-valid` folder) are not valid, or any files expected not to be valid (because in the `computer-invalid` folder) are found actually to be valid.
+
+The validating parser used is the Java built-in parser, Xerces, as instrumented in XML Calabash (using `p:validate-with-xml-schema`).
+
 ### Refresh the 'computer model' Inspector XSLT
 
 Before testing the Computer Inspector XSLT, the copy kept for testing must be refreshed.
