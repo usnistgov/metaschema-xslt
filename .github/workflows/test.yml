@@ -5,6 +5,9 @@ on:
       - main
       - dev
   pull_request: {}
+permissions:
+  checks: write
+  pull-requests: write  
 env:
   JAVA_VERSION: "17"
   JAVA_DISTRIBUTION: "temurin"
@@ -32,7 +35,6 @@ jobs:
         run: |
           make -C src spec-test
         id: spec-tests
-
       # Publish the test summary as comment on the PR
       - name: Publish XSpec Test Results Summary
         uses: EnricoMi/publish-unit-test-result-action@8885e273a4343cd7b48eaa72428dea0c3067ea98
