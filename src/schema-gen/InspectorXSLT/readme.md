@@ -94,8 +94,9 @@ For XML- and XSLT-focused developers of Metaschema and Metaschema-based technolo
 
 ### Use cases we have not catered to
 
-- Developers who wish to build metaschema-aware applications
+- Developers who wish to build their own metaschema-aware applications
   - This application is intended to be operated as a black box: while at core this is a code generator, it is not designed to be easily extensible as such or produce a 'library', so you might prefer to reverse engineer it than to extend it
+  - I.e., while it should be easy enough to generate, deploy and use an InspectorXSLT for a metaschema you find or build, for building your own XSLT transpiler, you are welcome to borrow but you are on your own.
 - Robots or 'lights out' automated processes (untested)
   - The interfaces are designed to be flexible for interfacing but YMMV as to scale/throughput - experience will tell
   - Our expectation is that performance will be good under normal loads but metaschemas will also vary considerably 
@@ -117,7 +118,6 @@ For XML- and XSLT-focused developers of Metaschema and Metaschema-based technolo
 - Validate lexical rules over datatypes
 - Validate constraints as defined by Metaschema
   - allowed values; string matching; referential integrity; arbitrary queries (assertions)
-
 ## Interfaces - how to use
 
 ### Schematron harness
@@ -153,7 +153,7 @@ Command line flags and options for using the InspectorXSLT with Saxon - note use
 
 - `-s` required flag indicates the source file or directory - if a directory, `-o` is also required
 - `-o` optional flag indicates where to write a report file; if omitted the report comes back to STDOUT; required when `-s` is a directory
-- `-it` (or `-initial-template`) settings are supported as aliases of the `format` parameter (see below). If `format` is not given, a template can be called by name to initiate the same behavior. This is mainly useful for debugging or to configure a different fallback behavior from the core default in deployment.
+- `-it` (or `--initial-template`) settings are supported as aliases of the `format` parameter (see below). If `format` is not given, a template can be called by name to initiate the same behavior. This is mainly useful for debugging or to configure a different fallback behavior from the core default in deployment.
 
 ##### Parameters
 
@@ -184,7 +184,7 @@ The `echo` parameter can be used to supplement output reports with messages to t
 
 When producing HTML reports, a file name reference to an out-of-line CSS resource can be provided. It will drop from HTML outputs the inlined CSS, and instead provide a link to the named resource. Provide a CSS file with that name to control all the styling of the reports.
 
-  - `css=cssfile.css` replaces CSS in your HTML header with `\<link rel="stylesheet" href="cssfile.css">`.
+  - `css=cssfile.css` replaces CSS in your HTML header with `<link rel="stylesheet" href="cssfile.css">`.
 
 TBD, to be considered (let us know):
 

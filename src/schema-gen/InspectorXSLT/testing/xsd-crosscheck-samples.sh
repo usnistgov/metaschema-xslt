@@ -12,7 +12,12 @@ usage() {
     cat <<EOF
 Usage: ${BASE_COMMAND:-$(basename "${BASH_SOURCE[0]}")} [ADDITIONAL_ARGS]
 
-Produces a validation report for a file set designated in the pipeline \"${XPROC_FILE}\" 
+Produces a validation report for a file set designated in the pipeline XSD-VALIDATE-COMPUTER-SAMPLES.xpl
+
+Get this message with first argument '--help' or '-help'
+
+Otherwise arguments are passed to XML Calabash, so take care (YMMV)
+
 EOF
 }
 
@@ -22,6 +27,17 @@ CALABASH_ARGS="-osurvey=/dev/null $ADDITIONAL_ARGS \"${XPROC_FILE}\""
 
 # echo "${CALABASH_ARGS}"
 
-invoke_calabash "${CALABASH_ARGS}"
+## show usage if a first argument is '-h', expanding $1 to '' if not set
+if [ "${1:-}" = '-h' ] || [ "${1:-}" = '--help' ];
+
+then
+
+  usage
+
+else
+
+  invoke_calabash "${CALABASH_ARGS}"
+
+fi
 
 echo GAMBARIMASU!
