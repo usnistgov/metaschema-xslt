@@ -14,7 +14,7 @@ Usage: ${BASE_COMMAND:-$(basename "${BASH_SOURCE[0]}")} [ADDITIONAL_ARGS]
 
 Produces a validation report for a file set designated in the pipeline XSD-VALIDATE-COMPUTER-SAMPLES.xpl
 
-Get this message with first argument '--help' or '-help'
+Get this message with first argument '--help' or '-h'
 
 Otherwise arguments are passed to XML Calabash, so take care (YMMV)
 

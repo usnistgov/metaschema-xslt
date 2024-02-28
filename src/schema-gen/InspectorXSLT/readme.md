@@ -4,9 +4,21 @@ Check your XML with an XSLT to see if it is valid to the rules defined in a meta
 
 Developers are urged to review this file in outline before reading it in detail. For experienced XSLT developers, it explains the interfaces. For beginners, it should tell you what you need to know. Any sections not of immediate interest can be skipped for later.
 
+## Project status
+
+This tool is now at a nominal version 0.8, with plans for these milestones:
+
+**v0.9** - will supporting all Metaschema features used in [OSCAL](http://pages.nist.gov/OSCAL/), the Open Security Controls Assessment Language, with conformance demonstrated with tests
+
+**v1.0** - Supports all features specified for [Metaschema](http://pages.nist.gov/metaschema/) v1.0 as applied to XML, also with tests demonstrating conformance.
+
+Metaschema is a NIST project in the Information Technology Lab (ITL) supporting the abstract description of data models expressible in either XML or JSON syntax (or other syntaxes), designed to enable and facilitate standards-based data exchange of information related to systems security.
+
+As of early 2024, Metaschema is not yet finalized at version 1.0. As noted below, providing its definitions with validation in the form of a (second) conformant implementation is a driving motive for this project.
+
 ## How this works
 
-A standalone XSLT ("stylesheet" or transformation specification) can be produced by applying a stylesheet (an XSLT) to a metaschema. Using the composition pipeline, it can apply to a top-level module of a modular metaschema.
+A standalone XSLT ("stylesheet" or transformation specification) can be produced by applying a stylesheet (an XSLT) to a metaschema. Using the metaschema-xslt [composition pipeline](../../compose/), it can apply to a top-level module of a modular metaschema.
 
 The XSLT that is created this way can be used to test XML instances for errors in view of the rules defined by the metaschema definitions.
 
@@ -27,7 +39,7 @@ Currently we plan to support only XML-based formats as defined by Metaschema, no
 
 Users of Metaschema-defined JSON can try reformatting their data as XML using automated means such as scripts produced by the  [Metaschema XSLT Converter Generators](../../converter-gen). Successful conversion will be valid on the other side. But failures will be indicated not typically be invalid results, and instead results missing those parts of the invalid that went unrecognized by the converter because they are invalid.
 
-## Demo
+## Demonstrations
 
 The [testing/current](testing/current) directory shows such an XSLT, which can be applied to an instance or set of instances (documents) to be tested against the rules defined by its metaschema - in this case the Computer Model metaschema example provided.
 
