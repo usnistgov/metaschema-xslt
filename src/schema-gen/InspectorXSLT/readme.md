@@ -6,9 +6,9 @@ Developers are urged to review this file in outline before reading it in detail.
 
 ## Project status
 
-This tool is now at a nominal version 0.8, with plans for these milestones:
+This tool is now at a nominal version **0.8**, with plans for these milestones:
 
-**v0.9** - will supporting all Metaschema features used in [OSCAL](http://pages.nist.gov/OSCAL/), the Open Security Controls Assessment Language, with conformance demonstrated with tests
+**v0.9** - will support all Metaschema features used in [OSCAL](http://pages.nist.gov/OSCAL/), the Open Security Controls Assessment Language, with conformance demonstrated with tests
 
 **v1.0** - Supports all features specified for [Metaschema](http://pages.nist.gov/metaschema/) v1.0 as applied to XML, also with tests demonstrating conformance.
 
@@ -376,7 +376,7 @@ No need to quit after first error; take advantage of the 'pull' process (random 
 
 The aims of the reporting are clarity/ease of use; to be unambiguous; to be traceable. To be concise and economical is a secondary goal.
 
-Reporting can be parsimonious - no need to be exhaustive.
+Reporting can be parsimonious - sometimes there is no need to be exhaustive.
 
 At the same time, errors anywhere are of interest (see 'no need to quit'). Some amount of redundancy is okay if not too noisy.
 
@@ -398,7 +398,7 @@ Interestingly, this different perspective on the rule set leads to different str
 
 If any of this is true, the application will show.
 
-### Advantages
+### Advantages of this approach
 
 - Open-endedness with respect to arbitrariness of rules including contingent and co-occurrent rules
 - Ease of post processing for presentation

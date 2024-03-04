@@ -17,6 +17,10 @@ For which capabilities can we write XSpec or meaningfully test and confirm (expo
   - Runtime parameter semantics
   - Exception handling
 
+(XSpec especially with `@run-as='external'` is able to provide support for much of this, but specific means are tbd.)
+
+Contributor at-galtm also notes that message handling code in the [xslt3-functions project repository](https://github.com/usnistgov/xslt3-functions) is configurable to emit processing instructions (instead of or with `xsl:message`) as message proxies, making this functionality testable.
+
 Additionally, plenty of 'obvious' tasks remain to be done, including
 
   - Addressing functional gaps e.g. Schematron, `x:label`, `x:pending`
