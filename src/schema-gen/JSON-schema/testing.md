@@ -8,23 +8,39 @@ At a future date we aim to support other forms.
 
 A JSON Schema, with other schemas, is produced by a pipeline in the parent directory, ../METASCHEMA-ALL-SCHEMAS.xpl, which is also run as a smoke test.
 
-(from that directory)
-
 ```
+pushd ..
 make smoke-test
+popd
 ```
 
 The smoke test outputs including a JSON Schema are found in the `test_output` folder (until/unless cleaned out). If a JSON instance cannot be produced, the process will fail.
 The smoke test does *not* currently
 
 - test that the JSON functions as a JSON Schema
-- test that it conforms to an idea of a JSON Schema ('the standard')
+- test that it conforms to an idea of a JSON Schema ('the standard') or JSON Schema usage patterns
 
 It does, however, confirm that the process terminated successfully with a file output in the expected location.
 
-This implies near-term and long-term goals:
 
-## Near term goals
+## Spec testing
+
+In this case, 'spec testing' is testing to see whether the resulting JSON Schema looks like what we think it should look like, in detail.
+
+## Unit testing
+
+Unit tests here focus on end-to-end testing, i.e. per-metaschema mappings from single model input to single JSON Schema output.
+
+The unit testing here is *less* granular than the specification testing.
+
+Neither of these actually test the JSON Schema, only the way in which one is produced.
+
+
+This implies near-term and longer-term goals:
+
+# JSON Schema generation - planning
+
+## Near-term
 
 Even without running the JSON Schema (a 'field-test' to demonstrate its adequacy for the purpose, i.e. validation), we can test a great deal since we know what that JSON Schema should look like.
 
@@ -44,7 +60,7 @@ Note that in this repo, the OSCAL models will *not* be used.
 
 (But it can be used in parallel work in the oscal-xslt repository.)
 
-## Longer term goals
+## Longer-term
 
 "Field test" script able to distinguish between expected-valid and expected-invalid JSON, and report findings.
 
