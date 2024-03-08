@@ -84,7 +84,7 @@
             </xsl:for-each-group>
             
             <!-- again, this time for (all) flags, grouping by key name when available -->
-            <xsl:for-each-group select=".//flag" group-by="(@key-name,@_metaschema-xml-id)[1]">
+            <xsl:for-each-group select=".//flag" group-by="(@_key-name,@_metaschema-xml-id)[1]">
                 <xsl:apply-templates select="current-group()[1]" mode="make-template">
                     <xsl:with-param name="team" tunnel="true" select="current-group()"/>
                 </xsl:apply-templates>
