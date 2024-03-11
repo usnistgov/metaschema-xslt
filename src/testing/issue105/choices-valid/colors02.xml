@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CHOICES xmlns="http://example.com/ns/choices">
+   <family>Family of Choices</family>
+   <blue>
+      <lapis/>
+   </blue>
+   <red>
+      <firetruck/>
+   </red>
+   <group>
+      <family>Another family</family>
+      <red>
+         <rooster/>
+      </red>
+   </group>
+</CHOICES>

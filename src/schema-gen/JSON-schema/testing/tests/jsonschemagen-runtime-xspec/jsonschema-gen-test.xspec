@@ -18,7 +18,7 @@
    <!-- This XSpec tests the basics of JSON Schema generation except for its final serialization
         into JSON, representing its target using this vocabulary as does the system internally. -->
    
-   <x:variable name="models-metaschema" href="../../../../../testing/models_metaschema.xml"/>
+   <x:variable name="models-metaschema" href="../../../../../testing/models_metaschema.xml"/>On 
    
    <x:scenario label="Metaschema makes an XPath JSON map object, in XML">
       <x:context select="$models-metaschema"/>

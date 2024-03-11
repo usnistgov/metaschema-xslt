@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+    <schema-name>Choices Model</schema-name>
+    <schema-version>0.0.1</schema-version>
+    <short-name>choices</short-name>
+    <namespace>http://example.com/ns/choices</namespace>
+    <json-base-uri>http://example.com/ns/choices</json-base-uri>
+
+   <define-assembly name="CHOICES">
+        <formal-name>Choices</formal-name>
+        <description>Colors and patterns.</description>
+      <root-name>CHOICES</root-name>
+      <define-flag name="id">
+         <formal-name>Vendor Identifier</formal-name>
+         <description>An identifier for classifying a unique computer parts vendor.</description>
+      </define-flag>
+      <model>
+         <define-field name="family" min-occurs="1">
+            <formal-name>Color family</formal-name>
+            <description>A name for your selection.</description>
+         </define-field>
+         <!-- At the top, both blues and reds can appear together, or neither -->
+         <assembly ref="blue" min-occurs="0"/>
+         <assembly ref="red" min-occurs="0"/>
+         <assembly ref="group" max-occurs="unbounded">
+            <group-as name="groups"/>
+         </assembly>
+      </model>
+    </define-assembly>   
+
+   <define-assembly name="group">
+      <formal-name>Group</formal-name>
+      <description>A grouping.</description>
+      <model>
+         <define-field name="family" min-occurs="1">
+            <formal-name>Color family</formal-name>
+            <description>A name or identifying code for your selection.</description>
+         </define-field>
+         <!-- But within a group, the choice is exclusive - one and one only is required -->
+         <choice>
+            <assembly ref="blue" min-occurs="1"/>
+            <assembly ref="red" min-occurs="1"/>
+         </choice>
+         <assembly ref="group" max-occurs="unbounded">
+            <group-as name="subgroups"/>
+         </assembly>
+      </model>
+   </define-assembly>   
+   
+   
+   <define-assembly name="blue">
+      <formal-name>Blue</formal-name>
+      <description>A blue color.</description>
+      <model>
+         <choice>
+            <define-assembly name="aquamarine" min-occurs="1">
+               <formal-name>Aquamarine</formal-name>
+               <description>Peace and tranquility.</description>
+            </define-assembly>
+            <define-assembly name="midnight" min-occurs="1">
+               <formal-name>Midnight</formal-name>
+               <description>Calmly resting.</description>
+            </define-assembly>
+            <define-assembly name="lapis" min-occurs="1">
+               <formal-name>Lapis</formal-name>
+               <description>In repose.</description>
+            </define-assembly>
+         </choice>
+      </model>
+   </define-assembly>
+   
+   <define-assembly name="red">
+      <formal-name>Red</formal-name>
+      <description>A red color.</description>
+      <model>
+         <choice>
+            <define-assembly name="firetruck" min-occurs="1">
+               <formal-name>Firetruck</formal-name>
+               <description>Heading for an emergeny.</description>
+            </define-assembly>
+            <define-assembly name="flame" min-occurs="1">
+               <formal-name>Flame</formal-name>
+               <description>Hot as heck.</description>
+            </define-assembly>
+            <define-assembly name="rooster" min-occurs="1">
+               <formal-name>Rooster</formal-name>
+               <description>Cock-a-doodle-doo.</description>
+            </define-assembly>
+         </choice>
+      </model>
+   </define-assembly>
+   
+</METASCHEMA>

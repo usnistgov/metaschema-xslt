@@ -16,7 +16,7 @@
          <x:expect label="is dropped" select="()"/>
       </x:scenario>
       <x:scenario label="[A.2] Processing instruction">
-         <x:context><?pi type="sample" href="file.css"?></x:context>
+         <x:context><?PI?></x:context>
          <x:expect label="is dropped" select="()"/>
       </x:scenario>
    </x:scenario>
