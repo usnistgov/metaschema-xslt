@@ -608,7 +608,7 @@
     <!--Not supporting float or double--> 
 
     <xsl:template priority="2.1" match="*[@as-type = $datatype-map/@as-type]" mode="object-type">
-        <xsl:variable name="assigned-type" select="$datatype-map[(@as-type|@prefer)=current()/@as-type]/string(.)"/>
+        <xsl:variable name="assigned-type" select="$datatype-map[@as-type=current()/@as-type]/string(.)"/>
         <string key="$ref">#/definitions/{$assigned-type}</string>
     </xsl:template>
     
