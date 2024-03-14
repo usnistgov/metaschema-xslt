@@ -36,9 +36,6 @@
         <flag ref="id"/>
         <model>
             <field ref="field-1only"/>
-            <field>
-                <use-name>overloaded</use-name>
-            </field>
             <field ref="overloaded">
                 <use-name>overloaded1</use-name>
             </field>
