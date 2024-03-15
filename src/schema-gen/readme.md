@@ -11,7 +11,7 @@ Currently, schemas in two formats are supported, with a third under development:
 
 - XSD (version 1.1)
 - JSON Schema (v 7)
-- Schematron - Metaschema Constraints model (in development) - code-name *Metatron*
+- InspectorXSLT - schema and Schematron emulator for XML, v0.8
 
 ## Producing schemas for a single metaschema source
 
@@ -28,7 +28,9 @@ Routines that provide the same services over sets or batches of metaschemas, for
 
 ### Produce an XSD using `make`
 
-XXX tbd XXX
+Currently the `make` infrastrucutre supports only high-level testing - see `make help`.
+
+Schema generation logic (or other utilities useful to developers) can be added to the `Makefile` as needed.
 
 ### Produce an XSD with a script (calling Maven)
 

@@ -19,26 +19,16 @@ Find resources for testing the XSLT Inspector and its production in the [testing
 
 Documented in the Makefile -
 
-For example
+Use
 
 ```
-> make test
+> make help
 ```
 
-Runs all tests using provided scripting.
+to see the available make targets, supporting smoke testing, unit testing of XSLT production and others.
 
-Don't commit unless this passes.
-
-```
-> make smoke-test
-```
-
-Runs only the 'smoke tests' (end to end production pipeline testing - are viable artifacts produced irrespective of their functionality or correctness)
-
-Available:
- - `smoke-test` - builds an XSLT from the `computer_metaschema.xml` test example, and attempts to execute the resulting XSLT over stub input. A failure indicates a problem in the production pipeline - it is either broken or wrong
- - `spec-test` - runs specification tests - does the produced XSLT behave as expected when used on the possible range of (XML) inputs? this is a validator: does it validate?
- - `unit-test` - runs transformation template- and function-level unit tests regulating the mapping between source (Metaschema) and target (XSLT) expressions.
+Some utilities described on this page are also available using scripts, which will function in place despite not being accessible via `make`.
+ expressions.
 
 Note this is work in progress and may change over time especially as we bring more tests in.
 
@@ -69,6 +59,14 @@ Use a script such as [../mvn-xsd-schema-xsl.sh](../mvn-xsd-schema-xsl.sh) or the
 This XSD should validate the same set of rules as the Inspector (excluding Metaschema query constraints) and can be used to cross check functionality. Note that this XSD is also dynamically generated and might itself have bugs or issues. (If only in principle. In reality, the schema generators are also tested both in the lab and the field.) Irrespective of this question, the requirements are that both processes (schema validation and Inspector-XSLT validation) are effectively congruent, compatible and "the same" inasmuch as they detect all the same problems in data.
 
 A copy of the current-best schema is also here, to be refreshed as necessary): [testing/current/computer_metaschema-xmlschema.xsd](testing/current/computer_metaschema-xmlschema.xsd)
+
+#### XSD Validate the Samples
+
+A bash script `testing/xsd-crosscheck-samples.sh` executes an XProc pipeline that performs batch 'go/no-go' validation of XML sources expected to be either valid, or invalid, to the computer_metaschema model, as found in the `testing` folder.
+
+It will report on the command line whether any files expected to be valid (based on their placement in the `computer-valid` folder) are not valid, or any files expected not to be valid (because in the `computer-invalid` folder) are found actually to be valid.
+
+The validating parser used is the Java built-in parser, Xerces, as instrumented in XML Calabash (using `p:validate-with-xml-schema`).
 
 ### Refresh the 'computer model' Inspector XSLT
 

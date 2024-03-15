@@ -4,9 +4,21 @@ Check your XML with an XSLT to see if it is valid to the rules defined in a meta
 
 Developers are urged to review this file in outline before reading it in detail. For experienced XSLT developers, it explains the interfaces. For beginners, it should tell you what you need to know. Any sections not of immediate interest can be skipped for later.
 
+## Project status
+
+This tool is now at a nominal version **0.8**, with plans for these milestones:
+
+**v0.9** - will support all Metaschema features used in [OSCAL](http://pages.nist.gov/OSCAL/), the Open Security Controls Assessment Language, with conformance demonstrated with tests
+
+**v1.0** - Supports all features specified for [Metaschema](http://pages.nist.gov/metaschema/) v1.0 as applied to XML, also with tests demonstrating conformance.
+
+Metaschema is a NIST project in the Information Technology Lab (ITL) supporting the abstract description of data models expressible in either XML or JSON syntax (or other syntaxes), designed to enable and facilitate standards-based data exchange of information related to systems security.
+
+As of early 2024, Metaschema is not yet finalized at version 1.0. As noted below, providing its definitions with validation in the form of a (second) conformant implementation is a driving motive for this project.
+
 ## How this works
 
-A standalone XSLT ("stylesheet" or transformation specification) can be produced by applying a stylesheet (an XSLT) to a metaschema. Using the composition pipeline, it can apply to a top-level module of a modular metaschema.
+A standalone XSLT ("stylesheet" or transformation specification) can be produced by applying a stylesheet (an XSLT) to a metaschema. Using the metaschema-xslt [composition pipeline](../../compose/), it can apply to a top-level module of a modular metaschema.
 
 The XSLT that is created this way can be used to test XML instances for errors in view of the rules defined by the metaschema definitions.
 
@@ -27,7 +39,7 @@ Currently we plan to support only XML-based formats as defined by Metaschema, no
 
 Users of Metaschema-defined JSON can try reformatting their data as XML using automated means such as scripts produced by the  [Metaschema XSLT Converter Generators](../../converter-gen). Successful conversion will be valid on the other side. But failures will be indicated not typically be invalid results, and instead results missing those parts of the invalid that went unrecognized by the converter because they are invalid.
 
-## Demo
+## Demonstrations
 
 The [testing/current](testing/current) directory shows such an XSLT, which can be applied to an instance or set of instances (documents) to be tested against the rules defined by its metaschema - in this case the Computer Model metaschema example provided.
 
@@ -94,8 +106,9 @@ For XML- and XSLT-focused developers of Metaschema and Metaschema-based technolo
 
 ### Use cases we have not catered to
 
-- Developers who wish to build metaschema-aware applications
+- Developers who wish to build their own metaschema-aware applications
   - This application is intended to be operated as a black box: while at core this is a code generator, it is not designed to be easily extensible as such or produce a 'library', so you might prefer to reverse engineer it than to extend it
+  - I.e., while it should be easy enough to generate, deploy and use an InspectorXSLT for a metaschema you find or build, for building your own XSLT transpiler, you are welcome to borrow but you are on your own.
 - Robots or 'lights out' automated processes (untested)
   - The interfaces are designed to be flexible for interfacing but YMMV as to scale/throughput - experience will tell
   - Our expectation is that performance will be good under normal loads but metaschemas will also vary considerably 
@@ -117,7 +130,6 @@ For XML- and XSLT-focused developers of Metaschema and Metaschema-based technolo
 - Validate lexical rules over datatypes
 - Validate constraints as defined by Metaschema
   - allowed values; string matching; referential integrity; arbitrary queries (assertions)
-
 ## Interfaces - how to use
 
 ### Schematron harness
@@ -153,7 +165,7 @@ Command line flags and options for using the InspectorXSLT with Saxon - note use
 
 - `-s` required flag indicates the source file or directory - if a directory, `-o` is also required
 - `-o` optional flag indicates where to write a report file; if omitted the report comes back to STDOUT; required when `-s` is a directory
-- `-it` (or `-initial-template`) settings are supported as aliases of the `format` parameter (see below). If `format` is not given, a template can be called by name to initiate the same behavior. This is mainly useful for debugging or to configure a different fallback behavior from the core default in deployment.
+- `-it` (or `--initial-template`) settings are supported as aliases of the `format` parameter (see below). If `format` is not given, a template can be called by name to initiate the same behavior. This is mainly useful for debugging or to configure a different fallback behavior from the core default in deployment.
 
 ##### Parameters
 
@@ -184,7 +196,7 @@ The `echo` parameter can be used to supplement output reports with messages to t
 
 When producing HTML reports, a file name reference to an out-of-line CSS resource can be provided. It will drop from HTML outputs the inlined CSS, and instead provide a link to the named resource. Provide a CSS file with that name to control all the styling of the reports.
 
-  - `css=cssfile.css` replaces CSS in your HTML header with `\<link rel="stylesheet" href="cssfile.css">`.
+  - `css=cssfile.css` replaces CSS in your HTML header with `<link rel="stylesheet" href="cssfile.css">`.
 
 TBD, to be considered (let us know):
 
@@ -364,7 +376,7 @@ No need to quit after first error; take advantage of the 'pull' process (random 
 
 The aims of the reporting are clarity/ease of use; to be unambiguous; to be traceable. To be concise and economical is a secondary goal.
 
-Reporting can be parsimonious - no need to be exhaustive.
+Reporting can be parsimonious - sometimes there is no need to be exhaustive.
 
 At the same time, errors anywhere are of interest (see 'no need to quit'). Some amount of redundancy is okay if not too noisy.
 
@@ -386,7 +398,7 @@ Interestingly, this different perspective on the rule set leads to different str
 
 If any of this is true, the application will show.
 
-### Advantages
+### Advantages of this approach
 
 - Open-endedness with respect to arbitrariness of rules including contingent and co-occurrent rules
 - Ease of post processing for presentation
