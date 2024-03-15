@@ -3,6 +3,8 @@
     xmlns:x="http://www.jenitennison.com/xslt/xspec"
     xmlns:mv="http://g"
     stylesheet="../converter-gen/xml-to-json/supermodel-to-json.xsl">
+   
+   <!-- Tests serialization into JSON format of 'supermodel' XML sources -->
     <x:scenario label="Regression Test for usnistgov/metaschema#235">
         <x:scenario label="If a document instance has a field with no value or flag defined">
             <x:context  mode="write-json">

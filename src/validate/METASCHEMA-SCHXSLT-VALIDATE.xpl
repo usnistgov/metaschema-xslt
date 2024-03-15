@@ -3,7 +3,7 @@
   xmlns:c="http://www.w3.org/ns/xproc-step" version="1.0"
   xmlns:metaschema="http://csrc.nist.gov/ns/metaschema/1.0"
   xmlns:schxslt="https://doi.org/10.5281/zenodo.1495494"
-  type="metaschema:METASCHEMA-ALL-SCHEMAS" name="METASCHEMA-ALL-SCHEMAS">
+  type="metaschema:METASCHEMA-SCHXSLT-VALIDATE" name="METASCHEMA-SCHXSLT-VALIDATE">
   
   <p:import href="../../support/schxslt/core/src/main/resources/xproc/1.0/validate-with-schematron.xpl"/>
   

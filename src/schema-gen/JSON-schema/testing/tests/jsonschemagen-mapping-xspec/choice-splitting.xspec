@@ -2,8 +2,7 @@
 <x:description xmlns:x="http://www.jenitennison.com/xslt/xspec" stylesheet="../../../choice-split.xsl"
    xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
 
-
-   <x:scenario label="[A] various patterns">
+   <x:scenario label="[A] 'choice' splitting various patterns">
       <x:scenario label="[A.1] A simple model">
          <x:context mode="splitting" select="/*">
             <model>

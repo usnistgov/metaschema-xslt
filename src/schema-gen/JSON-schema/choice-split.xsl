@@ -16,7 +16,7 @@
    
    <xsl:output indent="yes"/>
    
-   <xsl:variable name="m">
+   <!--<xsl:variable name="m">
       <model>
          <choice>
             <a1/>
@@ -29,7 +29,7 @@
    
    <xsl:template match="/">
       <xsl:apply-templates select="$m/*" mode="splitting"/>
-   </xsl:template>
+   </xsl:template>-->
    
    <xsl:mode name="splitting" on-no-match="fail"/>
         
@@ -40,6 +40,7 @@
             <xsl:with-param name="split" select="[]" as="array( element()* ) "/>
          </xsl:apply-templates>
       </xsl:variable>
+      
       <xsl:iterate select="$splits">
          <model>
             <xsl:sequence select="."/>
@@ -58,9 +59,8 @@
             <xsl:sequence select="$split"/>
          </xsl:if>
       </xsl:variable>
-      <xsl:message expand-text="true">{ generate-id() } { count($splitters) }: { ($splitters ! serialize(.)) => string-join(' ==== ') }</xsl:message>
+      
       <xsl:iterate select="$splitters">
-         
         <xsl:apply-templates select="$here/following-sibling::*[1]" mode="splitting">
          <xsl:with-param name="split" as="array( element()* ) " select="."/><!-- . is an array here -->
         </xsl:apply-templates>
@@ -73,6 +73,7 @@
    <xsl:template match="*" mode="splitting"  as="array( element()* ) *">
       <xsl:param name="split" required="true" as="array( element()* ) "/>
       <xsl:variable name="me" select="."/>
+      
       <xsl:apply-templates select="$me/following-sibling::*[1]" mode="splitting">
          <xsl:with-param name="split" select="array:append($split, $me)"/>
       </xsl:apply-templates>

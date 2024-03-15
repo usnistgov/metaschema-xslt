@@ -19,7 +19,7 @@
   
   <xsl:template match="/">
     <report>
-      <xsl:if test="not($incidents)">You are good - well-formed, no reported errors</xsl:if>
+      <xsl:if test="not($incidents)">You are good - well-formed, with no reported Schematron messages (reports or failed assertions)</xsl:if>
       <xsl:apply-templates select="$incidents"/>
     </report>
   </xsl:template>
