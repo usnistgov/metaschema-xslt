@@ -22,6 +22,7 @@ spec-test: ## Run all "specification tests", validating this implementation agai
 unit-test: ## Run all unit tests
 	$(call FOREACH_MAKE_OPTIONAL,$@,$(dirs))
 
+
 .PHONY: clean
 clean: ## Remove any generated test or build artifacts
 	$(call FOREACH_MAKE_OPTIONAL,$@,$(dirs))
