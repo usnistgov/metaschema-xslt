@@ -11,8 +11,8 @@ test: smoke-test ## Run all tests
 smoke-test: ## Run all smoke-tests
 	./mvn-schemas-xpl.sh "$(test_metaschema)" $(output_folder) models_metaschema
 
-.PHONY: spec-test
-spec-test: ## Run all spec-tests
+.PHONY: compile-schema
+compile-schema: ## compile schema
 		./json-compile-schema-validator.sh 
 .PHONY: clean
 clean: ## Remove test output
