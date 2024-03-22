@@ -8,8 +8,7 @@
    xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:nm="http://csrc.nist.gov/ns/metaschema"
    xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
-   <!-- Input: depends on finding file 'inspector-functional-xspec/validations-in-batch.xspec' in place -->
-   <!-- Input: Additionally, all inputs named therein (expect errors for files broken or missing)-->
+   <!-- Input: inputs named therein (expect errors for files broken or missing)-->
    <!-- Input: Additionally, an up-to-date XSD for the OSCAL schema taken as reference, either a local copy or link to Github -->
    <!-- Output: an 'all is well' message, or unexpected results such as errors from files expected to be valid or validity from files expected to be invalid -->
    <!-- Purpose: test alignment between XSD-based Metaschea validates and other forms, by providing a basis for comparisohn-->
@@ -138,7 +137,7 @@
                      select="child::NOMINALLY-VALID/document[@VALIDATION-STATUS='XSD-INVALID'] |
                              child::NOMINALLY-INVALID/document[not(@VALIDATION-STATUS='XSD-INVALID')]"/>
                   <REPORT>
-                     <progress>Checking { count(*/*) }{ if (count(*/*) eq 1) then ' document' else ' documents' } against an OSCAL Catalog XSD ...</progress>
+                     <progress>Checking { count(*/*) }{ if (count(*/*) eq 1) then ' document' else ' documents' } against a 'choices' XSD ...</progress>
                         <xsl:apply-templates select="child::*/document"/>
 
                         <xsl:if test="empty($anomalies)">

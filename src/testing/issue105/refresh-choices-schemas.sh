@@ -5,11 +5,6 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 source "$SCRIPT_DIR/../../common/subcommand_common.bash"
 
-# XProc produces Inspector XSLT with a fail-safe check by compiling and running it
-XPROC_FILE="${SCRIPT_DIR}/COMPUTER-INSPECTOR-PRODUCE.xpl"
-
-XSLT_RESULT=${SCRIPT_DIR}/current/computer_metaschema-inspector.xsl
-
 usage() {
     cat <<EOF
 Usage: ${BASE_COMMAND:-$(basename "${BASH_SOURCE[0]}")} [ADDITIONAL_ARGS]

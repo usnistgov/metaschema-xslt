@@ -2,7 +2,7 @@
 <x:description 
     xmlns:x="http://www.jenitennison.com/xslt/xspec"
     xmlns:mv="http://g"
-    stylesheet="../converter-gen/xml-to-json/supermodel-to-json.xsl">
+    stylesheet="xml-to-json/supermodel-to-json.xsl">
    
    <!-- Tests serialization into JSON format of 'supermodel' XML sources -->
     <x:scenario label="Regression Test for usnistgov/metaschema#235">
