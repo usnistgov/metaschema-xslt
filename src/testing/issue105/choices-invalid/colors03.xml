@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CHOICES xmlns="http://example.com/ns/choices">
+   <family>Family of Choices</family>
+   <blue>
+      <lapis/>
+   </blue>
+   <red>
+      <rooster/>
+   </red>
+   <group>
+      <family>Another family</family>
+      <blue>
+         <aquamarine/>
+      </blue>
+      <red><?EXPECT ERROR?> <!-- 'red' element is an alternative to 'blue', inside 'choice' -->
+         <firetruck/>
+      </red>
+   </group>
+</CHOICES>

@@ -1,0 +1,223 @@
+<xs:schema xmlns="http://example.com/ns/choices"
+            xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+            xmlns:xs="http://www.w3.org/2001/XMLSchema"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            elementFormDefault="qualified"
+            targetNamespace="http://example.com/ns/choices"
+            version="0.0.1">
+   <xs:annotation>
+      <xs:appinfo>
+         <m:schema-name>Choices Model</m:schema-name>
+         <m:schema-version>0.0.1</m:schema-version>
+         <m:short-name>choices</m:short-name>
+         <m:root>CHOICES</m:root>
+      </xs:appinfo>
+   </xs:annotation>
+   <xs:element name="CHOICES" type="choices-CHOICES-ASSEMBLY"/>
+   <xs:complexType name="choices-CHOICES-ASSEMBLY">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Choices</m:formal-name>
+            <m:description>Colors and patterns.</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Choices</b>: Colors and patterns.</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="family" minOccurs="1" maxOccurs="1">
+            <xs:simpleType>
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name>Color family</m:formal-name>
+                     <m:description>A name for your selection.</m:description>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b>Color family</b>: A name for your selection.</xs:documentation>
+               </xs:annotation>
+               <xs:restriction base="StringDatatype"/>
+            </xs:simpleType>
+         </xs:element>
+         <xs:element name="blue"
+                      type="choices-blue-ASSEMBLY"
+                      minOccurs="0"
+                      maxOccurs="1"/>
+         <xs:element name="red"
+                      type="choices-red-ASSEMBLY"
+                      minOccurs="0"
+                      maxOccurs="1"/>
+         <xs:element name="group"
+                      type="choices-group-ASSEMBLY"
+                      minOccurs="0"
+                      maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="id" type="StringDatatype">
+         <xs:annotation>
+            <xs:appinfo>
+               <m:formal-name>Vendor Identifier</m:formal-name>
+               <m:description>An identifier for classifying a unique computer parts vendor.</m:description>
+            </xs:appinfo>
+            <xs:documentation>
+               <b>Vendor Identifier</b>: An identifier for classifying a unique computer parts vendor.</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+   </xs:complexType>
+   <xs:complexType name="choices-group-ASSEMBLY">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Group</m:formal-name>
+            <m:description>A grouping.</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Group</b>: A grouping.</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="family" minOccurs="1" maxOccurs="1">
+            <xs:simpleType>
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name>Color family</m:formal-name>
+                     <m:description>A name or identifying code for your selection.</m:description>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b>Color family</b>: A name or identifying code for your selection.</xs:documentation>
+               </xs:annotation>
+               <xs:restriction base="StringDatatype"/>
+            </xs:simpleType>
+         </xs:element>
+         <xs:choice>
+            <xs:element name="blue"
+                         type="choices-blue-ASSEMBLY"
+                         minOccurs="1"
+                         maxOccurs="1"/>
+            <xs:element name="red"
+                         type="choices-red-ASSEMBLY"
+                         minOccurs="1"
+                         maxOccurs="1"/>
+         </xs:choice>
+         <xs:element name="group"
+                      type="choices-group-ASSEMBLY"
+                      minOccurs="0"
+                      maxOccurs="unbounded"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="choices-blue-ASSEMBLY">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Blue</m:formal-name>
+            <m:description>A blue color.</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Blue</b>: A blue color.</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:choice>
+            <xs:element name="aquamarine" minOccurs="1" maxOccurs="1">
+               <xs:complexType>
+                  <xs:annotation>
+                     <xs:appinfo>
+                        <m:formal-name>Aquamarine</m:formal-name>
+                        <m:description>Peace and tranquility.</m:description>
+                     </xs:appinfo>
+                     <xs:documentation>
+                        <b>Aquamarine</b>: Peace and tranquility.</xs:documentation>
+                  </xs:annotation>
+               </xs:complexType>
+            </xs:element>
+            <xs:element name="midnight" minOccurs="1" maxOccurs="1">
+               <xs:complexType>
+                  <xs:annotation>
+                     <xs:appinfo>
+                        <m:formal-name>Midnight</m:formal-name>
+                        <m:description>Calmly resting.</m:description>
+                     </xs:appinfo>
+                     <xs:documentation>
+                        <b>Midnight</b>: Calmly resting.</xs:documentation>
+                  </xs:annotation>
+               </xs:complexType>
+            </xs:element>
+            <xs:element name="lapis" minOccurs="1" maxOccurs="1">
+               <xs:complexType>
+                  <xs:annotation>
+                     <xs:appinfo>
+                        <m:formal-name>Lapis</m:formal-name>
+                        <m:description>In repose.</m:description>
+                     </xs:appinfo>
+                     <xs:documentation>
+                        <b>Lapis</b>: In repose.</xs:documentation>
+                  </xs:annotation>
+               </xs:complexType>
+            </xs:element>
+         </xs:choice>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="choices-red-ASSEMBLY">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Red</m:formal-name>
+            <m:description>A red color.</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Red</b>: A red color.</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:choice>
+            <xs:element name="firetruck" minOccurs="1" maxOccurs="1">
+               <xs:complexType>
+                  <xs:annotation>
+                     <xs:appinfo>
+                        <m:formal-name>Firetruck</m:formal-name>
+                        <m:description>Heading for an emergeny.</m:description>
+                     </xs:appinfo>
+                     <xs:documentation>
+                        <b>Firetruck</b>: Heading for an emergeny.</xs:documentation>
+                  </xs:annotation>
+               </xs:complexType>
+            </xs:element>
+            <xs:element name="flame" minOccurs="1" maxOccurs="1">
+               <xs:complexType>
+                  <xs:annotation>
+                     <xs:appinfo>
+                        <m:formal-name>Flame</m:formal-name>
+                        <m:description>Hot as heck.</m:description>
+                     </xs:appinfo>
+                     <xs:documentation>
+                        <b>Flame</b>: Hot as heck.</xs:documentation>
+                  </xs:annotation>
+               </xs:complexType>
+            </xs:element>
+            <xs:element name="rooster" minOccurs="1" maxOccurs="1">
+               <xs:complexType>
+                  <xs:annotation>
+                     <xs:appinfo>
+                        <m:formal-name>Rooster</m:formal-name>
+                        <m:description>Cock-a-doodle-doo.</m:description>
+                     </xs:appinfo>
+                     <xs:documentation>
+                        <b>Rooster</b>: Cock-a-doodle-doo.</xs:documentation>
+                  </xs:annotation>
+               </xs:complexType>
+            </xs:element>
+         </xs:choice>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:simpleType name="StringDatatype">
+      <xs:annotation>
+         <xs:documentation>A non-empty string of Unicode characters with leading and trailing whitespace
+				disallowed. Whitespace is: U+9, U+10, U+32 or [ \n\t]+</xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:string">
+         <xs:annotation>
+            <xs:documentation>The 'string' datatype restricts the XSD type by prohibiting leading 
+					and trailing whitespace, and something (not only whitespace) is required.</xs:documentation>
+         </xs:annotation>
+         <xs:whiteSpace value="preserve"/>
+         <xs:pattern value="\S(.*\S)?">
+            <xs:annotation>
+               <xs:documentation>This pattern ensures that leading and trailing whitespace is
+						disallowed. This helps to even the user experience between implementations
+						related to whitespace.</xs:documentation>
+            </xs:annotation>
+         </xs:pattern>
+      </xs:restriction>
+   </xs:simpleType>
+</xs:schema>

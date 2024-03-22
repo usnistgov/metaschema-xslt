@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../../../../../testing/xspec-assurance.sch"?>
+<x:description xmlns:mx="http://csrc.nist.gov/ns/csd/metaschema-xslt"
+   xmlns="http://www.w3.org/2005/xpath-functions"
+   xmlns:x="http://www.jenitennison.com/xslt/xspec" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+   run-as="external"
+   stylesheet="../../../../nist-metaschema-MAKE-JSON-SCHEMA-as-xml.xsl" xslt-version="3.0"
+   >
+
+   <!-- Purpose: accept metaschema input and demonstrate correct production of XPath JSON outputs for a JSON Schema, at the high level -->
+   
+   <!-- The XSLT under test is a pipeline executing a series of transform() calls
+        including the composition pipeline, hence @run-as='external' on this XSpec -->
+   
+   <!-- The unprefixed namespace is bound to the XPath vocabulary for JSON used by the
+        transformation as a target, hence use of the Q{} notation for XPath here, for convenience and clarity. -->
+   
+   <!-- This XSpec tests the basics of JSON Schema generation except for its final serialization
+        into JSON, representing its target using this vocabulary as does the system internally. -->
+   
+   <x:variable name="models-metaschema" href="../../../../../testing/models_metaschema.xml"/>On 
+   
+   <x:scenario label="Metaschema makes an XPath JSON map object, in XML">
+      <x:context select="$models-metaschema"/>
+      <x:scenario label="At the root">
+         <x:expect label="A JSON Map is produced" select="/">
+            <map>...</map>
+         </x:expect>
+         <x:expect label="with a string property marking the JSON as a schema, version draft-07"
+            select="'http://json-schema.org/draft-07/schema#'"
+            test="$x:result/*/Q{http://www.w3.org/2005/xpath-functions}string[@key='$schema']/string()"/>
+      </x:scenario>
+   </x:scenario>
+   
+   <!-- for the EVERYTHING metaschema models-metaschema.xml the outputs will look something like this:
+      
+   <map xmlns="http://www.w3.org/2005/xpath-functions"
+      xmlns:nm="http://csrc.nist.gov/ns/metaschema">
+      <string key="$schema">http://json-schema.org/draft-07/schema#</string>
+      <string key="$id">http://csrc.nist.gov/metaschema/ns/everything/1.0/everything-schema.json</string>
+      <string key="$comment">NIST Metaschema Everything: JSON Schema</string>
+      <string key="type">object</string>
+      
+      JSON Schema see ../jsonschemagen-mapping-xspec/metamap-test.xspec
+      
+    </map>
+      -->
+   
+</x:description>

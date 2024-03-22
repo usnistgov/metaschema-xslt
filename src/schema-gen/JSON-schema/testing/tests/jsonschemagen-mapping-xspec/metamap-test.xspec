@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../../../../../testing/xspec-assurance.sch"?>
+<?xml-model href="../../../../../util/xspec-fixup.sch"?>
+<x:description xmlns:mx="http://csrc.nist.gov/ns/csd/metaschema-xslt"
+   xmlns="http://example.com/ns/computer"
+   xmlns:x="http://www.jenitennison.com/xslt/xspec" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+   stylesheet="../../../make-json-schema-metamap.xsl" xslt-version="3.0">
+
+   <!--<x:variable name="mx:makes-a-date" as="function(*)"
+      select="function($v as item()) as xs:boolean { $v castable as xs:date }"/>-->
+
+   <x:scenario label="[A] Comments and PIs are dropped">
+      <x:scenario label="[A.1] Comment">
+         <x:variable name="mx:a-comment"><!--comment--></x:variable>
+         <x:context select="$mx:a-comment"/>
+         <x:expect label="is dropped" select="()"/>
+      </x:scenario>
+      <x:scenario label="[A.2] Processing instruction">
+         <x:context><?PI?></x:context>
+         <x:expect label="is dropped" select="()"/>
+      </x:scenario>
+   </x:scenario>
+   
+</x:description>

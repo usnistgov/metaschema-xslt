@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" version="3.0"
+   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+   xmlns:xvrl="http://www.xproc.org/ns/xvrl"
+   xmlns:nm="http://csrc.nist.gov/ns/metaschema"
+   xmlns:xs="http://www.w3.org/2001/XMLSchema"
+   >
+
+<!-- An XProc 3 pipeline providing batch validation of JSON inputs
+            
+     emulates the parallel XSD pipeline XSD-VALIDATE-CHOICES.xpl-->
+   
+   <p:input port="json-samples" sequence="true">
+      <!-- for the XML, invalid documents are marked with a PI <?ERROR ?> to show an expectation of INVALID -->
+      <p:document href="choices-valid/colors01.json"/>
+      <p:document href="choices-valid/colors02.json"/>
+      <p:document href="choices-invalid/colors03.json"/>
+      <p:document href="choices-valid/colors04.json"/>
+      <p:document href="choices-invalid/colors05.json"/>
+      <p:document href="choices-invalid/colors06.json"/>
+      <!--<p:document href="choices-invalid/colors07.json"/>-->
+   </p:input>
+   
+   <p:output port="result" content-types="text"/>
+
+   <!--<p:variable name="base" select="base-uri(/*)"/>-->
+   
+   <p:for-each>
+      <p:try>
+         <p:group name="validation">
+            <p:validate-with-json-schema assert-valid="true">
+               <p:with-input port="schema" href="current/choices_schema.json"/>
+            </p:validate-with-json-schema>
+
+            <p:cast-content-type content-type="application/xml"/>
+
+            <p:add-xml-base/>
+
+         </p:group>
+         <p:catch>
+            <p:add-attribute attribute-name="VALIDATION-STATUS" match="/*" attribute-value="JSON-SCHEMA-INVALID"/>
+         </p:catch>
+      </p:try>
+   </p:for-each>
+   
+   <p:wrap-sequence name="wrapup" wrapper="ALL-REPORTS"/>
+   
+   <p:xslt name="assessment">
+      <p:with-input port="stylesheet" href="json-validation-screener.xsl"/>
+   </p:xslt>
+   
+   <p:xslt name="summary">
+      <p:with-input port="stylesheet" href="json-validation-summarizer.xsl"/>
+   </p:xslt>
+   
+   <p:xslt name="plaintext">
+      <p:with-input port="stylesheet" href="summary-plaintext.xsl"/>
+   </p:xslt>
+
+   <p:cast-content-type content-type="text/plain"/>
+   
+</p:declare-step>
+

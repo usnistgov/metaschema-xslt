@@ -26,8 +26,20 @@ ADDITIONAL_ARGS=$(echo "${*// /\\ }")
 # -iMETASCHEMA=computer_metaschema.xml  -iMETASCHEMA=tiny_metaschema.xml
 CALABASH_ARGS="$ADDITIONAL_ARGS \"${XPROC_FILE}\""
 
+
+
+## show usage if a first argument is '-h', expanding $1 to '' if not set
+if [ "${1:-}" = '-h' ] || [ "${1:-}" = '--help' ];
+
+then
+
+  usage
+
+else
+
 # echo  "${CALABASH_ARGS}"
 invoke_calabash "${CALABASH_ARGS}"
-# invoke_calabash "-iMETASCHEMA=computer_metaschema.xml -iMETASCHEMA=tiny_metaschema.xml "${CALABASH_ARGS}"
 
 echo Current test models refreshed - InspectorXSLT and XSD - check 'current'
+
+fi

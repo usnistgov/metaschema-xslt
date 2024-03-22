@@ -1,11 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns="http://example.com/ns/tinydata"
-           xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
-           xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           elementFormDefault="qualified"
-           targetNamespace="http://example.com/ns/tinydata"
-           version="0.0.5">
+            xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+            xmlns:xs="http://www.w3.org/2001/XMLSchema"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            elementFormDefault="qualified"
+            targetNamespace="http://example.com/ns/tinydata"
+            version="0.0.5">
    <xs:annotation>
       <xs:appinfo>
          <m:schema-name>Computer Model</m:schema-name>
@@ -30,18 +29,18 @@
       </xs:annotation>
       <xs:sequence>
          <xs:element name="title"
-                     type="computer-title-FIELD"
-                     minOccurs="1"
-                     maxOccurs="1"/>
+                      type="computer-title-FIELD"
+                      minOccurs="1"
+                      maxOccurs="1"/>
          <xs:element name="term"
-                     type="computer-term-FIELD"
-                     minOccurs="0"
-                     maxOccurs="unbounded"/>
+                      type="computer-term-FIELD"
+                      minOccurs="0"
+                      maxOccurs="unbounded"/>
          <xs:group ref="blockElementGroup" maxOccurs="unbounded" minOccurs="0"/>
          <xs:element name="part"
-                     type="computer-part-ASSEMBLY"
-                     minOccurs="0"
-                     maxOccurs="unbounded"/>
+                      type="computer-part-ASSEMBLY"
+                      minOccurs="0"
+                      maxOccurs="unbounded"/>
          <xs:element name="notes" minOccurs="0" maxOccurs="1">
             <xs:complexType>
                <xs:sequence>
@@ -134,18 +133,18 @@
       </xs:annotation>
       <xs:sequence>
          <xs:element name="title"
-                     type="computer-title-FIELD"
-                     minOccurs="1"
-                     maxOccurs="1"/>
+                      type="computer-title-FIELD"
+                      minOccurs="1"
+                      maxOccurs="1"/>
          <xs:element name="term"
-                     type="computer-term-FIELD"
-                     minOccurs="0"
-                     maxOccurs="unbounded"/>
+                      type="computer-term-FIELD"
+                      minOccurs="0"
+                      maxOccurs="unbounded"/>
          <xs:group ref="blockElementGroup" maxOccurs="unbounded" minOccurs="0"/>
          <xs:element name="part"
-                     type="computer-part-ASSEMBLY"
-                     minOccurs="0"
-                     maxOccurs="unbounded"/>
+                      type="computer-part-ASSEMBLY"
+                      minOccurs="0"
+                      maxOccurs="unbounded"/>
          <xs:element name="note" minOccurs="0" maxOccurs="1">
             <xs:annotation>
                <xs:appinfo>
@@ -208,9 +207,9 @@
    <xs:complexType name="listType">
       <xs:sequence>
          <xs:element name="li"
-                     type="listItemType"
-                     minOccurs="1"
-                     maxOccurs="unbounded"/>
+                      type="listItemType"
+                      minOccurs="1"
+                      maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="orderedListType">

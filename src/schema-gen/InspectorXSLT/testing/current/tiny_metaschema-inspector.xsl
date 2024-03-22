@@ -1,11 +1,10 @@
-<?xml version="1.0" encoding="us-ascii"?>
 <xsl:transform xmlns="http://www.w3.org/1999/xhtml"
-               xmlns:mx="http://csrc.nist.gov/ns/csd/metaschema-xslt"
-               xmlns:xs="http://www.w3.org/2001/XMLSchema"
-               xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-               version="3.0"
-               xpath-default-namespace="http://example.com/ns/tinydata"
-               exclude-result-prefixes="#all"><!-- Generated 2023-11-22T14:56:44.4507206-05:00 -->
+                xmlns:mx="http://csrc.nist.gov/ns/csd/metaschema-xslt"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                version="3.0"
+                xpath-default-namespace="http://example.com/ns/tinydata"
+                exclude-result-prefixes="#all"><!-- Generated 2024-03-11T14:53:42.440339-04:00 -->
    <xsl:mode on-no-match="fail"/>
    <xsl:mode name="test" on-no-match="shallow-skip"/>
    <!-- .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     . -->
@@ -21,29 +20,29 @@
    <xsl:param name="css" as="xs:string" select="''"/>
    <!-- Entry points - or use initial-template or initial-mode in supporting processors  -->
    <xsl:template mode="#default"
-                 priority="100"
-                 name="xsl:initial-template"
-                 match="root()">
+                  priority="100"
+                  name="xsl:initial-template"
+                  match="root()">
       <xsl:call-template name="inspect"/>
    </xsl:template>
    <xsl:template mode="#default"
-                 priority="101"
-                 match="root()[$format=('mx','mx-report')]">
+                  priority="101"
+                  match="root()[$format=('mx','mx-report')]">
       <xsl:call-template name="mx-report"/>
    </xsl:template>
    <xsl:template mode="#default"
-                 priority="101"
-                 match="root()[$format=('html','webpage')]">
+                  priority="101"
+                  match="root()[$format=('html','webpage')]">
       <xsl:call-template name="html"/>
    </xsl:template>
    <xsl:template mode="#default"
-                 priority="101"
-                 match="root()[$format=('md','markdown')]">
+                  priority="101"
+                  match="root()[$format=('md','markdown')]">
       <xsl:call-template name="markdown"/>
    </xsl:template>
    <xsl:template mode="#default"
-                 priority="101"
-                 match="root()[$format=('plaintext','plain','text')]">
+                  priority="101"
+                  match="root()[$format=('plaintext','plain','text')]">
       <xsl:call-template name="plaintext"/>
    </xsl:template>
    <!-- entering with no mode or 'inspect' mode, or by name 'inspect' returns an annotated copy of input tree   -->
@@ -87,9 +86,9 @@
       <xsl:apply-templates mode="html-to-md" select="$html-report/*">
          <!--single lf passed to override double lf -->
          <xsl:with-param name="lf2"
-                         tunnel="true"
-                         as="xs:string"
-                         select="codepoints-to-string(10)"/>
+                          tunnel="true"
+                          as="xs:string"
+                          select="codepoints-to-string(10)"/>
       </xsl:apply-templates>
    </xsl:template>
    <xsl:template name="md">
@@ -100,8 +99,8 @@
    <xsl:mode name="validate-markup-line" on-no-match="text-only-copy"/>
    <xsl:mode name="validate-markup-multiline" on-no-match="shallow-skip"/>
    <xsl:mode name="constraint-cascade"
-             on-no-match="fail"
-             on-multiple-match="use-last"/>
+              on-no-match="fail"
+              on-multiple-match="use-last"/>
    <xsl:template match="* | @*" priority="1" mode="constraint-cascade"/>
    <xsl:template match="*" mode="validate">
       <xsl:copy>
@@ -134,14 +133,14 @@
    <xsl:template mode="test" match="ul/li | oi/li"/>
    <xsl:template mode="test" match="table/tr | tr/td | tr/th"/>
    <xsl:template mode="test"
-                 match="a/@href | a/@title | img/@alt | img/@src | img/@title | code/@class |       insert/@id-ref | insert/@type (: other legal attributes :)"/>
+                  match="a/@href | a/@title | img/@alt | img/@src | img/@title | code/@class |       insert/@id-ref | insert/@type (: other legal attributes :)"/>
    <xsl:template mode="test"
-                 match="p/br | li/br | h1/br | h2/br | h3/br | h4/br | h5/br | h6/br | pre/br | tr/br | td/br"/>
+                  match="p/br | li/br | h1/br | h2/br | h3/br | h4/br | h5/br | h6/br | pre/br | tr/br | td/br"/>
    <!-- XXX cover all text in mixed content -->
    <xsl:template mode="test"
-                 match="p/text() | li/text() | h1/text() | h2/text() | h3/text() | h4/text() | h5/text() | h6/text() |       pre/text() | blockquote/text() | th/text() | td/text()"/>
+                  match="p/text() | li/text() | h1/text() | h2/text() | h3/text() | h4/text() | h5/text() | h6/text() |       pre/text() | blockquote/text() | th/text() | td/text()"/>
    <xsl:template mode="test"
-                 match="em/text() | i/text() | strong/text() | b/text() | u/text() | q/text() | code/text() | a/text() | sub/text() | sup/text()"/>
+                  match="em/text() | i/text() | strong/text() | b/text() | u/text() | q/text() | code/text() | a/text() | sub/text() | sup/text()"/>
    <xsl:template match="text()" mode="test">
       <!-- report if not recognized -->
       <xsl:call-template name="notice">
@@ -151,7 +150,7 @@
       </xsl:call-template>
    </xsl:template>
    <xsl:variable name="markup-multline-blocks"
-                 select="          'p', 'pre', 'ul', 'ol', 'table',          'h1', 'h2', 'h3', 'h4', 'h5'"/>
+                  select="          'p', 'pre', 'ul', 'ol', 'table',          'h1', 'h2', 'h3', 'h4', 'h5'"/>
    <!-- ... and attributes ...  -->
    <xsl:template match="@*" mode="test">
       <xsl:call-template name="notice">
@@ -161,8 +160,8 @@
       </xsl:call-template>
    </xsl:template>
    <xsl:template xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                 mode="test"
-                 match="@xsi:*"/>
+                  mode="test"
+                  match="@xsi:*"/>
    <xsl:template name="notice">
       <xsl:param name="cf" as="xs:string" select="AV.203"/>
       <!-- default expecting override -->
@@ -181,10 +180,10 @@
             <xsl:apply-templates select="." mode="xpath"/>
          </xsl:variable>
          <mx:report cf="{$cf}"
-                    test="{ $testing }"
-                    class="{$class}"
-                    xpath="{ $xpath }"
-                    level="{ $level }">
+                     test="{ $testing }"
+                     class="{$class}"
+                     xpath="{ $xpath }"
+                     level="{ $level }">
             <xsl:if test="exists($rule-id[matches(., '\S')])">
                <xsl:attribute name="rule-id" select="string-join($rule-id[matches(., '\S')], ' ')"/>
             </xsl:if>
@@ -208,7 +207,7 @@
       <xsl:text expand-text="true">/{ name() }</xsl:text>
    </xsl:template>
    <xsl:template mode="xpath"
-                 match="*[node-name() = (../* except current())/node-name()]">
+                  match="*[node-name() = (../* except current())/node-name()]">
       <xsl:apply-templates select="parent::*" mode="#current"/>
       <xsl:variable name="kin" select="../*[node-name() = current()/node-name()]"/>
       <xsl:text expand-text="true">/{ name() }[{ mx:element-position(.)[count($kin) gt 1] }]</xsl:text>
@@ -271,11 +270,11 @@
    </xsl:template>
    <!-- Nominally invalid examples has errors or critical along with warning and info reports but no errors or critical -->
    <xsl:template match="/mx:validation[descendant::mx:report/@level = ('CRITICAL', 'ERROR')]"
-                 priority="103"
-                 mode="grab-mx">
+                  priority="103"
+                  mode="grab-mx">
       <xsl:variable name="report-count" select="count(.//mx:report)"/>
       <xsl:variable name="error-count"
-                    select="count(.//mx:report[@level = ('CRITICAL', 'ERROR')])"/>
+                     select="count(.//mx:report[@level = ('CRITICAL', 'ERROR')])"/>
       <xsl:call-template name="echoing" expand-text="true">
          <xsl:with-param name="msg">
             <xsl:choose>
@@ -291,8 +290,8 @@
    </xsl:template>
    <!-- Nominally valid examples may have warning or info reports but no errors or critical -->
    <xsl:template match="/mx:validation[not(descendant::mx:report/@level = ('CRITICAL', 'ERROR'))]"
-                 priority="102"
-                 mode="grab-mx">
+                  priority="102"
+                  mode="grab-mx">
       <xsl:if test="not($echo = 'invalid-only')">
          <xsl:call-template name="echoing" expand-text="true">
             <xsl:with-param name="msg">File { replace(@src,'.*/','') } is reported VALID, no issues ...</xsl:with-param>
@@ -304,22 +303,22 @@
       <xsl:copy copy-namespaces="false">
          <xsl:copy-of select="@*"/>
          <xsl:attribute name="elements"
-                        select="count(descendant::* except .//mx:*/descendant-or-self::*)"/>
+                         select="count(descendant::* except .//mx:*/descendant-or-self::*)"/>
          <xsl:attribute name="attributes"
-                        select="count(descendant::*/@* except .//mx:*/descendant-or-self::*/@*)"/>
+                         select="count(descendant::*/@* except .//mx:*/descendant-or-self::*/@*)"/>
          <xsl:attribute name="reports" select="count(.//mx:report)"/>
          <xsl:attribute name="severe-reports"
-                        select="count(.//mx:report[@level = ('CRITICAL', 'ERROR')])"/>
+                         select="count(.//mx:report[@level = ('CRITICAL', 'ERROR')])"/>
          <xsl:apply-templates mode="grab-mx"/>
       </xsl:copy>
    </xsl:template>
    <!-- copy reports but do not announce them -->
    <xsl:template match="mx:report[$echo = ('docs', 'info')][@level = ('ERROR', 'CRITICAL', 'WARNING')]"
-                 mode="grab-mx">
+                  mode="grab-mx">
       <xsl:copy-of select="." copy-namespaces="false"/>
    </xsl:template>
    <xsl:template match="mx:report[$echo = 'warnings'][@level = ('ERROR', 'CRITICAL')]"
-                 mode="grab-mx">
+                  mode="grab-mx">
       <xsl:copy-of select="." copy-namespaces="false"/>
    </xsl:template>
    <xsl:template match="mx:report" mode="grab-mx" expand-text="true">
@@ -437,109 +436,109 @@ details p { margin: 0.2em 0em }
    <xsl:mode name="html-to-md" on-no-match="text-only-copy"/>
    <xsl:variable name="lf" as="xs:string" expand-text="true">{ codepoints-to-string(10) }</xsl:variable>
    <xsl:template mode="html-to-md"
-                 match="html"
-                 xpath-default-namespace="http://www.w3.org/1999/xhtml">
+                  match="html"
+                  xpath-default-namespace="http://www.w3.org/1999/xhtml">
       <xsl:apply-templates mode="#current" select="body"/>
    </xsl:template>
    <xsl:template mode="html-to-md"
-                 match="style"
-                 xpath-default-namespace="http://www.w3.org/1999/xhtml"/>
+                  match="style"
+                  xpath-default-namespace="http://www.w3.org/1999/xhtml"/>
    <xsl:template mode="html-to-md"
-                 match="body"
-                 expand-text="true"
-                 xpath-default-namespace="http://www.w3.org/1999/xhtml">
+                  match="body"
+                  expand-text="true"
+                  xpath-default-namespace="http://www.w3.org/1999/xhtml">
       <xsl:apply-templates mode="#current"/>
       <xsl:text>{ $lf }</xsl:text>
    </xsl:template>
    <xsl:template mode="html-to-md"
-                 match="div | details"
-                 expand-text="true"
-                 xpath-default-namespace="http://www.w3.org/1999/xhtml">
+                  match="div | details"
+                  expand-text="true"
+                  xpath-default-namespace="http://www.w3.org/1999/xhtml">
       <xsl:param name="lf2" tunnel="true" as="xs:string" select="$lf || $lf"/>
       <xsl:text>{ $lf2 }---</xsl:text>
       <xsl:apply-templates mode="#current"/>
    </xsl:template>
    <xsl:template mode="html-to-md"
-                 match="body/*[1]/self::h1"
-                 expand-text="true"
-                 xpath-default-namespace="http://www.w3.org/1999/xhtml">
+                  match="body/*[1]/self::h1"
+                  expand-text="true"
+                  xpath-default-namespace="http://www.w3.org/1999/xhtml">
       <xsl:text># </xsl:text>
       <xsl:apply-templates mode="#current"/>
    </xsl:template>
    <xsl:template mode="html-to-md"
-                 match="h1"
-                 expand-text="true"
-                 xpath-default-namespace="http://www.w3.org/1999/xhtml">
+                  match="h1"
+                  expand-text="true"
+                  xpath-default-namespace="http://www.w3.org/1999/xhtml">
       <xsl:param name="lf2" tunnel="true" as="xs:string" select="$lf || $lf"/>
       <xsl:text>{ $lf2 }# </xsl:text>
       <xsl:apply-templates mode="#current"/>
    </xsl:template>
    <xsl:template mode="html-to-md"
-                 match="h2"
-                 expand-text="true"
-                 xpath-default-namespace="http://www.w3.org/1999/xhtml">
+                  match="h2"
+                  expand-text="true"
+                  xpath-default-namespace="http://www.w3.org/1999/xhtml">
       <xsl:param name="lf2" tunnel="true" as="xs:string" select="$lf || $lf"/>
       <xsl:text>{ $lf2 }## </xsl:text>
       <xsl:apply-templates mode="#current"/>
    </xsl:template>
    <xsl:template mode="html-to-md"
-                 match="h3 | details/summary"
-                 expand-text="true"
-                 xpath-default-namespace="http://www.w3.org/1999/xhtml">
+                  match="h3 | details/summary"
+                  expand-text="true"
+                  xpath-default-namespace="http://www.w3.org/1999/xhtml">
       <xsl:param name="lf2" tunnel="true" as="xs:string" select="$lf || $lf"/>
       <xsl:text>{ $lf2 }### </xsl:text>
       <xsl:apply-templates mode="#current"/>
    </xsl:template>
    <xsl:template mode="html-to-md"
-                 match="p"
-                 expand-text="true"
-                 xpath-default-namespace="http://www.w3.org/1999/xhtml">
+                  match="p"
+                  expand-text="true"
+                  xpath-default-namespace="http://www.w3.org/1999/xhtml">
       <xsl:param name="lf2" tunnel="true" as="xs:string" select="$lf || $lf"/>
       <xsl:text>{ $lf2 }</xsl:text>
       <xsl:apply-templates mode="#current"/>
    </xsl:template>
    <xsl:template mode="html-to-md"
-                 match="ul"
-                 expand-text="true"
-                 xpath-default-namespace="http://www.w3.org/1999/xhtml">
+                  match="ul"
+                  expand-text="true"
+                  xpath-default-namespace="http://www.w3.org/1999/xhtml">
       <xsl:param name="lf2" tunnel="true" as="xs:string" select="$lf || $lf"/>
       <xsl:sequence select="replace($lf2, '&#xA;$', '')"/>
       <xsl:apply-templates mode="#current"/>
    </xsl:template>
    <xsl:template mode="html-to-md"
-                 match="li"
-                 expand-text="true"
-                 xpath-default-namespace="http://www.w3.org/1999/xhtml">
+                  match="li"
+                  expand-text="true"
+                  xpath-default-namespace="http://www.w3.org/1999/xhtml">
       <xsl:text>{ $lf }- </xsl:text>
       <xsl:apply-templates mode="#current"/>
    </xsl:template>
    <xsl:template mode="html-to-md"
-                 match="b"
-                 priority="2"
-                 xpath-default-namespace="http://www.w3.org/1999/xhtml">
+                  match="b"
+                  priority="2"
+                  xpath-default-namespace="http://www.w3.org/1999/xhtml">
       <xsl:text>**</xsl:text>
       <xsl:apply-templates mode="#current"/>
       <xsl:text>**</xsl:text>
    </xsl:template>
    <xsl:template mode="html-to-md"
-                 match="i"
-                 xpath-default-namespace="http://www.w3.org/1999/xhtml">
+                  match="i"
+                  xpath-default-namespace="http://www.w3.org/1999/xhtml">
       <xsl:text>*</xsl:text>
       <xsl:apply-templates mode="#current"/>
       <xsl:text>*</xsl:text>
    </xsl:template>
    <xsl:template mode="html-to-md"
-                 match="code"
-                 priority="2"
-                 xpath-default-namespace="http://www.w3.org/1999/xhtml">
+                  match="code"
+                  priority="2"
+                  xpath-default-namespace="http://www.w3.org/1999/xhtml">
       <xsl:text>`</xsl:text>
       <xsl:apply-templates mode="#current"/>
       <xsl:text>`</xsl:text>
    </xsl:template>
    <xsl:template mode="metaschema-metadata" match="*">
       <mx:metaschema version="0.0.5"
-                     shortname="computer"
-                     namespace="http://example.com/ns/tinydata">Computer Model</mx:metaschema>
+                      shortname="computer"
+                      namespace="http://example.com/ns/tinydata">Computer Model</mx:metaschema>
    </xsl:template>
    <!-- .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     . -->
    <!--    Generated rules - first, any roots    -->
@@ -594,7 +593,7 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::term | preceding-sibling::part | preceding-sibling::notes | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists(preceding-sibling::term | preceding-sibling::part | preceding-sibling::notes | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)"/>
+                          select="exists(preceding-sibling::term | preceding-sibling::part | preceding-sibling::notes | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)"/>
          <xsl:with-param name="msg">Element <mx:gi>title</mx:gi> is unexpected following <mx:gi>term</mx:gi>, <mx:gi>stuff</mx:gi>, <mx:gi>part</mx:gi>, or <mx:gi>notes/note</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-title-field"/>
@@ -608,7 +607,7 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::part | preceding-sibling::notes | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists(preceding-sibling::part | preceding-sibling::notes | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)"/>
+                          select="exists(preceding-sibling::part | preceding-sibling::notes | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)"/>
          <xsl:with-param name="msg">Element <mx:gi>term</mx:gi> is unexpected following <mx:gi>stuff</mx:gi>, <mx:gi>part</mx:gi>, or <mx:gi>notes/note</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-term-field"/>
@@ -636,7 +635,7 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::term | preceding-sibling::part | preceding-sibling::note | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists(preceding-sibling::term | preceding-sibling::part | preceding-sibling::note | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)"/>
+                          select="exists(preceding-sibling::term | preceding-sibling::part | preceding-sibling::note | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)"/>
          <xsl:with-param name="msg">Element <mx:gi>title</mx:gi> is unexpected following <mx:gi>term</mx:gi>, <mx:gi>stuff</mx:gi>, <mx:gi>part</mx:gi>, or <mx:gi>note</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-title-field"/>
@@ -650,7 +649,7 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::part | preceding-sibling::note | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists(preceding-sibling::part | preceding-sibling::note | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)"/>
+                          select="exists(preceding-sibling::part | preceding-sibling::note | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)"/>
          <xsl:with-param name="msg">Element <mx:gi>term</mx:gi> is unexpected following <mx:gi>stuff</mx:gi>, <mx:gi>part</mx:gi>, or <mx:gi>note</mx:gi>.</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="require-for-term-field"/>
@@ -762,12 +761,12 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="cf" as="xs:string">gix.148</xsl:with-param>
          <xsl:with-param name="rule-id" as="xs:string*" select="$rule-id"/>
          <xsl:with-param name="matching"
-                         as="xs:string"
-                         select="($matching[matches(.,'\S')],'*')[1]"/>
+                          as="xs:string"
+                          select="($matching[matches(.,'\S')],'*')[1]"/>
          <xsl:with-param name="class" as="xs:string" expand-text="true">{ $class }</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">not(string(.) castable as xs:string and matches(.,'^\S(.*\S)?$'))</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="not(string(.) castable as xs:string and matches(.,'^\S(.*\S)?$'))"/>
+                          select="not(string(.) castable as xs:string and matches(.,'^\S(.*\S)?$'))"/>
          <xsl:with-param name="msg" expand-text="true">Value <mx:code>{ string(.) }</mx:code> of { if (self::element()) then 'element' else 'attribute' } <mx:gi>{ self::attribute()/'@' }{ name(.) }</mx:gi> does not conform to <mx:code>string</mx:code> datatype.</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
@@ -779,111 +778,111 @@ details p { margin: 0.2em 0em }
          <xsl:with-param name="cf" as="xs:string">gix.148</xsl:with-param>
          <xsl:with-param name="rule-id" as="xs:string*" select="$rule-id"/>
          <xsl:with-param name="matching"
-                         as="xs:string"
-                         select="($matching[matches(.,'\S')],'*')[1]"/>
+                          as="xs:string"
+                          select="($matching[matches(.,'\S')],'*')[1]"/>
          <xsl:with-param name="class" as="xs:string" expand-text="true">{ $class }</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">not(string(.) castable as xs:string and matches(.,'^(\p{L}|_)(\p{L}|\p{N}|[.\-_])*$') and matches(.,'^\S(.*\S)?$'))</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="not(string(.) castable as xs:string and matches(.,'^(\p{L}|_)(\p{L}|\p{N}|[.\-_])*$') and matches(.,'^\S(.*\S)?$'))"/>
+                          select="not(string(.) castable as xs:string and matches(.,'^(\p{L}|_)(\p{L}|\p{N}|[.\-_])*$') and matches(.,'^\S(.*\S)?$'))"/>
          <xsl:with-param name="msg" expand-text="true">Value <mx:code>{ string(.) }</mx:code> of { if (self::element()) then 'element' else 'attribute' } <mx:gi>{ self::attribute()/'@' }{ name(.) }</mx:gi> does not conform to <mx:code>token</mx:code> datatype.</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
    <xsl:template mode="test"
-                 match="title/a|title/insert|title/br|title/code|title/em|title/i|title/b|title/strong|title/sub|title/sup|title/q|title/img"/>
+                  match="title/a|title/insert|title/br|title/code|title/em|title/i|title/b|title/strong|title/sub|title/sup|title/q|title/img"/>
    <xsl:template mode="test"
-                 match="TINY/h1|TINY/h2|TINY/h3|TINY/h4|TINY/h5|TINY/h6|TINY/table|TINY/img|TINY/pre|TINY/hr|TINY/blockquote|TINY/ul|TINY/ol|TINY/p">
+                  match="TINY/h1|TINY/h2|TINY/h3|TINY/h4|TINY/h5|TINY/h6|TINY/table|TINY/img|TINY/pre|TINY/hr|TINY/blockquote|TINY/ul|TINY/ol|TINY/p">
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.390</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::part | preceding-sibling::notes)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists(preceding-sibling::part | preceding-sibling::notes)"/>
+                          select="exists(preceding-sibling::part | preceding-sibling::notes)"/>
          <xsl:with-param name="msg">Element <mx:gi>stuff</mx:gi> is unexpected following <mx:gi>part</mx:gi> or <mx:gi>notes/note</mx:gi>.</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
    <xsl:template mode="test"
-                 match="part/h1|part/h2|part/h3|part/h4|part/h5|part/h6|part/table|part/img|part/pre|part/hr|part/blockquote|part/ul|part/ol|part/p">
+                  match="part/h1|part/h2|part/h3|part/h4|part/h5|part/h6|part/table|part/img|part/pre|part/hr|part/blockquote|part/ul|part/ol|part/p">
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.390</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::part | preceding-sibling::note)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists(preceding-sibling::part | preceding-sibling::note)"/>
+                          select="exists(preceding-sibling::part | preceding-sibling::note)"/>
          <xsl:with-param name="msg">Element <mx:gi>stuff</mx:gi> is unexpected following <mx:gi>part</mx:gi> or <mx:gi>note</mx:gi>.</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
    <xsl:template mode="test"
-                 match="TINY/notes/note/h1|TINY/notes/note/h2|TINY/notes/note/h3|TINY/notes/note/h4|TINY/notes/note/h5|TINY/notes/note/h6|TINY/notes/note/table|TINY/notes/note/img|TINY/notes/note/pre|TINY/notes/note/hr|TINY/notes/note/blockquote|TINY/notes/note/ul|TINY/notes/note/ol|TINY/notes/note/p"/>
+                  match="TINY/notes/note/h1|TINY/notes/note/h2|TINY/notes/note/h3|TINY/notes/note/h4|TINY/notes/note/h5|TINY/notes/note/h6|TINY/notes/note/table|TINY/notes/note/img|TINY/notes/note/pre|TINY/notes/note/hr|TINY/notes/note/blockquote|TINY/notes/note/ul|TINY/notes/note/ol|TINY/notes/note/p"/>
    <xsl:template mode="test"
-                 match="part/note/h1|part/note/h2|part/note/h3|part/note/h4|part/note/h5|part/note/h6|part/note/table|part/note/img|part/note/pre|part/note/hr|part/note/blockquote|part/note/ul|part/note/ol|part/note/p"/>
+                  match="part/note/h1|part/note/h2|part/note/h3|part/note/h4|part/note/h5|part/note/h6|part/note/table|part/note/img|part/note/pre|part/note/hr|part/note/blockquote|part/note/ul|part/note/ol|part/note/p"/>
    <xsl:template mode="test"
-                 match="TINY/title/a|TINY/title/insert|TINY/title/br|TINY/title/code|TINY/title/em|TINY/title/i|TINY/title/b|TINY/title/strong|TINY/title/sub|TINY/title/sup|TINY/title/q|TINY/title/img">
+                  match="TINY/title/a|TINY/title/insert|TINY/title/br|TINY/title/code|TINY/title/em|TINY/title/i|TINY/title/b|TINY/title/strong|TINY/title/sub|TINY/title/sup|TINY/title/q|TINY/title/img">
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.390</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::term | preceding-sibling::part | preceding-sibling::notes | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists(preceding-sibling::term | preceding-sibling::part | preceding-sibling::notes | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)"/>
+                          select="exists(preceding-sibling::term | preceding-sibling::part | preceding-sibling::notes | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)"/>
          <xsl:with-param name="msg">Element <mx:gi>title</mx:gi> is unexpected following <mx:gi>term</mx:gi>, <mx:gi>stuff</mx:gi>, <mx:gi>part</mx:gi>, or <mx:gi>notes/note</mx:gi>.</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
    <xsl:template mode="test"
-                 match="part/title/a|part/title/insert|part/title/br|part/title/code|part/title/em|part/title/i|part/title/b|part/title/strong|part/title/sub|part/title/sup|part/title/q|part/title/img">
+                  match="part/title/a|part/title/insert|part/title/br|part/title/code|part/title/em|part/title/i|part/title/b|part/title/strong|part/title/sub|part/title/sup|part/title/q|part/title/img">
       <xsl:call-template name="notice">
          <xsl:with-param name="cf">gix.390</xsl:with-param>
          <xsl:with-param name="class">EOOO element-out-of-order</xsl:with-param>
          <xsl:with-param name="testing" as="xs:string">exists(preceding-sibling::term | preceding-sibling::part | preceding-sibling::note | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)</xsl:with-param>
          <xsl:with-param name="condition"
-                         select="exists(preceding-sibling::term | preceding-sibling::part | preceding-sibling::note | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)"/>
+                          select="exists(preceding-sibling::term | preceding-sibling::part | preceding-sibling::note | preceding-sibling::h1 | preceding-sibling::h2 | preceding-sibling::h3 | preceding-sibling::h4 | preceding-sibling::h5 | preceding-sibling::h6 | preceding-sibling::table | preceding-sibling::img | preceding-sibling::pre | preceding-sibling::hr | preceding-sibling::blockquote | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::p)"/>
          <xsl:with-param name="msg">Element <mx:gi>title</mx:gi> is unexpected following <mx:gi>term</mx:gi>, <mx:gi>stuff</mx:gi>, <mx:gi>part</mx:gi>, or <mx:gi>note</mx:gi>.</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
    <xsl:template mode="test"
-                 match="h1/a|h2/a|h3/a|h4/a|h5/a|h6/a|table/a|pre/a|blockquote/a|ul/a|ol/a|p/a"/>
+                  match="h1/a|h2/a|h3/a|h4/a|h5/a|h6/a|table/a|pre/a|blockquote/a|ul/a|ol/a|p/a"/>
    <xsl:template mode="test"
-                 match="a/a|insert/a|code/a|em/a|i/a|b/a|strong/a|sub/a|sup/a|q/a"/>
+                  match="a/a|insert/a|code/a|em/a|i/a|b/a|strong/a|sub/a|sup/a|q/a"/>
    <xsl:template mode="test"
-                 match="h1/insert|h2/insert|h3/insert|h4/insert|h5/insert|h6/insert|table/insert|pre/insert|blockquote/insert|ul/insert|ol/insert|p/insert"/>
+                  match="h1/insert|h2/insert|h3/insert|h4/insert|h5/insert|h6/insert|table/insert|pre/insert|blockquote/insert|ul/insert|ol/insert|p/insert"/>
    <xsl:template mode="test"
-                 match="a/insert|insert/insert|code/insert|em/insert|i/insert|b/insert|strong/insert|sub/insert|sup/insert|q/insert"/>
+                  match="a/insert|insert/insert|code/insert|em/insert|i/insert|b/insert|strong/insert|sub/insert|sup/insert|q/insert"/>
    <xsl:template mode="test"
-                 match="h1/br|h2/br|h3/br|h4/br|h5/br|h6/br|table/br|pre/br|blockquote/br|ul/br|ol/br|p/br"/>
+                  match="h1/br|h2/br|h3/br|h4/br|h5/br|h6/br|table/br|pre/br|blockquote/br|ul/br|ol/br|p/br"/>
    <xsl:template mode="test"
-                 match="a/br|insert/br|code/br|em/br|i/br|b/br|strong/br|sub/br|sup/br|q/br"/>
+                  match="a/br|insert/br|code/br|em/br|i/br|b/br|strong/br|sub/br|sup/br|q/br"/>
    <xsl:template mode="test"
-                 match="h1/code|h2/code|h3/code|h4/code|h5/code|h6/code|table/code|pre/code|blockquote/code|ul/code|ol/code|p/code"/>
+                  match="h1/code|h2/code|h3/code|h4/code|h5/code|h6/code|table/code|pre/code|blockquote/code|ul/code|ol/code|p/code"/>
    <xsl:template mode="test"
-                 match="a/code|insert/code|code/code|em/code|i/code|b/code|strong/code|sub/code|sup/code|q/code"/>
+                  match="a/code|insert/code|code/code|em/code|i/code|b/code|strong/code|sub/code|sup/code|q/code"/>
    <xsl:template mode="test"
-                 match="h1/em|h2/em|h3/em|h4/em|h5/em|h6/em|table/em|pre/em|blockquote/em|ul/em|ol/em|p/em"/>
+                  match="h1/em|h2/em|h3/em|h4/em|h5/em|h6/em|table/em|pre/em|blockquote/em|ul/em|ol/em|p/em"/>
    <xsl:template mode="test"
-                 match="a/em|insert/em|code/em|em/em|i/em|b/em|strong/em|sub/em|sup/em|q/em"/>
+                  match="a/em|insert/em|code/em|em/em|i/em|b/em|strong/em|sub/em|sup/em|q/em"/>
    <xsl:template mode="test"
-                 match="h1/i|h2/i|h3/i|h4/i|h5/i|h6/i|table/i|pre/i|blockquote/i|ul/i|ol/i|p/i"/>
+                  match="h1/i|h2/i|h3/i|h4/i|h5/i|h6/i|table/i|pre/i|blockquote/i|ul/i|ol/i|p/i"/>
    <xsl:template mode="test"
-                 match="a/i|insert/i|code/i|em/i|i/i|b/i|strong/i|sub/i|sup/i|q/i"/>
+                  match="a/i|insert/i|code/i|em/i|i/i|b/i|strong/i|sub/i|sup/i|q/i"/>
    <xsl:template mode="test"
-                 match="h1/b|h2/b|h3/b|h4/b|h5/b|h6/b|table/b|pre/b|blockquote/b|ul/b|ol/b|p/b"/>
+                  match="h1/b|h2/b|h3/b|h4/b|h5/b|h6/b|table/b|pre/b|blockquote/b|ul/b|ol/b|p/b"/>
    <xsl:template mode="test"
-                 match="a/b|insert/b|code/b|em/b|i/b|b/b|strong/b|sub/b|sup/b|q/b"/>
+                  match="a/b|insert/b|code/b|em/b|i/b|b/b|strong/b|sub/b|sup/b|q/b"/>
    <xsl:template mode="test"
-                 match="h1/strong|h2/strong|h3/strong|h4/strong|h5/strong|h6/strong|table/strong|pre/strong|blockquote/strong|ul/strong|ol/strong|p/strong"/>
+                  match="h1/strong|h2/strong|h3/strong|h4/strong|h5/strong|h6/strong|table/strong|pre/strong|blockquote/strong|ul/strong|ol/strong|p/strong"/>
    <xsl:template mode="test"
-                 match="a/strong|insert/strong|code/strong|em/strong|i/strong|b/strong|strong/strong|sub/strong|sup/strong|q/strong"/>
+                  match="a/strong|insert/strong|code/strong|em/strong|i/strong|b/strong|strong/strong|sub/strong|sup/strong|q/strong"/>
    <xsl:template mode="test"
-                 match="h1/sub|h2/sub|h3/sub|h4/sub|h5/sub|h6/sub|table/sub|pre/sub|blockquote/sub|ul/sub|ol/sub|p/sub"/>
+                  match="h1/sub|h2/sub|h3/sub|h4/sub|h5/sub|h6/sub|table/sub|pre/sub|blockquote/sub|ul/sub|ol/sub|p/sub"/>
    <xsl:template mode="test"
-                 match="a/sub|insert/sub|code/sub|em/sub|i/sub|b/sub|strong/sub|sub/sub|sup/sub|q/sub"/>
+                  match="a/sub|insert/sub|code/sub|em/sub|i/sub|b/sub|strong/sub|sub/sub|sup/sub|q/sub"/>
    <xsl:template mode="test"
-                 match="h1/sup|h2/sup|h3/sup|h4/sup|h5/sup|h6/sup|table/sup|pre/sup|blockquote/sup|ul/sup|ol/sup|p/sup"/>
+                  match="h1/sup|h2/sup|h3/sup|h4/sup|h5/sup|h6/sup|table/sup|pre/sup|blockquote/sup|ul/sup|ol/sup|p/sup"/>
    <xsl:template mode="test"
-                 match="a/sup|insert/sup|code/sup|em/sup|i/sup|b/sup|strong/sup|sub/sup|sup/sup|q/sup"/>
+                  match="a/sup|insert/sup|code/sup|em/sup|i/sup|b/sup|strong/sup|sub/sup|sup/sup|q/sup"/>
    <xsl:template mode="test"
-                 match="h1/q|h2/q|h3/q|h4/q|h5/q|h6/q|table/q|pre/q|blockquote/q|ul/q|ol/q|p/q"/>
+                  match="h1/q|h2/q|h3/q|h4/q|h5/q|h6/q|table/q|pre/q|blockquote/q|ul/q|ol/q|p/q"/>
    <xsl:template mode="test"
-                 match="a/q|insert/q|code/q|em/q|i/q|b/q|strong/q|sub/q|sup/q|q/q"/>
+                  match="a/q|insert/q|code/q|em/q|i/q|b/q|strong/q|sub/q|sup/q|q/q"/>
    <xsl:template mode="test"
-                 match="h1/img|h2/img|h3/img|h4/img|h5/img|h6/img|table/img|pre/img|blockquote/img|ul/img|ol/img|p/img"/>
+                  match="h1/img|h2/img|h3/img|h4/img|h5/img|h6/img|table/img|pre/img|blockquote/img|ul/img|ol/img|p/img"/>
    <xsl:template mode="test"
-                 match="a/img|insert/img|code/img|em/img|i/img|b/img|strong/img|sub/img|sup/img|q/img"/>
+                  match="a/img|insert/img|code/img|em/img|i/img|b/img|strong/img|sub/img|sup/img|q/img"/>
 </xsl:transform>

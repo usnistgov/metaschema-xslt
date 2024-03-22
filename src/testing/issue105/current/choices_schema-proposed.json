@@ -1,0 +1,194 @@
+{
+   "$schema": "http://json-schema.org/draft-07/schema#",
+   "$id": "http://example.com/ns/choices/0.0.1/choices-schema.json",
+   "$comment": "Choices Model: JSON Schema",
+   "type": "object",
+   "definitions": {
+      "json-schema-directive": {
+         "title": "Schema Directive",
+         "description": "A JSON Schema directive to bind a specific schema to its document instance.",
+         "$id": "#/definitions/json-schema-directive",
+         "$ref": "#/definitions/URIReferenceDatatype"
+      },
+      "choices-choices:CHOICES": {
+         "title": "Choices",
+         "description": "Colors and patterns.",
+         "$id": "#/definitions/choices-choices:CHOICES",
+         "type": "object",
+         "properties": {
+            "id": {
+               "title": "Vendor Identifier",
+               "description": "An identifier for classifying a unique computer parts vendor.",
+               "$ref": "#/definitions/StringDatatype"
+            },
+            "family": {
+               "title": "Color family",
+               "description": "A name for your selection.",
+               "$ref": "#/definitions/StringDatatype"
+            },
+            "blue": {"$ref": "#/definitions/choices-choices:blue"},
+            "red": {"$ref": "#/definitions/choices-choices:red"},
+            "groups": {
+               "anyOf": [
+                  {"$ref": "#/definitions/choices-choices:group"},
+                  {
+                     "type": "array",
+                     "minItems": 1,
+                     "items": {"$ref": "#/definitions/choices-choices:group"}
+                  }
+               ]
+            }
+         },
+         "required": ["family"],
+         "additionalProperties": false
+      },
+      "choices-choices:group": {
+         "title": "Group",
+         "description": "A grouping.",
+         "$id": "#/definitions/choices-choices:group",
+         "type": "object",
+         "oneOf": [
+            {
+               "properties": {
+                  "family": {
+                     "title": "Color family",
+                     "description": "A name or identifying code for your selection.",
+                     "$ref": "#/definitions/StringDatatype"
+                  },
+                  "blue": {"$ref": "#/definitions/choices-choices:blue"},
+                  "subgroups": {
+                     "anyOf": [
+                        {"$ref": "#/definitions/choices-choices:group"},
+                        {
+                           "type": "array",
+                           "minItems": 1,
+                           "items": {"$ref": "#/definitions/choices-choices:group"}
+                        }
+                     ]
+                  }
+               },
+               "required": ["family"],
+               "additionalProperties": false
+            },
+            {
+               "properties": {
+                  "family": {
+                     "title": "Color family",
+                     "description": "A name or identifying code for your selection.",
+                     "$ref": "#/definitions/StringDatatype"
+                  },
+                  "red": {"$ref": "#/definitions/choices-choices:red"},
+                  "subgroups": {
+                     "anyOf": [
+                        {"$ref": "#/definitions/choices-choices:group"},
+                        {
+                           "type": "array",
+                           "minItems": 1,
+                           "items": {"$ref": "#/definitions/choices-choices:group"}
+                        }
+                     ]
+                  }
+               },
+               "required": ["family"],
+               "additionalProperties": false
+            }
+         ]
+      },
+      "choices-choices:blue": {
+         "title": "Blue",
+         "description": "A blue color.",
+         "$id": "#/definitions/choices-choices:blue",
+         "type": "object",
+         "oneOf": [
+            {
+               "properties": {
+                  "aquamarine": {
+                     "title": "Aquamarine",
+                     "description": "Peace and tranquility.",
+                     "type": "object",
+                     "additionalProperties": false
+                  }
+               },
+               "additionalProperties": false
+            },
+            {
+               "properties": {
+                  "aquamarine": {
+                     "title": "Midnight",
+                     "description": "Calmly resting.",
+                     "type": "object",
+                     "additionalProperties": false
+                  }
+               },
+               "additionalProperties": false
+            },
+            {
+               "properties": {
+                  "aquamarine": {
+                     "title": "Lapis",
+                     "description": "In repose.",
+                     "type": "object",
+                     "additionalProperties": false
+                  }
+               },
+               "additionalProperties": false
+            }
+         ]
+      },
+      "choices-choices:red": {
+         "title": "Red",
+         "description": "A red color.",
+         "$id": "#/definitions/choices-choices:red",
+         "type": "object",
+         "oneOf": [
+            {
+               "properties": {
+                  "firetruck": {
+                     "title": "Firetruck",
+                     "description": "Heading for an emergeny.",
+                     "type": "object",
+                     "additionalProperties": false
+                  }
+               }
+            },
+            {
+               "properties": {
+                  "flame": {
+                     "title": "Flame",
+                     "description": "Hot as heck.",
+                     "type": "object",
+                     "additionalProperties": false
+                  }
+               }
+            },
+            {
+               "properties": {
+                  "rooster": {
+                     "title": "Rooster",
+                     "description": "Cock-a-doodle-doo.",
+                     "type": "object",
+                     "additionalProperties": false
+                  }
+               }
+            }
+         ],
+         "additionalProperties": false
+      },
+      "StringDatatype": {
+         "description": "A non-empty string with leading and trailing whitespace disallowed. Whitespace is: U+9, U+10, U+32 or [ \n\t]+",
+         "type": "string",
+         "pattern": "^\\S(.*\\S)?$"
+      },
+      "URIReferenceDatatype": {
+         "description": "A URI Reference, either a URI or a relative-reference, formatted according to section 4.1 of RFC3986.",
+         "type": "string",
+         "format": "uri-reference"
+      }
+   },
+   "properties": {
+      "$schema": {"$ref": "#/definitions/json-schema-directive"},
+      "CHOICES": {"$ref": "#/definitions/choices-choices:CHOICES"}
+   },
+   "required": ["CHOICES"],
+   "additionalProperties": false
+}
