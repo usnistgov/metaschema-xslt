@@ -608,10 +608,10 @@
     <!--Not supporting float or double--> 
 
     <xsl:template priority="2.1" match="*[@as-type = $datatype-map/@as-type]" mode="object-type">
-        <xsl:variable name="assigned-type" select="$datatype-map[(@as-type|@prefer)=current()/@as-type]/string(.)"/>
+        <xsl:variable name="assigned-type" select="$datatype-map[@as-type=current()/@as-type]/string(.)"/>
         <string key="$ref">#/definitions/{$assigned-type}</string>
     </xsl:template>
-    
+
     <xsl:mode name="acquire-types" on-no-match="shallow-copy"/>
     
     <xsl:template mode="acquire-types" xpath-default-namespace="http://www.w3.org/2005/xpath-functions" match="string[@key='description']"/>
