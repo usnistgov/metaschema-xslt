@@ -115,6 +115,14 @@
          </p>
       </xsl:where-populated>
    </xsl:template>
+
+   <xsl:template match="@deprecated" mode="produce">
+      <p>
+         <span class="usa-tag">deprecated</span>
+         <xsl:text> as of </xsl:text>
+         <xsl:value-of select="."/>
+     </p>
+   </xsl:template>
    
    <xsl:template match="formal-name" mode="produce">
       <xsl:where-populated>
