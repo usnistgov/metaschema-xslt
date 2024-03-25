@@ -259,6 +259,10 @@ span.OM-datatype { font-family: sans-serif;
   
    }
 
+.OM-name-deprecated {
+    text-decoration: line-through;
+  }
+
 .OM-ref {
     @extend .text-primary;
     font-style: normal;
