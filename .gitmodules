@@ -1,7 +1,6 @@
 [submodule "support/xspec"]
 	path = support/xspec
-	url = https://github.com/AirQuick/xspec.git
-	branch = test_saxon-12-3
+	url = https://github.com/xspec/xspec.git
 [submodule "support/metaschema"]
 	path = support/metaschema
 	url = https://github.com/usnistgov/metaschema.git
