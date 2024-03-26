@@ -1,6 +1,7 @@
 [submodule "support/xspec"]
 	path = support/xspec
 	url = https://github.com/xspec/xspec.git
+	branch = master
 [submodule "support/metaschema"]
 	path = support/metaschema
 	url = https://github.com/usnistgov/metaschema.git
