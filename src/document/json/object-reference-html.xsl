@@ -65,7 +65,7 @@
       <div class="model-entry definition { tokenize($me/@_metaschema-json-id,'/')[2] }">
          <xsl:variable name="header-class" expand-text="true">{ if (exists(parent::map)) then
             'definition' else 'instance' }-header</xsl:variable>
-         <div class="{ $header-class }">
+         <div class="{ $header-class }{ $me/@deprecated/' deprecated-header' }">
             <!-- 
                Generate the proper class attribute to match a given HTML header from $header-tag (h1, h2,...h6) 
                to define the proper corresponding style (toc1, toc2,... toc6) as bound by toc{ $level } in Hugo.
@@ -102,6 +102,7 @@
 
          <xsl:where-populated>
             <div class="body">
+               <xsl:apply-templates select="$me/@deprecated" mode="produce" />
                <xsl:apply-templates select="$me/description" mode="produce"/>
                <xsl:call-template name="remarks-group">
                   <xsl:with-param name="these-remarks" select="$me/remarks"/>
