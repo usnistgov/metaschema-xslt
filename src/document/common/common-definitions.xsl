@@ -131,9 +131,8 @@
         <xsl:variable name="definition" as="element()">
             <xsl:apply-templates select="." mode="find-definition"/>
         </xsl:variable>
-        <xsl:variable name="is-deprecated" select="exists($definition/@deprecated)"/>
         <div class="model-entry definition { name() }">
-            <div class="{ if ($is-inline) then 'instance-header' else 'definition-header' }{ if ($is-deprecated) then ' deprecated-header' else '' }">
+            <div class="{ if ($is-inline) then 'instance-header' else 'definition-header' }{ $definition/@deprecated/' deprecated-header' }">
                 <xsl:element namespace="http://www.w3.org/1999/xhtml" name="{ $header-tag }"
                     expand-text="true">
                     <xsl:call-template name="mark-id"/>
