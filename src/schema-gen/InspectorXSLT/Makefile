@@ -10,8 +10,8 @@ include ../../testing/make_common.mk
 
 module_path:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 output_folder:=$(module_path)/test_output
-xspec_script=$(realpath $(module_path)/../../../support/xspec-dev/mvn-saxon-xspec-batch-quiet.sh)
-xspec_ci_script=$(realpath $(module_path)/../../../support/xspec-dev/mvn-saxon-xspec-batch.sh)
+xspec_script=$(realpath $(module_path)/../../../support/xslt3-functions/xspec-dev/mvn-saxon-xspec-batch-quiet.sh)
+xspec_ci_script=$(realpath $(module_path)/../../../support/xslt3-functions/xspec-dev/mvn-saxon-xspec-batch.sh)
 smoketest_script=$(realpath $(module_path)/testing/smoketest-computer-inspector.sh)
 testing-refresh_script=$(realpath $(module_path)/testing/refresh-test-inspectors.sh)
 folder=.

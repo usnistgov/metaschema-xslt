@@ -68,6 +68,8 @@
         <type as-type="integer">IntegerDatatype</type>
         <type as-type="ip-v4-address">IPV4AddressDatatype</type>
         <type as-type="ip-v6-address">IPV6AddressDatatype</type>
+        <type as-type="markup-line">MarkupLineDatatype</type>
+        <type as-type="markup-multiline">MarkupMultilineDatatype</type>
         <type as-type="non-negative-integer">NonNegativeIntegerDatatype</type>
         <type as-type="positive-integer">PositiveIntegerDatatype</type>
         <type as-type="string">StringDatatype</type>

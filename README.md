@@ -42,7 +42,9 @@ Additionally, we care about, but do not prioritize:
 
 Formerly housed in the [Metaschema repository](https://github.com/usnistgov/metaschema), this code base traces the history of development of the Metaschema concept in the context of the OSCAL project. It was originally conceived as a demonstration and proof of concept, providing a bridge enabling JSON- and XML-based development in parallel over common problem sets and common data. Success in this effort led to a determination that multiple implementations of a platform-independent specification were needed, at which point this implementation was carved out into its own repository.
 
-### Project sunset
+### Maturity and project sunset
+
+Software in this repository remains 'experimental' in status until it can be demonstrated with public conformance testing, which in turn depends on the maturity of the Metaschema initiative.
 
 The NIST team has no long-term plan to maintain this project outside the context of the initiatives it supports, [OSCAL](https://pages.nist.gov/OSCAL) and [Metaschema](https://pages.nist.gov/metaschema), while we reserve the right to change and adapt to community needs in alignment with NIST's mission. A project goal is to enable the stabilization and socialization of the Metaschema technology, as evidenced by the use and support of *other* Metaschema implementations.
 

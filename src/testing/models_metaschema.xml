@@ -45,11 +45,11 @@
         <description>assembly everything.</description>
         <root-name>EVERYTHING</root-name>
         <flag ref="id"/>
+        <define-flag name="deprecated-flag" deprecated="1.0">
+          <formal-name>Deprecated</formal-name>
+          <description>a deprecated flag.</description>
+        </define-flag>
         <model>
-            <define-flag name="deprecated-flag" deprecated="1.0">
-                <formal-name>Deprecated</formal-name>
-                <description>a deprecated flag.</description>
-            </define-flag>
             <field ref="field-1only"/>
             <field ref="overloaded">
                 <use-name>overloaded1</use-name>

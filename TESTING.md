@@ -40,7 +40,6 @@ Currently we are emulating and re-engineering some specific XSpec capabilities i
 
 These efforts are focused on producing and refining XSpec runtimes for various use cases and scenarios with specialized requirements faced by this project, such as arbitrary batching and iXML support. Tools we develop here are released under the same terms as Metaschema-XSLT (as open-source software).
 
-
 ## Test-driven development
 
 Almost all testing in this repository falls into the category of either XSLT transformations, or runtimes that embed transformations.

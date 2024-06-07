@@ -1,11 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns="http://example.com/ns/computer"
-           xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
-           xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           elementFormDefault="qualified"
-           targetNamespace="http://example.com/ns/computer"
-           version="0.0.5">
+            xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+            xmlns:xs="http://www.w3.org/2001/XMLSchema"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            elementFormDefault="qualified"
+            targetNamespace="http://example.com/ns/computer"
+            version="0.0.5">
    <xs:annotation>
       <xs:appinfo>
          <m:schema-name>Computer Model</m:schema-name>
@@ -64,7 +63,7 @@
             </xs:simpleType>
          </xs:element>
       </xs:sequence>
-      <xs:attribute name="id" use="required" type="StringDatatype">
+      <xs:attribute name="id" type="StringDatatype">
          <xs:annotation>
             <xs:appinfo>
                <m:formal-name>Vendor Identifier</m:formal-name>
@@ -72,6 +71,16 @@
             </xs:appinfo>
             <xs:documentation>
                <b>Vendor Identifier</b>: An identifier for classifying a unique computer parts vendor.</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="ref" type="StringDatatype">
+         <xs:annotation>
+            <xs:appinfo>
+               <m:formal-name>Vendor Reference</m:formal-name>
+               <m:description>Instead of an identifier, a reference to another vendor by its @id.</m:description>
+            </xs:appinfo>
+            <xs:documentation>
+               <b>Vendor Reference</b>: Instead of an identifier, a reference to another vendor by its @id.</xs:documentation>
          </xs:annotation>
       </xs:attribute>
    </xs:complexType>
@@ -122,9 +131,9 @@
                </xs:annotation>
                <xs:sequence>
                   <xs:element name="vendor"
-                              type="computer-vendor-ASSEMBLY"
-                              minOccurs="0"
-                              maxOccurs="1"/>
+                               type="computer-vendor-ASSEMBLY"
+                               minOccurs="0"
+                               maxOccurs="1"/>
                   <xs:element name="type" minOccurs="1" maxOccurs="1">
                      <xs:simpleType>
                         <xs:annotation>
@@ -150,17 +159,17 @@
                         </xs:annotation>
                         <xs:sequence>
                            <xs:element name="vendor"
-                                       type="computer-vendor-ASSEMBLY"
-                                       minOccurs="0"
-                                       maxOccurs="1"/>
+                                        type="computer-vendor-ASSEMBLY"
+                                        minOccurs="0"
+                                        maxOccurs="1"/>
                            <xs:element name="product-name"
-                                       type="computer-product-name-FIELD"
-                                       minOccurs="1"
-                                       maxOccurs="1"/>
+                                        type="computer-product-name-FIELD"
+                                        minOccurs="1"
+                                        maxOccurs="1"/>
                            <xs:element name="cost"
-                                       type="computer-cost-FIELD"
-                                       minOccurs="0"
-                                       maxOccurs="1"/>
+                                        type="computer-cost-FIELD"
+                                        minOccurs="0"
+                                        maxOccurs="1"/>
                            <xs:element name="architecture" minOccurs="1" maxOccurs="1">
                               <xs:simpleType>
                                  <xs:annotation>
@@ -188,9 +197,9 @@
                               </xs:simpleType>
                            </xs:element>
                            <xs:element name="prop"
-                                       type="computer-property-ASSEMBLY"
-                                       minOccurs="0"
-                                       maxOccurs="1"/>
+                                        type="computer-property-ASSEMBLY"
+                                        minOccurs="0"
+                                        maxOccurs="1"/>
                            <xs:group ref="blockElementGroup" maxOccurs="unbounded" minOccurs="0"/>
                         </xs:sequence>
                      </xs:complexType>
@@ -207,17 +216,17 @@
                         </xs:annotation>
                         <xs:sequence>
                            <xs:element name="vendor"
-                                       type="computer-vendor-ASSEMBLY"
-                                       minOccurs="0"
-                                       maxOccurs="1"/>
+                                        type="computer-vendor-ASSEMBLY"
+                                        minOccurs="0"
+                                        maxOccurs="1"/>
                            <xs:element name="product-name"
-                                       type="computer-product-name-FIELD"
-                                       minOccurs="1"
-                                       maxOccurs="1"/>
+                                        type="computer-product-name-FIELD"
+                                        minOccurs="1"
+                                        maxOccurs="1"/>
                            <xs:element name="cost"
-                                       type="computer-cost-FIELD"
-                                       minOccurs="0"
-                                       maxOccurs="1"/>
+                                        type="computer-cost-FIELD"
+                                        minOccurs="0"
+                                        maxOccurs="1"/>
                            <xs:element name="type" minOccurs="1" maxOccurs="1">
                               <xs:simpleType>
                                  <xs:annotation>
@@ -232,9 +241,9 @@
                               </xs:simpleType>
                            </xs:element>
                            <xs:element name="prop"
-                                       type="computer-property-ASSEMBLY"
-                                       minOccurs="0"
-                                       maxOccurs="1"/>
+                                        type="computer-property-ASSEMBLY"
+                                        minOccurs="0"
+                                        maxOccurs="1"/>
                            <xs:group ref="blockElementGroup" maxOccurs="unbounded" minOccurs="0"/>
                         </xs:sequence>
                         <xs:attribute name="serial-number" type="StringDatatype">
@@ -271,17 +280,17 @@
                         </xs:annotation>
                         <xs:sequence>
                            <xs:element name="vendor"
-                                       type="computer-vendor-ASSEMBLY"
-                                       minOccurs="0"
-                                       maxOccurs="1"/>
+                                        type="computer-vendor-ASSEMBLY"
+                                        minOccurs="0"
+                                        maxOccurs="1"/>
                            <xs:element name="product-name"
-                                       type="computer-product-name-FIELD"
-                                       minOccurs="1"
-                                       maxOccurs="1"/>
+                                        type="computer-product-name-FIELD"
+                                        minOccurs="1"
+                                        maxOccurs="1"/>
                            <xs:element name="cost"
-                                       type="computer-cost-FIELD"
-                                       minOccurs="0"
-                                       maxOccurs="1"/>
+                                        type="computer-cost-FIELD"
+                                        minOccurs="0"
+                                        maxOccurs="1"/>
                            <xs:element name="byte-size" minOccurs="1" maxOccurs="1">
                               <xs:simpleType>
                                  <xs:annotation>
@@ -296,9 +305,9 @@
                               </xs:simpleType>
                            </xs:element>
                            <xs:element name="prop"
-                                       type="computer-property-ASSEMBLY"
-                                       minOccurs="0"
-                                       maxOccurs="1"/>
+                                        type="computer-property-ASSEMBLY"
+                                        minOccurs="0"
+                                        maxOccurs="1"/>
                            <xs:group ref="blockElementGroup" maxOccurs="unbounded" minOccurs="0"/>
                         </xs:sequence>
                         <xs:attribute name="serial-number" type="StringDatatype">
@@ -314,9 +323,9 @@
                      </xs:complexType>
                   </xs:element>
                   <xs:element name="cooling"
-                              type="computer-cooling-ASSEMBLY"
-                              minOccurs="0"
-                              maxOccurs="1"/>
+                               type="computer-cooling-ASSEMBLY"
+                               minOccurs="0"
+                               maxOccurs="1"/>
                   <xs:element name="expansion-card" minOccurs="0" maxOccurs="unbounded">
                      <xs:complexType>
                         <xs:annotation>
@@ -329,17 +338,17 @@
                         </xs:annotation>
                         <xs:sequence>
                            <xs:element name="vendor"
-                                       type="computer-vendor-ASSEMBLY"
-                                       minOccurs="0"
-                                       maxOccurs="1"/>
+                                        type="computer-vendor-ASSEMBLY"
+                                        minOccurs="0"
+                                        maxOccurs="1"/>
                            <xs:element name="product-name"
-                                       type="computer-product-name-FIELD"
-                                       minOccurs="1"
-                                       maxOccurs="1"/>
+                                        type="computer-product-name-FIELD"
+                                        minOccurs="1"
+                                        maxOccurs="1"/>
                            <xs:element name="cost"
-                                       type="computer-cost-FIELD"
-                                       minOccurs="0"
-                                       maxOccurs="1"/>
+                                        type="computer-cost-FIELD"
+                                        minOccurs="0"
+                                        maxOccurs="1"/>
                            <xs:element name="type" minOccurs="1" maxOccurs="1">
                               <xs:simpleType>
                                  <xs:annotation>
@@ -354,9 +363,9 @@
                               </xs:simpleType>
                            </xs:element>
                            <xs:element name="prop"
-                                       type="computer-property-ASSEMBLY"
-                                       minOccurs="0"
-                                       maxOccurs="1"/>
+                                        type="computer-property-ASSEMBLY"
+                                        minOccurs="0"
+                                        maxOccurs="1"/>
                            <xs:group ref="blockElementGroup" maxOccurs="unbounded" minOccurs="0"/>
                         </xs:sequence>
                         <xs:attribute name="serial-number" type="StringDatatype">
@@ -406,21 +415,21 @@
                </xs:annotation>
                <xs:sequence>
                   <xs:element name="vendor"
-                              type="computer-vendor-ASSEMBLY"
-                              minOccurs="0"
-                              maxOccurs="1"/>
+                               type="computer-vendor-ASSEMBLY"
+                               minOccurs="0"
+                               maxOccurs="1"/>
                   <xs:element name="product-name"
-                              type="computer-product-name-FIELD"
-                              minOccurs="1"
-                              maxOccurs="1"/>
+                               type="computer-product-name-FIELD"
+                               minOccurs="1"
+                               maxOccurs="1"/>
                   <xs:element name="cost"
-                              type="computer-cost-FIELD"
-                              minOccurs="0"
-                              maxOccurs="1"/>
+                               type="computer-cost-FIELD"
+                               minOccurs="0"
+                               maxOccurs="1"/>
                   <xs:element name="prop"
-                              type="computer-property-ASSEMBLY"
-                              minOccurs="0"
-                              maxOccurs="1"/>
+                               type="computer-property-ASSEMBLY"
+                               minOccurs="0"
+                               maxOccurs="1"/>
                   <xs:group ref="blockElementGroup" maxOccurs="unbounded" minOccurs="0"/>
                </xs:sequence>
                <xs:attribute name="uuid" use="required" type="UUIDDatatype">
@@ -436,9 +445,9 @@
             </xs:complexType>
          </xs:element>
          <xs:element name="prop"
-                     type="computer-property-ASSEMBLY"
-                     minOccurs="0"
-                     maxOccurs="1"/>
+                      type="computer-property-ASSEMBLY"
+                      minOccurs="0"
+                      maxOccurs="1"/>
          <xs:group ref="blockElementGroup" maxOccurs="unbounded" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="serial-number" type="StringDatatype">
@@ -689,9 +698,9 @@
    <xs:complexType name="listType">
       <xs:sequence>
          <xs:element name="li"
-                     type="listItemType"
-                     minOccurs="1"
-                     maxOccurs="unbounded"/>
+                      type="listItemType"
+                      minOccurs="1"
+                      maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="orderedListType">

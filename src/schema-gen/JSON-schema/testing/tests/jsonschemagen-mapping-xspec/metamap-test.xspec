@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../../../../../testing/xspec-assurance.sch"?>
+<?xml-model href="../../../../../util/xspec-fixup.sch"?>
+<x:description xmlns:mx="http://csrc.nist.gov/ns/csd/metaschema-xslt"
+   xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+   xmlns="http://csrc.nist.gov/ns/metaschema-xslt/tinydata"
+   xmlns:t="http://csrc.nist.gov/ns/metaschema-xslt/tinydata"
+   xmlns:x="http://www.jenitennison.com/xslt/xspec"
+   xmlns:xs="http://www.w3.org/2001/XMLSchema"
+   xmlns:fn="http://www.w3.org/2005/xpath-functions"
+   stylesheet="../../../make-json-schema-metamap.xsl"
+   xslt-version="3.0">
+
+   <x:helper stylesheet="../../../../../common/metaschema-ws-strip.xsl"/>
+   
+   <!--<x:variable name="mx:makes-a-date" as="function(*)"
+      select="function($v as item()) as xs:boolean { $v castable as xs:date }"/>-->
+
+
+   <!-- Tests following use as input the testing metaschema ../../../../../testing/tinydata/tiny_metaschema.xml
+        with static artifacts produced for the directory `current` in that folder
+   
+        refresh these artifacts with the script ../../../../../testing/tinydata/refresh-tiny-schemas.sh
+   -->
+   
+   <x:variable name="mx:tiny-composed"    href="../../../../../testing/tinydata/current/tiny_COMPOSED.xml"/>
+   <x:variable name="mx:corrected-schema" href="../../../../../testing/tinydata/tiny_json-schema-corrected.xml"/>
+   <x:variable name="mx:freshest-schema"  href="../../../../../testing/tinydata/current/tiny_json-schema.xml"/>
+   
+   <!-- Setting $composed-metaschema to override the variable assignment in the tested XSLT,
+        so it works without @run-as='external' -->
+   <x:variable name="composed-metaschema" select="$mx:tiny-composed"/>
+
+   <x:scenario label="[A] Comments and PIs are dropped">
+      <x:scenario label="[A.1] Comment">
+         <x:variable name="mx:a-comment"><!--comment--></x:variable>
+         <x:context select="$mx:a-comment"/>
+         <x:expect label="is dropped" select="()"/>
+      </x:scenario>
+      <x:scenario label="[A.2] Processing instruction">
+         <x:context><?PI?></x:context>
+         <x:expect label="is dropped" select="()"/>
+      </x:scenario>
+   </x:scenario>
+   
+   <x:scenario label="[B] modeling choice - issue 105 - testing the 'tinydata' JSON Schema generation">
+      <x:scenario label="[B.1] The 'sheet' assembly (with a choice)">
+         <x:context select="$mx:tiny-composed/*/m:define-assembly[@name='sheet']"/>
+         <x:expect label="Is consistent with the handmade corrected model" select="mx:scrub-up($x:result)"
+            test="$mx:corrected-schema/descendant::fn:map[@key='tiny-tiny:sheet'] => mx:scrub-up()"/>
+      </x:scenario>
+      <x:scenario label="And similarly">
+         <x:context select="$mx:tiny-composed/*/m:define-assembly[@name='sheet']"/>
+         <x:expect label="Corresponds to the cached testing copy" select="mx:scrub-up($x:result)"
+            test="$mx:freshest-schema/descendant::fn:map[@key='tiny-tiny:sheet'] => mx:scrub-up()"/>
+      </x:scenario>
+   </x:scenario>
+
+    <!--TODO: sketch out some datatype mapping?
+      test out architectur separately from modes?
+    -->  
+      
+   <!--<x:scenario label="[C] something normal">
+      <x:scenario label="[C.1] The 'sheet' assembly (with a choice)">
+         <x:context select="$mx:tiny-composed/*"/>
+         <x:expect label="Is consistent with the handmade corrected model" select="()"/>
+      </x:scenario>
+      <x:scenario label="[C.2] A bare METASCHEMA at the top">
+         <x:context>
+            <METASCHEMA/>
+         </x:context>
+         <x:expect label="Is consistent with the handmade corrected model" select="()"/>
+      </x:scenario>
+   </x:scenario>-->
+
+</x:description>

@@ -10,6 +10,10 @@ dirs:=$(shell find '.' ! -wholename ./Makefile -name 'Makefile' -printf "%h\n")
 test: ## Run all tests
 	$(call FOREACH_MAKE,$@,$(dirs))
 
+.PHONY: pre-checks
+pre-checks: ## Run all "pre checks", enforcing validation contracts across input artifacts
+	$(call FOREACH_MAKE_OPTIONAL,$@,$(dirs))
+
 .PHONY: smoke-test
 smoke-test: ## Run all "smoke tests", establishing a baseline of sanity across the project
 	$(call FOREACH_MAKE_OPTIONAL,$@,$(dirs))

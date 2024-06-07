@@ -1,0 +1,247 @@
+
+ { "$schema" : "http://json-schema.org/draft-07/schema#",
+  "$id" : "http://csrc.nist.gov/ns/metaschema-xslt/tinydata/0.0.2/tiny-schema.json",
+  "$comment" : "Tiny Data Model: JSON Schema",
+  "type" : "object",
+  "definitions" : 
+  { "json-schema-directive" : 
+   { "title" : "Schema Directive",
+    "description" : "A JSON Schema directive to bind a specific schema to its document instance.",
+    "$id" : "#/definitions/json-schema-directive",
+    "$ref" : "#/definitions/URIReferenceDatatype" },
+   "tiny-tiny:TINY" : 
+   { "title" : "Tiny Data",
+    "description" : "A minimally described data set.",
+    "$id" : "#/definitions/tiny-tiny:TINY",
+    "type" : "object",
+    "properties" : 
+    { "id" : 
+     { "title" : "Tiny ID",
+      "description" : "An identifier.",
+      "$ref" : "#/definitions/TokenDatatype" },
+     "title" : 
+     { "$ref" : "#/definitions/tiny-tiny:title" },
+     "terminology" : 
+     { "anyOf" : 
+      [ 
+       { "$ref" : "#/definitions/tiny-tiny:term" },
+       
+       { "type" : "array",
+        "minItems" : 1,
+        "items" : 
+        { "$ref" : "#/definitions/tiny-tiny:term" } } ] },
+     "stuff" : 
+     { "title" : "Stuff",
+      "description" : "Some amount of tiny stuff.",
+      "$ref" : "#/definitions/MarkupMultilineDatatype" },
+     "parts" : 
+     { "anyOf" : 
+      [ 
+       { "$ref" : "#/definitions/tiny-tiny:part" },
+       
+       { "type" : "array",
+        "minItems" : 1,
+        "items" : 
+        { "$ref" : "#/definitions/tiny-tiny:part" } } ] },
+     "notes" : 
+     { "anyOf" : 
+      [ 
+       { "$ref" : "#/definitions/tiny-tiny:note" },
+       
+       { "type" : "array",
+        "minItems" : 1,
+        "items" : 
+        { "$ref" : "#/definitions/tiny-tiny:note" } } ] } },
+    "required" : 
+    [ "id",
+     "title" ],
+    "additionalProperties" : false },
+   "tiny-tiny:title" : 
+   { "title" : "Title",
+    "description" : "markup-line example.",
+    "$id" : "#/definitions/tiny-tiny:title",
+    "$ref" : "#/definitions/MarkupLineDatatype" },
+   "tiny-tiny:term" : 
+   { "title" : "Term",
+    "description" : "Simple string value example.",
+    "$id" : "#/definitions/tiny-tiny:term",
+    "type" : "object",
+    "properties" : 
+    { "id" : 
+     { "title" : "Term identifier",
+      "description" : "A token identifying this term uniquely within the document.",
+      "$ref" : "#/definitions/TokenDatatype" },
+     "STRVALUE" : 
+     { "$ref" : "#/definitions/StringDatatype" } },
+    "required" : 
+    [ "STRVALUE",
+     "id" ],
+    "additionalProperties" : false },
+   "tiny-tiny:note" : 
+   { "title" : "Note",
+    "description" : "Wrapped markup-multiline example.",
+    "$id" : "#/definitions/tiny-tiny:note",
+    "$ref" : "#/definitions/MarkupMultilineDatatype" },
+   "tiny-tiny:part" : 
+   { "title" : "Tiny part",
+    "description" : "A bit of tiny data.",
+    "$id" : "#/definitions/tiny-tiny:part",
+    "type" : "object",
+    "properties" : 
+    { "title" : 
+     { "$ref" : "#/definitions/tiny-tiny:title" },
+     "terminology" : 
+     { "anyOf" : 
+      [ 
+       { "$ref" : "#/definitions/tiny-tiny:term" },
+       
+       { "type" : "array",
+        "minItems" : 1,
+        "items" : 
+        { "$ref" : "#/definitions/tiny-tiny:term" } } ] },
+     "stuff" : 
+     { "title" : "Stuff",
+      "description" : "Some amount of tiny stuff.",
+      "$ref" : "#/definitions/MarkupMultilineDatatype" },
+     "parts" : 
+     { "anyOf" : 
+      [ 
+       { "$ref" : "#/definitions/tiny-tiny:part" },
+       
+       { "type" : "array",
+        "minItems" : 1,
+        "items" : 
+        { "$ref" : "#/definitions/tiny-tiny:part" } } ] },
+     "sheets" : 
+     { "anyOf" : 
+      [ 
+       { "$ref" : "#/definitions/tiny-tiny:sheet" },
+       
+       { "type" : "array",
+        "minItems" : 1,
+        "items" : 
+        { "$ref" : "#/definitions/tiny-tiny:sheet" } } ] },
+     "note" : 
+     { "$ref" : "#/definitions/tiny-tiny:note" } },
+    "required" : 
+    [ "title" ],
+    "additionalProperties" : false },
+   "tiny-tiny:sheet" : 
+   { "title" : "Tiny sheet",
+    "description" : "A list or grid of data points (items), or an entry (row or line item) in such a list or grid that contains such a list or grid.",
+    "$id" : "#/definitions/tiny-tiny:sheet",
+    "type" : "object",
+    "anyOf" : 
+    [ 
+     { "properties" : 
+      { "key" : 
+       { "title" : "Field key",
+        "description" : "Distinguishing a sheet or item (field) among siblings or neighbors.",
+        "$ref" : "#/definitions/TokenDatatype" },
+       "class" : 
+       { "title" : "Class",
+        "description" : "Class or classes.",
+        "$ref" : "#/definitions/StringDatatype" },
+       "title" : 
+       { "$ref" : "#/definitions/tiny-tiny:title" },
+       "stuff" : 
+       { "title" : "Stuff",
+        "description" : "Some amount of tiny stuff.",
+        "$ref" : "#/definitions/MarkupMultilineDatatype" },
+       "sheets" : 
+       { "type" : "array",
+        "minItems" : 1,
+        "items" : 
+        { "$ref" : "#/definitions/tiny-tiny:sheet" } },
+       "note" : 
+       { "$ref" : "#/definitions/tiny-tiny:note" } },
+      "additionalProperties" : false },
+     
+     { "properties" : 
+      { "key" : 
+       { "title" : "Field key",
+        "description" : "Distinguishing a sheet or item (field) among siblings or neighbors.",
+        "$ref" : "#/definitions/TokenDatatype" },
+       "class" : 
+       { "title" : "Class",
+        "description" : "Class or classes.",
+        "$ref" : "#/definitions/StringDatatype" },
+       "title" : 
+       { "$ref" : "#/definitions/tiny-tiny:title" },
+       "stuff" : 
+       { "title" : "Stuff",
+        "description" : "Some amount of tiny stuff.",
+        "$ref" : "#/definitions/MarkupMultilineDatatype" },
+       "items" : 
+       { "anyOf" : 
+        [ 
+         { "$ref" : "#/definitions/tiny-tiny:item" },
+         
+         { "type" : "array",
+          "minItems" : 1,
+          "items" : 
+          { "$ref" : "#/definitions/tiny-tiny:item" } } ] },
+       "note" : 
+       { "$ref" : "#/definitions/tiny-tiny:note" } },
+      "additionalProperties" : false } ] },
+   "tiny-tiny:item" : 
+   { "title" : "Line item",
+    "description" : "A value, potentially marked with @key or @class.",
+    "$id" : "#/definitions/tiny-tiny:item",
+    "type" : "object",
+    "properties" : 
+    { "key" : 
+     { "title" : "Field key",
+      "description" : "Distinguishing a sheet or item (field) among siblings or neighbors.",
+      "$ref" : "#/definitions/TokenDatatype" },
+     "class" : 
+     { "title" : "Class",
+      "description" : "Class or classes.",
+      "$ref" : "#/definitions/StringDatatype" },
+     "n" : 
+     { "title" : "N (position)",
+      "description" : "An indexed position (distinctive among values of parent::*/*/@n).",
+      "$ref" : "#/definitions/NonNegativeIntegerDatatype" },
+     "RICHTEXT" : 
+     { "$ref" : "#/definitions/MarkupLineDatatype" } },
+    "required" : 
+    [ "RICHTEXT" ],
+    "additionalProperties" : false },
+   "IntegerDatatype" : 
+   { "description" : "A whole number value.",
+    "type" : "integer" },
+   "MarkupLineDatatype" : 
+   { "description" : "A single line of Markdown content conformant to the Commonmark specification.",
+    "type" : "string",
+    "pattern" : "^[^\n]+$" },
+   "MarkupMultilineDatatype" : 
+   { "description" : "A multiple lines of Markdown content conformant to the Commonmark specification.",
+    "type" : "string" },
+   "NonNegativeIntegerDatatype" : 
+   { "description" : "An integer value that is equal to or greater than 0.",
+    "allOf" : 
+    [ 
+     { "$ref" : "#/definitions/IntegerDatatype" },
+     
+     { "type" : "number",
+      "minimum" : 0 } ] },
+   "StringDatatype" : 
+   { "description" : "A non-empty string with leading and trailing whitespace disallowed. Whitespace is: U+9, U+10, U+32 or [ \n\t]+",
+    "type" : "string",
+    "pattern" : "^\\S(.*\\S)?$" },
+   "TokenDatatype" : 
+   { "description" : "A non-colonized name as defined by XML Schema Part 2: Datatypes Second Edition. https://www.w3.org/TR/xmlschema11-2/#NCName.",
+    "type" : "string",
+    "pattern" : "^(\\p{L}|_)(\\p{L}|\\p{N}|[.\\-_])*$" },
+   "URIReferenceDatatype" : 
+   { "description" : "A URI Reference, either a URI or a relative-reference, formatted according to section 4.1 of RFC3986.",
+    "type" : "string",
+    "format" : "uri-reference" } },
+  "properties" : 
+  { "$schema" : 
+   { "$ref" : "#/definitions/json-schema-directive" },
+   "TINY" : 
+   { "$ref" : "#/definitions/tiny-tiny:TINY" } },
+  "required" : 
+  [ "TINY" ],
+  "additionalProperties" : false }

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TINY xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://example.com/ns/tinydata ../current/tiny_schema.xsd" xmlns="http://csrc.nist.gov/ns/metaschema-xslt/tinydata"
+ id="bigbadtiny">
+   <title>Big Bad Tiny Data</title>
+   <h3>A tiny data example sheet.</h3>
+   <p>Find examples of both <b>valid</b> and <i>invalid</i> markup-line and markup-multiline in a pretend operational context.</p>
+   <part>
+      <title>Some valid data</title>
+      <p>Here's some okay markup multiline, all clear.</p>
+      <p>A markup <q>zoo</q> permits all kinds of inline markup including <b>bold</b>, <strong>strong</strong>, <i>italic</i>, <em>emphasis</em>, <code class="pseudocode">code</code>, <sub>subscript</sub>, <sup>superscript</sup>, <a href="file.xml" title="anchor">hypertext anchors</a>, <insert type="term" id-ref="term1"/> and <img src="file.jpg" alt="img alt-text for file.jpg" title="File image"/> (insertion points and images)</p>
+      <part>
+         <title>Valid structures</title>
+         <p>Including:</p>
+         <ul>
+            <li>lists</li>
+            <li>tables</li>
+            <li>preformatted blocks</li>
+            <li>block quotes</li>
+         </ul>
+      </part>
+      <sheet>
+         <title>Here's a data sheet</title>
+         <entry>
+                   <item>a</item>
+                   <item>b</item>
+         </entry>
+      </sheet>
+   </part>
+</TINY>

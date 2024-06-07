@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+   <schema-name>Tiny Data Model</schema-name>
+   <schema-version>0.0.2</schema-version>
+   <short-name>tiny</short-name>
+   <namespace>http://csrc.nist.gov/ns/metaschema-xslt/tinydata</namespace>
+   <json-base-uri>http://csrc.nist.gov/ns/metaschema-xslt/tinydata</json-base-uri>
+
+   <!--
+   Test metaschema for exercising some features not illustrated or easily found in computer-metaschema.xml:
+
+   markup-line and markup-multiline
+   wrapped and unwrapped markup-multiline
+   grouped sequences (e.g. TINY/notes/note)
+   'choice' - see `sheet` as alternative to parts
+   recursive nesting to arbitrary depths
+   Aiming to be very simple while testing these particular features
+
+   multiple roots - bug repair
+   Rules imposed on insert/@type and insert/@id-ref (the only constraints)
+   
+-->
+   
+   <remarks>
+      <h1>Tiny Metaschema</h1>
+      <p>A metaschema can be small and yet deep.</p>
+   </remarks>
+
+   <define-assembly name="TINY">
+      <formal-name>Tiny Data</formal-name>
+      <description>A minimally described data set.</description>
+      <root-name>TINY</root-name>
+      <define-flag name="id" required="yes" as-type="token">
+         <formal-name>Tiny ID</formal-name>
+         <description>An identifier.</description>
+      </define-flag>
+      <model>
+         <field ref="title" min-occurs="1" max-occurs="1"/>
+         <field ref="term"  min-occurs="0" max-occurs="unbounded">
+            <group-as name="terminology"/>
+         </field>
+         <define-field name="stuff" min-occurs="0" max-occurs="1" in-xml="UNWRAPPED" as-type="markup-multiline">
+            <formal-name>Stuff</formal-name>
+            <description>Some amount of tiny stuff.</description>
+         </define-field>
+         <assembly ref="part" min-occurs="0" max-occurs="unbounded">
+            <group-as name="parts"/>
+         </assembly>
+         <field ref="note" max-occurs="unbounded" in-xml="WRAPPED">
+            <group-as name="notes" in-xml="GROUPED"/>
+         </field>
+      </model>
+   </define-assembly>
+
+   <define-field name="title" as-type="markup-line">
+      <formal-name>Title</formal-name>
+      <description>markup-line example.</description>
+   </define-field>
+   
+   <define-field name="term" as-type="string">
+      <formal-name>Term</formal-name>
+      <description>Simple string value example.</description>
+      <define-flag required="yes" name="id" as-type="token">
+         <formal-name>Term identifier</formal-name>
+         <description>A token identifying this term uniquely within the document.</description>
+      </define-flag>
+      <remarks>
+         <p>For a more extensive model supporting definitions, acronyms etc. build this out into an assembly.
+            As a field, this supports some control over the vocabulary and formatting without heavier embedded metadata.</p>
+         <p>Of course you could always make a structured glossary out of regular and controlled parts for your terminology, and use this inside it, potentially with title/insert.</p>
+      </remarks>
+   </define-field>
+   
+   <define-field name="note" as-type="markup-multiline">
+      <formal-name>Note</formal-name>
+      <description>Wrapped markup-multiline example.</description>
+   </define-field>
+
+   <define-assembly name="part">
+      <formal-name>Tiny part</formal-name>
+      <description>A bit of tiny data.</description>
+      <model>
+         <field ref="title" min-occurs="1" max-occurs="1"/>
+         <field ref="term"  min-occurs="0" max-occurs="unbounded">
+            <group-as name="terminology"/>
+         </field>
+         <define-field name="stuff" min-occurs="0" max-occurs="1" in-xml="UNWRAPPED" as-type="markup-multiline">
+            <formal-name>Stuff</formal-name>
+            <description>Some amount of tiny stuff.</description>
+         </define-field>
+         <assembly ref="part" min-occurs="0" max-occurs="unbounded">
+            <group-as name="parts"/>
+         </assembly>
+         <assembly ref="sheet" min-occurs="0" max-occurs="unbounded">
+               <group-as name="sheets"/>
+            </assembly>
+         <field ref="note" max-occurs="1" in-xml="WRAPPED"/>
+      </model>
+   </define-assembly>
+   
+   <define-assembly name="sheet">
+      <formal-name>Tiny sheet</formal-name>
+      <description>A list or grid of data points (items), or an entry (row or line item) in such a list or grid that contains such a list or grid.</description>
+      <flag ref="key"   required="no"/>
+      <flag ref="class" required="no"/>
+      <model>
+         <field ref="title" min-occurs="0" max-occurs="1"/>
+         <!-- We get a choice - either more sheets as entries, or items (either sheet items or entry items) -->
+         <!-- Hence, entries can nest as deeply as necessary -->
+         <define-field name="stuff" min-occurs="0" max-occurs="1" in-xml="UNWRAPPED" as-type="markup-multiline">
+            <formal-name>Stuff</formal-name>
+            <description>Some amount of tiny stuff.</description>
+         </define-field>
+         <choice>
+            <assembly ref="sheet" min-occurs="0" max-occurs="unbounded">
+               <use-name>entry</use-name>
+               <group-as name="sheets" in-json="ARRAY"/>
+            </assembly>
+            <!-- note use of 'item' as the given name -->
+            <field ref="item" min-occurs="0" max-occurs="unbounded">
+               <use-name>item</use-name>
+               <group-as name="items"/>
+            </field>
+         </choice>
+         <field ref="note" max-occurs="1" in-xml="WRAPPED"/>
+      </model>
+   </define-assembly>
+   
+   <define-field name="item" as-type="markup-line">
+      <formal-name>Line item</formal-name>
+      <description>A value, potentially marked with @key or @class.</description>
+      <flag ref="key" required="no"/>
+      <flag ref="class" required="no"/>
+      <define-flag name="n" as-type="non-negative-integer" required="no">
+         <formal-name>N (position)</formal-name>
+         <description>An indexed position (distinctive among values of parent::*/*/@n).</description>
+      </define-flag>
+      <constraint>
+         <expect target="." test="not( @n = (../child::* except .)/@n )">
+            <formal-name>Distinctive 'n' value</formal-name>
+            <description>@n must be distinctive among sibling items.</description>
+            <remarks>
+               <p>A whole number is expected here although '0' is permitted. Values among siblings are not constrained to be ordered, only different. Ordering is up to the receiving application.</p>
+            </remarks>
+         </expect>
+      </constraint>
+      <remarks><p>An application may constrain the value of the node to a datatype or other requirement, on the basis of @key, @class or other association(s).</p></remarks>
+   </define-field>
+   
+   <define-flag name="key" as-type="token">
+      <formal-name>Field key</formal-name>
+      <description>Distinguishing a sheet or item (field) among siblings or neighbors.</description>
+   </define-flag>
+   
+   <define-flag name="class" as-type="string">
+      <formal-name>Class</formal-name>
+      <description>Class or classes.</description>
+   </define-flag>
+   
+</METASCHEMA>

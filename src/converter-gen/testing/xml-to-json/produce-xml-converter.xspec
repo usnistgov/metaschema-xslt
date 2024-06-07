@@ -1,14 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <x:description
+    xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
     xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+    xmlns:mt="http://csrc.nist.gov/ns/oscal/metaschema/xspec/testing"
+    xmlns:mv="http://csrc.nist.gov/ns/oscal/metaschema/xspec/variable"
+    xmlns:sm="http://csrc.nist.gov/ns/oscal/metaschema/1.0/supermodel"
     xmlns:x="http://www.jenitennison.com/xslt/xspec"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:XSLT="http://www.w3.org/1999/XSL/Transform"
+    run-as="import"
     stylesheet="../../xml-to-json/produce-xml-converter.xsl"
     xslt-version="3.0">
 
     <x:variable name="source-namespace" select="'http://csrc.nist.gov/ns/oscal/1.0'"/>
     <x:variable name="source-prefix" select="'oscal-profile'"/>
 
+    <!--
+        Helper XSLT contains mock templates that need to be part of
+        the system under test. As a result, this test requires
+        run-as="import". If there is a need to switch to run-as="external",
+        use a test harness architecture where the harness contains the
+        mock templates, imports produce-xml-converter.xsl, and is
+        where x:description/@stylesheet points.
+    -->
+    <x:helper stylesheet="test-helper-xml-to-json.xsl"/>
+
+    <!-- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
+    <!-- mode='make-match' templates -->
+    <x:scenario label="Tests for match=* mode=make-match template">
+        <!-- make-match mode routes to make-xml-match mode and
+            does very little processing (concatenating text content).
+            Check that we reached the mock template in the helper XSLT. -->
+        <x:context mode="make-match">
+            <mt:any-element>stub</mt:any-element>
+        </x:context>
+        <x:expect
+            label="String concatenating text from make-xml-match mode for context element"
+            select="'Reached make-xml-match mode for any-element'"/>
+    </x:scenario>
+
+    <!-- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
+    <!-- mode='make-pull' templates -->
+    <x:scenario label="Tests for match=* mode=make-pull template">
+        <!-- make-pull mode routes to either make-xml-pull or make-json-pull
+            mode, depending on whether the top-level stylesheet is
+            produce-xml-converter.xsl or produce-json-converter.xsl.
+            Check that we reached the mock template in the helper XSLT. -->
+        <x:context mode="make-pull">
+            <mt:any-element>stub</mt:any-element>
+        </x:context>
+        <x:expect label="Reached make-xml-pull mode for the context element">
+            <!--Reached make-xml-pull mode-->
+        </x:expect>
+    </x:scenario>
+
+    <!-- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
+    <!-- Template rule for /model -->
     <x:scenario label="Tests for match=/model template">
         <x:scenario label="Skeletal case with no assemblies, flags, or fields">
             <x:context href="../definition-maps/computer-build-reduce-map-output.xml"
@@ -35,5 +82,1524 @@
             <x:expect label="Schema name and version appear in comment (confirm fix for #62)"
                 test="exists($x:result//comment()[contains(.,'Computer Build (version 1.0)')])"/>
         </x:scenario>
+        <!-- Following sibling scenarios check that the right XSLT templates were
+            generated, by checking their match attributes. Contents of those templates
+            come from other units of code and are verified in other top-level test
+            scenarios. -->
+        <x:scenario label="Model with multiple @gi values across global assemblies, with some duplication but no aliasing">
+            <x:context>
+                <m:model>
+                    <m:assembly scope="global" gi="param" _key-name="oscal-catalog-common:parameter">
+                        <m:assembly scope="global" gi="prop" _key-name="oscal-metadata:property"/>
+                        <m:assembly scope="global" gi="guideline" _key-name="oscal-catalog-common:parameter-guideline"/>
+                    </m:assembly>
+                    <m:assembly scope="global" gi="param" _key-name="oscal-catalog-common:parameter">
+                        <m:assembly scope="global" gi="prop" _key-name="oscal-metadata:property"/>
+                    </m:assembly>
+                    <m:assembly scope="global" gi="guideline" _key-name="oscal-catalog-common:parameter-guideline"/>
+                </m:model>
+            </x:context>
+            <x:expect label="One XSLT template for each distinct @gi value, regardless of assembly hierarchy"
+                test="/XSLT:stylesheet/XSLT:template">
+                <XSLT:template match="param">...</XSLT:template>
+                <XSLT:template match="prop">...</XSLT:template>
+                <XSLT:template match="guideline">...</XSLT:template>
+            </x:expect>
+        </x:scenario>
+        <x:scenario label="Model with global assemblies with @gi duplication and aliasing">
+            <x:context>
+                <m:model>
+                    <m:assembly scope="global" gi="param" _key-name="oscal-catalog-common:parameter">
+                        <m:assembly scope="global" gi="prop" _key-name="PROP-KEY-1"/>
+                    </m:assembly>
+                    <m:assembly scope="global" gi="metadata" _key-name="oscal-catalog-common:parameter">
+                        <m:group>
+                            <m:assembly scope="global" gi="prop" _key-name="PROP-KEY-2"/>
+                        </m:group>
+                    </m:assembly>
+                </m:model>
+            </x:context>
+            <x:expect label="One XSLT template for each distinct pair of @gi and @_key-name, with disambiguated @match"
+                test="/XSLT:stylesheet/XSLT:template">
+                <XSLT:template match="param">...</XSLT:template>
+                <XSLT:template match="param/prop">...</XSLT:template>
+                <XSLT:template match="metadata/prop">...</XSLT:template>
+                <XSLT:template match="metadata">...</XSLT:template>
+            </x:expect>
+        </x:scenario>
+        <x:scenario label="Model with multiple @gi values across global fields, with some duplication but no aliasing">
+            <x:context>
+                <m:model>
+                    <m:assembly scope="global" gi="prop" _key-name="oscal-metadata:property">
+                        <m:field scope="global" gi="remarks" _key-name="oscal-metadata:remarks"/>
+                    </m:assembly>
+                    <m:assembly scope="local" gi="revision" _key-name="oscal-metadata:revision">
+                        <m:field scope="global" gi="remarks" _key-name="oscal-metadata:remarks"/>
+                    </m:assembly>
+                </m:model>
+            </x:context>
+            <x:expect label="One XSLT template for each distinct @gi value; sequence is global assembly, then global field, then local"
+                test="/XSLT:stylesheet/XSLT:template">
+                <XSLT:template match="prop">...</XSLT:template>
+                <XSLT:template match="remarks">...</XSLT:template>
+                <XSLT:template match="revision" priority="2">...</XSLT:template>
+            </x:expect>
+        </x:scenario>
+        <x:scenario label="Model with global fields with @gi duplication and aliasing">
+            <x:context>
+                <m:model>
+                    <m:assembly scope="global" gi="prop" _key-name="oscal-metadata:property">
+                        <m:field scope="global" gi="remarks" _key-name="REMARKS-KEY-1"/>
+                    </m:assembly>
+                    <m:assembly scope="local" gi="revision" _key-name="oscal-metadata:revision">
+                        <m:field scope="global" gi="remarks" _key-name="REMARKS-KEY-2"/>
+                    </m:assembly>
+                </m:model>
+            </x:context>
+            <x:expect label="One XSLT template for each distinct pair of @gi and @_key-name, with disambiguated @match"
+                test="/XSLT:stylesheet/XSLT:template">
+                <XSLT:template match="prop">...</XSLT:template>
+                <XSLT:template match="prop/remarks">...</XSLT:template>
+                <XSLT:template match="revision/remarks">...</XSLT:template>
+                <XSLT:template match="revision" priority="2">...</XSLT:template>
+            </x:expect>
+        </x:scenario>
+        <x:scenario label="Model with multiple unique @_key-name values across flags">
+            <x:context>
+                <m:model>
+                    <m:assembly scope="global" gi="profile">
+                        <m:flag _key-name="/assembly/oscal-profile/profile/uuid" gi="uuid"/>
+                        <m:assembly scope="global" gi="prop">
+                            <m:flag _key-name="/assembly/oscal-metadata/property/uuid" gi="uuid"/>
+                            <m:flag _key-name="/assembly/oscal-metadata/property/name" gi="name"/>
+                        </m:assembly>
+                    </m:assembly>
+                </m:model>
+            </x:context>
+            <x:expect label="XSLT template for each distinct pair of @gi and @_key-name"
+                test="/XSLT:stylesheet/XSLT:template">
+                <XSLT:template match="profile/@uuid" priority="1">...</XSLT:template>
+                <XSLT:template match="prop/@uuid" priority="1">...</XSLT:template>
+                <XSLT:template match="prop/@name" priority="1">...</XSLT:template>
+            </x:expect>
+        </x:scenario>
+        <x:scenario label="Model with duplicate @_key-name values across flags">
+            <x:context>
+                <m:model>
+                    <m:assembly scope="global" gi="profile">
+                        <m:flag _key-name="DUPLICATE" gi="uuid"/>
+                        <m:assembly scope="global" gi="prop">
+                            <m:flag _key-name="DUPLICATE" gi="uuid"/>
+                            <m:flag _key-name="/assembly/oscal-metadata/property/name" gi="name"/>
+                        </m:assembly>
+                    </m:assembly>
+                </m:model>
+            </x:context>
+            <x:expect label="XSLT template for each distinct pair of @gi and @_key-name"
+                test="/XSLT:stylesheet/XSLT:template">
+                <XSLT:template match="profile/@uuid | prop/@uuid" priority="1">...</XSLT:template>
+                <XSLT:template match="prop/@name" priority="1">...</XSLT:template>
+            </x:expect>
+        </x:scenario>
+        <x:scenario label="Model with multiple unique @_metaschema-xml-id values across flags">
+            <x:context>
+                <m:model>
+                    <m:assembly scope="global" gi="profile">
+                        <m:flag _metaschema-xml-id="/assembly/oscal-profile/profile/uuid" gi="uuid"/>
+                        <m:assembly scope="global" gi="prop">
+                            <m:flag _metaschema-xml-id="/assembly/oscal-metadata/property/uuid" gi="uuid"/>
+                            <m:flag _metaschema-xml-id="/assembly/oscal-metadata/property/name" gi="name"/>
+                        </m:assembly>
+                    </m:assembly>
+                </m:model>
+            </x:context>
+            <x:expect label="XSLT template for each distinct pair of @gi and @_metaschema-xml-id"
+                test="/XSLT:stylesheet/XSLT:template">
+                <XSLT:template match="profile/@uuid" priority="1">...</XSLT:template>
+                <XSLT:template match="prop/@uuid" priority="1">...</XSLT:template>
+                <XSLT:template match="prop/@name" priority="1">...</XSLT:template>
+            </x:expect>
+        </x:scenario>
+        <x:scenario label="Model with duplicate @_metaschema-xml-id and @_key-name values across flags">
+            <x:context>
+                <m:model>
+                    <m:assembly scope="global" gi="profile">
+                        <m:flag _metaschema-xml-id="DUPLICATE-metaschema-xml-id" gi="uuid"/>
+                        <m:flag _key-name="DUPLICATE-key-name" gi="date"/>
+                        <m:flag _key-name="DUPLICATE" gi="time"/>
+                        <m:assembly scope="global" gi="prop">
+                            <m:flag _metaschema-xml-id="DUPLICATE-metaschema-xml-id" gi="uuid"/>
+                            <m:flag _key-name="DUPLICATE-key-name" gi="date"/>
+                            <m:flag _metaschema-xml-id="DUPLICATE" gi="time"/>
+                            <m:flag _metaschema-xml-id="/assembly/oscal-metadata/property/name" gi="name"/>
+                        </m:assembly>
+                    </m:assembly>
+                </m:model>
+            </x:context>
+            <x:expect label="XSLT template for each distinct pair of either @_key-name (1st choice) or @_metaschema-xml-id (fallback)"
+                test="/XSLT:stylesheet/XSLT:template">
+                <XSLT:template match="profile/@uuid | prop/@uuid" priority="1">...</XSLT:template>
+                <XSLT:template match="profile/@date | prop/@date" priority="1">...</XSLT:template>
+                <XSLT:template match="profile/@time | prop/@time" priority="1">...</XSLT:template>
+                <XSLT:template match="prop/@name" priority="1">...</XSLT:template>
+            </x:expect>
+        </x:scenario>
+        <x:scenario label="Model whose flags have distinct @_key-name values that shadow duplicate @_metaschema-xml-id values">
+            <x:context>
+                <m:model>
+                    <m:assembly scope="global" gi="profile">
+                        <m:flag _key-name="DISTINCT-1" _metaschema-xml-id="DUPLICATE" gi="uuid"/>
+                        <m:assembly scope="global" gi="prop">
+                            <m:flag _key-name="DISTINCT-2" _metaschema-xml-id="DUPLICATE" gi="uuid"/>
+                            <m:flag _metaschema-xml-id="/assembly/oscal-metadata/property/name" gi="name"/>
+                        </m:assembly>
+                    </m:assembly>
+                </m:model>
+            </x:context>
+            <x:expect label="XSLT template for each distinct pair of @gi and either @_key-name (1st choice) or @_metaschema-xml-id (fallback)"
+                test="/XSLT:stylesheet/XSLT:template">
+                <XSLT:template match="profile/@uuid" priority="1">...</XSLT:template>
+                <XSLT:template match="prop/@uuid" priority="1">...</XSLT:template>
+                <XSLT:template match="prop/@name" priority="1">...</XSLT:template>
+            </x:expect>
+        </x:scenario>
+        <x:scenario label="Model with local assemblies and fields">
+            <x:context>
+                <m:model>
+                    <m:assembly scope="local" gi="revision">
+                        <m:field scope="local" gi="title"/>
+                        <m:field scope="local" gi="published"/>
+                    </m:assembly>
+                    <m:group key="addresses">
+                        <m:assembly scope="local" gi="address">
+                            <m:field scope="local" gi="addr-line"/>
+                        </m:assembly>
+                    </m:group>
+                </m:model>
+            </x:context>
+            <x:expect label="XSLT template for each local assembly and each local field"
+                test="/XSLT:stylesheet/XSLT:template">
+                <XSLT:template match="revision" priority="2">...</XSLT:template>
+                <XSLT:template match="revision/title" priority="3">...</XSLT:template>
+                <XSLT:template match="revision/published" priority="3">...</XSLT:template>
+                <XSLT:template match="address" priority="3">...</XSLT:template>
+                <XSLT:template match="address/addr-line" priority="4">...</XSLT:template>
+            </x:expect>
+        </x:scenario>
+        <x:scenario label="Model with markup-line and/or markup-multiline values">
+            <!-- Check that the /model template rule calls the
+                for-this-converter named template -->
+            <x:context>
+                <m:model>
+                    <m:assembly>
+                        <m:field gi="title">
+                            <m:value as-type="markup-line"/>
+                        </m:field>
+                        <m:field gi="remarks">
+                            <m:value as-type="markup-multiline"/>
+                        </m:field>
+                        <m:field gi="description">
+                            <m:value as-type="markup-multiline"/>
+                        </m:field>
+                        <m:field gi="document-id">
+                            <m:value as-type="string"/>
+                        </m:field>
+                    </m:assembly>
+                </m:model>
+            </x:context>
+            <x:expect label="Stylesheet has one match=* mode=cast-prose template"
+                test="count(//XSLT:template[@match='*'][@mode='cast-prose'])"
+                select="1"/>
+        </x:scenario>
     </x:scenario>
+
+    <!-- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
+    <!-- Named templates -->
+    <x:scenario label="Tests for name=namespace-variable template">
+        <x:call template="namespace-variable"/>
+        <x:expect label="Line break followed by global variable">
+            <x:text>&#xA;</x:text>
+            <XSLT:variable as="xs:string"
+                name="metaschema-namespace">http://csrc.nist.gov/ns/oscal/1.0</XSLT:variable>
+        </x:expect>
+    </x:scenario>
+
+    <x:scenario label="Tests for name=xpath-namespace template">
+        <x:call template="xpath-namespace"/>
+        <x:expect label="Attribute"
+            test="$x:result instance of attribute(xpath-default-namespace)"/>
+        <x:expect label="whose value comes from global variable"
+            test="string($x:result)" select="'http://csrc.nist.gov/ns/oscal/1.0'"/>
+    </x:scenario>
+
+    <x:scenario label="Tests for name=make-strip-space template">
+        <x:scenario label="Contains assembly/@gi">
+            <x:context select="/m:model">
+                <m:model>
+                    <m:assembly gi="profile"/>
+                    <m:assembly gi="metadata"/>
+                    <m:assembly gi="revision"/>
+                </m:model>
+            </x:context>
+            <x:call template="make-strip-space"/>
+            <x:expect label="XSLT strip-space element">
+                <XSLT:strip-space elements="..."/>
+            </x:expect>
+            <x:expect label="listing distinct @gi values"
+                test="$x:result/@elements => tokenize(' ') => sort()"
+                select="('metadata', 'profile', 'revision') => sort()"/>
+        </x:scenario>
+        <x:scenario label="Contains no assemblies">
+            <x:context href="../definition-maps/computer-build-reduce-map-output.xml"
+                select="/m:model"/>
+            <x:call template="make-strip-space"/>
+            <x:expect label="XSLT strip-space element listing no elements">
+                <XSLT:strip-space elements=""/>
+            </x:expect>
+        </x:scenario>
+    </x:scenario>
+
+    <x:scenario label="Tests for name=initial-comment template">
+        <x:call template="initial-comment"/>
+        <x:expect label="Comment with fixed text">
+            <!-- METASCHEMA conversion stylesheet supports XML -> METASCHEMA/SUPERMODEL conversion -->
+        </x:expect>
+    </x:scenario>
+
+    <x:scenario label="Tests for name=provide-namespace template">
+        <x:variable name="mv:model-assembly-field">
+            <model>
+                <m:assembly>
+                    <m:field/>
+                </m:assembly>
+            </model>
+        </x:variable>
+        <x:scenario label="Parent is model">
+            <x:context select="$mv:model-assembly-field//m:assembly"/>
+            <x:call template="provide-namespace"/>
+            <x:expect label="XSLT:if element">
+                <XSLT:if test=". is /*">
+                    <XSLT:attribute name="namespace" select="$metaschema-namespace"/>
+                </XSLT:if>
+            </x:expect>
+        </x:scenario>
+        <x:scenario label="Parent is not model">
+            <x:context select="$mv:model-assembly-field//m:field"/>
+            <x:call template="provide-namespace"/>
+            <x:expect label="Nothing" select="()"/>
+        </x:scenario>
+    </x:scenario>
+
+    <x:scenario label="Tests for name=for-this-converter template">
+        <x:scenario label="Model contains markup-line value">
+            <x:context>
+                <model>
+                    <m:assembly>
+                        <m:field name="title">
+                            <m:value as-type="markup-line"/>
+                        </m:field>
+                    </m:assembly>
+                </model>
+            </x:context>
+            <x:like label="Template to cast prose contents into supermodel namespace"/>
+        </x:scenario>
+        <x:scenario label="Model contains markup-multiline value">
+            <x:context>
+                <model>
+                    <m:assembly>
+                        <m:field name="remarks">
+                            <m:value as-type="markup-multiline"/>
+                        </m:field>
+                    </m:assembly>
+                </model>
+            </x:context>
+            <x:like label="Template to cast prose contents into supermodel namespace"/>
+        </x:scenario>
+        <x:scenario label="Model contains values but not type markup-line or markup-multiline">
+            <x:context>
+                <model>
+                    <m:assembly>
+                        <m:field>
+                            <m:value name="version" as-type="string"/>
+                        </m:field>
+                        <m:field>
+                            <m:value name="missingtype"/>
+                        </m:field>
+                    </m:assembly>
+                </model>
+            </x:context>
+            <x:call template="for-this-converter"/>
+            <x:expect label="Nothing" select="()"/>
+        </x:scenario>
+        <x:scenario label="Model contains no values of any type">
+            <x:context href="../definition-maps/computer-build-reduce-map-output.xml"
+                select="/m:model"/>
+            <x:call template="for-this-converter"/>
+            <x:expect label="Nothing" select="()"/>
+        </x:scenario>
+    </x:scenario>
+    <x:scenario shared="yes" label="Template to cast prose contents into supermodel namespace">
+        <x:call template="for-this-converter"/>
+        <x:expect label="Template to cast prose contents into supermodel namespace">
+            <XSLT:template match="*" mode="cast-prose">
+                <XSLT:element name="{{ local-name() }}"
+                    namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0/supermodel">
+                    <XSLT:copy-of select="@*"/>
+                    <XSLT:apply-templates mode="#current"/>
+                </XSLT:element>
+            </XSLT:template>
+        </x:expect>
+    </x:scenario>
+
+    <!-- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
+    <!-- mode='make-template-for-inline-definition' templates -->
+    <!-- This mode either returns empty (if @scope='global') or applies templates
+        to the same element with mode=make-template. -->
+
+    <x:scenario label="Tests for match=*[@scope='global'] mode=make-template-for-inline-definition template">
+        <!-- Template is called for field and assembly elements.
+            The template is empty regardless of the context
+            as long as the attribute scope="global" is present,
+            but check the typical contexts that come up. -->
+        <x:scenario label="Global assembly">
+            <x:context mode="make-template-for-inline-definition">
+                <m:assembly scope="global">
+                    <m:field>
+                        <m:value name="version" as-type="string"/>
+                    </m:field>
+                </m:assembly>
+            </x:context>
+            <x:expect label="Nothing" select="()"/>
+        </x:scenario>
+        <x:scenario label="Global field in local assembly">
+            <x:context mode="make-template-for-inline-definition"
+                select="//m:field">
+                <m:assembly scope="local">
+                    <m:field scope="global">
+                        <m:value name="version" as-type="string"/>
+                    </m:field>
+                </m:assembly>
+            </x:context>
+            <x:expect label="Nothing" select="()"/>
+        </x:scenario>
+        <x:scenario label="Global field in global assembly">
+            <x:context mode="make-template-for-inline-definition"
+                select="//m:field">
+                <m:assembly scope="global">
+                    <m:field scope="global">
+                        <m:value name="version" as-type="string"/>
+                    </m:field>
+                </m:assembly>
+            </x:context>
+            <x:expect label="Nothing" select="()"/>
+        </x:scenario>
+    </x:scenario>
+
+    <x:scenario label="Tests for match=* mode=make-template-for-inline-definition template">
+        <!-- The purpose of make-template-for-inline-definition mode is
+            to filter out globals (no-op) while routing to make-template mode
+            for everything else. Check that we reached the mock template
+            for make-template mode in the helper XSLT. -->
+        <x:context mode="make-template-for-inline-definition">
+            <mt:any-element scope="local">stub</mt:any-element>
+        </x:context>            
+        <x:expect label="Reached make-template mode for the context element">
+            <!--Reached make-template mode-->
+        </x:expect>
+    </x:scenario>
+
+    <!-- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
+    <!-- mode='maybe-keep' templates -->
+    <!-- Callers apply this mode for attributes other than @scope.
+        Certain attributes reach an empty template, and everything
+        else reaches a template that copies the attribute. -->
+
+    <x:scenario label="Test for match=@* mode=maybe-keep template">
+        <x:context mode="maybe-keep" select="/*/@as-type">
+            <m:flag as-type="uuid"/>
+        </x:context>
+        <x:expect label="Copy of attribute" select="/*/@as-type">
+            <mt:any-element as-type="uuid"/>
+        </x:expect>
+    </x:scenario>
+
+    <x:scenario label="Tests for match=@_base-uri | @_key-name | @_metaschema-json-id | @_metaschema-xml-id | @_using-root-name | @_in-json-name | @_in-xml-name | @_key | @_key-ref | @_step | @_using-name mode=maybe-keep template">
+        <x:scenario label="Attributes on a flag that reach this template">
+            <x:context mode="maybe-keep" select="/*/@*">
+                <m:flag
+                    _step="uuid"
+                    _key="uuid"
+                    _metaschema-xml-id="/assembly/oscal-profile/profile/uuid"
+                    _metaschema-json-id="/assembly/oscal-profile/profile/uuid"
+                    _using-name="uuid"
+                    _in-xml-name="uuid"
+                    _in-json-name="uuid"/>
+            </x:context>
+            <x:expect label="Nothing" select="()"/>
+        </x:scenario>
+        <x:scenario label="Attributes on a field that reach this template">
+            <x:context mode="maybe-keep" select="/*/@*">
+                <m:field
+                    _step="prose"
+                    _key="prose"
+                    _metaschema-xml-id="/assembly/oscal-catalog-common/parameter-guideline/prose"
+                    _metaschema-json-id="/assembly/oscal-catalog-common/parameter-guideline/prose"
+                    _using-name="prose"
+                    _in-xml-name="p ul ol pre table h1 h2 h3 h4 h5 h6"
+                    _in-json-name="prose"/>
+            </x:context>
+            <x:expect label="Nothing" select="()"/>
+        </x:scenario>
+        <x:scenario label="Attributes on an assembly including _base-uri, _key-name, and _using-root-name">
+            <x:context mode="maybe-keep" select="/*/@*">
+                <m:assembly
+                    _metaschema-xml-id="/assembly/oscal-profile/profile"
+                    _metaschema-json-id="/assembly/oscal-profile/profile"
+                    _base-uri=".../oscal_profile_metaschema.xml"
+                    _key-name="oscal-profile:profile"
+                    _using-root-name="profile"/>
+            </x:context>
+            <x:expect label="Nothing" select="()"/>
+        </x:scenario>
+        <x:scenario label="Attributes on an assembly including _key-ref">
+            <x:context mode="maybe-keep" select="/*/@*">
+                <m:assembly
+                    _metaschema-xml-id="/assembly/oscal-profile/profile/metadata"
+                    _metaschema-json-id="/assembly/oscal-profile/profile/metadata"
+                    _base-uri=".../oscal_metadata_metaschema.xml"
+                    _key-name="oscal-metadata:metadata"
+                    _step="metadata"
+                    _key="metadata"
+                    _key-ref="oscal-metadata:metadata"
+                    _using-name="metadata"
+                    _in-xml-name="metadata"
+                    _in-json-name="metadata"/>
+            </x:context>
+            <x:expect label="Nothing" select="()"/>
+        </x:scenario>
+    </x:scenario>
+
+    <!-- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
+    <!-- mode='make-template' templates -->
+    <x:scenario label="Tests for match=field[empty(@gi)][value/@as-type='markup-multiline'] mode=make-template template">
+        <!-- FYI: Data type, as="element(m:field)", ensures that the select
+            attribute matches exactly one element in the referenced XML file,
+            or else there is a clear error message to aid troubleshooting. -->
+        <x:context mode="make-template" as="element(m:field)"
+            href="../definition-maps/profile-reduce-map-output.xml"
+            select="/m:model/m:assembly/m:assembly[3]/m:group[1]//m:field[@name='prose']"/>
+        <x:expect label="Nothing" select="()"/>
+    </x:scenario>
+
+    <x:scenario label="Tests for match=* mode=make-template template">
+        <!-- Template is reached from these contexts:
+            assembly[@scope='global']
+            field[@scope='global']
+            inline assembly/field definitions (redirect from mode make-template-for-inline-definition)
+            group (recursive from this template)
+            -->
+        <x:scenario label="Basic case: Global-scope field with @gi">
+            <x:context mode="make-template" select="//m:field">
+                <m:model>
+                    <m:assembly gi="revision">
+                        <m:field scope="global"
+                            _metaschema-xml-id="/assembly/oscal-metadata/revision/remarks"
+                            _metaschema-json-id="/assembly/oscal-metadata/revision/remarks"
+                            as-type="markup-multiline"
+                            name="remarks"
+                            key="remarks"
+                            gi="remarks">
+                            <m:value as-type="markup-multiline"/>
+                        </m:field>
+                    </m:assembly>
+                </m:model>
+            </x:context>
+            <x:expect label="Template with no priority; field with in-json=SCALAR and potential key attr; markup-multiline value">
+                <XSLT:template match="remarks">
+                    <XSLT:param name="with-key" select="true()"/>
+                    <sm:field in-json="SCALAR"
+                        as-type="markup-multiline"
+                        name="remarks"
+                        key="remarks"
+                        gi="remarks">
+                        <XSLT:if test="$with-key">
+                            <XSLT:attribute name="key">remarks</XSLT:attribute>
+                        </XSLT:if>
+                        <sm:value as-type="markup-multiline"
+                            in-json="string">...</sm:value>
+                    </sm:field>
+                </XSLT:template>
+            </x:expect>
+        </x:scenario>
+        <x:scenario label="Same as basic case but with local scope">
+            <x:context mode="make-template" select="//m:field">
+                <m:model>
+                    <m:assembly gi="revision">
+                        <m:field scope="local"
+                            _metaschema-xml-id="/assembly/oscal-metadata/revision/remarks"
+                            _metaschema-json-id="/assembly/oscal-metadata/revision/remarks"
+                            as-type="markup-multiline"
+                            name="remarks"
+                            key="remarks"
+                            gi="remarks">
+                            <m:value as-type="markup-multiline"/>
+                        </m:field>
+                    </m:assembly>
+                </m:model>
+            </x:context>
+            <x:expect label="Template with priority=3 (and deeper match path)">
+                <XSLT:template priority="3" match="revision/remarks">...</XSLT:template>
+            </x:expect>
+        </x:scenario>
+        <x:scenario label="field containing a flag with @key not matching field's @json-key-flag">
+            <x:context mode="make-template" select="//m:field">
+                <m:model>
+                    <m:assembly>
+                        <m:field json-key-flag="FIELD-KEY">
+                            <m:flag key="FIELD-KEY"/>
+                            <m:flag key="DIFFERENT-KEY-FOR-THIS-FLAG"/>
+                        </m:field>
+                    </m:assembly>
+                </m:model>
+            </x:context>
+            <x:expect label="Output field uses json-key-flag from input field"
+                test="XSLT:template/sm:field">
+                    <sm:field json-key-flag="FIELD-KEY">...</sm:field>
+            </x:expect>
+            <x:expect label="and has no in-json attribute"
+                test="empty(XSLT:template/sm:field/@in-json)"/>
+        </x:scenario>
+        <x:scenario label="field without @key">
+            <x:context mode="make-template" select="//m:field">
+                <m:model>
+                    <m:assembly>
+                        <m:field scope="local"
+                            _metaschema-xml-id="/assembly/oscal-metadata/location/telephone-number"
+                            _metaschema-json-id="/assembly/oscal-metadata/location/telephone-numbers"
+                            as-type="string"
+                            name="telephone-number"
+                            gi="telephone-number">
+                            <m:value as-type="string" key="number"/>
+                        </m:field>
+                    </m:assembly>
+                </m:model>
+            </x:context>
+            <x:expect label="Template with field omitting XSLT:if test='$with-key' block">
+                <XSLT:template match="telephone-number" priority="3">
+                    <XSLT:param name="with-key" select="true()"/>
+                    <sm:field in-json="SCALAR"
+                        as-type="string"
+                        name="telephone-number"
+                        gi="telephone-number">
+                        <sm:value as-type="string" key="number"
+                            in-json="string">...</sm:value>
+                    </sm:field>
+                </XSLT:template>
+            </x:expect>
+            <x:expect label="Confirm absence of that XSLT:if block"
+                test="empty(//XSLT:if[contains(@test,'key')])"/>
+        </x:scenario>
+        <x:scenario label="assembly, where $team tunnel parameter has multiple elements with @key">
+            <x:variable name="mv:context">
+                <m:model>
+                    <m:assembly scope="global" gi="g" _key-name="key1" key="k"/>
+                    <m:assembly scope="global" gi="g" _key-name="key1" key="k"/>
+                    <m:assembly scope="global" gi="g" _key-name="key1-alias"/>
+                </m:model>
+            </x:variable>
+            <x:context mode="make-template" select="exactly-one($mv:context/m:assembly[1])">
+                <x:param name="team" tunnel="yes"
+                    select="one-or-more($mv:context/m:assembly[@_key-name='key1'])"/>
+            </x:context>
+            <x:expect label="XSLT:if block specifies one key value only, not list of all"
+                test="//XSLT:if[@test='$with-key']">
+                <XSLT:if test="$with-key">
+                    <XSLT:attribute name="key">k</XSLT:attribute>
+                </XSLT:if>
+            </x:expect>
+        </x:scenario>
+        <x:scenario label="assembly as child of model">
+            <x:context mode="make-template" select="//m:assembly">
+                <m:model>
+                    <m:assembly scope="global" name="profile" key="profile" gi="profile"/>
+                </m:model>
+            </x:context>
+            <x:expect label="Template with no priority; assembly with extra XSLT:if block to provide namespace">
+                <XSLT:template match="profile">
+                    <XSLT:param name="with-key" select="true()"/>
+                    <sm:assembly name="profile" key="profile" gi="profile">
+                        <XSLT:if test="$with-key">...</XSLT:if>
+                        <XSLT:if test=". is /*">
+                            <XSLT:attribute name="namespace" select="$metaschema-namespace"/>
+                        </XSLT:if>
+                    </sm:assembly>
+                </XSLT:template>
+            </x:expect>
+        </x:scenario>
+        <x:scenario label="Recursive assembly,">
+            <x:variable name="mv:recursive-parts">
+                <m:assembly scope="global"
+                    name="part"
+                    _key-name="oscal-catalog-common:part"
+                    gi="part">
+                    <m:group recursive="true"
+                        name="part"
+                        _key-name="oscal-catalog-common:part">
+                        <m:assembly scope="global"
+                            recursive="true"
+                            name="part"
+                            _key-name="oscal-catalog-common:part"
+                            gi="part"/>
+                    </m:group>
+                </m:assembly>
+            </x:variable>
+            <x:scenario label="Group element">
+                <x:context mode="make-template" select="$mv:recursive-parts/m:group"/>
+                <x:expect label="sm:group has make-xml-pull results for child assembly and parent group"
+                    test="/XSLT:template/sm:group">
+                    <sm:group recursive="true" name="part">
+                        <XSLT:apply-templates select="part"/>
+                        <XSLT:for-each-group select="part" group-by="true()">
+                            <sm:group in-json="...">...</sm:group>
+                        </XSLT:for-each-group>
+                    </sm:group>
+                </x:expect>
+            </x:scenario>
+            <x:scenario label="Child of group container">
+                <x:context mode="make-template" select="$mv:recursive-parts/m:group/m:assembly"/>
+                <x:expect label="One template only">
+                    <XSLT:template match="part">...</XSLT:template>
+                </x:expect>
+                <x:expect label="sm:assembly has make-xml-pull results for parent group and grandparent assembly"
+                    test="/XSLT:template/sm:assembly">
+                    <sm:assembly recursive="true" name="part" gi="part">
+                        <XSLT:for-each-group select="part" group-by="true()">
+                            <sm:group in-json="...">...</sm:group>
+                        </XSLT:for-each-group>
+                        <XSLT:apply-templates select="part"/>
+                    </sm:assembly>
+                </x:expect>
+            </x:scenario>
+        </x:scenario>
+        <x:scenario label="assembly as child of a group that has @gi">
+            <x:context mode="make-template" select="//m:assembly">
+                <m:group in-xml="SHOWN" gi="revisions" name="revision">
+                    <m:assembly scope="local" name="revision" gi="revision"/>
+                </m:group>
+            </x:context>
+            <x:expect label="XSLT templates for revision and its wrapper">
+                <XSLT:template match="revisions/revision" priority="2">...</XSLT:template>
+                <XSLT:template match="revisions" priority="1">...</XSLT:template>
+            </x:expect>
+            <x:expect label="Template for revision is like other results of make-template mode"
+                test="/XSLT:template[@match='revisions/revision']">
+                <XSLT:template match="revisions/revision" priority="2">
+                    <XSLT:param name="with-key" select="true()"/>
+                    <sm:assembly gi="revision" name="revision"/>
+                </XSLT:template>
+            </x:expect>
+            <x:expect label="Template for wrapper is like other results of make-template mode"
+                test="/XSLT:template[@match='revisions']">
+                <XSLT:template match="revisions" priority="1">
+                    <XSLT:param name="with-key" select="true()"/>
+                    <sm:group in-xml="SHOWN" gi="revisions" name="revision">
+                        <XSLT:apply-templates select="revision"/>
+                    </sm:group>
+                </XSLT:template>
+            </x:expect>
+        </x:scenario>
+    </x:scenario>
+
+    <x:scenario label="Tests for match=flag mode=make-template template">
+        <x:scenario label="Check @priority: ">
+            <x:scenario label="Flag does not have global scope but parent does, and...">
+                <x:scenario label="flag has one assembly ancestor">
+                    <x:context mode="make-template" as="element(m:flag)"
+                        href="../definition-maps/profile-reduce-map-output.xml"
+                        select="/m:model/m:assembly/m:flag[@gi='uuid']"/>
+                    <x:expect label="Template rule has priority 1">
+                        <XSLT:template match="profile/@uuid" priority="1">
+                            <sm:flag in-json="string"
+                                as-type="uuid"
+                                name="uuid"
+                                key="uuid"
+                                gi="uuid">
+                                <XSLT:value-of select="."/>
+                            </sm:flag>
+                        </XSLT:template>
+                    </x:expect>
+                </x:scenario>
+                <x:scenario label="flag has multiple global assembly ancestors, including parent of flag">
+                    <x:context mode="make-template" as="element(m:flag)"
+                        href="../definition-maps/profile-reduce-map-output.xml"
+                        select="/m:model/m:assembly/m:assembly[1][@scope='global']/m:group[3]/m:assembly[1][@scope='global']/m:flag[@gi='uuid']"/>
+                    <x:expect label="Template rule has priority 1; count stops at first global assembly ancestor">
+                        <XSLT:template match="prop/@uuid" priority="1">
+                            <sm:flag in-json="string"
+                                as-type="uuid"
+                                name="uuid"
+                                key="uuid"
+                                gi="uuid">
+                                <XSLT:value-of select="."/>
+                            </sm:flag>
+                        </XSLT:template>
+                    </x:expect>
+                </x:scenario>
+                <x:scenario label="flag has multiple global assembly ancestors but parent is not assembly">
+                    <x:context mode="make-template" as="element(m:flag)"
+                        href="../definition-maps/profile-reduce-map-output.xml"
+                        select="/m:model/m:assembly/m:assembly[4][@scope='global']/
+                            m:group[1]/m:assembly[1]/m:group[3]/m:assembly[1]/m:group[1]/
+                            m:field[1][@scope='global']/m:flag[@gi='algorithm']"/>
+                    <x:expect label="Template rule has priority 3, not 4; count stops at nearest global assembly ancestor">
+                        <XSLT:template match="hash/@algorithm" priority="3">
+                            <sm:flag in-json="string"
+                                as-type="string"
+                                name="algorithm"
+                                key="algorithm"
+                                gi="algorithm">
+                                <XSLT:value-of select="."/>
+                            </sm:flag>
+                        </XSLT:template>
+                    </x:expect>
+                </x:scenario>
+            </x:scenario>
+            <x:scenario label="Neither flag nor parent has global scope">
+                <x:context mode="make-template" as="element(m:flag)"
+                    href="../definition-maps/profile-reduce-map-output.xml"
+                    select="/m:model/m:assembly/m:assembly[4]/m:group[1]/m:assembly[1]/m:flag[@gi='uuid']"/>
+                <x:expect label="Template rule has priority 6, from # of ancestor-or-self nodes">
+                    <XSLT:template match="profile/back-matter/resource/@uuid" priority="6">
+                        <sm:flag in-json="string"
+                            as-type="uuid"
+                            name="uuid"
+                            key="uuid"
+                            gi="uuid">
+                            <XSLT:value-of select="."/>
+                        </sm:flag>
+                    </XSLT:template>
+                </x:expect>
+            </x:scenario>
+            <x:scenario label="Both flag and parent have global scope">
+                <x:context mode="make-template" as="element(m:flag)"
+                    href="../definition-maps/profile-reduce-map-output.xml"
+                    select="/m:model/m:assembly/m:assembly[1]/m:group[4]/m:assembly[1]/m:flag[@gi='media-type']"/>
+                <x:expect label="Template rule has no priority attribute">
+                    <XSLT:template match="link/@media-type">
+                        <sm:flag in-json="string"
+                            as-type="string"
+                            name="media-type"
+                            key="media-type"
+                            gi="media-type">
+                            <XSLT:value-of select="."/>
+                        </sm:flag>
+                    </XSLT:template>
+                </x:expect>
+            </x:scenario>
+        </x:scenario>
+        <x:scenario label="Check @in-json: ">
+            <x:scenario label="Flag does not have @as-type attribute">
+                <x:context mode="make-template" select="//m:flag">
+                    <m:assembly>
+                        <m:flag/>
+                    </m:assembly>
+                </x:context>
+                <x:expect label="in-json uses default value of 'string'"
+                    test="//sm:flag">
+                    <sm:flag in-json="string">...</sm:flag>
+                </x:expect>
+            </x:scenario>
+            <x:scenario label="Flag's @as-type attribute maps to string data type">
+                <x:context mode="make-template" select="//m:flag">
+                    <m:assembly>
+                        <m:flag as-type="string"/>
+                        <m:flag as-type="uri"/>
+                        <m:flag as-type="uri-reference"/>
+                        <m:flag as-type="date"/>
+                        <m:flag as-type="uuid"/>
+                        <m:flag as-type="token"/>
+                    </m:assembly>
+                </x:context>
+                <x:expect label="in-json uses value based on flag/@as-type"
+                    test="//sm:flag">
+                    <sm:flag as-type="string" in-json="string">...</sm:flag>
+                    <sm:flag as-type="uri" in-json="string">...</sm:flag>
+                    <sm:flag as-type="uri-reference" in-json="string">...</sm:flag>
+                    <sm:flag as-type="date" in-json="string">...</sm:flag>
+                    <sm:flag as-type="uuid" in-json="string">...</sm:flag>
+                    <sm:flag as-type="token" in-json="string">...</sm:flag>
+                </x:expect>
+            </x:scenario>
+            <x:scenario label="Flag's @as-type attribute maps to non-string data type">
+                <x:context mode="make-template" select="//m:flag">
+                    <m:assembly>
+                        <m:flag as-type="boolean"/>
+                        <m:flag as-type="integer"/>
+                        <m:flag as-type="positiveInteger"/>
+                        <m:flag as-type="nonNegativeInteger"/>
+                        <m:flag as-type="decimal"/>
+                    </m:assembly>
+                </x:context>
+                <x:expect label="in-json uses value based on flag/@as-type"
+                    test="//sm:flag">
+                    <sm:flag as-type="boolean" in-json="boolean">...</sm:flag>
+                    <sm:flag as-type="integer" in-json="number">...</sm:flag>
+                    <sm:flag as-type="positiveInteger" in-json="number">...</sm:flag>
+                    <sm:flag as-type="nonNegativeInteger" in-json="number">...</sm:flag>
+                    <sm:flag as-type="decimal" in-json="number">...</sm:flag>
+                </x:expect>
+            </x:scenario>
+        </x:scenario>
+    </x:scenario>
+
+    <!-- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
+    <!-- mode='make-key-flag' template -->
+    <x:scenario label="Tests for match=* mode=make-key-flag template">
+        <!-- Note: The only template with this mode in this file is empty
+            regardless of the context, but produce-json-converter.xsl has
+            nonempty template rules with this mode for certain flags and
+            their parents. Here, test the contexts that would be nontrivial
+            in produce-json-converter.xsl and check that they produce an
+            empty result because that other file is not part of the stylesheet. -->
+        <x:scenario label="flag">
+            <x:context mode="make-key-flag">
+                <m:flag key="uuid"/>
+            </x:context>
+            <x:expect label="Nothing, for this XSLT in isolation" select="()"/>
+        </x:scenario>
+        <x:scenario label="Element with @json-key-flag = flag/@name">
+            <x:context mode="make-key-flag">
+                <m:field json-key-flag="id">
+                    <m:flag name="id"/>
+                </m:field>
+            </x:context>
+            <x:expect label="Nothing, for this XSLT in isolation" select="()"/>
+        </x:scenario>
+    </x:scenario>
+
+    <!-- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
+    <!-- mode='make-xml-match' and mode='make-xml-step' templates -->
+    <x:scenario label="Tests for match=flag priority=11 mode=make-xml-match template">
+        <x:scenario label="Global flag with multiple global assembly ancestors, including parent of flag">
+            <x:context mode="make-xml-match" as="element(m:flag)"
+                href="../definition-maps/profile-reduce-map-output.xml"
+                select="/m:model/m:assembly/m:assembly[1][@scope='global']/m:group[3]/m:assembly[1][@scope='global']/m:flag[@gi='uuid']"/>
+            <x:expect label="Path with parent element and attribute from this context's @gi">prop/@uuid</x:expect>
+        </x:scenario>
+        <x:scenario label="Non-global flag">
+            <x:context mode="make-xml-match" as="element(m:flag)"
+                href="../definition-maps/profile-reduce-map-output.xml"
+                select="/m:model/m:assembly/m:flag[@gi='uuid']"/>
+            <x:expect label="Path with parent element and attribute from this context's @gi">profile/@uuid</x:expect>
+        </x:scenario>
+        <x:scenario label="Flag's parent has match path with multiple items separated by bar">
+            <!-- QUESTION: The context is contrived and might not be the right way
+                to exercise the code in the situation where $parent-match contains
+                multiple match expressions. Does the context need fixing? -->
+            <x:variable name="mv:flag-context" as="element(m:flag)"
+                href="../definition-maps/profile-reduce-map-output.xml"
+                select="/m:model[1]/m:assembly[1]/m:assembly[2]/m:choice[1]/m:assembly[2]/m:group[1]/m:assembly[1]/m:group[4]/m:assembly[@gi='part']/m:flag[@gi='id']"/>
+            <x:variable name="mv:parent-key-name" as="xs:string"
+                select="$mv:flag-context/../@_key-name/string()"/>
+            <x:variable name="mv:parent-team" as="element()+"
+                href="../definition-maps/profile-reduce-map-output.xml"
+                select="//m:assembly[@scope='global'][@_key-name=$mv:parent-key-name]"/>
+            <x:context mode="make-xml-match" select="$mv:flag-context">
+                <x:param name="team" select="$mv:parent-team" tunnel="yes"/>
+                <x:param name="aliased" select="true()" tunnel="yes"/>
+            </x:context>
+            <x:expect label="Union of paths to attribute of different elements with disambiguated paths">
+                <x:text>group/part/@id | group/part//part/@id | add/part/@id | add/part//part/@id</x:text>
+            </x:expect>
+        </x:scenario>
+        <x:scenario label="Flag with $team of flags with different ancestor @gi">
+            <x:variable name="mv:context">
+                <m:model>
+                    <m:assembly scope="global" gi="link1">
+                        <m:flag gi="href" _metaschema-xml-id="/assembly/oscal-metadata/link/href"/>                        
+                    </m:assembly>
+                    <m:assembly scope="global" gi="link2">
+                        <m:flag gi="href" _metaschema-xml-id="/assembly/oscal-metadata/link/href"/>
+                    </m:assembly>
+                </m:model>
+            </x:variable>
+            <x:context mode="make-xml-match"
+                select="($mv:context//m:flag[@gi='href'])[1]">
+                <x:param name="team" tunnel="yes"
+                    select="$mv:context//m:flag[@gi='href']"/>
+            </x:context>
+            <x:expect label="Union of paths to attribute of different elements">
+                <x:text>link1/@href | link2/@href</x:text>
+            </x:expect>
+        </x:scenario>
+        <x:scenario label="Flag with $team of flags with same ancestor @gi">
+            <x:variable name="mv:context">
+                <m:model>
+                    <m:assembly scope="global" gi="link">
+                        <m:flag gi="href" _metaschema-xml-id="/assembly/oscal-metadata/link/href"/>
+                    </m:assembly>
+                    <m:assembly scope="global" gi="link">
+                        <m:flag gi="href" _metaschema-xml-id="/assembly/oscal-metadata/link/href"/>
+                    </m:assembly>
+                </m:model>
+            </x:variable>
+            <x:context mode="make-xml-match"
+                select="($mv:context//m:flag[@gi='href'])[1]">
+                <x:param name="team" tunnel="yes"
+                    select="$mv:context//m:flag[@gi='href']"/>
+            </x:context>
+            <x:expect label="Paths to attribute of an element">
+                <x:text>link/@href</x:text>
+            </x:expect>
+        </x:scenario>
+    </x:scenario>
+
+    <x:scenario label="Tests for match=flag mode=make-xml-step priority=11 template">
+        <x:context mode="make-xml-step">
+            <m:flag gi="uuid"/>
+        </x:context>
+        <x:expect label="Path step for attribute named after gi">@uuid</x:expect>
+    </x:scenario>
+
+    <x:scenario label="Tests for match=*[@scope = 'global'] | group[*/@scope = 'global'] mode=make-xml-match template">
+        <x:scenario label="Non-aliased">
+            <x:scenario label="Non-flag element with global scope">
+                <x:context mode="make-xml-match">
+                    <m:assembly scope="global" gi="prop"/>
+                </x:context>
+                <x:expect label="@gi as an element name">prop</x:expect>
+            </x:scenario>
+            <x:scenario label="group that has a child with global scope">
+                <x:context mode="make-xml-match">
+                    <m:group name="property">
+                        <m:assembly scope="global" gi="prop"/>
+                    </m:group>
+                </x:context>
+                <x:expect label="Child's @gi as an element name">prop</x:expect>
+            </x:scenario>
+        </x:scenario>
+        <x:scenario label="Aliased">
+            <!-- match="/model" template passes $aliased tunnel param for assembly or field -->
+            <x:scenario label="Global-scope assembly with multiple team members, recursive">
+                <x:variable name="mv:context" as="element(m:assembly)"
+                    href="../definition-maps/profile-reduce-map-output.xml"
+                    select="/m:model/m:assembly/m:assembly[2]/m:choice[1]/m:assembly[2]/m:group[1]/m:assembly[1]/m:group[4]/m:assembly[1]/m:group[2]/m:assembly[@gi='part']"/>
+                <x:variable name="mv:team" as="element(m:assembly)+"
+                    href="../definition-maps/profile-reduce-map-output.xml"
+                    select="//m:assembly[@scope='global'][@_key-name=$mv:context/@_key-name]"/>
+                <x:context mode="make-xml-match" select="$mv:context">
+                    <x:param name="aliased" select="true()" tunnel="yes"/>
+                    <x:param name="team" select="$mv:team" tunnel="yes"/>
+                </x:context>
+                <x:expect label="Union of paths of the form X/Y and X/Y//Y, for all $team members">
+                    <x:text>group/part | group/part//part | add/part | add/part//part</x:text>
+                </x:expect>
+                <x:expect label="Bar-separated result has one path per item in $team"
+                    test="count( $x:result => tokenize('\|') )"
+                    select="count($mv:team)"/>
+            </x:scenario>
+            <x:scenario label="Another global-scope assembly with multiple team members, recursive">
+                <x:variable name="mv:context" as="element(m:assembly)">
+                    <m:assembly scope="global"
+                        key="ASSEMBLY-1ONLY"
+                        _key-name="everything:assembly-1only"
+                        gi="ASSEMBLY-1ONLY">
+                        <m:assembly scope="global"
+                            recursive="true"
+                            key="assembly-1only"
+                            _key-name="everything:assembly-1only"
+                            gi="assembly-1only"/>
+                    </m:assembly>
+                </x:variable>
+                <x:variable name="mv:team" as="element(m:assembly)+"
+                    href="../../../metapath/test/models_metaschema-definitions.xml"
+                    select="//m:assembly[@scope='global'][@_key-name=$mv:context/@_key-name]"/>
+                <x:context mode="make-xml-match" select="$mv:context">
+                    <x:param name="aliased" select="true()" tunnel="yes"/>
+                    <x:param name="team" select="$mv:team" tunnel="yes"/>
+                </x:context>
+                <x:expect label="Bar-separated result has one path per item in $team"
+                    test="count( $x:result => tokenize('\|') )"
+                    select="count($mv:team)"/>
+                <x:expect expand-text="1"
+                    label="Union of paths of the form X/Y and X/Y//Y, for all $team members">{
+                    concat(
+                    'alias/assembly-1only | alias/assembly-1only//assembly-1only | ',
+                    'alias/assembly-1only | alias/assembly-1only//assembly-1only | ',
+                    'EVERYTHING/assembly-1only | EVERYTHING/assembly-1only//assembly-1only | ',
+                    '/ASSEMBLY-1ONLY | ASSEMBLY-1ONLY//assembly-1only'
+                    )}</x:expect>
+            </x:scenario>
+            <x:scenario label="Global-scope assembly with one team member">
+                <x:variable name="mv:context" as="element(m:assembly)"
+                    href="../definition-maps/profile-reduce-map-output.xml"
+                    select="/m:model/m:assembly/m:assembly[@gi='metadata']/m:group[6]/m:assembly[@gi='location']"/>
+                <x:variable name="mv:team" as="element(m:assembly)"
+                    href="../definition-maps/profile-reduce-map-output.xml"
+                    select="//m:assembly[@scope='global'][@_key-name=$mv:context/@_key-name]"/>
+                <x:context mode="make-xml-match" select="$mv:context">
+                    <x:param name="aliased" select="true()" tunnel="yes"/>
+                    <x:param name="team" select="$mv:team" tunnel="yes"/>
+                </x:context>
+                <x:expect label="Path to location element from its parent"
+                    >metadata/location</x:expect>
+            </x:scenario>
+            <x:scenario label="Global-scope field with multiple team members, not recursive">
+                <x:variable name="mv:context" as="element(m:field)"
+                    href="../definition-maps/profile-reduce-map-output.xml"
+                    select="/m:model/m:assembly/m:assembly[3]/m:group[1]/m:assembly[1]/m:choice[1]/m:group[1]/m:field[@gi='value']"/>
+                <x:variable name="mv:team" as="element(m:field)+"
+                    href="../definition-maps/profile-reduce-map-output.xml"
+                    select="//m:field[@scope='global'][@_key-name=$mv:context/@_key-name]"/>
+                <x:context mode="make-xml-match" select="$mv:context">
+                    <x:param name="aliased" select="true()" tunnel="yes"/>
+                    <x:param name="team" select="$mv:team" tunnel="yes"/>
+                </x:context>
+                <!--
+                    Full paths to team members are
+                    profile/merge/custom/group/param/value | set-parameter/value | profile/modify/alter/add/param/value
+                    but no team members have recursive="true", so disambiguation
+                    of 1st and 3rd items is not needed.
+                -->
+                <!-- QUESTION: Is it OK that they're not distinct? -->
+                <x:expect label="Union of (non-distinct) paths to value element for all $team members"
+                    >param/value | set-parameter/value | param/value</x:expect>
+                <x:expect label="Bar-separated result has one path per item in $team"
+                    test="count( $x:result => tokenize('\|') )"
+                    select="count($mv:team)"/>
+            </x:scenario>
+        </x:scenario>
+    </x:scenario>
+
+    <x:scenario label="Tests for match=*[exists(@gi)] mode=make-xml-step template">
+        <x:scenario label="Element other than flag, with @gi (flag uses priority-11 template)">
+            <x:context mode="make-xml-step">
+                <m:assembly gi="profile"/>
+            </x:context>
+            <x:expect label="Path step for element named after gi">profile</x:expect>
+        </x:scenario>
+        <x:scenario label="Non-flag element without @gi, where descendant has @gi">
+            <x:context mode="make-xml-step">
+                <m:group in-xml="HIDDEN"
+                    recursive="true"
+                    group-json="ARRAY"
+                    name="part"
+                    key="parts">
+                    <m:assembly scope="global"
+                        recursive="true"
+                        gi="part"/>
+                </m:group>
+            </x:context>
+            <x:expect label="Path step for element named after descendant's gi">part</x:expect>
+        </x:scenario>
+    </x:scenario>
+
+    <x:scenario label="Tests for match=* mode=make-xml-match template">
+        <x:scenario label="Local assembly with two ancestors having @gi">
+            <x:context mode="make-xml-match" select="//*[@scope='local']">
+                <m:assembly scope="global" gi="profile">
+                    <m:assembly scope="global" gi="merge">
+                        <m:choice>
+                            <m:assembly scope="local" gi="custom"/>
+                        </m:choice>
+                    </m:assembly>
+                </m:assembly>
+            </x:context>
+            <x:expect label="Path including all ancestors having @gi"
+                >profile/merge/custom</x:expect>
+        </x:scenario>
+        <x:scenario label="Local assembly whose ancestor contains recursive nesting">
+            <x:context mode="make-xml-match" select="//*[@scope='local']">
+                <m:assembly scope="global" gi="profile">
+                    <m:assembly scope="global" gi="merge"
+                        _key-name="oscal-profile:fake-recursive-merge">
+                        <m:choice>
+                            <m:assembly scope="local" gi="custom"/>
+                            <m:assembly gi="recursive-merge"
+                                recursive="true"
+                                _key-name="oscal-profile:fake-recursive-merge"/>
+                        </m:choice>
+                    </m:assembly>
+                </m:assembly>
+            </x:context>
+            <x:expect label="Path including all ancestors having @gi"
+                >profile//merge/custom</x:expect>
+        </x:scenario>
+    </x:scenario>
+
+    <!-- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
+    <!-- mode=make-xml-pull templates -->
+    <x:scenario label="Tests for match=* mode=make-xml-pull template">
+        <x:context mode="make-xml-pull">
+            <m:allowed-values gi="fake-gi" key="fake-key" allow-other="yes"/>
+        </x:context>
+        <x:expect label="Diagnostic for unexpected match, with gi and key attributes">
+            <sm:pull who="allowed-values" gi="fake-gi" key="fake-key"/>
+        </x:expect>
+    </x:scenario>
+
+    <x:scenario label="Tests for match=choice mode=make-xml-pull template">
+        <x:scenario label="Choice among a field and two assemblies">
+            <x:context mode="make-xml-pull" select="//m:choice">
+                <m:choice>
+                    <m:assembly scope="local" key="flat" gi="flat"/>
+                    <m:field scope="local" key="as-is" gi="as-is"/>
+                    <m:assembly scope="local" key="custom" gi="custom"/>
+                </m:choice>
+            </x:context>
+            <x:expect label="Result of make-xml-pull mode on child elements">
+                <XSLT:apply-templates select="flat"/>
+                <XSLT:apply-templates select="as-is"/>
+                <XSLT:apply-templates select="custom"/>
+            </x:expect>
+        </x:scenario>
+        <x:scenario label="Choice between an assembly and a group">
+            <x:context mode="make-xml-pull" as="element(m:choice)"
+                href="../definition-maps/profile-reduce-map-output.xml"
+                select="/m:model/m:assembly/m:group[1]/m:assembly[1]/m:choice[1]"/>
+            <!-- x:context/@href preserves whitespace-only text nodes, but the template
+                ignores them and does not trigger xsl:mode/@on-no-match error. -->
+            <x:expect label="Result of make-xml-pull mode on child elements">
+                <XSLT:apply-templates select="include-all" />
+                <XSLT:for-each-group select="include-controls" group-by="true()">
+                    <sm:group in-json="ARRAY" key="include-controls">...</sm:group>
+                </XSLT:for-each-group>
+            </x:expect>
+        </x:scenario>
+    </x:scenario>
+
+    <x:scenario label="Tests for match=constraint mode=make-xml-pull template">
+        <x:context mode="make-xml-pull">
+            <m:constraint>
+                <m:allowed-values allow-other="yes">
+                    <m:enum value="marking">A label or descriptor that...</m:enum>
+                </m:allowed-values>
+            </m:constraint>
+        </x:context>
+        <x:expect label="Nothing" select="()"/>
+    </x:scenario>
+
+    <x:scenario label="Tests for match=field[empty(@gi)][(.|value)/@as-type='markup-multiline'] mode=make-xml-pull template">
+        <x:scenario label="field with no @gi, where @as-type=markup-multiline in both the field and its value child">
+            <x:context mode="make-xml-pull" as="element(m:field)"
+                href="../definition-maps/profile-reduce-map-output.xml"
+                select="/m:model/m:assembly/m:assembly[3]/m:group[1]//m:field[@name='prose']"/>
+            <x:expect label="For the whole group of prose elements,">
+                <XSLT:for-each-group
+                    select="p | ul | ol | pre | h1 | h2 | h3 | h4 | h5 | h6 | table"
+                    group-by="true()">...</XSLT:for-each-group>
+            </x:expect>
+            <x:expect label="output a field with in-json=SCALAR and various attributes from the context field"
+                test="//XSLT:for-each-group/node()">
+                <sm:field in-json="SCALAR"
+                    in-xml="UNWRAPPED"
+                    collapsible="no"
+                    as-type="markup-multiline"
+                    name="prose"
+                    key="prose">...</sm:field>
+            </x:expect>
+            <x:expect label="with a value child having all attributes from context's value child, plus in-json=string"
+                test="//XSLT:for-each-group/sm:field/node()">
+                <sm:value in-json="string"
+                    as-type="markup-multiline"
+                    _metaschema-xml-id="/assembly/oscal-catalog-common/parameter-guideline/prose/PROSE"
+                    _metaschema-json-id="/assembly/oscal-catalog-common/parameter-guideline/prose/PROSE">
+                    <XSLT:apply-templates select="current-group()" mode="cast-prose"/>
+                </sm:value>
+            </x:expect>
+            <x:expect label="and a child instruction to apply templates to the group in cast-prose mode"
+                test="//XSLT:for-each-group/sm:field/sm:value/node()">
+                <XSLT:apply-templates select="current-group()" mode="cast-prose"/>
+            </x:expect>
+            <x:expect label="Confirm attributes that come from XSLT, not the context"
+                test="exists(//sm:field[@in-json='SCALAR']/sm:value[@in-json='string'])"/>
+        </x:scenario>
+    </x:scenario>
+
+    <x:scenario label="Tests for match=flag | field | assembly | group[exists(@gi)] mode=make-xml-pull template">
+        <x:scenario label="flag">
+            <x:context mode="make-xml-pull" as="element(m:flag)"
+                href="../definition-maps/profile-reduce-map-output.xml"
+                select="/m:model/m:assembly/m:flag[@gi='uuid']"/>
+            <x:expect label="Apply templates instruction on attribute">
+                <XSLT:apply-templates select="@uuid"/>
+            </x:expect>
+        </x:scenario>
+        <x:scenario label="field that has @gi and type is markup-multiline">
+            <x:context mode="make-xml-pull">
+                <m:field scope="global"
+                    _metaschema-xml-id="/assembly/oscal-metadata/property/remarks"
+                    _metaschema-json-id="/assembly/oscal-metadata/property/remarks"
+                    in-xml="WITH_WRAPPER"
+                    collapsible="no"
+                    as-type="markup-multiline"
+                    name="remarks"
+                    key="remarks"
+                    gi="remarks">
+                    <m:value as-type="markup-multiline"
+                        _metaschema-xml-id="/field/oscal-metadata/remarks/PROSE"
+                        _metaschema-json-id="/field/oscal-metadata/remarks/PROSE"/>
+                </m:field>
+            </x:context>
+            <x:expect label="Apply templates instruction on element">
+                <XSLT:apply-templates select="remarks"/>
+            </x:expect>
+        </x:scenario>
+        <x:scenario label="field that has @gi and type is not markup-multiline">
+            <x:context mode="make-xml-pull">
+                <m:field scope="local"
+                    _metaschema-xml-id="/assembly/oscal-profile/add/title"
+                    _metaschema-json-id="/assembly/oscal-profile/add/title"
+                    collapsible="no"
+                    as-type="markup-line"
+                    name="title"
+                    key="title"
+                    gi="title">
+                    <m:value as-type="markup-line"
+                        _metaschema-xml-id="/assembly/oscal-profile/add/title/RICHTEXT"
+                        _metaschema-json-id="/assembly/oscal-profile/add/title/RICHTEXT"/>
+                </m:field>
+            </x:context>
+            <x:expect label="Apply templates instruction on element">
+                <XSLT:apply-templates select="title"/>
+            </x:expect>
+        </x:scenario>
+        <x:scenario label="assembly">
+            <x:context mode="make-xml-pull">
+                <m:assembly gi="profile"/>
+            </x:context>
+            <x:expect label="Apply templates instruction on element">
+                <XSLT:apply-templates select="profile"/>
+            </x:expect>
+        </x:scenario>
+        <x:scenario label="assembly child of recursive group">
+            <x:context mode="make-xml-pull" select="/m:assembly/m:group/m:assembly">
+                <m:assembly scope="global"
+                    name="part"
+                    _key-name="oscal-catalog-common:part"
+                    gi="irrelevant">
+                    <m:group recursive="true"
+                        name="part"
+                        _key-name="oscal-catalog-common:part">
+                        <m:assembly scope="global"
+                            recursive="true"
+                            name="part"
+                            _key-name="oscal-catalog-common:part"
+                            gi="part"/>
+                    </m:group>
+                </m:assembly>
+            </x:context>
+            <x:expect label="Apply templates instruction on element named after context's @gi">
+                <XSLT:apply-templates select="part"/>
+            </x:expect>
+        </x:scenario>
+        <x:scenario label="group that has @gi">
+            <x:context mode="make-xml-pull">
+                <m:group in-xml="SHOWN" gi="revisions" name="revision">
+                    <m:assembly scope="local" name="revision" gi="revision"/>
+                </m:group>
+            </x:context>
+            <x:expect label="Apply templates instruction on element named after group/@gi">
+                <XSLT:apply-templates select="revisions"/>
+            </x:expect>
+        </x:scenario>
+    </x:scenario>
+
+    <x:scenario label="Tests for match=group mode=make-xml-pull template">
+        <x:scenario label="group with no @gi, with @group-json">
+            <x:context mode="make-xml-pull">
+                <m:group in-xml="HIDDEN"
+                    recursive="true"
+                    group-json="ARRAY"
+                    name="part"
+                    key="parts">
+                    <m:assembly scope="global"
+                        recursive="true"
+                        gi="part"/>
+                </m:group>
+            </x:context>
+            <x:expect label="For the whole group of elements named in child elements' @gi,">
+                <XSLT:for-each-group select="part"
+                    group-by="true()">...</XSLT:for-each-group>
+            </x:expect>
+            <x:expect label="output a group with @in-json and @key from the context group"
+                test="//XSLT:for-each-group/node()">
+                <sm:group in-json="ARRAY" key="parts">...</sm:group>
+            </x:expect>
+            <x:expect label="with a child instruction to apply templates to the group"
+                test="//XSLT:for-each-group/sm:group/node()">
+                <XSLT:apply-templates select="current-group()">
+                    <XSLT:with-param name="with-key" select="false()"/>
+                </XSLT:apply-templates>
+            </x:expect>
+        </x:scenario>
+        <x:scenario label="group with no @gi and no @group-json">
+            <x:context mode="make-xml-pull">
+                <m:group in-xml="HIDDEN"
+                    name="field-simple-groupable"
+                    key="groupable-simple-fields">
+                    <m:field gi="field-simple-groupable">
+                        <m:flag gi="simple-flag"/>
+                        <m:value as-type="string" key="STRVALUE"/>
+                    </m:field>
+                </m:group>
+            </x:context>
+            <x:expect label="For the whole group of elements named in child elements' @gi,">
+                <XSLT:for-each-group select="field-simple-groupable"
+                    group-by="true()">...</XSLT:for-each-group>
+            </x:expect>
+            <x:expect label="output a group with @key from the context group"
+                test="//XSLT:for-each-group/node()">
+                <sm:group in-json="..." key="groupable-simple-fields">...</sm:group>
+            </x:expect>
+            <x:expect label="and in-json=SINGLETON_OR_ARRAY,"
+                test="//XSLT:for-each-group/node()">
+                <sm:group in-json="SINGLETON_OR_ARRAY" key="...">...</sm:group>
+            </x:expect>
+            <x:expect label="with a child instruction to apply templates to the group"
+                test="//XSLT:for-each-group/sm:group/node()">
+                <XSLT:apply-templates select="current-group()">
+                    <XSLT:with-param name="with-key" select="false()"/>
+                </XSLT:apply-templates>
+            </x:expect>
+        </x:scenario>
+    </x:scenario>
+
+    <x:scenario label="Tests for match=value mode=make-xml-pull template">
+        <x:scenario label="value with key attribute">
+            <x:context mode="make-xml-pull">
+                <m:value as-type="base64Binary" key="binvalue"
+                    _metaschema-json-id="/assembly/oscal-metadata/back-matter/resource/base64/value"
+                    _metaschema-xml-id="/assembly/oscal-metadata/back-matter/resources/base64/value"/>
+            </x:context>
+            <x:expect label="value element with as-type, key, and in-json attributes, with instruction to cast value">
+                <sm:value as-type="base64Binary"
+                    key="binvalue"
+                    in-json="string">
+                    <XSLT:value-of select="."/>
+                </sm:value>
+            </x:expect>
+        </x:scenario>
+        <x:scenario label="value with key-flag attribute">
+            <x:context mode="make-xml-pull">
+                <m:value as-type="string" key-flag="id"
+                    _metaschema-xml-id="/field/everything/field-dynamic-value-key/"
+                    _metaschema-json-id="/field/everything/field-dynamic-value-key/"
+                />
+            </x:context>
+            <x:expect label="value element with as-type, key-flag, and in-json attributes, with instruction to cast value">
+                <sm:value as-type="string"
+                    key-flag="id"
+                    in-json="string">
+                    <XSLT:value-of select="."/>
+                </sm:value>
+            </x:expect>
+        </x:scenario>
+    </x:scenario>
+
+    <!-- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
+    <!-- mode='assign-json-type' templates -->
+    <x:scenario label="Tests for match=@as-type mode=assign-json-type template">
+        <!-- Template produces fixed output from contexts not matched
+            in other templates in this mode. The concise test syntax
+            here applies the template to various attribute nodes and
+            checks the corresponding output attribute nodes. -->
+        <x:context mode="assign-json-type" select="/*/@as-type">
+            <m:value as-type="uuid"/>
+            <m:value as-type="markup-line"/>
+            <m:value as-type="dateTime-with-timezone"/>
+            <m:value as-type="string"/>
+            <m:value as-type="token"/>
+            <m:value as-type="uri"/>
+            <m:value as-type="markup-multiline"/>
+            <m:value as-type="uri-reference"/>
+            <m:value as-type="email"/>
+            <m:value as-type="empty"/>
+            <m:value as-type="base64Binary"/>
+        </x:context>
+        <x:expect
+            label="Each attribute of the context yields in-json attribute with value 'string'"
+            select="for $i in ($x:context) return /*/@in-json">
+            <mt:any-element in-json="string"/>
+        </x:expect>
+    </x:scenario>
+
+    <x:scenario label="Tests for match=@as-type[.='boolean'] mode=assign-json-type template">
+        <!-- Template produces fixed output. Test one sample context. -->
+        <x:context mode="assign-json-type" select="/*/@as-type">
+            <m:value as-type="boolean"
+                _metaschema-xml-id="/assembly/oscal-profile/merge/as-is/STRVALUE"
+                _metaschema-json-id="/assembly/oscal-profile/merge/as-is/STRVALUE"/>
+        </x:context>
+        <x:expect label="in-json attribute with value 'boolean'" select="/*/@in-json">
+            <mt:any-element in-json="boolean"/>
+        </x:expect>
+    </x:scenario>
+
+    <x:scenario label="Tests for match=@as-type[.=($integer-types,$numeric-types)] mode=assign-json-type template">
+        <!-- Template produces fixed output from four possible contexts.
+            The concise test syntax here applies the template to four
+            attribute nodes and checks four output attribute nodes. -->
+        <x:context mode="assign-json-type" select="/*/@as-type">
+            <m:value as-type="integer"/>
+            <m:value as-type="positiveInteger"/>
+            <m:value as-type="nonNegativeInteger"/>
+            <m:value as-type="decimal"/>
+        </x:context>
+        <x:expect
+            label="Each attribute of the context yields in-json attribute with value 'number'"
+            select="for $i in ($x:context) return /*/@in-json">
+            <mt:any-element in-json="number"/>
+        </x:expect>
+    </x:scenario>
+
+    <!-- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
+    <!-- mode='cast-value' templates -->
+    <x:scenario label="Tests for match=value[@as-type='markup-line'] mode=cast-value template">
+        <!-- Template produces fixed output. Test one sample context. -->
+        <x:context mode="cast-value">
+            <m:value as-type="markup-line"
+                _metaschema-xml-id="/assembly/oscal-metadata/metadata/title/RICHTEXT"
+                _metaschema-json-id="/assembly/oscal-metadata/metadata/title/RICHTEXT"/>
+        </x:context>
+        <x:expect label="Instruction to apply templates in cast-prose mode">
+            <XSLT:apply-templates mode="cast-prose"/>
+        </x:expect>
+    </x:scenario>
+
+    <x:scenario label="Tests for match=value[@as-type='markup-multiline'] mode=cast-value template">
+        <!-- Template produces fixed output. Test one sample context. -->
+        <x:context mode="cast-value">
+            <m:value as-type="markup-multiline"
+                _metaschema-xml-id="/field/oscal-metadata/remarks/PROSE"
+                _metaschema-json-id="/field/oscal-metadata/remarks/PROSE"/>
+        </x:context>
+        <x:expect label="Instruction to apply templates to grouped elements in cast-prose mode">
+            <XSLT:for-each-group
+                select="p | ul | ol | pre | h1 | h2 | h3 | h4 | h5 | h6 | table"
+                group-by="true()">
+                <XSLT:apply-templates select="current-group()" mode="cast-prose"/>
+            </XSLT:for-each-group>
+        </x:expect>
+    </x:scenario>
+
+    <x:scenario label="Tests for match=value mode=cast-value template">
+        <!-- Template produces fixed output. Test one sample context. -->
+        <x:context mode="cast-value">
+            <m:value as-type="string"
+                _metaschema-xml-id="/assembly/oscal-metadata/role/short-name/STRVALUE"
+                _metaschema-json-id="/assembly/oscal-metadata/role/short-name/STRVALUE"/>
+        </x:context>
+        <x:expect label="Instruction to take value-of on the element">
+            <XSLT:value-of select="."/>
+        </x:expect>
+    </x:scenario>
+
+    <!-- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
+    <x:scenario label="Tests for name=comment-template template">
+        <!-- Template is an empty stub designed for override. -->
+        <x:call template="comment-template"/>
+        <x:expect label="Nothing; interface is not overridden" select="()"/>
+    </x:scenario>
+
 </x:description>

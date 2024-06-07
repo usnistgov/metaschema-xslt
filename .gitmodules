@@ -1,13 +1,11 @@
-[submodule "support/xspec"]
-	path = support/xspec
-	url = https://github.com/xspec/xspec.git
 [submodule "support/metaschema"]
 	path = support/metaschema
 	url = https://github.com/usnistgov/metaschema.git
 	branch = develop
 	fetchRecurseSubmodules = false
+[submodule "support/xslt3-functions"]
+	path = support/xslt3-functions
+	url = https://github.com/usnistgov/xslt3-functions.git
 [submodule "support/schxslt"]
 	path = support/schxslt
 	url = https://github.com/schxslt/schxslt.git
-[submodule "metaschema"]
-	url = https://github.com/usnistgov/metaschema.git

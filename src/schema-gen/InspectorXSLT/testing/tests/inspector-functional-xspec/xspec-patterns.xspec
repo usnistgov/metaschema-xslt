@@ -91,6 +91,7 @@ Modes to test:
       </x:scenario>
       <x:scenario label="[B.4] A valid file instance in no mode">
          <x:context href="../../computer-valid/valid1.xml"/>
+         <!-- An x:expect with @test returning boolean is evaluated without comparing to source -->
          <x:expect label="brings its copy with its validation"
             test="deep-equal($x:result/self::mx:validation/(child::* except mx:*),$valid-file/child::*)"/>
       </x:scenario>

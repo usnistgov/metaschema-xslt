@@ -3,9 +3,7 @@
   xmlns:c="http://www.w3.org/ns/xproc-step" version="1.0"
   xmlns:metaschema="http://csrc.nist.gov/ns/metaschema/1.0"
   xmlns:schxslt="https://doi.org/10.5281/zenodo.1495494"
-  type="metaschema:METASCHEMA-ALL-SCHEMAS" name="METASCHEMA-ALL-SCHEMAS">
-  
-  <p:import href="../../support/schxslt/core/src/main/resources/xproc/1.0/validate-with-schematron.xpl"/>
+  type="metaschema:METASCHEMA-SCHXSLT-VALIDATE" name="METASCHEMA-SCHXSLT-VALIDATE">
   
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Ports -->
@@ -28,6 +26,8 @@
     <p:pipe port="result" step="plaintext-report"/>
   </p:output>
   
+  <p:import href="../../support/schxslt/core/src/main/resources/xproc/1.0/validate-with-schematron.xpl"/> 
+   
   <p:identity name="echo-input"/>
 
   <schxslt:validate-with-schematron name="schematron-check">

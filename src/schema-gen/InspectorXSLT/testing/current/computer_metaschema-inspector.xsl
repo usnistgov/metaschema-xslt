@@ -1,11 +1,10 @@
-<?xml version="1.0" encoding="us-ascii"?>
 <xsl:transform xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:mx="http://csrc.nist.gov/ns/csd/metaschema-xslt"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 version="3.0"
                 xpath-default-namespace="http://example.com/ns/computer"
-                exclude-result-prefixes="#all"><!-- Generated 2024-02-12T18:06:18.57633-05:00 -->
+                exclude-result-prefixes="#all"><!-- Generated 2024-03-11T14:53:43.203885-04:00 -->
    <xsl:mode on-no-match="fail"/>
    <xsl:mode name="test" on-no-match="shallow-skip"/>
    <!-- .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     .     . -->

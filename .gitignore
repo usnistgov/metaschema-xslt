@@ -8,3 +8,7 @@
 
 # test outputs
 src/**/test_output/
+
+# downloaded miscellaneous
+
+support/lib/*

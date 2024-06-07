@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" version="3.0">
+
+   <p:input port="json-in" primary="true"/>
+   
+   <p:output port="result" serialization="map{ 'indent': true() }"/>
+
+   <!--<p:variable name="base" select="base-uri(/*)"/>-->
+   
+   <p:try>
+      <p:group name="validation">
+         <p:validate-with-json-schema assert-valid="true">
+            <p:with-input port="schema" href="tiny_schema.json"/>
+         </p:validate-with-json-schema>
+
+      </p:group>
+      <p:catch>
+         <p:add-attribute attribute-name="VALIDATION-STATUS" match="/*" attribute-value="JSON-SCHEMA-INVALID"/>
+      </p:catch>
+   </p:try>
+   
+   <p:cast-content-type content-type="application/xml"/>
+   
+   
+   <!--<p:add-attribute attribute-name="baseURI" attribute-value="{$base}"/>-->
+   
+</p:declare-step>
+
