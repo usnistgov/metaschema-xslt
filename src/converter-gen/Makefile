@@ -13,7 +13,7 @@ folder=.
 test: smoke-test ## Run all tests
 
 .PHONY: smoke-test
-smoke-test: ## Apply generators to ../testing/models_metaschema.xml metaschema
+smoke-test: ## Apply generators to test_metaschema
 	./mvn-converters-xpl.sh "$(test_metaschema)" $(output_folder) models_metaschema
 
 .PHONY: spec-test
