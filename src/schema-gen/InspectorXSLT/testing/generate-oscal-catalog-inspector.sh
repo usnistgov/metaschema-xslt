@@ -4,7 +4,6 @@
 # which hard-wires the production of InspectorXSLT for OSCAL formats (currently catalog)
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-# shellcheck source=../common/subcommand_common.bash
 source "$SCRIPT_DIR/../../../common/subcommand_common.bash"
 
 usage() {
