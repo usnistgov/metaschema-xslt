@@ -5,7 +5,7 @@
 
    <!-- Purpose: Produces an Inspector XSLT for the OSCAL Catalog metaschema  -->
    <!-- Input: is hard-wired to a current copy of the metaschema on Github -->
-   <!-- Output: Writes artifacts to the file system, in 'current' subdirectory -->
+   <!-- Output: Writes artifacts to the file system, in 'current' subdirectory, encoding the source document into "raw" ASCII with escaped characters, if applicable.  -->
 
    <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
    <!-- Ports -->
