@@ -30,7 +30,7 @@
   
   <xsl:template match="/">
     <style type="text/css">
-      <xsl:text>@namespace "http://csrc.nist.gov/ns/oscal/1.0";</xsl:text>
+      <xsl:text expand-text="true">@namespace "{ /m:METASCHEMA/m:namespace }";</xsl:text>
       <xsl:copy-of select="$lf"/>
       <xsl:apply-templates/>
     </style>

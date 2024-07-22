@@ -61,6 +61,7 @@
    <define-field name="term" as-type="string">
       <formal-name>Term</formal-name>
       <description>Simple string value example.</description>
+      <json-value-key>term</json-value-key>
       <define-flag required="yes" name="id" as-type="token">
          <formal-name>Term identifier</formal-name>
          <description>A token identifying this term uniquely within the document.</description>
@@ -130,6 +131,7 @@
    <define-field name="item" as-type="markup-line">
       <formal-name>Line item</formal-name>
       <description>A value, potentially marked with @key or @class.</description>
+      <json-value-key>item</json-value-key>
       <flag ref="key" required="no"/>
       <flag ref="class" required="no"/>
       <define-flag name="n" as-type="non-negative-integer" required="no">

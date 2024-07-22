@@ -36,7 +36,7 @@
             <EXCEPTION problem-type="unused-definition">REMOVING unused assembly definition for 'unused-assembly' from nestedmessy.</EXCEPTION>
             <define-assembly name="BOX" module="nestedmessy" _key-name="nestedmessy:BOX">
                <formal-name>BOX</formal-name>
-               <description>An empty box</description>
+               <description>An empty box, the root of the model, should be copied</description>
                <root-name>BOX</root-name>
                <model/>
             </define-assembly>

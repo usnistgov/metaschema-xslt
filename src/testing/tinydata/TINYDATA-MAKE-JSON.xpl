@@ -13,23 +13,18 @@
    <!-- Output: For each input file, an equivalent JSON in place with the same name. -->
    <!-- Purpose: Batch-convert XML to JSON to support testing -->
    
-   
-
    <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
    <!-- Ports -->
 
    <p:input port="parameters" kind="parameter"/>
 
-
-   <p:input port="samples" sequence="true">
-      
-      <p:document href="tiny-data/bigbadtiny.xml"/>
-      <p:document href="tiny-data/tiny1.xml"/>
-   </p:input>
+   <p:import href="tinydata-samples.xpl"/>
    
+   <metaschema:tinydata-samples name="getting-samples"/>
+
    <p:for-each>
       <p:iteration-source>
-         <p:pipe port="samples" step="TINYDATA-MAKE-JSON"/>
+         <p:pipe port="tinydata" step="getting-samples"/>
       </p:iteration-source>
       <p:variable name="base" select="base-uri(.)"/>
 

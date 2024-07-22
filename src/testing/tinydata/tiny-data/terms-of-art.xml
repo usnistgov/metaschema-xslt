@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/css" href="../current/tiny-boilerplate.css" title="Boilerplate CSS" alternate="no"?>
+<TINY xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://csrc.nist.gov/ns/metaschema-xslt/tinydata ../current/tiny_schema.xsd"
+   xmlns="http://csrc.nist.gov/ns/metaschema-xslt/tinydata" id="bigbadtiny">
+   <title>Terms of Art</title>
+   <h3>Some terms of art.</h3>
+   <p>A glossary to <a href="https://pages.nist.gov/metaschema">Metaschema</a> technology.</p>
+   <p>Nothing here is normative.</p>
+   <part>
+      <title>Metaschema</title>
+      <term id="metaschema">metaschema</term>
+      <p>A metaschema is a composed artifact representing an abstract information model. If you are reading this you probably already have a good idea of what a metaschema is. In encoded form, a specific metaschema will define a set of rules to be tested over data instances - <q>actual data</q>, however stored and expressed. Data instances (documents or data sets) can be discriminated on the basis of whether and to what extent they follow such rules, thus serving as valid instances of the complex object type (or one such object type) defined by the metaschema.</p>
+      <p>When a data set or document is known or knowable as valid, it becomes possible to make with confidence a large set of assertions regarding its contents, based on information known from the metaschema. Essentially it converts the problem of interpreting the document contents from an <q>open world</q> to a <q>closed world</q> problem, by defining structures and boundaries for the information space into which data can be projected and declaring as <q>out of bounds</q> anything that is likely to pose problems because not well defined, or defined at all.</p>
+   </part>
+   <part>
+   <title>module</title>
+   <term id="module">module</term>   
+   <p>A Metaschema module represents implementations of the individual information elements of the information model using <a href="https://pages.nist.gov/metaschema/specification/glossary/#definition">definitions</a></p>.
+   <p>A module is synonym for a metaschema as defined above.</p>
+   </part>   
+   <part>
+      <title>Assembly</title>
+      <term id="assembly">assembly</term>
+      <p>An assembly is a complex object defined in a metaschema. Its properties include a name (identifier); a name in use (a tag to be used in data); and a model, including both permitted flags(appearing one each at most), assemblies, and fields (potentially appearing in multiples).</p>
+      <p>Assemblies have formal names (often giving more information than the tag or name-in-use) and descriptions, and they may be defined with additional constraints to apply either to themselves or descendants (structures within data content).</p>
+      <p>At least one assembly must be designated in a metaschema as a possible root assembly, that is to say the data object that contains all other data objects given, and thus the scope for parsing. Assemblies not defined as possible roots cannot appear <q>at the top</q> (meaning, themselves comprising the entire data instance), but they will commonly be permitted inside other definitions in a well-defined arrangement.</p>
+      <p>An assembly is like a record type whose properties can include other records - or in XML, a <b>complexType</b> (element with complex element content, not mixed or text content).</p>
+   </part>
+   <part>
+      <title>Field</title>
+      <term id="field">field</term>
+      <p>A field, like an assembly, is a data structure. Unlike assemblies, however, fields have no models (containing further fields and assemblies), instead presenting a single atomic value of a designated type (using the field definition's <code>as-type</code>). Datatypes for fields (and flags) include not only strings and numbers of different types (integer etc.) but also time-and-duration types, URIs and more.</p>
+      <p>Like assemblies, fields can have flags, providing for an additional layer for <q>annotation</q> of the field value.</p>
+   </part>
+   <part>
+      <title>Flag</title>
+      <term id="flag">flag</term>
+      <p>Flags are simple named data points associated with individual assemblies or fields.</p>
+      <p>Like fields, flags have atomic values that can be assigned data types and validated for the lexical forms associated with those types.</p>
+      <p>An XML representation will often use attribute syntax to represent flags, as a convenience.</p>
+   </part>
+   <part>
+      <title>Value</title>
+      <term id="value">value</term>
+      <p>Values are data points associated singly with fields or flags. Values can be assigned a type, in which case their lexical form must (for the data to be metaschema-valid) conform to requirements for that type.</p>
+      <p>Note that fields have their own values, while they can also have flags with their own values.</p>
+      <p>Assemblies do not have values, while a composite <q>value</q> can always be constructed for an assembly from the values of its contents, or by applying an appropriate function or filter.</p>
+   </part>
+
+</TINY>

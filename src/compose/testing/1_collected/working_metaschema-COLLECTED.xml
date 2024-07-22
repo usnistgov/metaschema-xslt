@@ -75,7 +75,7 @@
    </define-flag>
    <METASCHEMA abstract="yes"
       module="oscal-test-m1"
-      _base-uri="file:/C:/Users/wap1/Documents/usnistgov/metaschema/toolchains/xslt-M4/compose/testing/module_metaschema.xml">
+      _base-uri="...">
       <schema-name>OSCAL TEST Format Module</schema-name>
       <schema-version>0.0</schema-version>
       <short-name>oscal-test-m1</short-name>
@@ -83,7 +83,7 @@
       <define-assembly scope="global"
          name="module-assembly"
          module="oscal-test-m1"
-         _base-uri="file:/C:/Users/wap1/Documents/usnistgov/metaschema/toolchains/xslt-M4/compose/testing/module_metaschema.xml"
+         _base-uri="..."
          _key-name="oscal-test-m1:module-assembly">
          <formal-name>Assembly defined in a module</formal-name>
          <description>XXX</description>
@@ -115,7 +115,7 @@
          scope="global"
          name="global-field"
          module="oscal-test-m1"
-         _base-uri="file:/C:/Users/wap1/Documents/usnistgov/metaschema/toolchains/xslt-M4/compose/testing/module_metaschema.xml"
+         _base-uri="..."
          _key-name="oscal-test-m1:global-field">
          <formal-name>Field, defined in module 'oscal-test-m1' (global by default)</formal-name>
          <description>XXX</description>
@@ -125,7 +125,7 @@
          scope="local"
          name="local-field"
          module="oscal-test-m1"
-         _base-uri="file:/C:/Users/wap1/Documents/usnistgov/metaschema/toolchains/xslt-M4/compose/testing/module_metaschema.xml"
+         _base-uri="..."
          _key-name="oscal-test-m1:local-field">
          <formal-name>Field, defined in module 'oscal-test-m1' as local</formal-name>
          <description>ZZZ</description>

@@ -33,14 +33,14 @@
       
    -->
    
-   <p:input port="samples" sequence="true">
-      <!-- for the XML, invalid documents are marked with a PI <?ERROR ?> to show an expectation of INVALID -->
+   <!--<p:input port="samples" sequence="true">
+      <!-\- for the XML, invalid documents are marked with a PI <?ERROR ?> to show an expectation of INVALID -\->
       <p:document href="tiny-data/tiny1.xml"/>
       <p:document href="tiny-data/bigbadtiny.xml"/>
-      
+      <p:document href="tiny-data/terms-of-art.xml"/>
    </p:input>
-
-   <p:input port="tinydata-xsd">
+-->
+   <p:input port="tinydata-xsd" primary="false">
       <p:document href="current/tiny_schema.xsd"/>
    </p:input>
    
@@ -59,9 +59,13 @@
       <p:pipe port="result" step="plaintext"/>
    </p:output>
    
+   <p:import href="tinydata-samples.xpl"/>
+   
+   <metaschema:tinydata-samples name="getting-samples"/>
+   
    <p:for-each>
       <p:iteration-source>
-         <p:pipe port="samples" step="XSD-VALIDATE-CHOICES"/>
+         <p:pipe port="tinydata" step="getting-samples"/>
       </p:iteration-source>
       <p:variable name="base" select="base-uri(.)"/>
 
@@ -133,7 +137,7 @@
                      select="child::NOMINALLY-VALID/document[@VALIDATION-STATUS='XSD-INVALID'] |
                              child::NOMINALLY-INVALID/document[not(@VALIDATION-STATUS='XSD-INVALID')]"/>
                   <REPORT>
-                     <progress>Checking { count(*/*) }{ if (count(*/*) eq 1) then ' document' else ' documents' } against a 'choices' XSD ...</progress>
+                     <progress>Checking { count(*/*) }{ if (count(*/*) eq 1) then ' document' else ' documents' } against the current tinydata XSD ...</progress>
                         <xsl:apply-templates select="child::*/document"/>
 
                         <xsl:if test="empty($anomalies)">
