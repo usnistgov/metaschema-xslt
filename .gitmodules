@@ -8,4 +8,4 @@
 	url = https://github.com/usnistgov/xslt3-functions.git
 [submodule "support/schxslt"]
 	path = support/schxslt
-	url = https://github.com/schxslt/schxslt.git
+	url = http://codeberg.org/SchXslt/schxslt.git
