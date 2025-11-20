@@ -4,7 +4,8 @@ include testing/make_common.mk
 # Makefile wildcard function does not support that, so we use the shell
 # function with the find utility and look ever Makefile in a child dir
 # relative to this one, but exclude this one to use with the FOREACH macro.
-dirs:=$(shell find '.' ! -wholename ./Makefile -name 'Makefile' -printf "%h\n")
+# dirs:=$(shell find '.' ! -wholename ./Makefile -name 'Makefile' -printf "%h\n")
+dirs:=$(shell find '.' ! -wholename ./Makefile -name 'Makefile' |xargs -n1 dirname )
 
 .PHONY: test
 test: ## Run all tests
