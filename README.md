@@ -58,6 +58,20 @@ The best way to ensure long-term access to the code base is to clone or fork the
 
 `support` includes dependent submodules with other static resources.
 
+The following submodules are currently supporting metaschema-xslt functionality:
+- [support/metaschema](https://github.com/usnistgov/metaschema/)
+- [support/schxslt](https://codeberg.org/SchXslt/)
+- [support/xslt3-functions](https://github.com/usnistgov/xslt3-functions/)
+
+> **NOTE**: In 2025, the Schematron processor implementation in XSLT was relocated from GitHub.com to Codeberg.org repository. Since our parent GitHub repository cannot natively "open" in a browser a non-GitHub repository as if it were part of the same ecosystem, the submodule `support/schxslt` appears to have a broken link. 
+> The submodule is correctly identified in the `.gitmodules` and any clone of the `metaschema-xslt` repository will correctly reference or incorporate external code and resources when the following command:
+> ```
+> git submodule update --init --recursive  
+> ```
+> is executed from the parent directory.
+> 
+> The relocation of the Schematron submodule (`schxslt`) prevents automatic updates to teh supply chain and impairs dependabot. Forking the `SchXslt` external repository under `usnistgov` account is considered. 
+
 ## Installation and operation
 
 These utilities are designed for integration in a range of environments, and core functionalities are implemented in XSLT 3, which is supported across platforms including Java, Node.js and C. Please deconstruct and reverse engineer. (Consider proposing improvements as [contributions](CONTRIBUTING.md).)
