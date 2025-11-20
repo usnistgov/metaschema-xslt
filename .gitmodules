@@ -6,3 +6,6 @@
 [submodule "support/xslt3-functions"]
 	path = support/xslt3-functions
 	url = https://github.com/usnistgov/xslt3-functions.git
+[submodule "support/schxslt"]
+	path = support/schxslt
+	url = https://codeberg.org/SchXslt/schxslt.git
