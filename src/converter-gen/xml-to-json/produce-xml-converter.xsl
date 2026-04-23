@@ -479,6 +479,8 @@
     
     <xsl:variable name="integer-types" as="element()*">
         <type>integer</type>
+        <type>positive-integer</type>
+        <type>non-negative-integer</type>
         <type>positiveInteger</type>
         <type>nonNegativeInteger</type>
     </xsl:variable>

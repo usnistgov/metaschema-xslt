@@ -1537,11 +1537,13 @@
     </x:scenario>
 
     <x:scenario label="Tests for match=@as-type[.=($integer-types,$numeric-types)] mode=assign-json-type template">
-        <!-- Template produces fixed output from four possible contexts.
-            The concise test syntax here applies the template to four
-            attribute nodes and checks four output attribute nodes. -->
+        <!-- Template produces fixed output from six possible contexts.
+            The concise test syntax here applies the template to six
+            attribute nodes and checks six output attribute nodes. -->
         <x:context mode="assign-json-type" select="/*/@as-type">
             <m:value as-type="integer"/>
+            <m:value as-type="positive-integer"/>
+            <m:value as-type="non-negative-integer"/>
             <m:value as-type="positiveInteger"/>
             <m:value as-type="nonNegativeInteger"/>
             <m:value as-type="decimal"/>
