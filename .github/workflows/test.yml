@@ -14,7 +14,7 @@ env:
 jobs:
   test:
     name: "Test and Collect Results"
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
         with:
@@ -45,7 +45,7 @@ jobs:
             **/*_junit-report.xml
   event_file:
     name: "Upload Results to Event File"
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     needs: test
     steps:
     - name: Upload
