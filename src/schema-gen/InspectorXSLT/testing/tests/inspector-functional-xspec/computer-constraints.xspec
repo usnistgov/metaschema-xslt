@@ -442,7 +442,7 @@
          <!-- note escaping of { } as {{ }} in mx:report/@test LRE to avoid avt eval -->
          <x:expect label="throws an MDCV error">
             <mx:report cf="..." class="{ $mx:MDCV-class }" rule-id="manufacture-date-rule_3"
-               test="not(string(.) castable as xs:date and matches(.,'^(((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{{2}})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{{2}})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{{2}})-(0[469]|11)-(0[1-9]|[12][0-9]|30)))(Z|(-((0[0-9]|1[0-2]):00|0[39]:30)|\+((0[0-9]|1[0-4]):00|(0[34569]|10):30|(0[58]|12):45)))?$'))"
+               test="not(string(.) castable as xs:date and matches(.,'^(((2000|2400|2800|(19|2[0-9])(0[48]|[2468][048]|[13579][26]))-02-29)|(((19|2[0-9])[0-9]{{2}})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{{2}})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{{2}})-(0[469]|11)-(0[1-9]|[12][0-9]|30)))(Z|(-((0[0-9]|1[0-2]):00|0[39]:30)|\+((0[0-9]|1[0-4]):00|(0[34569]|10):30|(0[58]|12):45)))?$'))"
                xpath="/computer/@date-of-manufacture" 
                matching="computer/(@date-of-manufacture)" level="ERROR">Value <mx:code>today</mx:code> of attribute <mx:gi>@date-of-manufacture</mx:gi> does not conform to <mx:code>date</mx:code> datatype.</mx:report>
          </x:expect>
@@ -457,7 +457,7 @@
                xpath="/computer/@date-of-manufacture" rule-id="manufacture-date-rule_1"
                level="WARNING" matching="computer/(self::*[starts-with(@id,'April')]/@date-of-manufacture)">Value <mx:code>today</mx:code> does not appear among permissible (enumerated) values for this <mx:gi>date-of-manufacture</mx:gi>: <mx:code>1980-04-01|1981-04-01|1982-04-01</mx:code>.</mx:report>
             <mx:report cf="..." class="{ $mx:MDCV-class }" rule-id="manufacture-date-rule_3"
-               test="not(string(.) castable as xs:date and matches(.,'^(((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{{2}})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{{2}})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{{2}})-(0[469]|11)-(0[1-9]|[12][0-9]|30)))(Z|(-((0[0-9]|1[0-2]):00|0[39]:30)|\+((0[0-9]|1[0-4]):00|(0[34569]|10):30|(0[58]|12):45)))?$'))"
+               test="not(string(.) castable as xs:date and matches(.,'^(((2000|2400|2800|(19|2[0-9])(0[48]|[2468][048]|[13579][26]))-02-29)|(((19|2[0-9])[0-9]{{2}})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{{2}})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{{2}})-(0[469]|11)-(0[1-9]|[12][0-9]|30)))(Z|(-((0[0-9]|1[0-2]):00|0[39]:30)|\+((0[0-9]|1[0-4]):00|(0[34569]|10):30|(0[58]|12):45)))?$'))"
                xpath="/computer/@date-of-manufacture" 
                matching="computer/(@date-of-manufacture)" level="ERROR">Value <mx:code>today</mx:code> of attribute <mx:gi>@date-of-manufacture</mx:gi> does not conform to <mx:code>date</mx:code> datatype.</mx:report>
          </x:expect>
